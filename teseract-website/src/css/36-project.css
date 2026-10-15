@@ -1,7 +1,8 @@
 /* ==========================================================================
    CASE STUDY (/projects/<slug>/) — prefix pj-
-   Studio's own websites: group line + H1 + facts, hero media (device scene / first still), then the captured
-   stills - desktop screens in the ZIP half/full rhythm (native aspect, .reveal-image), phone screens as pairs.
+   Studio's own websites: group line + H1 + facts, hero media (device scene / plain frame), then the captured
+   stills - desktop screens in the ZIP half/full rhythm (native aspect, .reveal-image), phone screens as pairs (a
+   swipe strip on phones); every still is a link into the full-screen still viewer (36-project.js).
    Black theme: --ink headings, glass back pill and service chips (white washes + hairlines, brighten
    on hover), frames on a #141414 loading plate with a white-6 % hairline so light boards keep an edge.
    ========================================================================== */
@@ -37,10 +38,10 @@
 .pj-tag__note{flex:1 0 100%;padding-left:18px;letter-spacing:.01em;text-transform:none;color:var(--muted-strong)}
 .pj-visit{margin-top:8px}
 
-/* ---------- Hero media: the device scene playing the recording (38-scene.css), or the first still full width */
+/* ---------- Hero media: the device scene playing the recording or showing a still (38-scene.css), or the Work card's
+   plain frame (pages/project.hero) */
 .pj-hero{padding-bottom:12px}
 .pj-hero__inner{max-width:1944px;margin-inline:auto;padding:0 12px}
-.pj-frame--hero{display:block}
 
 /* ---------- Gallery (ZIP: 2-col grid, gap 12, edge to edge with a 12 px gutter) */
 .pj-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:1944px;margin-inline:auto;padding:0 12px}
@@ -56,6 +57,73 @@
 .pj-phone{position:relative;flex:none;width:min(40%,340px);margin:0;border-radius:clamp(16px,2.6vw,40px);overflow:hidden;background:var(--surface-2);
   box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -40px rgba(0,0,0,.9)}
 .pj-phone img,.pj-phone video{width:100%;height:100%;object-fit:cover}
+/* the plain-frame hero's first still opens the gallery only where its 4:5 stage shows the phone screen instead
+   (pages/project.PLAIN_NARROW) */
+@media (min-width:656px){.pj-frame--lead{display:none}}
+
+/* ---------- Stills as links into the viewer (36-project.js; without JS the link opens the image file itself). The
+   badge (expand icon) fades in on hover on hover-capable screens; on touch screens the first frame's badge reads
+   "Tap to enlarge" (frosted dark pill, the .motion-toggle look) */
+.pj-zoom{position:relative;display:block;width:100%;height:100%;color:var(--ink);cursor:zoom-in;-webkit-tap-highlight-color:transparent}
+.pj-zoom:focus-visible{outline-offset:-5px}   /* the frame clips its overflow: the ring sits inside the still */
+/* a still scene in the hero is one link: it takes the scene's hero size (38-scene.css), the scene fills it */
+.pj-zoom--hero{width:100%;height:auto;max-width:calc((100svh - 96px) * 1.6);min-width:min(100%,640px);margin-inline:auto;border-radius:clamp(24px,2.4vw,40px)}
+.pj-hero .pj-zoom--hero .scn{max-width:none;min-width:0}
+.pj-zoom--hero:focus-visible{outline-offset:4px}
+.pj-zoom__badge{position:absolute;right:12px;bottom:12px;z-index:1;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 9px;border-radius:10px;
+  background:rgba(14,14,14,.74);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -8px rgba(0,0,0,.8);
+  font:500 12px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;pointer-events:none;
+  opacity:0;transform:translateY(4px);transition:opacity .3s ease,transform .5s var(--ease)}
+.pj-zoom__badge,.pj-zoom__badge *{font-weight:400 !important}   /* small UI label at 400, like the motion toggle */
+.pj-zoom__badge svg{flex:none;width:14px;height:14px}
+.pj-zoom__label{padding-right:2px}
+@media (hover:hover){
+  .pj-zoom__label{display:none}
+  .pj-zoom:hover .pj-zoom__badge,.pj-zoom:focus-visible .pj-zoom__badge{opacity:1;transform:none}
+}
+@media (hover:none){.pj-zoom__badge--hint{opacity:1;transform:none}}
+.pj-phone .pj-zoom__badge{right:10px;bottom:10px}
+
+/* ---------- Still viewer (36-project.js clones pages/project.viewer's <template>): a black full-screen <dialog>.
+   The slides sit side by side on a track (swipe, arrows, keys); each still is fitted between the count (top) and the
+   controls (bottom: previous / close / next, the thumb zone) and zoomed by transform. touch-action:none - every
+   gesture is the script's: pinch / double-tap / wheel zoom, pan, swipe, swipe down to close. */
+.pj-viewer{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;overflow:hidden;
+  background:transparent;color:var(--ink);touch-action:none;overscroll-behavior:contain;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.pj-viewer:not([open]){display:none}
+.pj-viewer::backdrop{background:transparent}
+.pj-viewer__shade{position:absolute;inset:0;background:#000}
+.pj-viewer__stage{position:absolute;inset:0;overflow:hidden}
+.pj-viewer__track{position:absolute;top:0;left:0;height:100%;display:flex;gap:16px;will-change:transform}
+.pj-viewer__slide{position:relative;flex:none;width:var(--slide-w,100vw);height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pj-viewer__img{display:block;flex:none;max-width:none;transform-origin:50% 50%;background:var(--surface-2);-webkit-user-drag:none;user-select:none;cursor:zoom-in}
+.pj-viewer__slide--phone .pj-viewer__img{border-radius:clamp(14px,4vw,28px)}
+.pj-viewer.is-zoomed .pj-viewer__img{cursor:grab}
+.pj-viewer.is-grabbing .pj-viewer__img{cursor:grabbing}
+.pj-viewer__count{position:absolute;top:max(14px,env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);padding:10px 12px;border-radius:10px;
+  background:rgba(14,14,14,.74);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:var(--ink-2);
+  font:500 12px/1 var(--mono);letter-spacing:.05em;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none}
+.pj-viewer__count,.pj-viewer__count *{font-weight:400 !important}
+.pj-viewer__bar{position:absolute;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;gap:16px;pointer-events:none}
+.pj-viewer__count,.pj-viewer__bar{transition:opacity .3s ease}
+.pj-viewer.is-dismissing .pj-viewer__count,.pj-viewer.is-dismissing .pj-viewer__bar,.pj-viewer.is-single .pj-viewer__count{opacity:0}
+.pj-viewer__btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;padding:0;border:0;border-radius:50%;pointer-events:auto;
+  background:rgba(14,14,14,.74);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);color:var(--ink);cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -8px rgba(0,0,0,.8);
+  transition:background-color .3s ease,opacity .3s ease,transform .5s var(--ease)}
+.pj-viewer__btn svg{width:18px;height:18px}
+.pj-viewer__btn--prev svg{transform:scaleX(-1)}
+.pj-viewer__btn--close{width:56px;height:56px;background:var(--ink);color:#000;box-shadow:0 8px 20px -8px rgba(0,0,0,.8)}
+.pj-viewer__btn--close svg{width:20px;height:20px}
+.pj-viewer__btn:active{transform:scale(.94)}
+.pj-viewer__btn[aria-disabled="true"]{opacity:.32;cursor:default}
+.pj-viewer.is-single .pj-viewer__btn--prev,.pj-viewer.is-single .pj-viewer__btn--next{display:none}
+@media (hover:hover){
+  .pj-viewer__btn:not(.pj-viewer__btn--close):not([aria-disabled="true"]):hover{background:rgba(40,40,40,.84)}
+  .pj-viewer__btn--close:hover{background:#fff}
+}
+@media (forced-colors:active){.pj-viewer__shade{background:Canvas}.pj-viewer__btn{border:1px solid ButtonText}}
 
 /* ---------- Next project */
 .pj-next__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:1fr auto;grid-template-areas:"head media" "cta media";gap:0 48px}
@@ -104,7 +172,7 @@
   .pj-next__title{font-size:48px}
 }
 @media (max-width:719.98px){
-  .pj-head__title{font-size:32px;line-height:1.05}
+  .pj-head__title{font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}   /* ~1.3x the 32px next-project H2, as on desktop */
   .pj-next__title{font-size:32px}
 }
 
@@ -117,7 +185,7 @@
   .pj-gallery{gap:8px;padding:0 8px}
   .pj-hero{padding-bottom:8px}
   .pj-hero__inner{padding:0 8px}
-  .pj-tag{margin-bottom:14px;font-size:11px}
+  .pj-tag{margin-bottom:14px}   /* 12px like desktop (and its "Unofficial, ..." line): phones never get smaller type */
   .pj-next__grid{gap:32px}
   .pj-next__cta{display:block;margin-top:0}
   .pj-next__line{font-size:16px}
@@ -126,7 +194,34 @@
 }
 
 /* ---------- Narrow phones <600: a half-width desktop screen (about 180 px) is unreadable, so every desktop
-   screen runs full width (pages/project.SIZES['half'] matches) */
+   screen runs full width (pages/project.SIZES['half'] matches). Phone screens: a horizontal swipe strip at 72vw
+   (~280 px, 72 % of their real size; the 1170 variant, pages/project.SIZES['phone']) instead of a 137 px pair - the
+   first screen centred, the second peeking at the right edge, a lone screen centred at the same width; the band's
+   hairline moves to an inset shadow so it does not scroll with the screens */
 @media (max-width:599.98px){
   .pj-frame--half{grid-column:1/-1}
+  .pj-phones{justify-content:flex-start;gap:16px;padding-inline:calc((100% - 72vw) / 2);overflow-x:auto;overflow-y:hidden;
+    overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+  .pj-phones::-webkit-scrollbar{display:none}
+  .pj-phones::after{content:none}
+  .pj-phone{width:72vw;scroll-snap-align:center;scroll-snap-stop:always}
+  .pj-phones:has(>.pj-phone:only-child){justify-content:center}
+}
+
+/* ---------- Phones held sideways (landscape, at most 520 px tall; from 656 px wide): the head tightens - smaller
+   margins, name and facts beside the services and Visit - and the hero scene is sized to the screen's height, so the
+   whole device and its plinth fit under the header and part of the scene shows in the first view (the scene's own
+   rule: 38-scene.css, end). Phone screens never grow taller than the screen. */
+@media (orientation:landscape) and (max-height:520px) and (min-width:656px){
+  .pj-head{padding:12px 0 20px}
+  .pj-head__bar{margin-bottom:16px}
+  .pj-head__grid{grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;gap:16px 32px}
+  .pj-head__services{justify-self:end;align-items:flex-end;gap:10px;text-align:right}
+  .pj-head__services .chips{justify-content:flex-end}
+  .pj-head__title{font-size:44px;line-height:1}
+  .pj-tag{margin-bottom:10px}
+  .pj-head__meta{margin-top:12px}
+  .pj-visit{margin-top:2px}
+  .pj-zoom--hero{width:min(100%,calc((100svh - var(--nav-h) - 16px) * 1.6));max-width:none;min-width:0}
+  .pj-phone{width:auto;height:calc(100svh - 120px)}
 }

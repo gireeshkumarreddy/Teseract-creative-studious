@@ -1,6 +1,7 @@
 """THE WORK page (/work/).
 
-Hero (reference page-hero lockup + project-name marquee) -> intro lines -> the studio's own projects in
+Hero (reference page-hero lockup + project-name marquee, which the shared "Pause motion" control stops - WCAG 2.2.2,
+chrome.motion_toggle) -> intro lines -> the studio's own projects in
 two sections, "Client Work" and "Concepts & Interactive" (the latter introduced as self-initiated work,
 never as client commissions; every concept card carries its label) -> how a case study is structured ->
 "your project could be next" slot. Projects come from scripts/projects.py (shown = captured media).
@@ -17,6 +18,7 @@ by pages/project.py.
 """
 import lib
 from lib import E, fmt, ICONS, roll, button, pill_label
+import chrome
 import content
 import projects as P
 
@@ -193,10 +195,11 @@ def hero(ctx):
     </div>
     <div class="wk-hero__ctas" data-reveal style="--y:60px;--d:400ms">{ctas}</div>
   </div>
-  <div class="container wk-hero__band" data-reveal="fade" style="--d:600ms">
+  <div class="container wk-hero__band" data-reveal="fade" style="--d:600ms" data-motion-scope>
     <div class="wk-marquee" data-ticker data-direction="left" data-speed="25" aria-hidden="true">
       <ul class="wk-marquee__list" data-ticker-list role="list">{names}</ul>
     </div>
+    {chrome.motion_toggle(cls='wk-hero__motion')}
   </div>
 </section>'''
 

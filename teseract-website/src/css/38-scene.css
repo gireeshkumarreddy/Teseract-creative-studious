@@ -48,8 +48,11 @@
   font-family:inherit;
 }
 
-/* ---------- 2. Stage: fixed aspect (16:10; 4:5 when the scene is narrower than 640px) */
-.scn-stage{position:relative;container:stage/size;aspect-ratio:16/10;overflow:hidden;
+/* ---------- 2. Stage: fixed aspect (16:10; 4:5 when the scene is narrower than 640px). content-visibility:auto - a
+   scene far from the viewport is not rendered (its 3D device, filters and grain held ~570 composited layers on the
+   Work page and stalled phone scrolling); the stage is a size container with a fixed aspect, so skipping its
+   contents never changes its size (no intrinsic-size guess, no layout shift) */
+.scn-stage{position:relative;container:stage/size;aspect-ratio:16/10;overflow:hidden;content-visibility:auto;
   border-radius:var(--radius);background:#000;isolation:isolate;box-shadow:0 0 0 1px var(--frame-line)}
 @container scn (max-width:639.98px){.scn-stage{aspect-ratio:4/5}}
 
@@ -236,14 +239,17 @@
    tile), plain case on the pill's own ground */
 .scn-note{position:relative;max-width:min(100%,34em);margin-top:-.4cqw;padding:5px 11px;border-radius:12px;background:var(--cap-pill-bg);
   box-shadow:inset 0 0 0 1px var(--cap-pill-line);font-size:clamp(10px,.8cqw,12px);line-height:1.35;letter-spacing:.01em}
-.scn-name{font-size:clamp(20px,2.3cqw,34px);line-height:1.02;letter-spacing:-.035em}
+.scn-name{font-size:clamp(20px,2.3cqw,34px);line-height:1.02;letter-spacing:-.035em;text-wrap:balance}
 /* a long name (lib.SCENE_NAME_LONG) wraps in a column left of the device, whose lid / panel starts at ~24cqw; in the
    4:5 stage (under 640px) the device sits lower and the name wraps over the full width as before */
 .scn-name--long{max-width:18cqw}
-@container scn (max-width:639.98px){.scn-cap{left:5.5cqw;top:5.5cqw;gap:2.4cqw}.scn-name{font-size:clamp(20px,6.4cqw,30px)}
-  .scn-name--long{max-width:none}}
-/* the grey-wall plaster is mid-grey under the window light: a soft shade keeps the white name legible */
-.scn--grey-wall .scn-name{text-shadow:0 1px 14px rgba(0,0,0,.4)}
+/* phones (cards under 640px): the name at 24px or more, so it reads as large text; the pill and the "Unofficial, ..."
+   note never under 12px (their desktop size) */
+@container scn (max-width:639.98px){.scn-cap{left:5.5cqw;top:5.5cqw;gap:2.4cqw}.scn-name{font-size:clamp(24px,6.8cqw,30px)}
+  .scn-name--long{max-width:none}.scn-pill,.scn-note{font-size:12px}}
+/* the grey-wall plaster is mid-grey under the window light and the amber-rock sky is a bright ember: a tight dark
+   edge plus a wide soft shade keep the white name at 4.5:1 or better behind every glyph (weight and colour unchanged) */
+.scn--grey-wall .scn-name,.scn--amber-rock .scn-name{text-shadow:0 1px 2px rgba(0,0,0,.35),0 2px 20px rgba(0,0,0,.6)}
 /* caption on a light backdrop; its screen is pale until the lazy still / poster has decoded */
 .scn--light .scn-screen{background:#e9e4dc}
 .scn--light{--cap-ink:#121212;--cap-pill-bg:rgba(255,255,255,.55);--cap-pill-line:rgba(0,0,0,.1);--cap-dot:rgba(0,0,0,.08);--frame-line:rgba(255,255,255,.1)}
@@ -591,3 +597,9 @@ a.wk-tile--scene:focus-visible{outline-offset:6px;border-radius:clamp(24px,2.4vw
 
 /* Project page hero: the scene fills the width but never grows taller than the viewport */
 .pj-hero .scn{width:100%;max-width:calc((100svh - 96px) * 1.6);min-width:min(100%,640px);margin-inline:auto}
+/* phones held sideways (36-project.css): sized to the screen's height under the header, so the whole device and its
+   plinth fit; the figure stops being a size container there, so a stage under 640px keeps its 16:10 aspect and
+   placements (the stage itself stays the container every part is sized by) */
+@media (orientation:landscape) and (max-height:520px) and (min-width:656px){
+  .pj-hero .scn{container-type:normal;width:min(100%,calc((100svh - var(--nav-h) - 16px) * 1.6));max-width:none;min-width:0}
+}

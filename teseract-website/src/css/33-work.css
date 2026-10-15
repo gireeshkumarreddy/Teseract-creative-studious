@@ -40,12 +40,12 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
 .wk-card:has(.wk-link:focus-visible) .wk-cap .roll>span,
 .pj-next__grid:has(.pj-next__title a:hover) .wk-cap .roll>span,
 .pj-next__grid:has(.pj-next__title a:focus-visible) .wk-cap .roll>span{transform:translateY(-100%)}
+/* phones: one row (date beside the line), at the desktop 11px - never smaller; a row too long for the box wraps */
 @media (max-width:799.98px){
-  .wk-cap{left:9px;right:auto;bottom:6px;display:flex;align-items:center;gap:12px;padding:3px 6px;font-size:9px;line-height:15px;text-align:left}
+  .wk-cap{left:9px;right:auto;bottom:8px;display:flex;flex-wrap:wrap;align-items:center;column-gap:12px;padding:4px 8px;line-height:17px;text-align:left}
   .wk-cap__date{display:inline}
   .wk-cap__line{justify-content:flex-start}
 }
-@media (max-width:360px){.wk-cap{font-size:8px}}
 @media (min-width:1920px){.wk-cap{font-size:12px}}
 
 /* ---------- Hero (reference page-hero lockup) */
@@ -60,7 +60,8 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
 /* brand avatar on the white CTA (also used by the case pages): the transparent mark on the same dark coin
    as the hero, agency and footer "Start a Project" buttons */
 .btn__lead img.wk-lead{padding:4px;object-fit:contain;background:radial-gradient(120% 120% at 28% 12%,#3c3c3c 0%,#111 55%,#000 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 2px 6px -2px rgba(0,0,0,.45)}
-.wk-hero__band{margin-top:56px}
+.wk-hero__band{position:relative;margin-top:56px}
+.wk-hero__motion{position:absolute;z-index:1;top:8px;right:var(--page-pad)}
 .wk-marquee{position:relative;height:48px;overflow:hidden;
   -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 50%,#000 50%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 50%,#000 50%,transparent 100%)}
 .wk-marquee__list{display:flex;align-items:center;gap:64px;width:max-content;height:100%;margin:0;padding:0;list-style:none}
@@ -89,7 +90,7 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
 /* index · title · call to action share one baseline; the doc's card lines hang under the title */
 .wk-info{display:grid;grid-template-columns:20px minmax(0,1fr) auto;grid-template-areas:"n title cta" ". meta meta";align-items:baseline;gap:12px 16px;padding-top:20px}
 .wk-info__n{grid-area:n;font:500 12px/1 var(--mono);letter-spacing:.02em;color:rgba(244,244,242,.5);transform:translateY(-.35em)}
-.wk-info__title{grid-area:title;min-width:0;font-size:32px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink)}
+.wk-info__title{grid-area:title;min-width:0;font-size:32px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
 .wk-info__meta{grid-area:meta;display:flex;flex-direction:column;gap:2px;min-width:0}
 .wk-meta{font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--text-2);text-wrap:pretty}
 .wk-meta__k{font-weight:500;color:var(--ink)}
@@ -177,7 +178,7 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
   .wk-slot__title{font-size:48px}
 }
 @media (max-width:719.98px){
-  .wk-hero__title{font-size:32px;line-height:1.05}
+  .wk-hero__title{font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}
   .wk-intro__title,.wk-slot__title{font-size:32px}
 }
 
@@ -205,10 +206,9 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
   .wk-grid{gap:48px}
   .wk-row{flex-direction:column;gap:48px}
   .wk-card{flex:none;width:100%}
-  .wk-info,.wk-row--pair .wk-info{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "meta" "cta";gap:10px;padding-top:16px}
-  .wk-info__n{display:none}
+  .wk-info,.wk-row--pair .wk-info{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"n title" "meta meta" "cta cta";gap:10px 12px;padding-top:16px}
+  .wk-info__n{transform:none}
   .wk-info__title{font-size:24px;letter-spacing:-.03em}
-  .wk-meta{font-size:15px}
   .wk-info__cta,.wk-row--pair .wk-info__cta{justify-self:start;padding-left:0;margin-top:-6px}
   .wk-story__head{margin-bottom:40px}
   .wk-story__list{grid-template-columns:minmax(0,1fr);gap:12px}
