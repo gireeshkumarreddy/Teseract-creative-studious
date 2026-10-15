@@ -963,7 +963,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   TS.observeVideos = root => {
     const scope = root || document;
     const found = [...(scope.matches && scope.matches('[data-video]') ? [scope] : []), ...scope.querySelectorAll('[data-video]')];
-    if (!found.length || !boot()) return;
+    if (!found.length) return;
+    if (!boot()) { found.forEach(poster); return; }        // very old browsers: the posters only
     found.forEach(register);
     live.forEach(poster);                                  // a ticker rebuilt at a new width: its originals are rendered now
   };

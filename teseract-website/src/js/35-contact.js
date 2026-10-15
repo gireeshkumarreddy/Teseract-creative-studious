@@ -2,7 +2,7 @@
    - POST FormData to the configured form service (form[data-endpoint], from site.config.json "form_endpoint"), or
    - open a pre-filled email (mailto:) to the studio address (form[data-email]).
    Also: budget quick answers, select placeholder tint, ?service=… pre-selection, Enter moves to the next field
-   (never submits). Without JS the form
+   (never submits), the iOS tap wash. Without JS the form
    submits natively (action = endpoint or mailto:). */
 (() => {
   'use strict';
@@ -66,6 +66,10 @@
       syncQuick();
     }));
     if (budget) budget.addEventListener('input', syncQuick);
+
+    /* ---------- tap feedback: iOS Safari paints :active on touch only under a touch listener, so a passive no-op one
+       on the form gives the chips and quick answers their short :active wash (35-contact.css; Android has it anyway) */
+    form.addEventListener('touchstart', () => {}, { passive: true });
 
     /* ---------- Enter (the phone keyboard's "next", enterkeyhint) in a one-line field moves on to the next field
        instead of submitting half a form: only the button sends. The textarea keeps its newlines. */

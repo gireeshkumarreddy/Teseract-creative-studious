@@ -16,6 +16,7 @@ CSS: src/css/34-stories.css (.sto-*), JS: src/js/34-stories.js (the deck). Share
 The page is self-contained (own label-swap button and typographic helper) so it does not depend on
 the home-page sections, which are redesigned independently.
 """
+import re
 from urllib.parse import quote
 
 import lib
@@ -59,9 +60,11 @@ def swap_button(text, alt, href, *, cls='', icon_name=None, label=None):
 STAR = ICONS['star']
 MEDIA_SIZES = '(max-width: 799.98px) calc(100vw - 104px), (max-width: 1023.98px) 452px, (max-width: 1279.98px) 464px, 504px'
 # PERF-11 (mobile audit): only the front card and its two neighbours load their still with the page; the others carry
-# it as data-src / data-srcset, which 34-stories.js copies in as the deck comes near them (at once for the far peeks
-# >= 800 px), plus a <noscript> copy, so without JS every card still shows its still.
+# it as data-src / data-srcset, which 34-stories.js copies in as the deck comes near them, plus a <noscript> copy, so
+# without JS every card still shows its still. The far peeks (WIDE_REACH) are on screen from 800 px: a <picture> source
+# for that width loads them there natively, so a visible peek never waits on app.js (phones still wait for the deck).
 EAGER_REACH = 1
+WIDE_REACH = 2
 NEUTRAL_SPILL = 'rgba(255,255,255,.05)'     # glow for a project without a portfolio.json "spill" (none is invented)
 
 
@@ -128,7 +131,7 @@ def _card(ctx, t, i, n):
     media = lib.media_img(ctx, still['entry'], still['alt'], sizes=MEDIA_SIZES, max_width=1280, cls='sto-voice__img',
                           attrs=f'style="object-position:{projects.focal(p, still)}" draggable="false"')
     if abs(d) > EAGER_REACH:
-        media = _deferred(media)
+        media = _deferred(media, wide=abs(d) <= WIDE_REACH)
     person = ' · '.join(E(T(x)) for x in (t.get('name'), t.get('role')) if x)       # only with the person's consent
     person = f'<p class="sto-voice__person">{person}</p>' if person else ''
     link = lib.button(ctx, 'View project', ctx.url(p['route']), variant='light', icon_name='arrow-ne',
@@ -151,10 +154,14 @@ def _card(ctx, t, i, n):
         </div>"""
 
 
-def _deferred(img):
+def _deferred(img, wide=False):
     """The <img> with its src / srcset moved to data-src / data-srcset (34-stories.js loads it), followed by a
-    <noscript> copy of the original for visitors without JS (34-stories.css hides the empty one there)."""
+    <noscript> copy of the original for visitors without JS (34-stories.css hides the empty one there). wide: a far
+    peek, wrapped in a <picture> whose >= 800 px source (the same files and sizes) the browser loads by itself."""
     lazy = img.replace(' src="', ' data-src="', 1).replace(' srcset="', ' data-srcset="', 1)
+    if wide:
+        srcset = re.search(r' srcset="([^"]*)"', img).group(1)
+        lazy = f'<picture><source media="(min-width: 800px)" srcset="{srcset}" sizes="{MEDIA_SIZES}">{lazy}</picture>'
     return f'{lazy}<noscript>{img}</noscript>'
 
 

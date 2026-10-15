@@ -174,8 +174,8 @@
 
 /* ---------- Breakpoints */
 @media (max-width:1099.98px){.ct-before{position:relative;top:auto}}
-/* touch (incl. landscape phones and tablets): 44 px chips */
-@media (pointer:coarse){.ct-chip>span{height:44px}}
+/* touch (incl. landscape phones and tablets): 44 px chips and the note at its phone reading size */
+@media (pointer:coarse){.ct-chip>span{height:44px}.ct-note{font-size:15px}}
 @media (max-width:799.98px){
   .ct-card{padding:24px;gap:24px}
   .ct-card .dots,.ct-before .dots{display:none}
@@ -184,7 +184,7 @@
   .ct-chip>span{height:44px}
   .ct-budget{flex-direction:column;align-items:stretch}
   .ct-quicks>.ct-quick{flex:1;height:44px}
-  .ct-note{font-size:15px}                 /* reading size on phones (desktop 13 px) */
+  .ct-note{font-size:15px}                 /* reading size on phones and touch screens (desktop 13 px) */
   .ct-before{padding:24px}
   .ct-before__title{font-size:22px}
   .ct-done__actions .btn{flex:1 1 100%}

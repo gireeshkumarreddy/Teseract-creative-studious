@@ -38,7 +38,8 @@
    separates from the black page without a grey drop shadow */
 .nf-zero{display:block;width:.92em;margin:0 -.08em 0 .08em;filter:drop-shadow(0 30px 34px rgba(0,0,0,.9)) drop-shadow(0 0 42px rgba(255,255,255,.09))}
 .nf-zero__img{width:100%;height:auto}
-.motion .nf-zero__img{animation:nf-float 7s ease-in-out 1s infinite}
+/* two slow floats, then the mark rests in its start pose (no endless decorative loop, as mobile audit A11Y-06) */
+.motion .nf-zero__img{animation:nf-float 7s ease-in-out 1s 2}
 @keyframes nf-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(-4deg)}}
 .nf__text{font-size:20px;font-weight:500;line-height:1.4;letter-spacing:-.03em;color:var(--ink-2)}
 .nf__actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}

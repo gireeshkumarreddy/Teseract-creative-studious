@@ -21,7 +21,8 @@
    clickable); roving tabs; focus rescued from a card that left the front; a status line for arrow, drag, wheel and
    peek moves; neighbour stills decoded ahead (not under Save-Data). Stills: only the front card and its neighbours
    load with the page (the others wait as data-src / data-srcset, pages/stories.py); at rest the phone loads |d| <= 1,
-   >= 800 px every visible peek (|d| <= 2), and once the visitor moves the deck, two cards ahead.
+   >= 800 px every visible peek (|d| <= 2; their <picture> source loads those there even without this script), and
+   once the visitor moves the deck, two cards ahead.
    Also: a one-time star-fill wipe on the front card when its rating first comes into view (.is-seen / .is-wipe), and
    parallax + glare on the front still only (a mouse over it on fine pointers; on touch / pen it follows the finger
    that drags the deck; motion only), so the quote never moves while it is read.

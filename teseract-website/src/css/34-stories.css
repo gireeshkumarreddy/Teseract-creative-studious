@@ -81,6 +81,7 @@
   box-shadow:0 0 0 1px rgba(255,255,255,.08),0 24px 40px -28px rgba(0,0,0,.95)}
 .sto-voice__media::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
 .sto-voice__img{width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
+.sto-voice__media picture{display:contents}        /* a far peek's >= 800 px source (pages/stories.py _deferred) */
 .sto-voice__media .hero-tile__tag{left:12px;top:12px}
 .sto-voice__glare{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(360px circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.07),transparent 60%);
   opacity:0;transition:opacity .3s var(--ease)}
