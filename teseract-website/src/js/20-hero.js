@@ -1,15 +1,13 @@
-/* Home hero: load-time appear, rotating statement pill, gallery reveal, keyboard support and a
-   pause control for the hero's moving content (WCAG 2.2.2).
-   Tickers (marquee + gallery columns) and [data-reveal] come from 02-core.js. */
+/* Home hero: load-time appear, rotating statement pill, gallery reveal and keyboard support.
+   Tickers (marquee + gallery columns), [data-reveal] and the hero's pause control (WCAG 2.2.2: the section is a
+   [data-motion-scope] with the shared toggle, TS.motionToggle) come from 02-core.js. */
 (() => {
   'use strict';
   const TS = window.TS || {};
   if (!TS.ready) return;
 
-  /* Shared state: "still" = the visitor paused the hero motion with the gallery control. */
-  const state = { still: false, listeners: [] };
-  const onStill = fn => state.listeners.push(fn);
-  const heroTickers = hero => (TS.tickers || []).filter(t => hero.contains(t.el));
+  /* "Still" = the visitor paused the hero motion with the gallery control (02-core.js; 'ts:motion' on the hero). */
+  const still = el => !!(TS.motionStill && TS.motionStill(el));
   const inView = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width > 0; };
   const headerBottom = () => {
     const h = document.querySelector('[data-header]');
@@ -54,54 +52,13 @@
     };
     const run = () => {
       clearInterval(timer); timer = 0;
-      if (visible && !document.hidden && !state.still) timer = setInterval(step, 2000);
+      if (visible && !document.hidden && !still(slot)) timer = setInterval(step, 2000);
     };
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(([e]) => { visible = e.isIntersecting; run(); }).observe(slot);
     } else run();
     document.addEventListener('visibilitychange', run);
-    onStill(run);
-  }
-
-  /* Pause control: one button (sticky inside the gallery frame) pauses every moving part of the
-     hero — marquee, gallery columns, statement pill and the badge pulse. The shared ticker
-     runtime resumes animations when they re-enter the viewport or are rebuilt on resize, so
-     the paused state is re-applied after those events. Hidden under reduced motion (nothing moves). */
-  function motionControl(hero) {
-    const btn = hero.querySelector('[data-hero-motion]');
-    if (!btn || !TS.motion()) return;
-    const label = btn.querySelector('[data-hero-motion-label]');
-    btn.hidden = false;
-    const hold = () => {
-      if (!state.still) return;
-      heroTickers(hero).forEach(t => { if (t.anim && t.anim.playState !== 'paused') t.anim.pause(); });
-    };
-    const set = still => {
-      state.still = still;
-      hero.classList.toggle('is-still', still);
-      if (label) label.textContent = still ? 'Play motion' : 'Pause motion';
-      if (hero.querySelector('[data-video]')) {   // client video tiles pause with the rest of the hero motion
-        hero.toggleAttribute('data-video-hold', still);
-        if (TS.syncVideos) TS.syncVideos(hero);
-      }
-      if (still) hold();
-      else heroTickers(hero).forEach(t => {
-        const focused = t.el.contains(document.activeElement);
-        if (t.anim && !focused && inView(t.el)) t.anim.play();
-      });
-      state.listeners.forEach(fn => fn());
-    };
-    btn.addEventListener('click', () => set(!state.still));
-    // Re-apply after the ticker runtime resumes an animation on viewport re-entry (its observer
-    // callback may run after this one, so wait a frame) or rebuilds it (clone mutations).
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(() => { hold(); requestAnimationFrame(hold); });
-      heroTickers(hero).forEach(t => io.observe(t.el));
-    }
-    if ('MutationObserver' in window) {
-      const mo = new MutationObserver(hold);
-      hero.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
-    }
+    hero.addEventListener('ts:motion', run);
   }
 
   /* Gallery: open every tile (originals and the ticker's aria-hidden clones) together the first
@@ -122,9 +79,25 @@
       const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); reveal(); } }, { threshold: 0.01 });
       io.observe(frame);
     } else reveal();
+    /* Lead tiles (row 0, 20-hero.css) enter in CSS from the first paint. A ticker clone is a new element and would
+       start that entrance over (a 'down' column shows a clone in its lead's place as soon as it runs), so each clone
+       joins its original's timeline, or skips to the end once the original has finished. */
+    const syncLeads = () => frame.querySelectorAll('[data-ticker-list]').forEach(list => {
+      const lead = list.querySelector(':scope > :not([data-clone]) .hero-tile__media--lead img');
+      const own = lead && lead.getAnimations ? lead.getAnimations() : [];
+      list.querySelectorAll(':scope > [data-clone] .hero-tile__media--lead img').forEach(img => {
+        if (img.dataset.leadSync || !img.getAnimations) return;
+        img.dataset.leadSync = '1';
+        img.getAnimations().forEach(a => {
+          const o = own.find(x => x.animationName === a.animationName);
+          if (o && o.currentTime != null) a.currentTime = o.currentTime; else a.finish();
+        });
+      });
+    });
+    syncLeads();                                   // tickers() (02-core.js) has made the first clones already
     // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed.
     if ('MutationObserver' in window) {
-      const mo = new MutationObserver(() => { if (revealed) openAll(); });
+      const mo = new MutationObserver(() => { syncLeads(); if (revealed) openAll(); });
       frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     }
 
@@ -205,7 +178,7 @@
       const col = e.target.closest('[data-ticker]');
       if (!col || col.contains(e.relatedTarget)) return;
       const t = tickerOf(col);
-      if (t && t.anim && !TS.reduced() && !state.still && inView(col)) t.anim.play();
+      if (t && t.anim && !TS.reduced() && !still(col) && inView(col)) t.anim.play();
     });
   }
 
@@ -215,6 +188,5 @@
     appear(hero);
     pill(hero);
     gallery(hero);
-    motionControl(hero);
   });
 })();

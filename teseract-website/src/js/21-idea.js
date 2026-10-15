@@ -7,8 +7,9 @@
       hidden tab or the pause button; never autoplays under reduced motion. When the client's own
       website recordings are supplied (media manifest) the slides hold <video>s instead: only the
       active slide's clip plays (06-video.js holds clips in inert slides), the pause button pauses it.
-   The laptop also gets an optional, very small scroll-linked rise (desktop/tablet fine pointers);
-   string E is kept docked under the lid's top edge whatever the laptop's offset. */
+   The laptop also gets a very small scroll-linked rise (desktop/tablet fine pointers here; phones and touch screens
+   get the same rise as a CSS scroll-driven animation, 21-idea.css); string E is kept docked under the lid's top edge
+   whatever the laptop's offset. */
 (() => {
   'use strict';
   const TS = window.TS || {};
@@ -104,8 +105,8 @@
 
     /* ---------- 2c. Subtle scroll-linked rise of the laptop: 40px low while it enters, settling
        exactly when the panel's bottom edge (where the stones are cropped) reaches the viewport, so
-       no gap ever opens under the stones. Fine pointers >= 800px only (Lenis-smoothed scroll),
-       never under reduced motion. */
+       no gap ever opens under the stones. Fine pointers >= 800px only (Lenis-smoothed scroll; every other screen runs
+       it in CSS, animation-timeline: view()), never under reduced motion. */
     const lift = matchMedia('(min-width: 800px) and (pointer: fine)');
     if (motion && 'IntersectionObserver' in window) {
       let on = false, raf = 0;
@@ -197,11 +198,42 @@
     device.addEventListener('focusin', e => { const f = onSlide(e.target); if (f !== focused) { focused = f; schedule(); } });
     device.addEventListener('focusout', e => { const f = onSlide(e.relatedTarget); if (f !== focused) { focused = f; schedule(); } });
     document.addEventListener('visibilitychange', schedule);
+    /* The toggle shows what the clip does, not only what was asked: "pause" while it plays (or is about to), "play"
+       while the visitor holds it and whenever it stopped by itself on screen - the phone refused autoplay (iOS Low
+       Power Mode, a no-autoplay setting, Save-Data: 06-video.js marks its frame .is-blocked and fires
+       'ts:videoblocked') or the browser paused it. A tap on "play" starts the clip inside the tap (TS.playVideo),
+       which a phone allows even then. */
+    let stopped = false;                   // the active clip is not playing although nothing holds it
+    const active = el => !!(el && el.closest && el.closest('[data-idea-slide]') === slides[idx]);
+    const shown = () => { const r = device.getBoundingClientRect(); return Math.min(r.bottom, innerHeight) - Math.max(r.top, 0) > r.height / 2; };
+    const paint = () => {
+      const off = paused || stopped;
+      toggle.classList.toggle('is-paused', off);
+      toggle.setAttribute('aria-pressed', String(off));
+    };
+    if (hasVideo) {
+      const v0 = slides[idx] && slides[idx].querySelector('[data-video]');
+      const frame = v0 && (v0.closest('figure') || v0.parentElement);
+      stopped = !!(frame && frame.classList.contains('is-blocked'));   // refused before this script listened (Save-Data)
+      screen.addEventListener('ts:videoblocked', e => { if (active(e.target)) { stopped = true; paint(); } });
+      // media events do not bubble: listen in the capture phase
+      screen.addEventListener('playing', e => { if (active(e.target) && stopped) { stopped = false; paint(); } }, true);
+      screen.addEventListener('pause', e => {   // off-screen, a hidden tab, a slide change or a hold: not "stopped"
+        if (active(e.target) && !paused && !document.hidden && !e.target.closest('[inert]') && shown()) { stopped = true; paint(); }
+      }, true);
+      paint();
+    }
     toggle.addEventListener('click', () => {
-      paused = !paused;
-      toggle.setAttribute('aria-pressed', String(paused));
-      toggle.classList.toggle('is-paused', paused);
-      if (hasVideo) { screen.toggleAttribute('data-video-hold', paused); if (TS.syncVideos) TS.syncVideos(screen); }
+      const play = paused || stopped;
+      paused = !play;
+      stopped = false;
+      if (hasVideo) {
+        screen.toggleAttribute('data-video-hold', paused);
+        const v = play && slides[idx].querySelector('[data-video]');
+        if (v && TS.playVideo) TS.playVideo(v);   // synchronously, inside the tap
+        if (TS.syncVideos) TS.syncVideos(screen);
+      }
+      paint();
       schedule();
     });
   });

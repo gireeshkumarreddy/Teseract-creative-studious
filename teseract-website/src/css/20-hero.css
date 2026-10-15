@@ -133,17 +133,38 @@
 .hero-col{flex:1 0 0;width:1px;height:100%;overflow:hidden;overflow:clip}
 .hero-col__list{display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none}
 .hero-col__item{display:block}
+/* stand-ins for the columns a screen hides (home_hero._columns): column 4's tiles below 1440px, column 3's below
+   800px. Hidden, a stand-in is not drawn, read or focused (the original is, at those widths). */
+.hero-col__item--lt1440,.hero-col__item--lt800{display:none}
 
 /* Tiles: hairline inner frame (light-background shots stay contained on black), radius 0,
    ZIP hover (zoom 1.018 + mono caption roll). The frame brightens on hover/focus. */
 .hero-tile{position:relative;display:block;overflow:hidden;background:var(--surface-2);color:var(--ink)}
 .hero-tile::after{content:"";position:absolute;inset:0;z-index:2;border:1px solid rgba(255,255,255,.08);pointer-events:none;transition:border-color .4s ease}
-.hero-tile:hover::after{border-color:rgba(255,255,255,.22)}
-.hero-tile__media{display:block;aspect-ratio:var(--ar,4/3)}
+.hero-tile__media{position:relative;display:block;overflow:hidden;aspect-ratio:var(--ar,4/3)}
 .hero-tile__media img{width:100%;height:100%;object-fit:cover}
-.hero-tile:hover .hero-tile__media.is-in img,.hero-tile:focus-visible .hero-tile__media.is-in img{transform:scale(1.018)}
+@media (hover:hover){
+  .hero-tile:hover::after{border-color:rgba(255,255,255,.22)}
+  .hero-tile:hover .hero-tile__media:is(.is-in,.hero-tile__media--lead) img{transform:scale(1.018)}
+}
+.hero-tile:focus-visible .hero-tile__media:is(.is-in,.hero-tile__media--lead) img{transform:scale(1.018)}
 .hero-tile:focus-visible{outline:2px solid transparent;outline-offset:-2px;border-radius:0}   /* transparent: still drawn in forced-colors */
 .hero-tile:focus-visible::before{content:"";position:absolute;inset:0;z-index:4;box-shadow:inset 0 0 0 2px var(--red),inset 0 0 0 3px rgba(0,0,0,.55);pointer-events:none}
+/* Lead tiles (row 0 of each column, home_hero._media; columns 1-2 load eager): no script reveal, the gallery's own
+   entrance (scale 1.1 -> 1 over 1.3s + .7s fade, columns staggered) runs in CSS from the first paint, so the first
+   image a phone shows (its LCP) never waits for app.js. 20-hero.js puts the ticker's clones of them on the same
+   timeline. Without motion (reduced motion, no JS) they are simply there. */
+.hero-tile__media--lead img{transition:transform 1.3s var(--ease)}
+.motion .hero-tile__media--lead img{animation:hero-lead-zoom 1.3s var(--ease) var(--lead-d,0ms) backwards,hero-lead-fade .7s ease var(--lead-d,0ms) backwards}
+.hero-col--2{--lead-d:90ms}
+.hero-col--3{--lead-d:180ms}
+.hero-col--4{--lead-d:270ms}
+@keyframes hero-lead-zoom{from{transform:scale(1.1)}}
+@keyframes hero-lead-fade{from{opacity:0}}
+/* Name caption. Pointer screens: rolls in at the tile's foot on hover / keyboard focus (lifted by 20-hero.js to stay
+   inside the tile's visible part). Touch screens: always shown, static (no roll, no blur), at the image foot under the
+   label pill's left edge - the name, plus the industry where a tile is wide enough (from 600px) - and on a tile with a
+   strip under its image (an Interactive Concept's note) it opens that strip instead of covering the artwork. */
 .hero-tile__cap{position:absolute;z-index:3;right:10px;bottom:calc(10px + var(--cap-lift,0px));display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;column-gap:7px;
   max-width:calc(100% - 20px);padding:7px 10px 8px;background:rgba(8,8,8,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--ink);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 10px 24px -10px rgba(0,0,0,.8);
@@ -153,9 +174,21 @@
 .hero-tile__dot{color:var(--red-dot)}
 .hero-tile__ind{color:rgba(244,244,242,.66)}
 .hero-tile:hover .hero-tile__cap,.hero-tile:focus-visible .hero-tile__cap{opacity:1;transform:none}
-@media (hover:none){.hero-tile__cap{display:none}}
-/* label pill on EVERY tile, always visible (touch screens never see the hover caption): client vs concept at a
-   glance - ink dot = Client Project, red dot = Interactive Concept / Concept Project / Personal project */
+@media (hover:none){
+  .hero-tile__cap{left:8px;right:auto;bottom:8px;max-width:calc(100% - 16px - var(--clear,0px));justify-content:flex-start;padding:5px 8px 6px;
+    background:rgba(8,8,8,.86);-webkit-backdrop-filter:none;backdrop-filter:none;font-size:12px;line-height:15px;opacity:1;transform:none;transition:none}
+  .hero-tile__cap .roll{height:auto;line-height:inherit;vertical-align:top}
+  .hero-tile__cap .roll>span,.hero-tile:hover .hero-tile__cap .roll>span{white-space:normal;text-wrap:balance;transform:none}
+  .hero-tile__cap .roll>span+span{display:none}
+}
+@media (hover:none) and (max-width:599.98px){.hero-tile__dot,.hero-tile__ind{display:none}}
+/* Touch: the pause button (below) docks on the frame's right edge, over the outer 8-12px of the right-hand column's
+   tiles - the text there that wraps (name, note, a two-line pill) keeps clear of it. */
+@media (hover:none){.hero-col--4 .hero-tile{--clear:8px}}
+@media (hover:none) and (max-width:1439.98px){.hero-col--3 .hero-tile{--clear:8px}}
+@media (hover:none) and (max-width:799.98px){.hero-col--2 .hero-tile{--clear:12px}}
+/* label pill on EVERY tile, always visible: client vs concept at a glance - ink dot = Client Project,
+   red dot = Interactive Concept / Concept Project / Personal project */
 .hero-tile__tag{position:absolute;z-index:3;left:8px;top:8px;display:inline-flex;align-items:center;gap:6px;max-width:calc(100% - 16px);
   padding:4px 9px 4px 7px;border-radius:999px;background:rgba(8,8,8,.82);color:var(--ink);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-family:var(--mono);font-size:10px;font-weight:500;line-height:14px;
@@ -169,31 +202,47 @@
 .hero-tile__labels .hero-tile__tag{position:static;max-width:100%}
 .hero-tile__note{max-width:100%;padding:3px 9px 4px;border-radius:10px;background:rgba(8,8,8,.82);color:var(--ink-2);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-family:var(--mono);font-size:10px;line-height:13px;letter-spacing:.01em}
-/* phone tiles (about 150 px wide): a long label wraps to a second line instead of being cut */
-@media (max-width:479.98px){.hero-tile__tag{white-space:normal;text-overflow:clip;border-radius:10px;padding:4px 8px 4px 7px;line-height:13px}}
-/* narrow phones: the name gets the caption's width */
-@media (max-width:379.98px){.hero-tile__dot,.hero-tile__ind{display:none}}
+/* Phones (tiles ~130-200px wide) and touch screens: the pill at 11.5px on one line; an Interactive Concept's
+   "Unofficial, ..." line leaves the image for a full-text strip under it (12px: the artwork stays visible and the
+   owner-required line is never cut), the pill stays on the image. */
+@media (max-width:479.98px),(hover:none){
+  .hero-tile__tag{gap:5px;padding:3px 7px 3px 6px;font-size:11.5px;line-height:15px;letter-spacing:.01em}
+  .hero-tile__labels{position:static;display:block;max-width:none}
+  .hero-tile__labels .hero-tile__tag{position:absolute;max-width:calc(100% - 16px)}
+  .hero-tile__note{display:block;max-width:none;padding:8px calc(10px + var(--clear,0px)) 9px 10px;border-radius:0;background:none;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);font-size:12px;line-height:1.35;letter-spacing:0;text-wrap:pretty}
+}
+@media (hover:none){
+  .hero-tile:has(.hero-tile__note) .hero-tile__cap{position:static;max-width:none;padding:9px calc(10px + var(--clear,0px)) 0 10px;
+    background:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+  .hero-tile:has(.hero-tile__note) .hero-tile__note{padding-top:3px;box-shadow:none}
+}
+@media (max-width:479.98px){
+  .hero-tile__tag,.hero-tile__labels .hero-tile__tag{left:6px;top:6px;max-width:calc(100% - 12px)}
+}
+@media (max-width:479.98px) and (hover:none){
+  .hero-tile__cap{left:6px;bottom:6px;max-width:calc(100% - 12px - var(--clear,0px))}
+}
+/* narrow phones (tiles ~130-150px): a long pill wraps to two balanced lines instead of being cut, never smaller */
+@media (max-width:379.98px){
+  .hero-tile__tag,.hero-tile__labels .hero-tile__tag{max-width:calc(100% - 12px - var(--clear,0px));white-space:normal;text-overflow:clip;text-wrap:balance;border-radius:9px}
+  .hero-tile__dot,.hero-tile__ind{display:none}
+}
 
-/* Pause control (WCAG 2.2.2): frosted dark pill in the frame's top-right corner, sticky below the
-   header while the gallery is on screen. Shown on gallery hover / keyboard focus / when paused, and
-   always on touch screens. Same vocabulary as the idea slideshow toggle. Hover brightens. */
+/* Pause control (WCAG 2.2.2; the shared .motion-toggle, 02-components.css, for the hero's [data-motion-scope]):
+   sticky below the header while the gallery is on screen. Pointer screens: the frosted "Pause motion" pill in the
+   frame's top-right corner, shown on gallery hover / keyboard focus / while paused. Touch screens: always shown, the
+   32px round icon button (44px hit area) docked on the frame's right edge - centred over the frame's side padding,
+   so it stays off the tiles' labels and names (the right-hand column's wrapping text keeps clear of it, --clear). */
 .hero-gallery__ui{position:absolute;z-index:5;inset:0;display:flex;flex-direction:column;align-items:flex-end;padding:12px 28px;pointer-events:none}
-.hero-motion{position:sticky;top:calc(var(--nav-h) + 12px);display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px 0 11px;
-  border-radius:10px;background:rgba(14,14,14,.74);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);color:var(--ink);
-  font-family:var(--mono);font-size:12px;font-weight:500;line-height:1;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -8px rgba(0,0,0,.8);pointer-events:auto;
-  opacity:0;transform:translate3d(0,-4px,0);transition:opacity .3s ease,transform .5s var(--ease),background-color .3s ease,box-shadow .3s ease}
-.hero-motion[hidden]{display:none}
-.hero-motion::before{content:"";position:absolute;inset:-6px}
-.hero-gallery:hover .hero-motion,.hero-gallery:focus-within .hero-motion,.hero.is-still .hero-motion{opacity:1;transform:none}
-.hero-motion:hover{background:rgba(40,40,40,.84);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.08),0 8px 20px -8px rgba(0,0,0,.8)}
-.hero-motion:active{transform:scale(.97)}
-.hero-motion:focus-visible{border-radius:10px}
-.hero-motion__ic{position:relative;display:inline-flex;gap:3px;width:10px;height:10px}
-.hero-motion__ic i{width:3px;height:10px;border-radius:1px;background:currentColor}
-.hero.is-still .hero-motion__ic i{display:none}
-.hero.is-still .hero-motion__ic::before{content:"";width:0;height:0;margin-left:1px;border-style:solid;border-width:5px 0 5px 8.5px;border-color:transparent transparent transparent currentColor}
-@media (hover:none){.hero-motion{opacity:1;transform:none}}
+.hero-gallery__motion{position:sticky;top:calc(var(--nav-h) + 12px);pointer-events:auto;opacity:0;transform:translate3d(0,-4px,0);
+  transition:opacity .3s ease,transform .5s var(--ease),background-color .3s ease,box-shadow .3s ease}
+.hero-gallery:hover .hero-gallery__motion,.hero-gallery:focus-within .hero-gallery__motion,.hero.is-still .hero-gallery__motion{opacity:1;transform:none}
+.hero-gallery .hero-gallery__motion:active{transform:scale(.97)}
+@media (hover:none){
+  .hero-gallery__ui{padding:12px 0}
+  .hero-gallery__motion{margin-right:-8px;opacity:1;transform:none}   /* centre over the 16px side padding */
+}
 
 /* reveal: tiles (and the ticker's clones) open together when the frame first enters, columns staggered */
 .hero-gallery.is-revealing .hero-col--2 .reveal-image img{transition-delay:90ms}
@@ -207,6 +256,7 @@
   .hero-marquee__track{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%);
                                mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%)}
   .hero-col--4{display:none}
+  .hero-col__item--lt1440{display:block}
 }
 @media (max-width:1023.98px){
   .hero__title{font-size:64px}
@@ -221,7 +271,7 @@
   .hero.section::before{top:-20px;height:640px;background:radial-gradient(300px 320px at 50% 50%,rgba(255,255,255,.05) 0%,rgba(255,255,255,.016) 55%,transparent 100%)}
   .hero__lockup{padding:0}
   .hero__title{max-width:none}
-  .hero__body{font-size:14px}
+  .hero__body{font-size:16px;line-height:1.5}
   .hero__cta{width:100%}
   .hero__buttons{grid-template-columns:1fr;width:100%}
   .hero__btn:is(:first-child,:last-child){justify-self:stretch}
@@ -232,13 +282,17 @@
                                mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%)}
   .hero-gallery{height:100vh;height:100svh;gap:10px;padding:0 8px}
   .hero-col--3{display:none}
+  .hero-col__item--lt800{display:block}
   .hero-col__list{gap:8px}
   .hero-gallery__ui{padding:8px 16px}
-  .hero-motion{top:calc(var(--nav-h) + 4px);height:30px;font-size:12px;gap:6px;padding:0 10px 0 9px;border-radius:8px}
-  .hero-motion::before{inset:-7px -6px}                 /* 44px touch target */
+  .hero-gallery__motion{top:calc(var(--nav-h) + 4px)}
+}
+@media (max-width:799.98px) and (hover:none){
+  .hero-gallery__ui{padding:8px 0}
+  .hero-gallery__motion{margin-right:-12px}             /* centre over the 8px side padding */
 }
 @media (max-width:719.98px){
-  .hero__title{font-size:32px;line-height:1.05}
+  .hero__title{font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}   /* ~1.3x the 32px section H2s, as on desktop */
   .hero__kicker{margin-bottom:14px;font-size:12px;letter-spacing:.14em}
 }
 /* forced colours: the frame tint, hairlines and handles are drawn by the system palette */

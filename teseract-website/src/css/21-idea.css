@@ -171,7 +171,7 @@
      the deck's far-left tip is cropped by the panel */
   .idea__laptop{position:relative;right:auto;bottom:auto;width:122%;margin:36px 0 0 -22%}
   .idea__toggle{height:30px;font-size:12px;gap:6px;padding:0 9px 0 8px;border-radius:8px}
-  .idea__toggle::before{inset:-7px -8px}              /* 44px+ touch target */
+  .idea__toggle::before{inset:-7px -9px}              /* 44 x 45px touch target (the 27px icon-only button) */
 }
 /* the phone diagram scales with the width; keep its dots near the poster's 4-5px on large phones */
 @media (min-width:520px) and (max-width:799.98px){
@@ -180,6 +180,17 @@
 @media (min-width:650px) and (max-width:799.98px){
   .idea__strings--phone .idea__dot{scale:.6}
 }
+/* Phones, touch and narrow screens: the laptop's small rise (the fine-pointer path in 21-idea.js 2c) is a CSS
+   scroll-driven animation - 40px low as it enters, settled when its foot (the panel's bottom edge, where the stones
+   are cropped) reaches the viewport bottom, so no gap opens under the stones. Run by the compositor (no script per
+   frame); static where scroll timelines are unsupported, and under reduced motion (no html.motion). */
+@supports (animation-timeline:view()){
+  @media not all and (min-width:800px) and (pointer:fine){
+    .motion .idea__laptop{view-timeline:--idea-laptop block}
+    .motion .idea__device{animation:idea-rise linear both;animation-timeline:--idea-laptop;animation-range:entry 0% entry 100%}
+  }
+}
+@keyframes idea-rise{from{transform:translate3d(0,40px,0)}to{transform:none}}
 /* forced colours: drop the decorative light pool / hairline and the studio glow */
 @media (forced-colors:active){
   .idea.section::before,.idea.section::after,.idea__laptop::before{display:none}
