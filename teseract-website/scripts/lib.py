@@ -23,9 +23,10 @@ E = html.escape
 
 def build_report_path(out):
     """Where build.py writes its build report for an output folder: docs/build-report.json for dist/ (kept out of
-    the published site), <folder>.build-report.json next to any other output folder."""
+    the published site), <folder>.build-report.json next to any other output folder. Compared with ROOT/dist, not
+    DIST: build.py points DIST at its --out folder, so a preview build would overwrite dist's report."""
     out = pathlib.Path(out).resolve()
-    if out == DIST.resolve():
+    if out == (ROOT / 'dist').resolve():
         return ROOT / 'docs' / 'build-report.json'
     return out.parent / f'{out.name}.build-report.json'
 
@@ -303,23 +304,24 @@ def media_project(mp):
             'route': None, 'url': url or None}
 
 
-# A still's 480 px "thumb" variant (prepare_media.py) is offered only to an image whose sizes are all fixed lengths of
-# at most this many CSS px: the footer ring's ~90-110 px cards. Larger or fluid images (vw, cover crops in big tiles)
-# never list it, so the browser cannot draw them from it.
-THUMB_MAX_CSS = 160
-
-
-def _small(sizes):
+# A still's 480 px "thumb" variant (prepare_media.py) is offered only to an image whose sizes are all fixed lengths the
+# thumb still covers on a 2x screen when object-fit:cover crops it into a SQUARE box: the limit is half its short side
+# (a 480x270 thumb: 135 px), as a 16:9 still in a square card is drawn ~1.8x wider than the card and its height is what
+# fills the box. That is the footer ring: 110 px desktop cards (2x: 220 of 270 file px) and 64-80 px phone cards (3x:
+# 240). Larger or fluid images (vw, cover crops in big tiles) never list it, so the browser cannot draw them from it.
+def _small(sizes, thumb):
+    limit = min(thumb['width'], thumb['height']) / 2
     vals = [part.strip().rsplit(None, 1)[-1] for part in sizes.split(',') if part.strip()]
-    return bool(vals) and all(re.fullmatch(r'\d+(\.\d+)?px', v) and float(v[:-2]) <= THUMB_MAX_CSS for v in vals)
+    return bool(vals) and all(re.fullmatch(r'\d+(\.\d+)?px', v) and float(v[:-2]) <= limit for v in vals)
 
 
 def media_img(ctx, entry, alt, *, sizes='100vw', eager=False, cls='', attrs='', max_width=None):
     """Responsive WebP <img> for a manifest image item (variants written by scripts/prepare_media.py),
-    never wider than max_width when given; the 480 thumbnail only for a small fixed size (THUMB_MAX_CSS).
+    never wider than max_width when given; the 480 thumbnail only for a small fixed size (_small).
     Lazy unless eager (then fetchpriority=high)."""
     vs = sorted(entry['variants'], key=lambda v: v['width'])
-    if not _small(sizes):
+    thumb = next((v for v in vs if v.get('thumb')), None)
+    if thumb and not _small(sizes, thumb):
         vs = [v for v in vs if not v.get('thumb')] or vs
     if max_width:
         vs = [v for v in vs if v['width'] <= max_width] or vs[:1]
