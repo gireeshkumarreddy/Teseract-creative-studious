@@ -1,0 +1,91 @@
+# TESERACT Creative Studios
+
+> TESERACT is a digital creative studio focused on design, technology and experiences. We create interactive, thoughtful and tailor-made digital experiences for businesses that want to be different.
+
+From the first idea to the final interaction, we design and build your digital presence around your business, your audience and your vision.
+
+## What we create
+
+- Website Design: Make a great first impression. We design websites that look beautiful, feel intuitive and communicate your business clearly. (UX Strategy, User Journeys, Wireframes, UI Design, Responsive Design, Prototyping, Design Systems, Interaction Design)
+- Website Development: From design to reality. We turn the design into a real, responsive and functional website. (Business Websites, Corporate Websites, Landing Pages, CMS Websites, Interactive Websites, Web Applications)
+- E-commerce: Make buying feel simple. From discovering a product to completing a purchase, we design every step of the experience. (Product Pages, Shopping Experiences, Cart & Checkout, Payment Integration, Order Management, CMS, Mobile Experiences)
+- Interactive & 3D: Don't just show people. Let them experience it. We create digital experiences using motion, interaction and 3D. (Scroll animations, Interactive storytelling, Product interactions, Micro-interactions, Cinematic experiences, 3D environments)
+- Brand & Digital Identity: Your brand should feel consistent everywhere. (Typography, Colour Systems, Visual Direction, Digital Identity, Design Systems, Brand Guidelines)
+- Product & SaaS: Digital products people actually want to use. (Dashboards, SaaS Platforms, Web Applications, Mobile Interfaces, User Flows, Prototypes, Design Systems)
+- AI & Automation: Make your business work smarter. (AI Experiences, Workflow Automation, AI Interfaces, Internal Tools, Intelligent Dashboards, API Integrations)
+- Digital Strategy: Before we build, we think. (Digital Positioning, Website Strategy, User Research, Competitor Analysis, Content Structure, Conversion Strategy)
+
+## How we work
+
+1. Understand — First, we listen. Before we design anything, we learn about your business.
+2. Define — Then, we find the direction. We turn everything we've learned into a clear plan.
+3. Explore — Now we start thinking differently. We explore ideas, layouts, references and visual directions.
+4. Design — The idea starts to take shape. Everything starts coming together.
+5. Refine — Details make the difference. We review every important detail.
+6. Build — Design meets technology. Once the direction is approved, we bring the experience to life.
+7. Test — Before people use it, we test it.
+8. Launch — Ready for the world. Once everything is tested and approved, we launch.
+9. Evolve — Launch is not the end. Businesses change. Your website should be able to change with them.
+
+## What we believe
+
+Simple for people. Powerful for business.
+A website should not make people think too hard. It should be easy to understand, easy to explore and easy to remember.
+Behind every beautiful experience, there should be a clear purpose.
+We make complex things feel simple.
+
+## The founder
+
+Gireesh — Founder · Product Designer · Business & Technology.
+With nearly five years of professional experience across aviation, business, technology and digital innovation, Gireesh brings together a multidisciplinary perspective shaped by different industries and disciplines.
+
+## Frequently asked questions
+
+- **Do I need a perfect brief before we talk?** No. You don't need a perfect brief. You don't need technical knowledge. You don't even need to know exactly what you want yet. Tell us what you have in mind — we'll take it from there.
+- **Do you offer fixed packages?** We don't believe in fixed packages. Every business has different goals, audiences and challenges, so we build what makes sense for you.
+- **What can you build for us?** Website design, website development, e-commerce, interactive & 3D experiences, brand & digital identity, product & SaaS, AI & automation and digital strategy.
+- **Will my website look like a template?** No. You don't need another template. Every project starts from zero, built around your business, your audience and your vision.
+- **How does a project work?** Understand, define, explore, design, refine, build, test, launch and evolve. We take the time to understand, explore, design, build and refine.
+- **What happens after launch?** Launch is not the end. Businesses change, and your website should be able to change with them. We can continue supporting, improving and evolving your digital experience as your business grows.
+- **How involved will we be?** We communicate, share progress, ask questions, listen to feedback and build together — because the best results happen when the client isn't just watching the process. They're part of it.
+
+## Client Work
+
+- [Aivinci Creative Studio](projects/aivinci/index.html): AI creative & technology studio; 2026; Client Project. Tagline: “WE CREATE WHAT’S NEXT.” Live site: https://aivinci.ai/
+- [Geetha Jewellers](projects/geetha-jewellers/index.html): Jewellery; 2026; Client Project. Tagline: “More than Jewellery, It’s a part of your story”. Live site: https://geetha-seven.vercel.app/
+- [AeroSkys](projects/aeroskys/index.html): Travel booking; 2026; Client Project. Tagline: “Book your trip in a few clicks.” Live site: https://aeroskys.vercel.app/
+- [Derlin Haus](projects/derlin-haus/index.html): Menswear e-commerce; 2026; Client Project. Tagline: “WHAT’S INSIDE MATTERS.” Live site: https://derlin-haus.vercel.app/
+- [Mahira Select](projects/mahira-select/index.html): Indian ethnic womenswear; 2026; Client Project. Tagline: “More Than Fashion”. Live site: https://mahira2.netlify.app/
+- [SAN Media Solution](projects/san-media/index.html): Digital marketing agency; 2026; Client Project. Tagline: “BRANDS TODAY. BIGGER TOMORROWS.” Live site: https://www.sanmediasolutions.com/
+- [SIAARA By S&A](projects/siaara/index.html): Handcrafted sarees; 2026; Client Project. Tagline: “SAREES WOVEN WITH CULTURE”. Live site: https://gleeful-belekoy-e52bbe.netlify.app/
+- [Vynk Network](projects/vynk/index.html): Travel eSIM; 2026; Client Project. Tagline: “Global data. No roaming. Total freedom.” Live site: https://vynk-zeta.vercel.app/
+- [LiveCV](projects/livecv/index.html): Resume & career platform; 2026; Client Project. Tagline: “Your career is bigger than a resume.” Live site: https://gireeshkumarreddy.github.io/Livecv/
+- [Hidden Stories](projects/hidden-stories/index.html): Short-stay homes, Hyderabad; 2026; Client Project. Tagline: “Your stay. Your story.” Live site: https://gireeshkumarreddy.github.io/hidden/
+- [Careers at Aeroskys](projects/aeroskys-careers/index.html): Careers portal; 2026; Client Project. Tagline: “Go further. Grow further.” Live site: https://aeroskys-careers.vercel.app/
+
+## Concepts & Interactive
+
+Self-initiated concepts and fan projects, not client commissions. Fan pieces are unofficial and not affiliated with the rights holders.
+
+- [ONE PIECE | Luffy](projects/one-piece/index.html): Cinematic fan tribute; 2026; Interactive Concept, unofficial, not affiliated with the rights holders. Tagline: “More than a hat. A promise.” Live site: https://gireeshkumarreddy.github.io/one-piece-/
+- [TĀVRA](projects/tavra/index.html): Sportswear concept; 2026; Concept Project. Tagline: “Women's sportswear drawn from India's textile art.”
+- [VELORA](projects/velora/index.html): Fragrance concept; 2026; Concept Project. Tagline: “The essence of subtle romance”.
+- [AARADHYA](projects/aaradhya/index.html): Saree house concept; 2026; Concept Project. Tagline: “Maa Durga.”
+- [SAANJH](projects/saanjh/index.html): Beverage concept; 2026; Concept Project. Tagline: “Good things. Slowly savoured.”
+- [VYRN](projects/vyrn/index.html): Fashion e-commerce concept; 2026; Concept Project. Tagline: “Modern essentials. Independent expression.”
+- [Vesper](projects/vesper/index.html): Architectural lighting concept; 2026; Concept Project. Tagline: “Objects of light for quiet architecture — calm by day, generous after dark.” Live site: https://wall-lights.vercel.app/
+- [Gireesh](projects/gireesh-portfolio/index.html): Designer portfolio; 2026; Personal project. Tagline: “Thoughtful design. Lasting impact.” Live site: https://gireeshuiux.vercel.app/
+- [THENGA](projects/thenga/index.html): Beverage brand concept; 2026; Concept Project. Tagline: “A taste of Kerala in every sip.”
+- [Gireesh — a designer's working desk](projects/gireesh-desk/index.html): UI/UX portfolio; 2026; Personal project. Tagline: “I turn ‘what if’ into things people love to use.”
+- [GIREESH — Artist · Creative · Storyteller](projects/gireesh-cinematic/index.html): Cinematic portfolio; 2026; Personal project. Tagline: “Welcome to my world”.
+- [Sedile](projects/sedile/index.html): 3D chair showroom concept; 2026; Concept Project. Tagline: “Explore our collection and find the chair that fits your work style.” Live site: https://gireeshkumarreddy.github.io/Sedile/
+
+## Pages
+
+- [Home](index.html): We don't build ordinary websites.
+- [Who we are](who-we-are/index.html): We're a small team with big ideas.
+- [What we create](what-we-create/index.html): Digital experiences built around your business.
+- [Our approach](our-approach/index.html): How an idea becomes an experience.
+- [The work](work/index.html): Explore a selection of work we've created for businesses, brands and digital products.
+- [Client stories](client-stories/index.html): Good work starts with good collaboration.
+- [Contact](contact/index.html): Let's build something worth remembering.

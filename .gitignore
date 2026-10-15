@@ -1,0 +1,14 @@
+# TESERACT Creative Studios - the whole project folder (site source, built site, brand kit, specs, tools).
+# The built site (teseract-website/dist) IS committed: GitHub Pages serves exactly what was checked locally.
+
+# installed tool packages (reinstall with: cd _tools && npm install)
+node_modules/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
