@@ -160,8 +160,8 @@ def _deferred(img, wide=False):
     peek, wrapped in a <picture> whose >= 800 px source (the same files and sizes) the browser loads by itself."""
     lazy = img.replace(' src="', ' data-src="', 1).replace(' srcset="', ' data-srcset="', 1)
     if wide:
-        srcset = re.search(r' srcset="([^"]*)"', img).group(1)
-        lazy = f'<picture><source media="(min-width: 800px)" srcset="{srcset}" sizes="{MEDIA_SIZES}">{lazy}</picture>'
+        at = dict(re.findall(r' (srcset|sizes)="([^"]*)"', img))
+        lazy = f'<picture><source media="(min-width: 800px)" srcset="{at["srcset"]}" sizes="{at["sizes"]}">{lazy}</picture>'
     return f'{lazy}<noscript>{img}</noscript>'
 
 

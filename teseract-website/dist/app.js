@@ -3398,7 +3398,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
    clickable); roving tabs; focus rescued from a card that left the front; a status line for arrow, drag, wheel and
    peek moves; neighbour stills decoded ahead (not under Save-Data). Stills: only the front card and its neighbours
    load with the page (the others wait as data-src / data-srcset, pages/stories.py); at rest the phone loads |d| <= 1,
-   >= 800 px every visible peek (|d| <= 2), and once the visitor moves the deck, two cards ahead.
+   >= 800 px every visible peek (|d| <= 2; their <picture> source loads those there even without this script), and
+   once the visitor moves the deck, two cards ahead.
    Also: a one-time star-fill wipe on the front card when its rating first comes into view (.is-seen / .is-wipe), and
    parallax + glare on the front still only (a mouse over it on fine pointers; on touch / pen it follows the finger
    that drags the deck; motion only), so the quote never moves while it is read.
@@ -3846,7 +3847,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
    - POST FormData to the configured form service (form[data-endpoint], from site.config.json "form_endpoint"), or
    - open a pre-filled email (mailto:) to the studio address (form[data-email]).
    Also: budget quick answers, select placeholder tint, ?service=… pre-selection, Enter moves to the next field
-   (never submits). Without JS the form
+   (never submits), the iOS tap wash. Without JS the form
    submits natively (action = endpoint or mailto:). */
 (() => {
   'use strict';
@@ -3910,6 +3911,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       syncQuick();
     }));
     if (budget) budget.addEventListener('input', syncQuick);
+
+    /* ---------- tap feedback: iOS Safari paints :active on touch only under a touch listener, so a passive no-op one
+       on the form gives the chips and quick answers their short :active wash (35-contact.css; Android has it anyway) */
+    form.addEventListener('touchstart', () => {}, { passive: true });
 
     /* ---------- Enter (the phone keyboard's "next", enterkeyhint) in a one-line field moves on to the next field
        instead of submitting half a form: only the button sends. The textarea keeps its newlines. */
