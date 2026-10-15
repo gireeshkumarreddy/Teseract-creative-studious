@@ -65,7 +65,10 @@
    badge (expand icon) fades in on hover on hover-capable screens; on touch screens the first frame's badge reads
    "Tap to enlarge" (frosted dark pill, the .motion-toggle look) */
 .pj-zoom{position:relative;display:block;width:100%;height:100%;color:var(--ink);cursor:zoom-in;-webkit-tap-highlight-color:transparent}
-.pj-zoom:focus-visible{outline-offset:-5px}   /* the frame clips its overflow: the ring sits inside the still */
+/* the frame clips its overflow and the (transformed) still paints over the link's own outline: the focus ring is drawn
+   by a layer above the still, just inside its edge */
+.pj-zoom:not(.pj-zoom--hero):focus-visible{outline:none}
+.pj-zoom:not(.pj-zoom--hero):focus-visible::after{content:"";position:absolute;inset:0;z-index:2;border-radius:inherit;outline:2px solid var(--red);outline-offset:-4px;pointer-events:none}
 /* a still scene in the hero is one link: it takes the scene's hero size (38-scene.css), the scene fills it */
 .pj-zoom--hero{width:100%;height:auto;max-width:calc((100svh - 96px) * 1.6);min-width:min(100%,640px);margin-inline:auto;border-radius:clamp(24px,2.4vw,40px)}
 .pj-hero .pj-zoom--hero .scn{max-width:none;min-width:0}
@@ -83,6 +86,7 @@
   .pj-zoom:hover .pj-zoom__badge,.pj-zoom:focus-visible .pj-zoom__badge{opacity:1;transform:none}
 }
 @media (hover:none){.pj-zoom__badge--hint{opacity:1;transform:none}}
+.pj-phone .pj-zoom{border-radius:inherit}   /* the focus ring follows the phone's corners */
 .pj-phone .pj-zoom__badge{right:10px;bottom:10px}
 
 /* ---------- Still viewer (36-project.js clones pages/project.viewer's <template>): a black full-screen <dialog>.
@@ -219,6 +223,7 @@
   .pj-head__services{justify-self:end;align-items:flex-end;gap:10px;text-align:right}
   .pj-head__services .chips{justify-content:flex-end}
   .pj-head__title{font-size:44px;line-height:1}
+  .pj-next__title{font-size:34px}   /* the H1 stays ~1.3x the next-project H2 */
   .pj-tag{margin-bottom:10px}
   .pj-head__meta{margin-top:12px}
   .pj-visit{margin-top:2px}

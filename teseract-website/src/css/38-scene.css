@@ -247,9 +247,13 @@
    note never under 12px (their desktop size) */
 @container scn (max-width:639.98px){.scn-cap{left:5.5cqw;top:5.5cqw;gap:2.4cqw}.scn-name{font-size:clamp(24px,6.8cqw,30px)}
   .scn-name--long{max-width:none}.scn-pill,.scn-note{font-size:12px}}
+@media (hover:none) and (pointer:coarse){.scn-pill,.scn-note{font-size:12px}}   /* touch screens (a phone held sideways) too */
 /* the grey-wall plaster is mid-grey under the window light and the amber-rock sky is a bright ember: a tight dark
-   edge plus a wide soft shade keep the white name at 4.5:1 or better behind every glyph (weight and colour unchanged) */
+   edge, a wide soft shade and a faint radial scrim behind the caption keep the white name at 4.5:1 or better around
+   its glyphs (median; 3:1 or better at the lightest tenth) - weight and colour unchanged */
 .scn--grey-wall .scn-name,.scn--amber-rock .scn-name{text-shadow:0 1px 2px rgba(0,0,0,.35),0 2px 20px rgba(0,0,0,.6)}
+.scn--grey-wall .scn-cap::before,.scn--amber-rock .scn-cap::before{content:"";position:absolute;z-index:-1;inset:-8cqw -14cqw -6cqw -8cqw;
+  background:radial-gradient(closest-side,rgba(0,0,0,.34),rgba(0,0,0,.18) 55%,rgba(0,0,0,0));pointer-events:none}
 /* caption on a light backdrop; its screen is pale until the lazy still / poster has decoded */
 .scn--light .scn-screen{background:#e9e4dc}
 .scn--light{--cap-ink:#121212;--cap-pill-bg:rgba(255,255,255,.55);--cap-pill-line:rgba(0,0,0,.1);--cap-dot:rgba(0,0,0,.08);--frame-line:rgba(255,255,255,.1)}
