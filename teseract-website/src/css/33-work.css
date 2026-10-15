@@ -1,0 +1,224 @@
+/* ==========================================================================
+   THE WORK (/work/) — prefix wk-
+   Project tile = ZIP home gallery tile (also used by the case pages' next-project block).
+   Small informational mono text uses the shared AA grey (--muted-strong); --muted is decorative only.
+   Black theme: headings/body on --ink / --ink-2, artwork framed by a 1px white-6 % hairline on a
+   #141414 loading plate, caption boxes stay solid black (they sit on imagery) with a faint edge,
+   the CTA slot is a dark "selected frame" with white handles.
+   ========================================================================== */
+
+/* ---------- Project tile (ZIP §4: native aspect, reveal 1.1→1, hover zoom 1.018, caption box) */
+.wk-tile{position:relative;display:block;overflow:hidden;background:var(--surface-2);color:#fff;isolation:isolate}
+.wk-tile__media{display:block;width:100%;overflow:hidden}
+.wk-tile__media img{width:100%;height:100%;object-fit:cover}
+/* hairline so artwork keeps a crisp edge on the black page (light boards and dark renders alike) */
+.wk-tile::after{content:"";position:absolute;inset:0;z-index:2;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
+@media (prefers-reduced-motion:no-preference){
+  .wk-tile:hover .reveal-image.is-in img,
+  .wk-card:has(.wk-link:hover) .reveal-image.is-in img,
+  .wk-card:has(.wk-link:focus-visible) .reveal-image.is-in img,
+  .pj-next__grid:has(.pj-next__title a:hover) .reveal-image.is-in img,
+  .pj-next__grid:has(.pj-next__title a:focus-visible) .reveal-image.is-in img{transform:scale(1.018)}
+}
+a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-radius:0}
+/* pointer on the tile = hover on the whole card: the text link answers too (underline + arrow) */
+.wk-card:has(a.wk-tile:hover) .wk-link__label::after{transform:scaleX(1);transform-origin:left center}
+.wk-card:has(a.wk-tile:hover) .wk-link:not(.wk-link--ext) .wk-link__icon{transform:translateX(3px)}
+.wk-card:has(a.wk-tile:hover) .wk-link--ext .wk-link__icon{transform:translate(2px,-2px)}
+
+/* caption: solid black square box, mono uppercase, date (no roll) over TITLE · INDUSTRY (roll) */
+.wk-cap{position:absolute;right:16px;bottom:18px;z-index:3;display:block;max-width:calc(100% - 24px);padding:7px 10px 8px;background:#000;color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  font:500 11px/19px var(--mono);letter-spacing:.03em;text-transform:uppercase;text-align:right;pointer-events:none}   /* --mono is now the site sans: uppercase labels get positive tracking */
+.wk-cap__date{display:block;color:var(--muted-strong)}
+.wk-cap__line{display:flex;align-items:center;justify-content:flex-end;gap:7px;white-space:nowrap}
+.wk-cap__dot{color:rgba(244,244,242,.5)}
+.wk-cap__ind{color:var(--red)}
+.wk-cap .roll{height:1.4em;line-height:1.4;vertical-align:middle}
+.wk-cap .roll>span+span{color:inherit}
+.wk-card:has(.wk-link:hover) .wk-cap .roll>span,
+.wk-card:has(.wk-link:focus-visible) .wk-cap .roll>span,
+.pj-next__grid:has(.pj-next__title a:hover) .wk-cap .roll>span,
+.pj-next__grid:has(.pj-next__title a:focus-visible) .wk-cap .roll>span{transform:translateY(-100%)}
+@media (max-width:799.98px){
+  .wk-cap{left:9px;right:auto;bottom:6px;display:flex;align-items:center;gap:12px;padding:3px 6px;font-size:9px;line-height:15px;text-align:left}
+  .wk-cap__date{display:inline}
+  .wk-cap__line{justify-content:flex-start}
+}
+@media (max-width:360px){.wk-cap{font-size:8px}}
+@media (min-width:1920px){.wk-cap{font-size:12px}}
+
+/* ---------- Hero (reference page-hero lockup) */
+.wk-hero{position:relative;padding:64px 0 56px}
+.wk-hero__inner{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.wk-hero__lockup{display:flex;flex-direction:column;align-items:center;gap:24px;padding:16px}
+.wk-hero__title{max-width:1240px;font-size:72px;font-weight:600;line-height:.95;letter-spacing:-.05em;color:var(--ink)}
+.wk-hero__title>span{display:block;text-wrap:balance}
+.wk-hero__second{color:rgba(244,244,242,.5)}   /* the second line steps back (large text, 4.6:1 on black) */
+.wk-hero__sub{max-width:460px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:balance}
+.wk-hero__ctas{display:flex;align-items:center;justify-content:center;gap:8px}
+/* brand avatar on the white CTA (also used by the case pages): the transparent mark on the same dark coin
+   as the hero, agency and footer "Start a Project" buttons */
+.btn__lead img.wk-lead{padding:4px;object-fit:contain;background:radial-gradient(120% 120% at 28% 12%,#3c3c3c 0%,#111 55%,#000 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 2px 6px -2px rgba(0,0,0,.45)}
+.wk-hero__band{margin-top:56px}
+.wk-marquee{position:relative;height:48px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 50%,#000 50%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 50%,#000 50%,transparent 100%)}
+.wk-marquee__list{display:flex;align-items:center;gap:64px;width:max-content;height:100%;margin:0;padding:0;list-style:none}
+.wk-marquee__list li{flex:none;font-size:20px;font-weight:700;line-height:1;letter-spacing:-.05em;color:var(--ink);opacity:.5;white-space:nowrap}   /* decorative (aria-hidden); .5 keeps the light 20px names at 4.9:1 */
+
+/* ---------- Intro: heading + the four "Some need…" lines */
+.wk-intro__grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:16px;align-items:start}
+.wk-intro__title{grid-column:1/span 5;position:sticky;top:calc(var(--nav-h) + 40px);font-size:56px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
+.wk-intro__body{grid-column:7/span 6}
+.wk-intro__list{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.wk-intro__row{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:baseline;padding:26px 0 28px;border-bottom:1px solid var(--line)}
+.wk-intro__n{font:500 12px/1 var(--mono);letter-spacing:.02em;color:rgba(244,244,242,.5)}   /* subdued index, still AA (4.9:1) */
+.wk-intro__text{font-size:32px;font-weight:300;line-height:1.2;letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
+.wk-intro__closing{display:flex;align-items:center;gap:16px;margin-top:40px;padding-left:64px;font-size:32px;font-weight:600;line-height:1.2;letter-spacing:-.04em;color:var(--ink)}
+.wk-intro__closing i{flex:none;width:12px;height:12px;border-radius:10px;background:var(--red-dot);box-shadow:0 0 0 4px rgba(255,59,59,.12),0 0 22px 2px rgba(255,59,59,.45);margin-left:-28px}
+
+/* ---------- Project index */
+.wk-projects{padding-top:0}
+.wk-index{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:16px;margin-bottom:24px;border-bottom:1px solid var(--line);
+  font:500 12px/1.2 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted-strong)}
+.wk-index__title{font:inherit;color:var(--ink)}
+.wk-grid{display:flex;flex-direction:column;gap:80px}
+.wk-row{display:flex;align-items:flex-start;gap:16px}
+/* pair rows: widths proportional to the images' aspect ratios → equal heights at native aspect */
+.wk-card{flex:var(--a,1.7778) 1 0;min-width:0;display:flex;flex-direction:column}
+/* index · title · call to action share one baseline; the doc's card lines hang under the title */
+.wk-info{display:grid;grid-template-columns:20px minmax(0,1fr) auto;grid-template-areas:"n title cta" ". meta meta";align-items:baseline;gap:12px 16px;padding-top:20px}
+.wk-info__n{grid-area:n;font:500 12px/1 var(--mono);letter-spacing:.02em;color:rgba(244,244,242,.5);transform:translateY(-.35em)}
+.wk-info__title{grid-area:title;min-width:0;font-size:32px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink)}
+.wk-info__meta{grid-area:meta;display:flex;flex-direction:column;gap:2px;min-width:0}
+.wk-meta{font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--text-2);text-wrap:pretty}
+.wk-meta__k{font-weight:500;color:var(--ink)}
+.wk-meta__item{white-space:nowrap}
+.wk-info__cta{grid-area:cta;justify-self:end;padding-left:8px}
+/* reference underline link ("Better email? Let's chat ->"): line draws in from the left, exits right */
+.wk-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin:-10px 0;padding:4px 0;font-size:16px;font-weight:500;line-height:24px;letter-spacing:-.3px;color:var(--ink);white-space:nowrap}
+.wk-link__label{position:relative}
+.wk-link__label::before,.wk-link__label::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;pointer-events:none}
+.wk-link__label::before{background:rgba(255,255,255,.18)}
+.wk-link__label::after{background:var(--ink);transform:scaleX(0);transform-origin:right center;transition:transform .6s var(--spring-soft)}
+.wk-link:hover .wk-link__label::after,.wk-link:focus-visible .wk-link__label::after{transform:scaleX(1);transform-origin:left center}
+.wk-link__icon{display:inline-flex;width:16px;height:16px;transition:transform .5s var(--ease)}
+.wk-link:focus-visible{outline-offset:2px;border-radius:6px}
+.wk-link__icon svg{width:100%;height:100%}
+.wk-link:hover .wk-link__icon{transform:translateX(3px)}
+.wk-link--ext:hover .wk-link__icon{transform:translate(2px,-2px)}
+/* "Coming soon" — reference availability badge (red dot + grey mono) */
+.wk-soon{display:inline-flex;align-items:center;gap:8px;min-height:24px;font:500 12px/1.2 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted-strong);user-select:none}
+.wk-soon i{width:12px;height:12px;border-radius:10px;background:var(--red-dot);box-shadow:0 0 0 4px rgba(255,59,59,.12),0 0 20px 0 rgba(255,59,59,.45)}
+
+/* ---------- Portfolio groups: "Client Work" / "Concepts & Interactive" (H2 on the index line + real count) */
+.wk-projects--concept{padding-top:0}
+.wk-index--group{align-items:flex-end}
+.wk-index--group .wk-index__title{font-size:40px;line-height:1.1;letter-spacing:-.04em;text-transform:none;color:var(--ink)}
+.wk-group__intro{max-width:640px;margin:-4px 0 48px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:pretty}
+/* project label on every card (always visible text): ink dot = Client Project, red dot = the concepts group; an
+   Interactive Concept's "Unofficial, not affiliated with ..." line sits under it in small sentence-case type */
+.wk-tag{display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;row-gap:2px;margin-bottom:4px;font:500 12px/1.3 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.wk-tag i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--red-dot);box-shadow:0 0 0 3px rgba(255,59,59,.12)}
+.wk-tag--client i{background:var(--ink);box-shadow:0 0 0 3px rgba(244,244,242,.12)}
+.wk-tag__note{flex:1 0 100%;padding-left:16px;font-size:12px;line-height:1.4;letter-spacing:.01em;text-transform:none;color:var(--muted-strong)}
+
+/* ---------- Case study structure (doc CASE STUDY STRUCTURE; reference frame + price-card) */
+.wk-story__head{margin-bottom:80px}
+.wk-story__list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:0;padding:0;list-style:none}
+.wk-story__card{display:flex;flex-direction:column;justify-content:space-between;gap:48px;min-height:340px;padding:40px 32px 28px}
+.wk-story__n{font-size:96px;font-weight:200;line-height:.8;letter-spacing:-.06em;color:rgba(244,244,242,.2);font-variant-numeric:tabular-nums;transition:color .6s var(--ease)}   /* decorative numeral (aria-hidden); red on hover */
+.wk-story__card:hover .wk-story__n{color:var(--red)}
+.wk-story__copy{display:flex;flex-direction:column;gap:8px}
+.wk-story__name{font-size:24px;font-weight:600;line-height:1.15;letter-spacing:-.04em;color:var(--ink)}
+.wk-story__q{font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--text-2)}
+
+/* ---------- CTA: an empty, selected frame — the next slot in the index */
+.wk-cta{padding-top:0}
+.wk-slot{position:relative;display:grid;place-items:center;min-height:560px;padding:96px 24px;text-align:center;
+  background:radial-gradient(70% 60% at 50% 0%,rgba(255,255,255,.035) 0%,rgba(255,255,255,0) 70%),#080808;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.wk-slot::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.1);pointer-events:none}
+.wk-slot__x{position:absolute;inset:0;width:100%;height:100%;color:rgba(255,255,255,.06);pointer-events:none}
+.wk-slot__h{position:absolute;z-index:2;width:8px;height:8px;border-radius:100%;background:var(--ink);border:1px solid rgba(255,255,255,.5);box-shadow:0 0 0 3px rgba(0,0,0,.6),0 0 12px rgba(255,255,255,.18)}
+.wk-slot__h--tl{top:-3px;left:-3px}.wk-slot__h--tr{top:-3px;right:-3px}.wk-slot__h--bl{bottom:-3px;left:-3px}.wk-slot__h--br{bottom:-3px;right:-3px}
+.wk-slot__inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:20px;max-width:640px}
+.wk-slot__n{font:500 12px/1 var(--mono);letter-spacing:.02em;color:var(--muted-strong);padding:8px 12px;border-radius:57px;background:var(--surface-2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+.wk-slot__title{font-size:56px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
+.wk-slot__body{font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2)}
+.wk-slot__inner>div{margin-top:8px}
+
+/* ---------- Tablet 800–1439.98 */
+@media (max-width:1439.98px){
+  .wk-hero__title{max-width:1100px}
+  .wk-marquee{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%)}
+  .wk-marquee__list{gap:40px}
+  .wk-intro__title{grid-column:1/span 6}
+  .wk-intro__body{grid-column:7/span 6}
+  .wk-intro__text,.wk-intro__closing{font-size:28px}
+  .wk-grid{gap:64px}
+  .wk-info__title{font-size:28px}
+  .wk-index--group .wk-index__title{font-size:32px}
+  .wk-story__list{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .wk-story__card{grid-column:span 2;min-height:300px}
+  .wk-story__card:nth-child(n+4){grid-column:span 3}
+  .wk-story__head{margin-bottom:64px}
+  .wk-slot{min-height:520px}
+}
+/* narrow pairs (two cards under 600 px): the call to action drops under the card lines */
+@media (min-width:800px) and (max-width:1199.98px){
+  .wk-row--pair .wk-info{grid-template-columns:20px minmax(0,1fr);grid-template-areas:"n title" ". meta" ". cta"}
+  .wk-row--pair .wk-info__cta{justify-self:start;padding-left:0;margin-top:-2px}
+}
+@media (max-width:1023.98px){
+  .wk-hero__title{font-size:64px}
+  .wk-intro__grid{display:flex;flex-direction:column;gap:48px}
+  .wk-intro__title{position:static;max-width:640px;font-size:48px}
+  .wk-intro__body{width:100%}
+  .wk-slot__title{font-size:48px}
+}
+@media (max-width:719.98px){
+  .wk-hero__title{font-size:32px;line-height:1.05}
+  .wk-intro__title,.wk-slot__title{font-size:32px}
+}
+
+/* ---------- Phone ≤799.98 */
+@media (max-width:799.98px){
+  .wk-hero{padding:64px 0 56px}
+  .wk-hero__lockup{padding:0}
+  .wk-hero__title{max-width:none}
+  .wk-hero__sub{font-size:16px}
+  .wk-hero__inner{gap:32px}
+  .wk-hero__ctas{flex-direction:column;align-items:stretch;width:100%;gap:8px}
+  .wk-hero__ctas .btn{width:100%}
+  .wk-hero__band{margin-top:48px}
+  .wk-marquee{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%)}
+  .wk-marquee__list{gap:28px}
+  .wk-marquee__list li{font-size:18px}
+  .wk-intro__grid{gap:32px}
+  .wk-intro__row{grid-template-columns:40px minmax(0,1fr);padding:18px 0 20px}
+  .wk-intro__text,.wk-intro__closing{font-size:22px}
+  .wk-intro__closing{padding-left:40px;margin-top:28px;gap:12px}
+  .wk-intro__closing i{width:10px;height:10px;margin-left:-22px}
+  .wk-index{flex-direction:column;align-items:flex-start;gap:6px}
+  .wk-index--group .wk-index__title{font-size:28px}
+  .wk-group__intro{margin:-4px 0 32px;font-size:16px}
+  .wk-grid{gap:48px}
+  .wk-row{flex-direction:column;gap:48px}
+  .wk-card{flex:none;width:100%}
+  .wk-info,.wk-row--pair .wk-info{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "meta" "cta";gap:10px;padding-top:16px}
+  .wk-info__n{display:none}
+  .wk-info__title{font-size:24px;letter-spacing:-.03em}
+  .wk-meta{font-size:15px}
+  .wk-info__cta,.wk-row--pair .wk-info__cta{justify-self:start;padding-left:0;margin-top:-6px}
+  .wk-story__head{margin-bottom:40px}
+  .wk-story__list{grid-template-columns:minmax(0,1fr);gap:12px}
+  .wk-story__card,.wk-story__card:nth-child(n+4){grid-column:auto;min-height:0;flex-direction:row-reverse;align-items:flex-start;justify-content:flex-end;gap:20px;padding:28px 24px}
+  .wk-story__card .dots{display:none}
+  .wk-story__n{font-size:48px;min-width:60px;line-height:.85}
+  .wk-story__name{font-size:20px}
+  .wk-slot{min-height:480px;padding:72px 20px}
+  .wk-slot__body{font-size:16px}
+  .wk-slot__inner>div{width:100%}
+  .wk-slot__inner .btn{width:100%}
+}
+

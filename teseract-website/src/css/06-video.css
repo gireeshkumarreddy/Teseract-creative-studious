@@ -1,0 +1,43 @@
+/* Client project videos (scripts/lib.py video() + src/js/06-video.js). Dormant: these rules match
+   nothing until scripts/media-manifest.json has entries. The poster shows until the clip plays and
+   stays under reduced motion, Save-Data and iOS Low Power Mode. */
+.media-video{display:block;width:100%;height:100%;object-fit:cover;background:var(--surface-1)}
+/* Lazy poster (data-poster: the hero tiles): without JS the empty video gives way to its <noscript> still. */
+.no-js .media-video[data-poster]{display:none}
+/* Idea laptop screen: the clip fills the warped slide (the screenshots use per-image crop boxes). */
+.idea-slide__video{inset:0}
+/* Hero tiles: same hover zoom and column-staggered reveal as the image tiles. */
+.hero-tile:hover .hero-tile__media.is-in video,.hero-tile:focus-visible .hero-tile__media.is-in video{transform:scale(1.018)}
+.hero-gallery.is-revealing .hero-col--2 .reveal-image video{transition-delay:90ms}
+.hero-gallery.is-revealing .hero-col--3 .reveal-image video{transition-delay:180ms}
+.hero-gallery.is-revealing .hero-col--4 .reveal-image video{transition-delay:270ms}
+
+/* Pause / play control (WCAG 2.2.2) of a looping clip outside a section with its own control (06-video.js adds it:
+   Work card, project scenes and gallery clips). The frosted dark control of the Idea laptop and the hero
+   (.motion-toggle): 32px, icon-only (the name stays for screen readers), a 44px hit area, in the frame's top-right
+   corner - the scene captions sit top-left. A mouse screen shows it while the frame is hovered or the control has
+   keyboard focus (always while paused); touch screens always. Autoplay refused (iOS Low Power Mode) or Save-Data: a
+   "Play" pill. */
+.has-video-ctl{position:relative}
+.video-ctl{position:absolute;z-index:5;top:var(--video-ctl-inset,14px);right:var(--video-ctl-inset,14px);display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  width:32px;height:32px;padding:0;border-radius:50%;background:rgba(14,14,14,.74);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);color:var(--ink);
+  font-family:var(--mono);font-size:12px;line-height:1;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -8px rgba(0,0,0,.8);
+  -webkit-tap-highlight-color:transparent;transition:opacity .3s ease,transform .5s var(--ease),background-color .3s ease,box-shadow .3s ease}
+.video-ctl[hidden]{display:none}
+.video-ctl::before{content:"";position:absolute;inset:-6px}
+.video-ctl:active{transform:scale(.97)}
+.video-ctl__ic{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:3px;width:10px;height:10px;flex:none}
+.video-ctl__ic i{width:3px;height:10px;border-radius:1px;background:currentColor}
+.video-ctl.is-paused .video-ctl__ic i,.video-ctl.is-blocked .video-ctl__ic i{display:none}
+.video-ctl.is-paused .video-ctl__ic::before,.video-ctl.is-blocked .video-ctl__ic::before{content:"";width:0;height:0;margin-left:2px;border-style:solid;border-width:5px 0 5px 8.5px;border-color:transparent transparent transparent currentColor}
+.video-ctl__txt{display:none}
+.video-ctl.is-blocked{width:auto;padding:0 14px 0 12px;border-radius:10px}
+.video-ctl.is-blocked .video-ctl__txt{display:inline}
+@media (min-width:800px){.has-video-ctl{--video-ctl-inset:20px}}
+@media (hover:hover){
+  .video-ctl{opacity:0}
+  .has-video-ctl:hover>.video-ctl,.video-ctl:focus-visible,.video-ctl.is-paused,.video-ctl.is-blocked{opacity:1}
+  .video-ctl:hover{background:rgba(40,40,40,.84);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.08),0 8px 20px -8px rgba(0,0,0,.8)}
+}
+@media (forced-colors:active){.video-ctl__ic{forced-color-adjust:none;color:ButtonText}}   /* the drawn glyph keeps a system colour */

@@ -1,0 +1,132 @@
+/* ==========================================================================
+   CASE STUDY (/projects/<slug>/) — prefix pj-
+   Studio's own websites: group line + H1 + facts, hero media (device scene / first still), then the captured
+   stills - desktop screens in the ZIP half/full rhythm (native aspect, .reveal-image), phone screens as pairs.
+   Black theme: --ink headings, glass back pill and service chips (white washes + hairlines, brighten
+   on hover), frames on a #141414 loading plate with a white-6 % hairline so light boards keep an edge.
+   ========================================================================== */
+
+/* ---------- Header */
+.pj-head{padding:40px 0 56px}
+.pj-head__bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:64px}
+.pj-back{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:12px;background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.04);
+  font-size:14px;font-weight:500;line-height:20px;letter-spacing:-.02em;color:var(--ink);transition:background-color .35s var(--ease),box-shadow .35s var(--ease)}
+.pj-back:hover{background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06)}
+.pj-back:active{background:rgba(255,255,255,.07)}
+/* pill label at 400 like every .btn (95-typography.css lists .btn, not this component) */
+.pj-back,.pj-back *{font-weight:400 !important}
+.pj-back__icon{display:inline-flex;width:16px;height:16px;transform:scaleX(-1);transition:transform .5s var(--ease)}
+.pj-back__icon svg{width:100%;height:100%}
+.pj-back:hover .pj-back__icon,.pj-back:focus-visible .pj-back__icon{transform:scaleX(-1) translateX(3px)}
+.pj-head__count{font:500 12px/1.2 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted-strong)}
+.pj-head__grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;gap:40px 48px}
+/* reference H1 preset (72 / .95 / -0.05em), left-aligned for the case header */
+.pj-head__title{font-size:72px;font-weight:600;line-height:.95;letter-spacing:-.05em;color:var(--ink);text-wrap:balance}
+.pj-head__meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:24px;font:500 12px/1.2 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted-strong)}
+.pj-head__services{display:flex;flex-direction:column;align-items:flex-end;gap:12px;justify-self:end;width:100%;max-width:560px;padding-bottom:2px;text-align:right}
+.pj-head__services .chips{justify-content:flex-end}
+.pj-head__label{font:500 12px/1.2 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+.pj-head__chips .chip{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.04);color:var(--ink-2)}
+
+/* ---------- Label line above the title (always visible, ink): ink dot = "Client Project", red dot = the concepts
+   group ("Interactive Concept" + its small "Unofficial, not affiliated with ..." line, "Concept Project", "Personal project") */
+.pj-tag{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:10px;row-gap:4px;max-width:640px;margin-bottom:20px;font:500 12px/1.45 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--ink);text-wrap:balance}
+.pj-tag i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--red-dot);box-shadow:0 0 0 3px rgba(255,59,59,.12),0 0 14px rgba(255,59,59,.45);transform:translateY(-1px)}
+.pj-tag--client i{background:var(--ink);box-shadow:0 0 0 3px rgba(244,244,242,.12)}
+.pj-tag__note{flex:1 0 100%;padding-left:18px;letter-spacing:.01em;text-transform:none;color:var(--muted-strong)}
+.pj-visit{margin-top:8px}
+
+/* ---------- Hero media: the device scene playing the recording (38-scene.css), or the first still full width */
+.pj-hero{padding-bottom:12px}
+.pj-hero__inner{max-width:1944px;margin-inline:auto;padding:0 12px}
+.pj-frame--hero{display:block}
+
+/* ---------- Gallery (ZIP: 2-col grid, gap 12, edge to edge with a 12 px gutter) */
+.pj-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:1944px;margin-inline:auto;padding:0 12px}
+.pj-frame{position:relative;margin:0;background:var(--surface-2)}
+.pj-frame--full{grid-column:1/-1}
+.pj-frame img{width:100%;height:100%;object-fit:cover}
+.pj-frame::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
+
+/* ---------- Phone screens: pairs, centred on a quiet band (a lone last screen stays centred) */
+.pj-phones{position:relative;grid-column:1/-1;display:flex;justify-content:center;align-items:flex-start;gap:clamp(16px,5vw,96px);
+  padding:clamp(40px,7vw,120px) 16px;background:radial-gradient(60% 70% at 50% 0%,rgba(255,255,255,.04) 0%,rgba(255,255,255,0) 70%),var(--surface-1)}
+.pj-phones::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
+.pj-phone{position:relative;flex:none;width:min(40%,340px);margin:0;border-radius:clamp(16px,2.6vw,40px);overflow:hidden;background:var(--surface-2);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -40px rgba(0,0,0,.9)}
+.pj-phone img,.pj-phone video{width:100%;height:100%;object-fit:cover}
+
+/* ---------- Next project */
+.pj-next__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:1fr auto;grid-template-areas:"head media" "cta media";gap:0 48px}
+.pj-next__head{grid-area:head;align-self:end;display:flex;flex-direction:column;align-items:flex-start}
+.pj-next__media{grid-area:media;align-self:end}
+.pj-next__cta{grid-area:cta}
+.pj-next__label{font:500 12px/1.2 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted-strong)}
+.pj-next__title{margin-top:16px;font-size:56px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink)}
+.pj-next__title a{display:inline-block;padding-block:4px;border-radius:4px}
+.pj-next__title .roll{height:1.15em;line-height:1.15}
+/* Heading text appears once in the HTML (SEO/a11y); the hover-roll copy is drawn by CSS from data-text */
+.pj-next__title .roll--css::after{content:attr(data-text);position:absolute;top:100%;left:0;white-space:nowrap;transition:transform .5s var(--ease)}
+.pj-next__title a:hover .roll--css>span,.pj-next__title a:hover .roll--css::after,.pj-next__title a:focus-visible .roll--css>span,.pj-next__title a:focus-visible .roll--css::after,
+.pj-next__grid:has(a.wk-tile:hover) .pj-next__title .roll--css>span,.pj-next__grid:has(a.wk-tile:hover) .pj-next__title .roll--css::after{transform:translateY(-100%)}
+/* pointer on the cover tile = hover on the title link too (letter roll), like the work cards */
+.pj-next__grid:has(a.wk-tile:hover) .pj-next__title .roll>span{transform:translateY(-100%)}
+.pj-next__grid:has(a.wk-tile:hover) .pj-next__title .roll.has-chars>span{transform:none}
+.pj-next__grid:has(a.wk-tile:hover) .pj-next__title .roll.has-chars .char{transform:translateY(-100%)}
+.pj-next__title a:focus-visible{outline-offset:4px;border-radius:8px}
+/* a long name (pages/project.NEXT_ROLL_MAX: "Gireesh — a designer's working desk") wraps on its own lines: no one-line letter
+   roll, no hidden copy, no roll on hover */
+.pj-next__title.is-long .roll{height:auto;overflow:visible}
+.pj-next__title.is-long .roll>span{white-space:normal}
+.pj-next__title.is-long .roll--css::after{content:none}
+.pj-next__title.is-long a:hover .roll--css>span,.pj-next__title.is-long a:focus-visible .roll--css>span,
+.pj-next__grid:has(a.wk-tile:hover) .pj-next__title.is-long .roll--css>span{transform:none}
+.pj-next__cta{width:100%;margin-top:48px;padding-top:24px;border-top:1px solid var(--line)}
+.pj-next__line{font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--text-2);text-wrap:balance}
+.pj-next__line strong{font-weight:500;color:var(--ink)}
+.pj-next__btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pj-next__media{min-width:0}
+
+/* ---------- Tablet 800–1439.98 */
+@media (max-width:1439.98px){
+  .pj-head__bar{margin-bottom:56px}
+  .pj-back{height:44px}   /* 44 px tap target on touch tablets and phones */
+  .pj-head__grid{grid-template-columns:minmax(0,1fr);gap:32px}
+  .pj-head__services{justify-self:start;align-items:flex-start;text-align:left}
+  .pj-head__services .chips{justify-content:flex-start}
+  .pj-next__grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"head" "media" "cta";gap:40px}
+  .pj-next__cta{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:0}
+  .pj-next__btns{margin-top:0;flex:none}
+}
+@media (max-width:1023.98px){
+  .pj-head__title{font-size:64px}
+  .pj-next__title{font-size:48px}
+}
+@media (max-width:719.98px){
+  .pj-head__title{font-size:32px;line-height:1.05}
+  .pj-next__title{font-size:32px}
+}
+
+/* ---------- Phone ≤799.98 */
+@media (max-width:799.98px){
+  .pj-head{padding:24px 0 40px}
+  .pj-head__bar{margin-bottom:40px}
+  .pj-head__meta{margin-top:16px}
+  .pj-head__grid{gap:28px}
+  .pj-gallery{gap:8px;padding:0 8px}
+  .pj-hero{padding-bottom:8px}
+  .pj-hero__inner{padding:0 8px}
+  .pj-tag{margin-bottom:14px;font-size:11px}
+  .pj-next__grid{gap:32px}
+  .pj-next__cta{display:block;margin-top:0}
+  .pj-next__line{font-size:16px}
+  .pj-next__btns{flex-direction:column;margin-top:20px}
+  .pj-next__btns .btn{width:100%}
+}
+
+/* ---------- Narrow phones <600: a half-width desktop screen (about 180 px) is unreadable, so every desktop
+   screen runs full width (pages/project.SIZES['half'] matches) */
+@media (max-width:599.98px){
+  .pj-frame--half{grid-column:1/-1}
+}

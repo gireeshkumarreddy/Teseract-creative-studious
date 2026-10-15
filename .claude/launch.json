@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "teseract-site",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-I",
+        "C:/Users/giris/OneDrive/Desktop/Teseract/_tools/serve.py",
+        "4273",
+        "C:/Users/giris/OneDrive/Desktop/Teseract/teseract-website/dist"
+      ],
+      "port": 4273
+    }
+  ]
+}

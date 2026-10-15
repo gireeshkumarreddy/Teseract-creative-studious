@@ -1,0 +1,143 @@
+/* Intro logo animation (owner, 14 Oct). Once per tab session, on whatever page the visitor enters: the four shards of
+   the mark assemble in 3D, the mark makes the header logo's own -120deg turn, "TESERACT / CREATIVE STUDIOS" comes in
+   from the right, and the whole lockup flies into the live header logo while the black stage lifts.
+   Markup: scripts/chrome_intro.py (hidden unless the inline <head> script in chrome.py adds html.ts-intro).
+   Beats 1-3 are the CSS below (transform/opacity only, literal keyframes, all started on one frame by the html.tsi-go
+   parse sentinel); beat 4 (the FLIP flight, stage lift and handover), the pointer light and the skip are 01-intro.js.
+   Times are ms from the overlay's first frame. Every intro rule lives in this file.
+   Rules: no var() inside @keyframes (easing var() only in the animation shorthand); no filter/clip-path/mask
+   animation; no opacity or overflow on a preserve-3d element (opacity only on leaves).
+   Supersampling: Chrome rasterizes layers in a 3D (perspective) context at ~1 texel per CSS px whatever the screen
+   density, so the shard edges came out stair-stepped. The mark is laid out --ss times larger and scaled back down
+   (--ss ~ device pixel ratio x the solo scale); depths are in em (1em = --ss x 10px) and the perspective is x --ss,
+   so the 3D looks the same at every --ss. */
+
+.tsi{display:none}
+.ts-intro .tsi{position:fixed;inset:0;z-index:400;display:grid;place-items:center;overflow:hidden;contain:strict;color:var(--ink);
+  pointer-events:auto;touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none;--k:3.4;--ka:1.5;--ss:2;
+  animation:tsi-failsafe .5s ease 4.4s both}
+/* failsafe: without app.js the overlay fades out at 4.4-4.9s; while the script owns it this is only a dead-man switch.
+   Its animationstart also drops the head script's skip listener, so later input never switches to the skip rules. */
+.ts-intro.tsi-js .tsi{animation-delay:7s}
+/* input before app.js ran (head script adds .tsi-skip): a short CSS exit unless the script takes over within 550 ms */
+.ts-intro.tsi-skip:not(.tsi-js) .tsi{animation:tsi-failsafe .5s ease 4.4s both,tsi-out .3s ease .6s both}
+.tsi-lift .tsi{pointer-events:none}
+@keyframes tsi-failsafe{to{opacity:0;visibility:hidden}}
+@keyframes tsi-out{to{opacity:0;visibility:hidden}}
+
+/* The header logo hides only while the intro runs; the flight hands over to it (html.tsi-landed: opacity 1 at once,
+   under the identical lockup copy). Pointer-off while the script owns it, so a hover turn is never mid-way at handover. */
+.ts-intro .hdr-brand{opacity:0;animation:tsi-brand .5s ease 4.4s both}
+.ts-intro.tsi-js .hdr-brand{animation-delay:7s;pointer-events:none}
+.ts-intro.tsi-skip:not(.tsi-js) .hdr-brand{animation:tsi-brand .5s ease 4.4s both,tsi-brand-in .3s ease .6s both}
+.ts-intro.tsi-landed .hdr-brand{opacity:1;animation:none}
+@keyframes tsi-brand{from{opacity:0}to{opacity:1}}
+@keyframes tsi-brand-in{from{opacity:0}to{opacity:1}}
+/* The home H1 rise (20-hero.css) is held under the stage and restarts as it lifts (.tsi-lift switches the animation
+   name back to hero-rise). The H1 itself paints at first paint (LCP): only its rise is held. */
+.motion.ts-intro:not(.tsi-lift) .hero__title{animation:hero-rise-held .95s var(--ease) 4.4s both}
+.motion.ts-intro.tsi-skip:not(.tsi-js) .hero__title{animation:hero-rise-skip .95s var(--ease) .5s both}
+@keyframes hero-rise-held{from{transform:translate3d(0,22px,0)}}
+@keyframes hero-rise-skip{from{transform:translate3d(0,22px,0)}}
+/* background tab / prerender: everything waits until the page is first shown */
+.tsi-wait .tsi,.tsi-wait .tsi *,.tsi-wait .hdr-brand,.tsi-wait .hero__title{animation-play-state:paused!important}
+
+/* ---------- Stage: solid black veil (+ feathered tail that trails it as it lifts), the studio light pool */
+.tsi__veil{position:absolute;inset:0;background:var(--bg)}
+.tsi__tail{position:absolute;left:0;right:0;top:100%;height:160px;background:linear-gradient(var(--bg),rgba(0,0,0,0));will-change:transform}
+.tsi__light{position:absolute;left:50%;top:50%;width:320px;height:320px;margin:-160px 0 0 -160px;border-radius:50%;opacity:0;transform:scale(2);
+  background:radial-gradient(closest-side,rgba(244,244,242,.1),rgba(244,244,242,.035) 50%,rgba(244,244,242,0))}
+.tsi__cue{position:absolute;width:0;height:0}
+
+/* ---------- Lockup: an exact k-times copy of a.hdr-brand (mark box, gap, word box from the --brand-* tokens) */
+.tsi__lock{position:relative;display:flex;align-items:center;gap:calc(var(--brand-gap) * var(--k))}
+.tsi__fx{position:relative;flex:none}
+.tsi__fx--mark{z-index:2}                 /* the docking mark passes over the name area */
+.tsi__fy{transform-origin:0 0}
+.tsi__dock{position:relative;width:calc(var(--brand-mark) * var(--k));aspect-ratio:1}
+.tsi__mark{position:absolute;left:0;top:0;width:calc(var(--ss) * 100%);height:calc(var(--ss) * 100%);transform:scale(calc(1 / var(--ss)));transform-origin:0 0;
+  perspective:calc(var(--ss) * 900px);font-size:calc(var(--ss) * 10px)}
+.tsi__glint{position:absolute;inset:-60%;border-radius:50%;opacity:0;
+  background:radial-gradient(closest-side,rgba(244,244,242,.55),rgba(244,244,242,.12) 45%,rgba(244,244,242,0))}
+.tsi__tilt,.tsi__pulse,.tsi__spin,.tsi__ring,.tsi__sh{position:absolute;inset:0;transform-style:preserve-3d}
+.tsi__arr{position:absolute;inset:0}       /* flat: ink + shade are coplanar, painted in DOM order */
+.tsi__arr,.tsi__echo{transform-origin:var(--o)}
+.tsi__sh svg{position:absolute;inset:0;width:100%;height:100%;display:block;fill:currentColor}
+.tsi__ink,.tsi__echo{opacity:0}
+.tsi__sh .tsi__shade{fill:#000;opacity:0}  /* facet shading, written by 01-intro.js from the pointer light */
+.tsi__word{position:relative;width:calc(var(--brand-word) * var(--k));aspect-ratio:1474.29/201.84}
+.tsi__ch{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);overflow:hidden}
+.tsi__ch svg{display:block;width:100%;height:100%;max-width:none;opacity:0}
+/* the flying copies: plain single SVGs (no 3D context, no letter windows) swapped in once beat 3 is complete, so the
+   lockup lands rendering exactly like the header logo (01-intro.js adds .is-flat) */
+.tsi__flat{position:absolute;left:0;top:0;width:100%;height:100%;max-width:none;fill:currentColor;visibility:hidden}
+.tsi.is-flat .tsi__flat{visibility:visible}
+.tsi.is-flat .tsi__mark,.tsi.is-flat .tsi__ch{visibility:hidden}
+
+/* ---------- Beat 1: assembly. The centre triangle rises out of depth; the slivers tumble in from the viewer's side,
+   clockwise from the bottom slot (the spin starts at 120deg, so the right sliver seats in the visual bottom slot). */
+.tsi__sh--c{--in:tsi-in-c;--du:720ms;--ez:cubic-bezier(.16,1,.3,1);--dl:60ms;--de:105ms}
+.tsi__sh--r{--in:tsi-in-r;--du:580ms;--ez:var(--ease-lock);--dl:200ms;--de:245ms}
+.tsi__sh--b{--in:tsi-in-b;--du:580ms;--ez:var(--ease-lock);--dl:260ms;--de:305ms}
+.tsi__sh--l{--in:tsi-in-l;--du:580ms;--ez:var(--ease-lock);--dl:320ms;--de:365ms}
+.ts-intro.tsi-go .tsi__light{animation:tsi-fade-in .9s cubic-bezier(.22,1,.36,1) both}
+.ts-intro.tsi-go .tsi__arr{animation:var(--in) var(--du) var(--ez) var(--dl) both}
+.ts-intro.tsi-go .tsi__ink{animation:tsi-ink var(--du) linear var(--dl) both}
+.ts-intro.tsi-go .tsi__echo{animation:var(--in) var(--du) var(--ez) var(--de) both,tsi-echo var(--du) linear var(--de) both}
+/* lock: the mark "clicks" (a small scale pulse) and light leaks round the silhouette */
+.ts-intro.tsi-go .tsi__pulse{animation:tsi-pulse 270ms linear 720ms both}
+.ts-intro.tsi-go .tsi__glint{animation:tsi-glint 320ms cubic-bezier(.22,1,.36,1) 720ms both}
+/* Beat 2: the header-hover turn (-120deg, counter-clockwise) ending exactly on logo-mark.svg's own geometry; the
+   slivers lag a few degrees like a ratchet */
+.ts-intro.tsi-go .tsi__spin{animation:tsi-spin 700ms linear 920ms both}
+.ts-intro.tsi-go .tsi__ring{animation:tsi-ring 780ms linear 920ms both}
+/* Beat 3: the mark glides left and shrinks into its slot; the name drifts in from the right, each letter sliding in
+   from the right inside its own masked window, right-most letters first (--d from chrome_intro.py) */
+.ts-intro.tsi-go .tsi__dock{animation:tsi-dock 600ms cubic-bezier(.76,0,.24,1) 1420ms both}
+.ts-intro.tsi-go .tsi__word{animation:tsi-word 760ms cubic-bezier(.22,1,.36,1) 1480ms both}
+.ts-intro.tsi-go .tsi__ch svg{animation:tsi-ch 440ms cubic-bezier(.22,1,.36,1) var(--d) both}
+.ts-intro.tsi-go .tsi__ch--s svg{animation-duration:400ms}
+/* its end starts beat 4 (01-intro.js) */
+.ts-intro.tsi-go .tsi__cue{animation:tsi-cue 2260ms linear both}
+
+@keyframes tsi-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes tsi-in-c{from{transform:translate3d(0,0,-48em) rotateX(28deg) rotateZ(-16deg)}to{transform:none}}
+@keyframes tsi-in-r{from{transform:translate3d(64%,-28%,24em) rotateY(-36deg) rotateZ(44deg)}to{transform:none}}
+@keyframes tsi-in-b{from{transform:translate3d(-9%,69%,24em) rotateX(36deg) rotateZ(-40deg)}to{transform:none}}
+@keyframes tsi-in-l{from{transform:translate3d(-55%,-43%,24em) rotateY(36deg) rotateZ(38deg)}to{transform:none}}
+@keyframes tsi-ink{0%{opacity:0}38%,100%{opacity:1}}
+@keyframes tsi-echo{0%{opacity:0}30%{opacity:.26}100%{opacity:0}}
+@keyframes tsi-pulse{0%{transform:scale(1);animation-timing-function:cubic-bezier(.3,0,.2,1)}26%{transform:scale(.965);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}100%{transform:scale(1)}}
+@keyframes tsi-glint{0%{opacity:0;transform:scale(.85)}22%{opacity:.5}100%{opacity:0;transform:scale(1.15)}}
+@keyframes tsi-spin{0%{transform:rotate(120deg);animation-timing-function:cubic-bezier(.65,0,.35,1)}84%{transform:rotate(-3deg);animation-timing-function:cubic-bezier(.22,1,.36,1)}100%{transform:rotate(0deg)}}
+@keyframes tsi-ring{0%{transform:rotate(0deg);animation-timing-function:cubic-bezier(.45,0,.55,1)}35%{transform:rotate(6deg);animation-timing-function:cubic-bezier(.45,0,.55,1)}75%{transform:rotate(-1.5deg);animation-timing-function:cubic-bezier(.45,0,.55,1)}100%{transform:rotate(0deg)}}
+/* dock offsets = ((gap + word) / 2) / mark of the --brand-* tokens (check.py recomputes them) */
+@keyframes tsi-dock{from{transform:translate3d(296.43%,0,0) scale(1.5)}to{transform:none}}
+@keyframes tsi-dock-p{from{transform:translate3d(277.08%,0,0) scale(2.2)}to{transform:none}}
+@keyframes tsi-dock-xs{from{transform:translate3d(239.58%,0,0) scale(2.2)}to{transform:none}}
+@keyframes tsi-word{from{transform:translate3d(8%,0,0)}to{transform:none}}
+@keyframes tsi-ch{0%{transform:translate3d(105%,0,0);opacity:0}40%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes tsi-cue{from{opacity:0}to{opacity:0}}
+
+/* ---------- Size: --k = lockup scale over the header logo; --ka = the solo mark's extra scale (read once by JS);
+   --ss = 3D supersampling (see the top of this file) */
+@media (min-resolution:1.5dppx){.ts-intro .tsi{--ss:3}}
+@media (min-resolution:2.5dppx){.ts-intro .tsi{--ss:4}}
+@media (min-width:1800px){.ts-intro .tsi{--k:4}}
+@media (max-width:1023.98px){.ts-intro .tsi{--k:3.2}}
+@media (max-width:799.98px){
+  .ts-intro .tsi{--k:2.8;--ka:2.2;--ss:3}
+  .ts-intro.tsi-go .tsi__dock{animation-name:tsi-dock-p}
+  .tsi__mark{perspective:calc(var(--ss) * 700px)}
+  .tsi__echo{display:none}
+  .tsi__tail{height:120px}
+  .tsi__light{width:260px;height:260px;margin:-130px 0 0 -130px}
+}
+@media (max-width:799.98px) and (min-resolution:1.5dppx){.ts-intro .tsi{--ss:4}}
+@media (max-width:799.98px) and (min-resolution:2.5dppx){.ts-intro .tsi{--ss:6}}
+@media (max-width:599.98px){.ts-intro .tsi{--k:2.1}}
+@media (max-width:374.98px){.ts-intro .tsi{--k:2}}
+@media (max-width:359.98px){.ts-intro.tsi-go .tsi__dock{animation-name:tsi-dock-xs}}
+.ts-intro .tsi__tilt,.ts-intro .tsi__light{will-change:transform}
+@media print{.tsi{display:none!important}.ts-intro .hdr-brand{opacity:1!important;animation:none!important}}
+@media (forced-colors:active){.tsi{display:none!important}.ts-intro .hdr-brand{opacity:1!important;animation:none!important}}

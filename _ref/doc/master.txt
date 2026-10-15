@@ -1,0 +1,192 @@
+[Title] TESSERACT — Website Content Master Document
+Complete website content, structure, positioning, services, approach, work, testimonials and contact copy.
+[Heading1] NAVIGATION
+HomeWho We AreWhat We CreateOur ApproachThe WorkClient StoriesContact
+Primary CTA: Start a Project
+[Heading1] 01 — HOME
+HEROWE DON'T BUILD ORDINARY WEBSITES.
+We create interactive, thoughtful and tailor-made digital experiences for businesses that want to be different.
+From the first idea to the final interaction, we design and build your digital presence around your business, your audience and your vision.
+CTAs: Start a Project / Explore Our Work
+THE IDEAYOUR BUSINESS IS UNIQUE. YOUR WEBSITE SHOULD BE TOO.
+You don't need another template.You don't need a website that looks like everyone else's.You need something that feels like you.
+That's what we build.
+We combine strategy, design, technology, interaction and storytelling to create websites and digital experiences made specifically for your brand.
+WHAT WE BELIEVESIMPLE FOR PEOPLE. POWERFUL FOR BUSINESS.
+A website should not make people think too hard. It should be easy to understand, easy to explore and easy to remember.
+Behind every beautiful experience, there should be a clear purpose.
+We make complex things feel simple.
+OUR NUMBERS20K+ — Community400K+ — ReachMillions — Views GeneratedGlobal — Clients &amp; Projects
+What started with an idea has grown into a community, a portfolio and a growing network of people who believe that digital experiences can be better.
+A DIFFERENT KIND OF AGENCYWE DON'T WANT TO LOOK LIKE EVERY OTHER AGENCY.
+Because we're not trying to be one.
+We work closely with our clients, understand what they're trying to achieve and build around that.
+No unnecessary layers.No confusing language.No copy-paste solutions.
+Just good thinking, good design and technology that serves a purpose.
+FINAL CTAHAVE AN IDEA?
+You don't need a perfect brief.You don't need to know exactly what you need.
+Just bring us the idea.We'll figure out the rest together.
+Start a Project →
+[Heading1] 02 — WHO WE ARE
+HEROWE'RE A SMALL TEAM WITH BIG IDEAS.
+TESSERACT is a digital creative studio focused on design, technology and experiences.
+We work with businesses, founders and teams that want to build something different.
+Our work sits somewhere between strategy, design, technology and creativity.
+WHY WE STARTEDWE STARTED WITH A SIMPLE QUESTION.
+Why do so many businesses with great ideas have websites that feel exactly the same?
+We wanted to change that.
+We believe your digital presence should not simply explain what your business does. It should communicate who you are, what you believe and why people should care.
+That's why every project starts from zero.
+OUR PHILOSOPHYUNDERSTAND FIRST. DESIGN SECOND. BUILD BETTER.
+We don't jump straight into design.
+First, we understand the business.Then we understand the people.Then we find the right idea.Then we build it.
+HOW WE THINK
+PEOPLE FIRST.Technology changes. Trends change. Design styles change. But people remain people.
+We create experiences that are easy to understand, enjoyable to use and meaningful to the people they're built for.
+DETAILS MATTER.A button. A transition. A headline. A colour. A loading screen.
+Small details can change how something feels. We care about those details.
+DIFFERENT DOESN'T MEAN COMPLICATED.We love creative ideas. But creativity should never get in the way of clarity.
+If someone can't understand what you're offering, the design isn't doing its job.
+OUR PROMISEWE WILL NEVER BUILD SOMETHING JUST BECAUSE EVERYONE ELSE IS DOING IT.
+We'll question the obvious.We'll explore different directions.And we'll always ask:
+Is this right for the brand?
+[Heading1] 03 — WHAT WE CREATE
+HERODIGITAL EXPERIENCES BUILT AROUND YOUR BUSINESS.
+We don't believe in fixed packages.
+Every business has different goals, audiences and challenges.
+So we build what makes sense for you.
+01 — WEBSITE DESIGNMAKE A GREAT FIRST IMPRESSION.
+We design websites that look beautiful, feel intuitive and communicate your business clearly.
+UX StrategyUser JourneysWireframesUI DesignResponsive DesignPrototypingDesign SystemsInteraction Design
+02 — WEBSITE DEVELOPMENTFROM DESIGN TO REALITY.
+We turn the design into a real, responsive and functional website.
+Business WebsitesCorporate WebsitesLanding PagesCMS WebsitesInteractive WebsitesWeb Applications
+03 — E-COMMERCEMAKE BUYING FEEL SIMPLE.
+From discovering a product to completing a purchase, we design every step of the experience.
+Product PagesShopping ExperiencesCart &amp; CheckoutPayment IntegrationOrder ManagementCMSMobile Experiences
+04 — INTERACTIVE &amp; 3DDON'T JUST SHOW PEOPLE. LET THEM EXPERIENCE IT.
+We create digital experiences using motion, interaction and 3D.
+Scroll animations.Interactive storytelling.Product interactions.Micro-interactions.Cinematic experiences.3D environments.
+Every interaction has a purpose.
+05 — BRAND &amp; DIGITAL IDENTITYYOUR BRAND SHOULD FEEL CONSISTENT EVERYWHERE.
+TypographyColour SystemsVisual DirectionDigital IdentityDesign SystemsBrand Guidelines
+06 — PRODUCT &amp; SAASDIGITAL PRODUCTS PEOPLE ACTUALLY WANT TO USE.
+DashboardsSaaS PlatformsWeb ApplicationsMobile InterfacesUser FlowsPrototypesDesign Systems
+07 — AI &amp; AUTOMATIONMAKE YOUR BUSINESS WORK SMARTER.
+AI ExperiencesWorkflow AutomationAI InterfacesInternal ToolsIntelligent DashboardsAPI Integrations
+08 — DIGITAL STRATEGYBEFORE WE BUILD, WE THINK.
+Digital PositioningWebsite StrategyUser ResearchCompetitor AnalysisContent StructureConversion Strategy
+SERVICE CTANOT SURE WHAT YOU NEED?
+That's completely fine.
+Tell us what you're trying to achieve.We'll help you figure out what needs to be built.
+Let's Talk →
+[Heading1] 04 — OUR APPROACH
+HEROHOW AN IDEA BECOMES AN EXPERIENCE.
+Great work doesn't happen in one step.
+We take the time to understand, explore, design, build and refine.
+01 — UNDERSTANDFIRST, WE LISTEN.
+Before we design anything, we learn about your business.
+Your goals.Your audience.Your competitors.Your challenges.Your vision.
+Result: A clear understanding of what we're building and why.
+02 — DEFINETHEN, WE FIND THE DIRECTION.
+We turn everything we've learned into a clear plan.
+We define:The structureThe user journeyThe contentThe functionalityThe visual direction
+Result: A clear project blueprint.
+03 — EXPLORENOW WE START THINKING DIFFERENTLY.
+We explore ideas, layouts, references and visual directions.
+This is where we ask:What could this become?
+Not:What template should we use?
+04 — DESIGNTHE IDEA STARTS TO TAKE SHAPE.
+Typography.Colours.Layouts.Components.Images.Interactions.
+Everything starts coming together.
+05 — REFINEDETAILS MAKE THE DIFFERENCE.
+We review every important detail.
+Spacing.Responsiveness.Interactions.Hierarchy.Readability.Motion.
+We refine until everything feels right.
+06 — BUILDDESIGN MEETS TECHNOLOGY.
+Once the direction is approved, we bring the experience to life.
+We develop the website, integrate the required functionality and make it responsive across devices.
+07 — TESTBEFORE PEOPLE USE IT, WE TEST IT.
+Desktop.Tablet.Mobile.Navigation.Forms.Animations.Performance.Content.Functionality.
+08 — LAUNCHREADY FOR THE WORLD.
+Once everything is tested and approved, we launch.
+Your idea becomes a real digital experience.
+09 — EVOLVELAUNCH IS NOT THE END.
+Businesses change. Your website should be able to change with them.
+We can continue supporting, improving and evolving your digital experience as your business grows.
+[Heading1] 05 — THE WORK
+HEROWE COULD TELL YOU WE'RE DIFFERENT.BUT WE'D RATHER SHOW YOU.
+Explore a selection of work we've created for businesses, brands and digital products.
+PROJECT INTROEvery project starts with a different challenge.
+Some need a complete digital transformation.Some need a better way to sell.Some need to explain something complicated.Some simply need to be seen differently.
+There is no single formula.
+CASE STUDY STRUCTURE
+THE CHALLENGEWhat needed to change?
+THE IDEAWhat direction did we take?
+THE EXPERIENCEWhat did we design and build?
+THE DETAILSWhat made the project different?
+THE RESULTWhat changed after launch?
+PROJECT CARD TEMPLATE
+[CLIENT NAME]Industry: [Industry]
+What we created:Website · UX/UI · Development · Motion
+A digital experience designed to make [specific business goal] simpler, clearer and more memorable.
+View Case Study →
+WORK CTAHAVE SOMETHING IN MIND?
+Your project could be next.
+Start a Project →
+[Heading1] 06 — CLIENT STORIES
+HEROWE CAN TALK ABOUT OUR WORK.BUT OUR CLIENTS CAN TELL THE STORY BETTER.
+We believe the best measure of our work is what our clients think after working with us.
+TESTIMONIAL FORMAT
+★★★★★“[Client testimonial goes here.]”[Client Name][Role] — [Company]
+★★★★★“[Client testimonial goes here.]”[Client Name][Role] — [Company]
+★★★★★“[Client testimonial goes here.]”[Client Name][Role] — [Company]
+CLIENT EXPERIENCEGOOD WORK STARTS WITH GOOD COLLABORATION.
+We don't disappear after sending a proposal.
+We communicate.We share progress.We ask questions.We listen to feedback.And we build together.
+Because the best results happen when the client isn't just watching the process.
+They're part of it.
+REVIEW CTAWORKED WITH US?
+We'd love to hear what you thought.
+Leave a Review →
+[Heading1] 07 — CONTACT
+HEROLET'S BUILD SOMETHING WORTH REMEMBERING.
+Have an idea?A new business?A website that needs a complete rethink?A digital product you've been thinking about?
+Let's talk.
+CONTACT FORM
+Your NameEmail AddressCompany / BrandWhat are you looking to build?What do you need help with?Estimated BudgetTell us a little about your idea
+CTA: START THE CONVERSATION →
+BEFORE YOU SENDDON'T HAVE EVERYTHING FIGURED OUT?
+That's okay.
+You don't need a perfect brief.You don't need technical knowledge.You don't even need to know exactly what you want yet.
+Tell us what you have in mind.
+We'll take it from there.
+[Heading1] FOOTER
+TESSERACTDigital experiences, built around you.
+Web Design · Development · E-commerce · Interactive · Branding · Product · AI
+InstagramLinkedInEmail
+HomeWho We AreWhat We CreateOur ApproachThe WorkClient StoriesContact
+© [YEAR] TESSERACT. All rights reserved.
+BUILT DIFFERENT. BUILT FOR YOU.
+[Heading1] TESSERACT — BRAND IDENTITY &amp; LOGO DIRECTION
+[Heading2] Brand Name
+TESSERACT
+[Heading2] Tagline
+Build beyond the ordinary.
+[Heading2] What the Name Represents
+Tesseract is a geometric concept associated with a fourth dimension. For the agency, the name represents thinking beyond the obvious, exploring new dimensions of digital experiences, and building work that goes beyond ordinary websites.
+[Heading2] Logo Direction
+The logo should feel intelligent, minimal, technical and timeless. It should avoid looking like a generic technology company or an overly complicated futuristic brand.
+[Heading2] Core Logo Elements
+[ListBullet] A geometric symbol inspired by the structure or dimensional perspective of a tesseract.
+[ListBullet] A clean TESSERACT wordmark using strong, modern typography.
+[ListBullet] A standalone symbol that works as a favicon, app icon, social avatar and small-scale brand mark.
+[ListBullet] Simple geometric construction that gives the identity a precise, engineered character.
+[ListBullet] A flexible monochrome version for premium applications, with an optional digital accent colour for interactive experiences.
+[Heading2] Visual Personality
+Minimal • Intelligent • Precise • Experimental • Premium • Digital • Human
+[Heading2] Brand Idea
+We don't simply make websites look different. We think differently about how a digital experience can work, feel and communicate.
+[Heading2] Primary Brand Lockup
+TESSERACTBuild beyond the ordinary.
+Use the full lockup in key brand moments. The TESSERACT wordmark or geometric symbol can be used independently across the website, social media, favicon and other digital applications.

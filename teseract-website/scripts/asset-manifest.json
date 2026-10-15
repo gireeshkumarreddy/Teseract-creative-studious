@@ -1,0 +1,2889 @@
+[
+  {
+    "url": "https://framerusercontent.com/images/ZVkjQ0FlJu0aGji9XqfmAeRw.png",
+    "name": "404-01",
+    "vector": false,
+    "source_page": "404",
+    "native_width": 532,
+    "native_height": 708,
+    "sha256": "67eb97e33c23f38e13fba4f8619f1bee2016954314bdd5d1b7191b3aa46695c7",
+    "variants": [
+      {
+        "file": "assets/404-01-532.webp",
+        "width": 532,
+        "height": 708,
+        "bytes": 34406
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/GMwbr2lLsWuyGfBOZKIfnkqerk.jpg",
+    "name": "contact-01",
+    "vector": false,
+    "source_page": "contact",
+    "native_width": 2000,
+    "native_height": 2000,
+    "sha256": "55e492455b94789465c5e632357e8cde989b1929657dee06a7adc29adafdc93b",
+    "variants": [
+      {
+        "file": "assets/contact-01-640.webp",
+        "width": 640,
+        "height": 640,
+        "bytes": 50942
+      },
+      {
+        "file": "assets/contact-01-1280.webp",
+        "width": 1280,
+        "height": 1280,
+        "bytes": 125010
+      },
+      {
+        "file": "assets/contact-01-2000.webp",
+        "width": 2000,
+        "height": 2000,
+        "bytes": 211270
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/I8HQTEryTQMD9iFqKK6p3iynj0.png",
+    "name": "contact-02",
+    "vector": false,
+    "source_page": "contact",
+    "native_width": 532,
+    "native_height": 708,
+    "sha256": "71d6a7ac8375963df84ece50a1411cccd5ebd1bb6f703be116b2384664638d59",
+    "variants": [
+      {
+        "file": "assets/contact-02-532.webp",
+        "width": 532,
+        "height": 708,
+        "bytes": 25212
+      }
+    ]
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFg08vz7ehw.woff2",
+    "name": "geist-mono.woff2",
+    "font": true,
+    "file": "assets/geist-mono.woff2",
+    "bytes": 5812
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2",
+    "name": "geist.woff2",
+    "font": true,
+    "file": "assets/geist.woff2",
+    "bytes": 29400
+  },
+  {
+    "url": "https://framerusercontent.com/images/ACf6fkOdB7fQlLnmagGJQ56z4.jpg",
+    "name": "home-01",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 3840,
+    "native_height": 2160,
+    "sha256": "fb6852b15b0c4de57980791130d2df6d39672a89a2a61f65bbaca47ebf9242b9",
+    "variants": [
+      {
+        "file": "assets/home-01-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 27462
+      },
+      {
+        "file": "assets/home-01-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 69130
+      },
+      {
+        "file": "assets/home-01-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 171600
+      },
+      {
+        "file": "assets/home-01-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 291030
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/Z5iU0GC3rNz8Ku68nza1TaH4i9Y.jpg",
+    "name": "home-02",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 3840,
+    "native_height": 2160,
+    "sha256": "dfb074774d0f20ed08258a48d865d5750cfd74ffb015730f983725fa64e4c732",
+    "variants": [
+      {
+        "file": "assets/home-02-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 20540
+      },
+      {
+        "file": "assets/home-02-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 54084
+      },
+      {
+        "file": "assets/home-02-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 140454
+      },
+      {
+        "file": "assets/home-02-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 240170
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/ISNcDimHxsFEIuBygZokQUyk9g.jpg",
+    "name": "home-03",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 3840,
+    "native_height": 2160,
+    "sha256": "57238323f46e0954933e2b8f88127e885489c0f90e9313b876db5ec78bc4fad3",
+    "variants": [
+      {
+        "file": "assets/home-03-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 15430
+      },
+      {
+        "file": "assets/home-03-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 38570
+      },
+      {
+        "file": "assets/home-03-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 98538
+      },
+      {
+        "file": "assets/home-03-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 171428
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/UfQFlkZcUAjmZN1H3FJ5kjRAeI.jpg",
+    "name": "home-04",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 3840,
+    "native_height": 2160,
+    "sha256": "514cc95761befb921102eb214af0ecea8d2f032c90473fcb648e064a9007c898",
+    "variants": [
+      {
+        "file": "assets/home-04-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 22834
+      },
+      {
+        "file": "assets/home-04-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 57220
+      },
+      {
+        "file": "assets/home-04-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 152742
+      },
+      {
+        "file": "assets/home-04-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 302494
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/81s3Eu5WRpAE2frc9aFblerdE.jpg",
+    "name": "home-05",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "6da5f823bb6282a97a083105f3c40464f099242ea21cd656f7bc0dae6ac09906",
+    "variants": [
+      {
+        "file": "assets/home-05-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 24334
+      },
+      {
+        "file": "assets/home-05-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 85574
+      },
+      {
+        "file": "assets/home-05-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 285254
+      },
+      {
+        "file": "assets/home-05-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 544190
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/WFbPbBD5Qp7e7AEIM85ANL3jOOg.jpg",
+    "name": "home-06",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 3840,
+    "native_height": 2160,
+    "sha256": "9a302c8934f52eb0441d83083cc335c184c4f678270400f57b3ffca78261a4d6",
+    "variants": [
+      {
+        "file": "assets/home-06-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 49264
+      },
+      {
+        "file": "assets/home-06-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 184856
+      },
+      {
+        "file": "assets/home-06-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 612494
+      },
+      {
+        "file": "assets/home-06-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 1037562
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/mh0ApVBexy1Eb2GNxsydae0esc.jpg",
+    "name": "home-07",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 6000,
+    "native_height": 3980,
+    "sha256": "2226ae0980935f4408d50c04c5282fcae6d6ed3dabbcd96ffbc903c2832f61fe",
+    "variants": [
+      {
+        "file": "assets/home-07-640.webp",
+        "width": 640,
+        "height": 425,
+        "bytes": 26376
+      },
+      {
+        "file": "assets/home-07-1280.webp",
+        "width": 1280,
+        "height": 849,
+        "bytes": 81566
+      },
+      {
+        "file": "assets/home-07-2560.webp",
+        "width": 2560,
+        "height": 1698,
+        "bytes": 222896
+      },
+      {
+        "file": "assets/home-07-3840.webp",
+        "width": 3840,
+        "height": 2547,
+        "bytes": 421348
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/IkC8MfAbbNXjfVCA732YuqBtwE.jpg",
+    "name": "home-08",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 3840,
+    "native_height": 2160,
+    "sha256": "7eea8ced078824070b2e1eb9df213d665f35d2434c15f50b561984e97fff1a79",
+    "variants": [
+      {
+        "file": "assets/home-08-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 34212
+      },
+      {
+        "file": "assets/home-08-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 89910
+      },
+      {
+        "file": "assets/home-08-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 298016
+      },
+      {
+        "file": "assets/home-08-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 634068
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/5uiuB5wESGEmgf8JxcUwmBs5JJU.jpg",
+    "name": "home-09",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 7680,
+    "native_height": 4426,
+    "sha256": "16e5f9fa80dbf75ab4b3fde4630671ab87694ec9938ddfca2170eb30a18c3287",
+    "variants": [
+      {
+        "file": "assets/home-09-640.webp",
+        "width": 640,
+        "height": 369,
+        "bytes": 22300
+      },
+      {
+        "file": "assets/home-09-1280.webp",
+        "width": 1280,
+        "height": 738,
+        "bytes": 59722
+      },
+      {
+        "file": "assets/home-09-2560.webp",
+        "width": 2560,
+        "height": 1475,
+        "bytes": 154870
+      },
+      {
+        "file": "assets/home-09-3840.webp",
+        "width": 3840,
+        "height": 2213,
+        "bytes": 265634
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/4yTuYH6SnfIQKaOaibWKPUq16M.jpg",
+    "name": "home-10",
+    "vector": false,
+    "source_page": "home",
+    "native_width": 5632,
+    "native_height": 3802,
+    "sha256": "7106ca7c31ae81a87d0fc6fc2fef8ee078d496ae3a24313c717b9685e8b11f39",
+    "variants": [
+      {
+        "file": "assets/home-10-640.webp",
+        "width": 640,
+        "height": 432,
+        "bytes": 24084
+      },
+      {
+        "file": "assets/home-10-1280.webp",
+        "width": 1280,
+        "height": 864,
+        "bytes": 78668
+      },
+      {
+        "file": "assets/home-10-2560.webp",
+        "width": 2560,
+        "height": 1728,
+        "bytes": 253574
+      },
+      {
+        "file": "assets/home-10-3840.webp",
+        "width": 3840,
+        "height": 2592,
+        "bytes": 466968
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/assets/JeWC0e3uj1uCDfsdMMPFSrYIex8.svg",
+    "name": "home-11.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-11.svg",
+    "bytes": 783
+  },
+  {
+    "url": "https://framerusercontent.com/assets/ggbQXYZQh4jo6bHX58ntfmQzUM.svg",
+    "name": "home-12.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-12.svg",
+    "bytes": 1071
+  },
+  {
+    "url": "https://framerusercontent.com/assets/4d5eVQ4Gy6CwNIWUPdrAVLCQPDY.svg",
+    "name": "home-13.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-13.svg",
+    "bytes": 1506
+  },
+  {
+    "url": "https://framerusercontent.com/assets/xuaGAk0PPP2TtRnHiVujlXNGg.svg",
+    "name": "home-14.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-14.svg",
+    "bytes": 952
+  },
+  {
+    "url": "https://framerusercontent.com/assets/oPQQEQ2kvnGSlOecBIBEtakZYwg.svg",
+    "name": "home-15.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-15.svg",
+    "bytes": 1008
+  },
+  {
+    "url": "https://framerusercontent.com/images/cjD249GLFDpyvRZqtdEFu27E4.svg",
+    "name": "home-16.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-16.svg",
+    "bytes": 30170
+  },
+  {
+    "url": "https://framerusercontent.com/images/0rr1QeZla3GANwTW62PIon0QIQ.svg",
+    "name": "home-17.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-17.svg",
+    "bytes": 49512
+  },
+  {
+    "url": "https://framerusercontent.com/images/NUR2J6VN4w4WdwbeBZuSKjNcdE0.svg",
+    "name": "home-18.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-18.svg",
+    "bytes": 17837
+  },
+  {
+    "url": "https://framerusercontent.com/images/iuWZ3IveQ2nZbyAkWqrTky2lho.svg",
+    "name": "home-19.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-19.svg",
+    "bytes": 5432
+  },
+  {
+    "url": "https://framerusercontent.com/images/2jEuzMzcszAwHPYsH92a7EabzYU.svg",
+    "name": "home-20.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-20.svg",
+    "bytes": 2495
+  },
+  {
+    "url": "https://framerusercontent.com/images/aSiFOmUlowllz85TTVSDiVUE2U.svg",
+    "name": "home-21.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-21.svg",
+    "bytes": 2574
+  },
+  {
+    "url": "https://framerusercontent.com/images/3AfnG89aZFfXBhYnfpx7PyPLTmo.svg",
+    "name": "home-22.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-22.svg",
+    "bytes": 1781
+  },
+  {
+    "url": "https://framerusercontent.com/images/CehKtiFcMtwCuNJ8DO4s1cakh8w.svg",
+    "name": "home-23.svg",
+    "vector": true,
+    "source_page": "home",
+    "file": "assets/home-23.svg",
+    "bytes": 900
+  },
+  {
+    "url": "https://framerusercontent.com/images/LnleQVyrAAigZiRuiWNq3xGJQ4.png",
+    "name": "profile-01",
+    "vector": false,
+    "source_page": "profile",
+    "native_width": 1064,
+    "native_height": 1416,
+    "sha256": "c9993c6a6b032886257c36a9cfdd522f4c8e657bcf908a2ebab3f8ae34440fb8",
+    "variants": [
+      {
+        "file": "assets/profile-01-640.webp",
+        "width": 640,
+        "height": 852,
+        "bytes": 36574
+      },
+      {
+        "file": "assets/profile-01-1064.webp",
+        "width": 1064,
+        "height": 1416,
+        "bytes": 123098
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/zcbTKQWAswECe4Til7jpzrscQA.svg",
+    "name": "profile-02.svg",
+    "vector": true,
+    "source_page": "profile",
+    "file": "assets/profile-02.svg",
+    "bytes": 643
+  },
+  {
+    "url": "https://framerusercontent.com/images/pZTuWqDMrnK8Icmq8d35MK9HMxs.svg",
+    "name": "profile-04.svg",
+    "vector": true,
+    "source_page": "profile",
+    "file": "assets/profile-04.svg",
+    "bytes": 362
+  },
+  {
+    "url": "https://framerusercontent.com/images/lyCu7Pbtt9oFHIUgSP0kuww0E9c.svg",
+    "name": "profile-06.svg",
+    "vector": true,
+    "source_page": "profile",
+    "file": "assets/profile-06.svg",
+    "bytes": 2694
+  },
+  {
+    "url": "https://framerusercontent.com/images/u6oEhMggh85UHpF389bmvnywUY.svg",
+    "name": "profile-08.svg",
+    "vector": true,
+    "source_page": "profile",
+    "file": "assets/profile-08.svg",
+    "bytes": 2064
+  },
+  {
+    "url": "https://framerusercontent.com/images/EZE9i85FaTgMktANzyKmaQw2B0.png",
+    "name": "profile-10",
+    "vector": false,
+    "source_page": "profile",
+    "native_width": 903,
+    "native_height": 1200,
+    "sha256": "eec082ed663cd5bbdf38efa89a2c8465d3962ec742a4bfa2d5df55c4fb3378b0",
+    "variants": [
+      {
+        "file": "assets/profile-10-640.webp",
+        "width": 640,
+        "height": 850,
+        "bytes": 26708
+      },
+      {
+        "file": "assets/profile-10-903.webp",
+        "width": 903,
+        "height": 1200,
+        "bytes": 64598
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/XNszoufqdOhkQMVWHICHbOILUXE.png",
+    "name": "profile-13",
+    "vector": false,
+    "source_page": "profile",
+    "native_width": 440,
+    "native_height": 478,
+    "sha256": "fd59cc66b80c2acfc494b570fccd5cce98fb83e43603c6b39ea95fcb57e1f265",
+    "variants": [
+      {
+        "file": "assets/profile-13-440.webp",
+        "width": 440,
+        "height": 478,
+        "bytes": 14738
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/1heZ2xWBHzEO4Xyx8Pl3MjFa5HI.png",
+    "name": "profile-16",
+    "vector": false,
+    "source_page": "profile",
+    "native_width": 440,
+    "native_height": 478,
+    "sha256": "f4e82f084ddb2cc20e3ee807827a8a6877dd17f33156d4692122d8891852e87e",
+    "variants": [
+      {
+        "file": "assets/profile-16-440.webp",
+        "width": 440,
+        "height": 478,
+        "bytes": 28098
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/KNyAHwLEOTUS2MhfZXk7eEuKEM8.png",
+    "name": "profile-19",
+    "vector": false,
+    "source_page": "profile",
+    "native_width": 440,
+    "native_height": 508,
+    "sha256": "a208a35e085f3cecb322a7b747826858f202de1eae61705394c9f2f316534a52",
+    "variants": [
+      {
+        "file": "assets/profile-19-440.webp",
+        "width": 440,
+        "height": 508,
+        "bytes": 23758
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/KtWpLzleC914b43WRuFwHpACDlg.png",
+    "name": "profile-21",
+    "vector": false,
+    "source_page": "profile",
+    "native_width": 440,
+    "native_height": 508,
+    "sha256": "6384248014c132141719b51c6f4023ca345945396b3e74a5a191fc754b9330bd",
+    "variants": [
+      {
+        "file": "assets/profile-21-440.webp",
+        "width": 440,
+        "height": 508,
+        "bytes": 16732
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/sTosQZRWuxIKnIjCTA4EHLgimM.jpg",
+    "name": "projects-aesthetic-origins-01",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "d5cd8b727886583303d2131439f2b9a71e7d866acfb42dfac84d62c7ffb88a68",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-01-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 11132
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-01-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 23822
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-01-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 50758
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-01-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 83416
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/r2BKitjcPav1or5zLIXiusQ5LFE.jpg",
+    "name": "projects-aesthetic-origins-02",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "e874bf0c1870ff419ff7ae8f6e6c68886abddc390609e921012c6ed52f7290cb",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-02-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 8966
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-02-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 21514
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-02-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 51522
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-02-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 84852
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/ljlJxZQgZXLakaZlBtvtwSWovSY.jpg",
+    "name": "projects-aesthetic-origins-03",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "0c08a8ab02f7315399930ea49ddb5e93e656ce395368c0a7ea2b1589663c78e0",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-03-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 11910
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-03-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 26810
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-03-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 54590
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-03-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 97366
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/a4wGkNMRh09STgHS2xhf0m8vaK0.jpg",
+    "name": "projects-aesthetic-origins-04",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "3b2a28e7700e2a9d9a99399f6c46226db712e1c3eb6510c9dff543453fb891ce",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-04-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 30108
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-04-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 74932
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-04-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 175294
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-04-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 269786
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/lLcm1Oz2BNmC9IVjA21F7h1qGkA.jpg",
+    "name": "projects-aesthetic-origins-05",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "c68e753802b5dedca47f172b497ba43ccd106a0b89f3020adb3bab3d04bb4c8a",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-05-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 19256
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-05-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 46786
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-05-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 107134
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-05-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 158134
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/SvwJ7EdA8mf97TaJTPWDujk2qU.jpg",
+    "name": "projects-aesthetic-origins-06",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 2000,
+    "native_height": 1600,
+    "sha256": "ad1551c7e848547ed4837ddeb2989cef2140f84734c71bbe20e3ab7410054aa9",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-06-640.webp",
+        "width": 640,
+        "height": 512,
+        "bytes": 16406
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-06-1280.webp",
+        "width": 1280,
+        "height": 1024,
+        "bytes": 48302
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-06-2000.webp",
+        "width": 2000,
+        "height": 1600,
+        "bytes": 86786
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/t20AcxDhvAbQqnwYq6Bhvnmqyo.jpg",
+    "name": "projects-aesthetic-origins-07",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 2000,
+    "native_height": 1600,
+    "sha256": "e3ebcdf74341f9a68fc09fe39b0afaa20d96eb64abfd753069be4ff36fce2ebc",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-07-640.webp",
+        "width": 640,
+        "height": 512,
+        "bytes": 8708
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-07-1280.webp",
+        "width": 1280,
+        "height": 1024,
+        "bytes": 23640
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-07-2000.webp",
+        "width": 2000,
+        "height": 1600,
+        "bytes": 44686
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/jtaYhhV6DJwlkSH3goFDsiQOM.jpg",
+    "name": "projects-aesthetic-origins-08",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 2000,
+    "native_height": 1600,
+    "sha256": "c9fb281d1c2b86791b2e966e68cba6b47f541d248aa6c1030d4a0cea60ee4d65",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-08-640.webp",
+        "width": 640,
+        "height": 512,
+        "bytes": 11388
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-08-1280.webp",
+        "width": 1280,
+        "height": 1024,
+        "bytes": 26026
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-08-2000.webp",
+        "width": 2000,
+        "height": 1600,
+        "bytes": 42806
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/K3azxUXQqPJMNsePbwEqHfSSCCQ.jpg",
+    "name": "projects-aesthetic-origins-09",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 2000,
+    "native_height": 1600,
+    "sha256": "c2bd219ffbafd7a81940571bae43fa28a2b8a9254b9c5c1cbc05a7d4abb40b2b",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-09-640.webp",
+        "width": 640,
+        "height": 512,
+        "bytes": 19030
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-09-1280.webp",
+        "width": 1280,
+        "height": 1024,
+        "bytes": 46070
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-09-2000.webp",
+        "width": 2000,
+        "height": 1600,
+        "bytes": 82766
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/0aNQbo23BoVWg3uAc88J0Cd6rBY.jpg",
+    "name": "projects-aesthetic-origins-10",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "144c93744e3db54838d7dbcf2d2a3279c477eae0120690c3bff49f15d5437ec3",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-10-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 13272
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-10-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 34334
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-10-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 75996
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-10-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 122784
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/psXAUyyJHX6LsabQg9AvWsmwigk.jpg",
+    "name": "projects-aesthetic-origins-11",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "7f4a18277bddba387ab47b579cc15e0d4f4afd9a95f6bdbd674d75f2296af9b1",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-11-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 10570
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-11-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 28696
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-11-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 63814
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-11-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 109924
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/TmsD5O7AsvN2jsYcFmCGfG5WC0.jpg",
+    "name": "projects-aesthetic-origins-12",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 2000,
+    "native_height": 1600,
+    "sha256": "928e8315882c15bd009fb6065f60d9f0d1875b0bdb97fde3c8a9c55900ab40e3",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-12-640.webp",
+        "width": 640,
+        "height": 512,
+        "bytes": 21284
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-12-1280.webp",
+        "width": 1280,
+        "height": 1024,
+        "bytes": 58990
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-12-2000.webp",
+        "width": 2000,
+        "height": 1600,
+        "bytes": 114666
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/Ulh3ZV58jjWhPunS7s1zxNenN8.jpg",
+    "name": "projects-aesthetic-origins-13",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "38c5e1e4440ced79daeafac1481116d73a599dc661bda1c410cf1c028345aac3",
+    "variants": [
+      {
+        "file": "assets/projects-aesthetic-origins-13-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 8436
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-13-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 21260
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-13-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 48572
+      },
+      {
+        "file": "assets/projects-aesthetic-origins-13-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 79844
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/qtllfS7ICZmK1OFfrSTz8xFIEZs.jpg",
+    "name": "projects-fragile-base-01",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 2829,
+    "native_height": 2887,
+    "sha256": "29a8092d1fb923ae072ac93887549c6fcca6e8ef5a0676d4745cc02cbda1b9b5",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-01-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 10590
+      },
+      {
+        "file": "assets/projects-fragile-base-01-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 22562
+      },
+      {
+        "file": "assets/projects-fragile-base-01-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 49878
+      },
+      {
+        "file": "assets/projects-fragile-base-01-2829.webp",
+        "width": 2829,
+        "height": 2887,
+        "bytes": 54330
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/KNGI7WJfjUeIBbm0GNwiI0Q44Y.jpg",
+    "name": "projects-fragile-base-02",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 2829,
+    "native_height": 2887,
+    "sha256": "e14b1d7697d3721941bc66df15bfedaa9d5c8df03cbdc44ca5247e53bbbcbd65",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-02-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 7516
+      },
+      {
+        "file": "assets/projects-fragile-base-02-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 17486
+      },
+      {
+        "file": "assets/projects-fragile-base-02-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 43620
+      },
+      {
+        "file": "assets/projects-fragile-base-02-2829.webp",
+        "width": 2829,
+        "height": 2887,
+        "bytes": 47216
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/88qEw7KYzQzOP6ixvJF6PQUGMoI.jpg",
+    "name": "projects-fragile-base-03",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 5760,
+    "native_height": 3240,
+    "sha256": "c1c027fb7bdf0c8a1333f9cd79c63715d1a0fcb0b6a82a92cf0542560b6d54e7",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-03-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 12574
+      },
+      {
+        "file": "assets/projects-fragile-base-03-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 33174
+      },
+      {
+        "file": "assets/projects-fragile-base-03-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 91026
+      },
+      {
+        "file": "assets/projects-fragile-base-03-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 172658
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/H9ShSiu0Pd1s0FLc5drl4eR0Qfs.jpg",
+    "name": "projects-fragile-base-04",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 2829,
+    "native_height": 2887,
+    "sha256": "adaddde03910351b16377e2447f71cfa649772e58dd83ae73f58fa78efc65b26",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-04-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 9954
+      },
+      {
+        "file": "assets/projects-fragile-base-04-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 29188
+      },
+      {
+        "file": "assets/projects-fragile-base-04-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 87944
+      },
+      {
+        "file": "assets/projects-fragile-base-04-2829.webp",
+        "width": 2829,
+        "height": 2887,
+        "bytes": 106446
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/wQ1DWea0vlxXJLALd0gGBHOYI2M.jpg",
+    "name": "projects-fragile-base-05",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 2829,
+    "native_height": 2887,
+    "sha256": "9a29fca9c0535355b71999c20820af6305b84898205743eff70b4b376953bc5c",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-05-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 13482
+      },
+      {
+        "file": "assets/projects-fragile-base-05-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 34254
+      },
+      {
+        "file": "assets/projects-fragile-base-05-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 89972
+      },
+      {
+        "file": "assets/projects-fragile-base-05-2829.webp",
+        "width": 2829,
+        "height": 2887,
+        "bytes": 107664
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/cmsEskn26UMdXCtIx1rHwSwEt68.jpg",
+    "name": "projects-fragile-base-06",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 5760,
+    "native_height": 3240,
+    "sha256": "fa515de29a1f99557b837d1be2baa49b8ef30009a13beb04467dbb856fd7d41c",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-06-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 19752
+      },
+      {
+        "file": "assets/projects-fragile-base-06-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 55002
+      },
+      {
+        "file": "assets/projects-fragile-base-06-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 158952
+      },
+      {
+        "file": "assets/projects-fragile-base-06-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 309032
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/zMqPp0Kv9HpZTpJra9ADdEIE76Q.jpg",
+    "name": "projects-fragile-base-07",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 5760,
+    "native_height": 3240,
+    "sha256": "9e7af72332bc439e8e6bc95f8bc5a49f7b8995c490070ea8db6f01caefd20a7f",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-07-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 14008
+      },
+      {
+        "file": "assets/projects-fragile-base-07-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 39620
+      },
+      {
+        "file": "assets/projects-fragile-base-07-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 112630
+      },
+      {
+        "file": "assets/projects-fragile-base-07-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 197102
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/cnhn24DmQUkapuicFv1AzTSR2kM.jpg",
+    "name": "projects-fragile-base-08",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 2829,
+    "native_height": 2887,
+    "sha256": "96d5e0aa397e186ec87e669ec9292239c19a2d2617ae632d9adca43f70de7289",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-08-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 19820
+      },
+      {
+        "file": "assets/projects-fragile-base-08-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 51124
+      },
+      {
+        "file": "assets/projects-fragile-base-08-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 139028
+      },
+      {
+        "file": "assets/projects-fragile-base-08-2829.webp",
+        "width": 2829,
+        "height": 2887,
+        "bytes": 167540
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/lq6G0TiFoJJkfPRw4kDz6ZPsc.jpg",
+    "name": "projects-fragile-base-09",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 2829,
+    "native_height": 2887,
+    "sha256": "dfc28b7ed9817fc459e811fb1fa98dfea6fa9c746b3226a1d032509f13bba45e",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-09-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 8914
+      },
+      {
+        "file": "assets/projects-fragile-base-09-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 23554
+      },
+      {
+        "file": "assets/projects-fragile-base-09-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 60524
+      },
+      {
+        "file": "assets/projects-fragile-base-09-2829.webp",
+        "width": 2829,
+        "height": 2887,
+        "bytes": 72612
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/e5gUOWD0tWVdSxPtgmNcXAhiqA.jpg",
+    "name": "projects-fragile-base-10",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 5760,
+    "native_height": 3240,
+    "sha256": "f20f3d1d226df346f00bd4168c36ad492b147cfdf0a14e2775bbfaaf9dd87a34",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-10-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 22316
+      },
+      {
+        "file": "assets/projects-fragile-base-10-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 65728
+      },
+      {
+        "file": "assets/projects-fragile-base-10-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 184870
+      },
+      {
+        "file": "assets/projects-fragile-base-10-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 339786
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/2sYsteW6ZYCjFM4WwhVv1teg0AU.jpg",
+    "name": "projects-fragile-base-11",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 5760,
+    "native_height": 3240,
+    "sha256": "35af4253c32e6df8a02d3c47bd49655b7afc2704d325a9bbe8a984cef309794e",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-11-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 6622
+      },
+      {
+        "file": "assets/projects-fragile-base-11-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 17914
+      },
+      {
+        "file": "assets/projects-fragile-base-11-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 46398
+      },
+      {
+        "file": "assets/projects-fragile-base-11-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 79426
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/DmfBGB4wTQBnytBIo7RtWuTBec.jpg",
+    "name": "projects-fragile-base-12",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 5760,
+    "native_height": 3240,
+    "sha256": "581dbec733a32a2a067829d65ec4162f7e11a1c2de402df381e1298d52a00beb",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-12-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 18250
+      },
+      {
+        "file": "assets/projects-fragile-base-12-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 49238
+      },
+      {
+        "file": "assets/projects-fragile-base-12-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 130950
+      },
+      {
+        "file": "assets/projects-fragile-base-12-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 240032
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/5SeO516XEfTp2CzOd7rXmx1U4c.jpg",
+    "name": "projects-fragile-base-13",
+    "vector": false,
+    "source_page": "projects__fragile-base",
+    "native_width": 5760,
+    "native_height": 3240,
+    "sha256": "f7648c11abd157df2dd65fdf74fc2e746662e6204c6fac83548c05852031eace",
+    "variants": [
+      {
+        "file": "assets/projects-fragile-base-13-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 10006
+      },
+      {
+        "file": "assets/projects-fragile-base-13-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 24528
+      },
+      {
+        "file": "assets/projects-fragile-base-13-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 58242
+      },
+      {
+        "file": "assets/projects-fragile-base-13-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 94974
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/6QLGWhi3POovZxgQQjDpNSwTNM.jpg",
+    "name": "projects-hocl-labs-01",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "824d1ffca66eb1ef4cc21475a52a6f034e9fc1f1298749af35bb1621ac1918c7",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-01-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 17742
+      },
+      {
+        "file": "assets/projects-hocl-labs-01-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 45798
+      },
+      {
+        "file": "assets/projects-hocl-labs-01-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 118732
+      },
+      {
+        "file": "assets/projects-hocl-labs-01-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 213156
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/JYkMKPJ9Zvn4rLgpnm00Jdijwg.jpg",
+    "name": "projects-hocl-labs-02",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "598097ce36ada4e58a81be7ad724088b25992300f7f212a3bb82000f97d777ff",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-02-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 19186
+      },
+      {
+        "file": "assets/projects-hocl-labs-02-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 55408
+      },
+      {
+        "file": "assets/projects-hocl-labs-02-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 142066
+      },
+      {
+        "file": "assets/projects-hocl-labs-02-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 249130
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/0zNASClWwfgHM39x95czMScBWYk.jpg",
+    "name": "projects-hocl-labs-03",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "84b2c95b7d7b53bac9d75b1e6e9e7d792f66ef0a8b0e81914b92594c2910e47f",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-03-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 18270
+      },
+      {
+        "file": "assets/projects-hocl-labs-03-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 43456
+      },
+      {
+        "file": "assets/projects-hocl-labs-03-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 97882
+      },
+      {
+        "file": "assets/projects-hocl-labs-03-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 172720
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/OFrbBv1sESxvkgxNRT8PRRLPAYE.jpg",
+    "name": "projects-hocl-labs-04",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "dcc5881e372dd1d1ee3d323ef565c5038209f88903452cc1ba42604e87818cdb",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-04-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 31764
+      },
+      {
+        "file": "assets/projects-hocl-labs-04-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 81910
+      },
+      {
+        "file": "assets/projects-hocl-labs-04-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 215378
+      },
+      {
+        "file": "assets/projects-hocl-labs-04-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 382374
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/ttgbwwJZU9kh2pWatgwk91Rk5u8.jpg",
+    "name": "projects-hocl-labs-05",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "90cb4a51b4139772437b7f307803c91a1bdc543e24480370dc63c90f32ade4ef",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-05-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 37936
+      },
+      {
+        "file": "assets/projects-hocl-labs-05-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 122010
+      },
+      {
+        "file": "assets/projects-hocl-labs-05-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 348932
+      },
+      {
+        "file": "assets/projects-hocl-labs-05-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 598528
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/9PwpN9gxKRgljaC3OUXHC41D7gc.jpg",
+    "name": "projects-hocl-labs-06",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "d8e369fa0f3fe0b030362409059900e5350181b404f75ac40f3c79b6aef67eea",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-06-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 15554
+      },
+      {
+        "file": "assets/projects-hocl-labs-06-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 37014
+      },
+      {
+        "file": "assets/projects-hocl-labs-06-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 92894
+      },
+      {
+        "file": "assets/projects-hocl-labs-06-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 165328
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/UCd4QYNwM0us0Iji246GtiCDGw.jpg",
+    "name": "projects-hocl-labs-07",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "05ac1feec4313b40f90b62c06011d522a742352045f53dda2dd439270ad3996d",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-07-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 21236
+      },
+      {
+        "file": "assets/projects-hocl-labs-07-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 59298
+      },
+      {
+        "file": "assets/projects-hocl-labs-07-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 157770
+      },
+      {
+        "file": "assets/projects-hocl-labs-07-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 299828
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/vw1xBsCzkmVkOVX5OSjJcl4g6I.jpg",
+    "name": "projects-hocl-labs-08",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "eda0b307818fd5acd963df8ee48ff07a5761f29b87129a4525249fac817d65e5",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-08-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 49416
+      },
+      {
+        "file": "assets/projects-hocl-labs-08-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 150078
+      },
+      {
+        "file": "assets/projects-hocl-labs-08-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 424250
+      },
+      {
+        "file": "assets/projects-hocl-labs-08-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 690394
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/H9f7Ng5NO2NbcpZp9z867xV5yI.jpg",
+    "name": "projects-hocl-labs-09",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "c826898283513bc2a40192e043cada7da83ebb745fa77d1763621d0042074d4e",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-09-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 17800
+      },
+      {
+        "file": "assets/projects-hocl-labs-09-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 54432
+      },
+      {
+        "file": "assets/projects-hocl-labs-09-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 146470
+      },
+      {
+        "file": "assets/projects-hocl-labs-09-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 263484
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/kjDDlxoScxvZq7JudwamOZdomnY.jpg",
+    "name": "projects-hocl-labs-10",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "c57b3c61bc62e1a9e3c6d66102bb0f4fc6f7b9d3da0af66aed1fe29e6ee4fdc9",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-10-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 23542
+      },
+      {
+        "file": "assets/projects-hocl-labs-10-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 54598
+      },
+      {
+        "file": "assets/projects-hocl-labs-10-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 132222
+      },
+      {
+        "file": "assets/projects-hocl-labs-10-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 248176
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/Wy7y4W1BZBThWJbM1bS6REp0.jpg",
+    "name": "projects-hocl-labs-11",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "5d7b38a6be8b3a0b255e9cfb83ccfa636c87a20ac7a7d88507776ae5c909238d",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-11-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 13414
+      },
+      {
+        "file": "assets/projects-hocl-labs-11-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 37992
+      },
+      {
+        "file": "assets/projects-hocl-labs-11-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 99244
+      },
+      {
+        "file": "assets/projects-hocl-labs-11-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 182850
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/RDvGU0Ak31CwbLghL8IiiVx5mh0.jpg",
+    "name": "projects-hocl-labs-12",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "01d507e3a79516502b38508e58e36f28ca1be9d1cc8664b61e518ec1ac30c71b",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-12-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 14204
+      },
+      {
+        "file": "assets/projects-hocl-labs-12-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 37852
+      },
+      {
+        "file": "assets/projects-hocl-labs-12-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 115020
+      },
+      {
+        "file": "assets/projects-hocl-labs-12-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 224232
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/HmPKrIYTfc1fGQ15Vx6wFJJgLQ.jpg",
+    "name": "projects-hocl-labs-13",
+    "vector": false,
+    "source_page": "projects__hocl-labs",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "7b24e45122db99d3b5a2c4a575925ddd75ffae7fd7349a76239bb9ef0d24a935",
+    "variants": [
+      {
+        "file": "assets/projects-hocl-labs-13-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 10784
+      },
+      {
+        "file": "assets/projects-hocl-labs-13-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 31824
+      },
+      {
+        "file": "assets/projects-hocl-labs-13-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 91486
+      },
+      {
+        "file": "assets/projects-hocl-labs-13-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 182670
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/Fr5kHhVre3ail5oJfpzehCwaa4.jpg",
+    "name": "projects-tafuta-01",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "0435343f1093201223e7df788e6efa9741f30cbcad905d5c3aa9ec2b65934d28",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-01-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 10934
+      },
+      {
+        "file": "assets/projects-tafuta-01-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 22802
+      },
+      {
+        "file": "assets/projects-tafuta-01-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 49764
+      },
+      {
+        "file": "assets/projects-tafuta-01-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 82148
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/aseUjQ7jtKeRgEGssQ8izaPdDw.jpg",
+    "name": "projects-tafuta-02",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "cc14fa0a1adde76362299f1cf99764f3622397e50c3b373f55e659a9877254a6",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-02-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 8942
+      },
+      {
+        "file": "assets/projects-tafuta-02-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 21658
+      },
+      {
+        "file": "assets/projects-tafuta-02-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 52636
+      },
+      {
+        "file": "assets/projects-tafuta-02-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 87954
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/mqRajbQ3nLp0o04iYPTKkGx7GgI.jpg",
+    "name": "projects-tafuta-03",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "d0f6fff0e6ea69531d04e8930548166d622fcc457950d1d6e9ddf3285e158ebb",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-03-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 15228
+      },
+      {
+        "file": "assets/projects-tafuta-03-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 40960
+      },
+      {
+        "file": "assets/projects-tafuta-03-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 106878
+      },
+      {
+        "file": "assets/projects-tafuta-03-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 185072
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/h4cMeZNfTX4MVLmXs338zNBMpw.jpg",
+    "name": "projects-tafuta-04",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "059ce203d2e711ad8e854413a92c217e0290d21c79e1d58a601384a7c094870c",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-04-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 11616
+      },
+      {
+        "file": "assets/projects-tafuta-04-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 30870
+      },
+      {
+        "file": "assets/projects-tafuta-04-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 74520
+      },
+      {
+        "file": "assets/projects-tafuta-04-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 122288
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/TgbroIvNu672AIkrE8AQXjCTGPk.jpg",
+    "name": "projects-tafuta-05",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "9765ef0f190c344b2a17faf731be263d34846a5090dff6054a13455e5b8ad822",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-05-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 22340
+      },
+      {
+        "file": "assets/projects-tafuta-05-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 53376
+      },
+      {
+        "file": "assets/projects-tafuta-05-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 120754
+      },
+      {
+        "file": "assets/projects-tafuta-05-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 199902
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/qAO2cIr5pxioNmWVM2tyLNtkVX4.jpg",
+    "name": "projects-tafuta-06",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "41ca6eb99e3c4d1faa1f97b989edc20285045855c0d7c90b945c1251d0357636",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-06-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 34816
+      },
+      {
+        "file": "assets/projects-tafuta-06-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 94278
+      },
+      {
+        "file": "assets/projects-tafuta-06-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 253122
+      },
+      {
+        "file": "assets/projects-tafuta-06-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 440972
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/vJBcMn8wN8PaGytgfqsb8hYzw.jpg",
+    "name": "projects-tafuta-07",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 3840,
+    "native_height": 2160,
+    "sha256": "cf5f9200ab398c6b5753b75ad929248fb45f44b92dd0feab6b5403f3aa23fc3f",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-07-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 35910
+      },
+      {
+        "file": "assets/projects-tafuta-07-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 98802
+      },
+      {
+        "file": "assets/projects-tafuta-07-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 322400
+      },
+      {
+        "file": "assets/projects-tafuta-07-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 659626
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/vjmLRje6ntj3NdxKf7dVXfFRA0.jpg",
+    "name": "projects-tafuta-08",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "62893e9d174bc454a95c3483954391de295cc4551a1a819474fe832fe97f06e9",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-08-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 23404
+      },
+      {
+        "file": "assets/projects-tafuta-08-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 56732
+      },
+      {
+        "file": "assets/projects-tafuta-08-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 131896
+      },
+      {
+        "file": "assets/projects-tafuta-08-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 214978
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/Omc07MqHfI3gcBCxWSWVcvrueQ.jpg",
+    "name": "projects-tafuta-09",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "c8abb19bf47edf420e0e33068b4ea15f453245b16821d14c16ffe73c8b6fe488",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-09-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 24194
+      },
+      {
+        "file": "assets/projects-tafuta-09-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 56784
+      },
+      {
+        "file": "assets/projects-tafuta-09-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 128422
+      },
+      {
+        "file": "assets/projects-tafuta-09-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 213124
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/Wf2BcKgDbaCFVa05uUyEu79hYY.jpg",
+    "name": "projects-tafuta-10",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "b9e20d33d06900dc607d74126f0572d3bea670ad6afe4216610c362a5e5707aa",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-10-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 18768
+      },
+      {
+        "file": "assets/projects-tafuta-10-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 47076
+      },
+      {
+        "file": "assets/projects-tafuta-10-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 113938
+      },
+      {
+        "file": "assets/projects-tafuta-10-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 197024
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/OOxbWbkp7pQAWNGPrxYJWC2HHsA.jpg",
+    "name": "projects-tafuta-11",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "f2df428d76cc508f59c0ec8296000a5bd5e7c88252136ab1b536ce769980f296",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-11-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 7984
+      },
+      {
+        "file": "assets/projects-tafuta-11-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 79906
+      },
+      {
+        "file": "assets/projects-tafuta-11-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 213940
+      },
+      {
+        "file": "assets/projects-tafuta-11-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 327116
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/IJatay3bfmIk07Ybc9J0BAzBWE.jpg",
+    "name": "projects-tafuta-12",
+    "vector": false,
+    "source_page": "projects__tafuta",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "5f667459cb26863575104c99ad56f5d36e98719963e54ae834ac003ed81732c6",
+    "variants": [
+      {
+        "file": "assets/projects-tafuta-12-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 22204
+      },
+      {
+        "file": "assets/projects-tafuta-12-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 116802
+      },
+      {
+        "file": "assets/projects-tafuta-12-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 304516
+      },
+      {
+        "file": "assets/projects-tafuta-12-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 551252
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/0JJ24tYwSv6XQDre96EJNdk72W8.jpg",
+    "name": "projects-taurus-arena-01",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 3767,
+    "native_height": 3562,
+    "sha256": "38af3dfc8b61454808359b4788fc22f8adf449e985872e47c00c664a36c18f8c",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-01-640.webp",
+        "width": 640,
+        "height": 605,
+        "bytes": 15066
+      },
+      {
+        "file": "assets/projects-taurus-arena-01-1280.webp",
+        "width": 1280,
+        "height": 1210,
+        "bytes": 33232
+      },
+      {
+        "file": "assets/projects-taurus-arena-01-2560.webp",
+        "width": 2560,
+        "height": 2421,
+        "bytes": 74038
+      },
+      {
+        "file": "assets/projects-taurus-arena-01-3767.webp",
+        "width": 3767,
+        "height": 3562,
+        "bytes": 122550
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/NmL4srUWHSIM7HCQ9QTHHFjpVM.jpg",
+    "name": "projects-taurus-arena-02",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 3767,
+    "native_height": 3562,
+    "sha256": "8d264d977054f743ff384f14b621e1a1a80dbca3a828aadb88e8e07a81dd2263",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-02-640.webp",
+        "width": 640,
+        "height": 605,
+        "bytes": 7840
+      },
+      {
+        "file": "assets/projects-taurus-arena-02-1280.webp",
+        "width": 1280,
+        "height": 1210,
+        "bytes": 19424
+      },
+      {
+        "file": "assets/projects-taurus-arena-02-2560.webp",
+        "width": 2560,
+        "height": 2421,
+        "bytes": 48824
+      },
+      {
+        "file": "assets/projects-taurus-arena-02-3767.webp",
+        "width": 3767,
+        "height": 3562,
+        "bytes": 81200
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/WvnQTqLweiyUF0nngM0E2ewK8s0.jpg",
+    "name": "projects-taurus-arena-03",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "d3b50b8471aa2c759fe7ffd8a7440e2c5ad1e18d4cd5f12dd84c0169f71742b0",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-03-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 18304
+      },
+      {
+        "file": "assets/projects-taurus-arena-03-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 45100
+      },
+      {
+        "file": "assets/projects-taurus-arena-03-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 106474
+      },
+      {
+        "file": "assets/projects-taurus-arena-03-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 179144
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/AuDxTUxD851F74YFxAeHozd2Y.jpg",
+    "name": "projects-taurus-arena-04",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "07bda6fccc8bf8e53ff499eb362d125be95014fce4456e20fccee4393367ac5b",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-04-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 24020
+      },
+      {
+        "file": "assets/projects-taurus-arena-04-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 60896
+      },
+      {
+        "file": "assets/projects-taurus-arena-04-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 141170
+      },
+      {
+        "file": "assets/projects-taurus-arena-04-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 229290
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/VePyAezpFyzA5WUHsFD7y7ellYE.jpg",
+    "name": "projects-taurus-arena-05",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "a1e0bbfc26fd50be3756ab2f9c1ae1c2f34629cf3c6fc850d9abd60c52adfe68",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-05-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 36590
+      },
+      {
+        "file": "assets/projects-taurus-arena-05-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 107374
+      },
+      {
+        "file": "assets/projects-taurus-arena-05-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 268858
+      },
+      {
+        "file": "assets/projects-taurus-arena-05-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 535616
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/5SXj5cdhzk85XnkZ7kLVt31s0E.jpg",
+    "name": "projects-taurus-arena-06",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "95b63f83cd15f2747251cd91704856cb6ad471f826610d08a68614840c05b0dd",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-06-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 11280
+      },
+      {
+        "file": "assets/projects-taurus-arena-06-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 28814
+      },
+      {
+        "file": "assets/projects-taurus-arena-06-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 71692
+      },
+      {
+        "file": "assets/projects-taurus-arena-06-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 117448
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/25ofMGkvX7H6ty8SaJe7B57i8.jpg",
+    "name": "projects-taurus-arena-07",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "c5cd7d135485e31f18755b419d589b40630d4d42942cddf85665c5578c1ffd4d",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-07-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 15808
+      },
+      {
+        "file": "assets/projects-taurus-arena-07-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 37032
+      },
+      {
+        "file": "assets/projects-taurus-arena-07-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 81042
+      },
+      {
+        "file": "assets/projects-taurus-arena-07-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 129198
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/ig4D3m5q7xlJslxIWCGQX6jj8g.jpg",
+    "name": "projects-taurus-arena-08",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "b4c8a8d67e072842e9094c3f28855654a9411707f6d63092fbe9245f5a994cc0",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-08-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 35710
+      },
+      {
+        "file": "assets/projects-taurus-arena-08-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 100166
+      },
+      {
+        "file": "assets/projects-taurus-arena-08-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 244864
+      },
+      {
+        "file": "assets/projects-taurus-arena-08-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 444804
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/w6AlbB5z4qUkTbMxgsj6Yxs8iQ.jpg",
+    "name": "projects-taurus-arena-09",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 3772,
+    "native_height": 3849,
+    "sha256": "940f45f5f9e1595c85cf7466d48183d57a6b1c8898c9f1dbfed1320b8bfefe85",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-09-640.webp",
+        "width": 640,
+        "height": 653,
+        "bytes": 11716
+      },
+      {
+        "file": "assets/projects-taurus-arena-09-1280.webp",
+        "width": 1280,
+        "height": 1306,
+        "bytes": 28312
+      },
+      {
+        "file": "assets/projects-taurus-arena-09-2560.webp",
+        "width": 2560,
+        "height": 2612,
+        "bytes": 69648
+      },
+      {
+        "file": "assets/projects-taurus-arena-09-3772.webp",
+        "width": 3772,
+        "height": 3849,
+        "bytes": 123332
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/ahbQaFQ5tbtJouRsHYj6uOQ.jpg",
+    "name": "projects-taurus-arena-10",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "fb81d4af3d2692bf8f5dd987cab179bc1037363fd6487c8d1f5b425477643580",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-10-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 17760
+      },
+      {
+        "file": "assets/projects-taurus-arena-10-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 48422
+      },
+      {
+        "file": "assets/projects-taurus-arena-10-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 122318
+      },
+      {
+        "file": "assets/projects-taurus-arena-10-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 201224
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/4eutErQEomhOHbTGwqrboi4gK8.jpg",
+    "name": "projects-taurus-arena-11",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "e2a87032f7605778fc1f1203dd511f39b71143936b8cd1a5b28a0e3ea944ccaa",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-11-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 11508
+      },
+      {
+        "file": "assets/projects-taurus-arena-11-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 32962
+      },
+      {
+        "file": "assets/projects-taurus-arena-11-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 83280
+      },
+      {
+        "file": "assets/projects-taurus-arena-11-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 134602
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/ZoiKB1wtel5qg9nyKjB5jtjdjU0.jpg",
+    "name": "projects-taurus-arena-12",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "260e0e5ac768f7c011a4c19aab01041b087247a850b723cc8b2553abc0d475f6",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-12-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 14788
+      },
+      {
+        "file": "assets/projects-taurus-arena-12-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 42450
+      },
+      {
+        "file": "assets/projects-taurus-arena-12-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 116596
+      },
+      {
+        "file": "assets/projects-taurus-arena-12-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 207862
+      }
+    ]
+  },
+  {
+    "url": "https://framerusercontent.com/images/rBjEM6BBtuQgiVXKYim5OJjK8O4.jpg",
+    "name": "projects-taurus-arena-13",
+    "vector": false,
+    "source_page": "projects__taurus-arena",
+    "native_width": 7680,
+    "native_height": 4320,
+    "sha256": "0e7866af7c3f9a91d744b436e781d2c29421a6f90ed257836e6300dc15b0f0c0",
+    "variants": [
+      {
+        "file": "assets/projects-taurus-arena-13-640.webp",
+        "width": 640,
+        "height": 360,
+        "bytes": 8586
+      },
+      {
+        "file": "assets/projects-taurus-arena-13-1280.webp",
+        "width": 1280,
+        "height": 720,
+        "bytes": 23560
+      },
+      {
+        "file": "assets/projects-taurus-arena-13-2560.webp",
+        "width": 2560,
+        "height": 1440,
+        "bytes": 59054
+      },
+      {
+        "file": "assets/projects-taurus-arena-13-3840.webp",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 98594
+      }
+    ]
+  }
+]

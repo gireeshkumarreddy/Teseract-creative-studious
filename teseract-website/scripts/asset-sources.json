@@ -1,0 +1,612 @@
+[
+  {
+    "url": "https://framerusercontent.com/images/ZVkjQ0FlJu0aGji9XqfmAeRw.png",
+    "name": "404-01",
+    "vector": false,
+    "source_page": "404"
+  },
+  {
+    "url": "https://framerusercontent.com/images/GMwbr2lLsWuyGfBOZKIfnkqerk.jpg",
+    "name": "contact-01",
+    "vector": false,
+    "source_page": "contact"
+  },
+  {
+    "url": "https://framerusercontent.com/images/I8HQTEryTQMD9iFqKK6p3iynj0.png",
+    "name": "contact-02",
+    "vector": false,
+    "source_page": "contact"
+  },
+  {
+    "url": "https://framerusercontent.com/images/ACf6fkOdB7fQlLnmagGJQ56z4.jpg",
+    "name": "home-01",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/Z5iU0GC3rNz8Ku68nza1TaH4i9Y.jpg",
+    "name": "home-02",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/ISNcDimHxsFEIuBygZokQUyk9g.jpg",
+    "name": "home-03",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/UfQFlkZcUAjmZN1H3FJ5kjRAeI.jpg",
+    "name": "home-04",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/81s3Eu5WRpAE2frc9aFblerdE.jpg",
+    "name": "home-05",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/WFbPbBD5Qp7e7AEIM85ANL3jOOg.jpg",
+    "name": "home-06",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/mh0ApVBexy1Eb2GNxsydae0esc.jpg",
+    "name": "home-07",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/IkC8MfAbbNXjfVCA732YuqBtwE.jpg",
+    "name": "home-08",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/5uiuB5wESGEmgf8JxcUwmBs5JJU.jpg",
+    "name": "home-09",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/4yTuYH6SnfIQKaOaibWKPUq16M.jpg",
+    "name": "home-10",
+    "vector": false,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/assets/JeWC0e3uj1uCDfsdMMPFSrYIex8.svg",
+    "name": "home-11.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/assets/ggbQXYZQh4jo6bHX58ntfmQzUM.svg",
+    "name": "home-12.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/assets/4d5eVQ4Gy6CwNIWUPdrAVLCQPDY.svg",
+    "name": "home-13.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/assets/xuaGAk0PPP2TtRnHiVujlXNGg.svg",
+    "name": "home-14.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/assets/oPQQEQ2kvnGSlOecBIBEtakZYwg.svg",
+    "name": "home-15.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/cjD249GLFDpyvRZqtdEFu27E4.svg",
+    "name": "home-16.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/0rr1QeZla3GANwTW62PIon0QIQ.svg",
+    "name": "home-17.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/NUR2J6VN4w4WdwbeBZuSKjNcdE0.svg",
+    "name": "home-18.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/iuWZ3IveQ2nZbyAkWqrTky2lho.svg",
+    "name": "home-19.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/2jEuzMzcszAwHPYsH92a7EabzYU.svg",
+    "name": "home-20.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/aSiFOmUlowllz85TTVSDiVUE2U.svg",
+    "name": "home-21.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/3AfnG89aZFfXBhYnfpx7PyPLTmo.svg",
+    "name": "home-22.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/CehKtiFcMtwCuNJ8DO4s1cakh8w.svg",
+    "name": "home-23.svg",
+    "vector": true,
+    "source_page": "home"
+  },
+  {
+    "url": "https://framerusercontent.com/images/LnleQVyrAAigZiRuiWNq3xGJQ4.png",
+    "name": "profile-01",
+    "vector": false,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/zcbTKQWAswECe4Til7jpzrscQA.svg",
+    "name": "profile-02.svg",
+    "vector": true,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/pZTuWqDMrnK8Icmq8d35MK9HMxs.svg",
+    "name": "profile-04.svg",
+    "vector": true,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/lyCu7Pbtt9oFHIUgSP0kuww0E9c.svg",
+    "name": "profile-06.svg",
+    "vector": true,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/u6oEhMggh85UHpF389bmvnywUY.svg",
+    "name": "profile-08.svg",
+    "vector": true,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/EZE9i85FaTgMktANzyKmaQw2B0.png",
+    "name": "profile-10",
+    "vector": false,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/XNszoufqdOhkQMVWHICHbOILUXE.png",
+    "name": "profile-13",
+    "vector": false,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/1heZ2xWBHzEO4Xyx8Pl3MjFa5HI.png",
+    "name": "profile-16",
+    "vector": false,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/KNyAHwLEOTUS2MhfZXk7eEuKEM8.png",
+    "name": "profile-19",
+    "vector": false,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/KtWpLzleC914b43WRuFwHpACDlg.png",
+    "name": "profile-21",
+    "vector": false,
+    "source_page": "profile"
+  },
+  {
+    "url": "https://framerusercontent.com/images/sTosQZRWuxIKnIjCTA4EHLgimM.jpg",
+    "name": "projects-aesthetic-origins-01",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/r2BKitjcPav1or5zLIXiusQ5LFE.jpg",
+    "name": "projects-aesthetic-origins-02",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/ljlJxZQgZXLakaZlBtvtwSWovSY.jpg",
+    "name": "projects-aesthetic-origins-03",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/a4wGkNMRh09STgHS2xhf0m8vaK0.jpg",
+    "name": "projects-aesthetic-origins-04",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/lLcm1Oz2BNmC9IVjA21F7h1qGkA.jpg",
+    "name": "projects-aesthetic-origins-05",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/SvwJ7EdA8mf97TaJTPWDujk2qU.jpg",
+    "name": "projects-aesthetic-origins-06",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/t20AcxDhvAbQqnwYq6Bhvnmqyo.jpg",
+    "name": "projects-aesthetic-origins-07",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/jtaYhhV6DJwlkSH3goFDsiQOM.jpg",
+    "name": "projects-aesthetic-origins-08",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/K3azxUXQqPJMNsePbwEqHfSSCCQ.jpg",
+    "name": "projects-aesthetic-origins-09",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/0aNQbo23BoVWg3uAc88J0Cd6rBY.jpg",
+    "name": "projects-aesthetic-origins-10",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/psXAUyyJHX6LsabQg9AvWsmwigk.jpg",
+    "name": "projects-aesthetic-origins-11",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/TmsD5O7AsvN2jsYcFmCGfG5WC0.jpg",
+    "name": "projects-aesthetic-origins-12",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/Ulh3ZV58jjWhPunS7s1zxNenN8.jpg",
+    "name": "projects-aesthetic-origins-13",
+    "vector": false,
+    "source_page": "projects__aesthetic-origins"
+  },
+  {
+    "url": "https://framerusercontent.com/images/qtllfS7ICZmK1OFfrSTz8xFIEZs.jpg",
+    "name": "projects-fragile-base-01",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/KNGI7WJfjUeIBbm0GNwiI0Q44Y.jpg",
+    "name": "projects-fragile-base-02",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/88qEw7KYzQzOP6ixvJF6PQUGMoI.jpg",
+    "name": "projects-fragile-base-03",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/H9ShSiu0Pd1s0FLc5drl4eR0Qfs.jpg",
+    "name": "projects-fragile-base-04",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/wQ1DWea0vlxXJLALd0gGBHOYI2M.jpg",
+    "name": "projects-fragile-base-05",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/cmsEskn26UMdXCtIx1rHwSwEt68.jpg",
+    "name": "projects-fragile-base-06",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/zMqPp0Kv9HpZTpJra9ADdEIE76Q.jpg",
+    "name": "projects-fragile-base-07",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/cnhn24DmQUkapuicFv1AzTSR2kM.jpg",
+    "name": "projects-fragile-base-08",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/lq6G0TiFoJJkfPRw4kDz6ZPsc.jpg",
+    "name": "projects-fragile-base-09",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/e5gUOWD0tWVdSxPtgmNcXAhiqA.jpg",
+    "name": "projects-fragile-base-10",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/2sYsteW6ZYCjFM4WwhVv1teg0AU.jpg",
+    "name": "projects-fragile-base-11",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/DmfBGB4wTQBnytBIo7RtWuTBec.jpg",
+    "name": "projects-fragile-base-12",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/5SeO516XEfTp2CzOd7rXmx1U4c.jpg",
+    "name": "projects-fragile-base-13",
+    "vector": false,
+    "source_page": "projects__fragile-base"
+  },
+  {
+    "url": "https://framerusercontent.com/images/6QLGWhi3POovZxgQQjDpNSwTNM.jpg",
+    "name": "projects-hocl-labs-01",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/JYkMKPJ9Zvn4rLgpnm00Jdijwg.jpg",
+    "name": "projects-hocl-labs-02",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/0zNASClWwfgHM39x95czMScBWYk.jpg",
+    "name": "projects-hocl-labs-03",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/OFrbBv1sESxvkgxNRT8PRRLPAYE.jpg",
+    "name": "projects-hocl-labs-04",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/ttgbwwJZU9kh2pWatgwk91Rk5u8.jpg",
+    "name": "projects-hocl-labs-05",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/9PwpN9gxKRgljaC3OUXHC41D7gc.jpg",
+    "name": "projects-hocl-labs-06",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/UCd4QYNwM0us0Iji246GtiCDGw.jpg",
+    "name": "projects-hocl-labs-07",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/vw1xBsCzkmVkOVX5OSjJcl4g6I.jpg",
+    "name": "projects-hocl-labs-08",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/H9f7Ng5NO2NbcpZp9z867xV5yI.jpg",
+    "name": "projects-hocl-labs-09",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/kjDDlxoScxvZq7JudwamOZdomnY.jpg",
+    "name": "projects-hocl-labs-10",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/Wy7y4W1BZBThWJbM1bS6REp0.jpg",
+    "name": "projects-hocl-labs-11",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/RDvGU0Ak31CwbLghL8IiiVx5mh0.jpg",
+    "name": "projects-hocl-labs-12",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/HmPKrIYTfc1fGQ15Vx6wFJJgLQ.jpg",
+    "name": "projects-hocl-labs-13",
+    "vector": false,
+    "source_page": "projects__hocl-labs"
+  },
+  {
+    "url": "https://framerusercontent.com/images/Fr5kHhVre3ail5oJfpzehCwaa4.jpg",
+    "name": "projects-tafuta-01",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/aseUjQ7jtKeRgEGssQ8izaPdDw.jpg",
+    "name": "projects-tafuta-02",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/mqRajbQ3nLp0o04iYPTKkGx7GgI.jpg",
+    "name": "projects-tafuta-03",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/h4cMeZNfTX4MVLmXs338zNBMpw.jpg",
+    "name": "projects-tafuta-04",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/TgbroIvNu672AIkrE8AQXjCTGPk.jpg",
+    "name": "projects-tafuta-05",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/qAO2cIr5pxioNmWVM2tyLNtkVX4.jpg",
+    "name": "projects-tafuta-06",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/vJBcMn8wN8PaGytgfqsb8hYzw.jpg",
+    "name": "projects-tafuta-07",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/vjmLRje6ntj3NdxKf7dVXfFRA0.jpg",
+    "name": "projects-tafuta-08",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/Omc07MqHfI3gcBCxWSWVcvrueQ.jpg",
+    "name": "projects-tafuta-09",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/Wf2BcKgDbaCFVa05uUyEu79hYY.jpg",
+    "name": "projects-tafuta-10",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/OOxbWbkp7pQAWNGPrxYJWC2HHsA.jpg",
+    "name": "projects-tafuta-11",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/IJatay3bfmIk07Ybc9J0BAzBWE.jpg",
+    "name": "projects-tafuta-12",
+    "vector": false,
+    "source_page": "projects__tafuta"
+  },
+  {
+    "url": "https://framerusercontent.com/images/0JJ24tYwSv6XQDre96EJNdk72W8.jpg",
+    "name": "projects-taurus-arena-01",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/NmL4srUWHSIM7HCQ9QTHHFjpVM.jpg",
+    "name": "projects-taurus-arena-02",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/WvnQTqLweiyUF0nngM0E2ewK8s0.jpg",
+    "name": "projects-taurus-arena-03",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/AuDxTUxD851F74YFxAeHozd2Y.jpg",
+    "name": "projects-taurus-arena-04",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/VePyAezpFyzA5WUHsFD7y7ellYE.jpg",
+    "name": "projects-taurus-arena-05",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/5SXj5cdhzk85XnkZ7kLVt31s0E.jpg",
+    "name": "projects-taurus-arena-06",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/25ofMGkvX7H6ty8SaJe7B57i8.jpg",
+    "name": "projects-taurus-arena-07",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/ig4D3m5q7xlJslxIWCGQX6jj8g.jpg",
+    "name": "projects-taurus-arena-08",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/w6AlbB5z4qUkTbMxgsj6Yxs8iQ.jpg",
+    "name": "projects-taurus-arena-09",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/ahbQaFQ5tbtJouRsHYj6uOQ.jpg",
+    "name": "projects-taurus-arena-10",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/4eutErQEomhOHbTGwqrboi4gK8.jpg",
+    "name": "projects-taurus-arena-11",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/ZoiKB1wtel5qg9nyKjB5jtjdjU0.jpg",
+    "name": "projects-taurus-arena-12",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://framerusercontent.com/images/rBjEM6BBtuQgiVXKYim5OJjK8O4.jpg",
+    "name": "projects-taurus-arena-13",
+    "vector": false,
+    "source_page": "projects__taurus-arena"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2",
+    "name": "geist.woff2",
+    "font": true
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFg08vz7ehw.woff2",
+    "name": "geist-mono.woff2",
+    "font": true
+  }
+]

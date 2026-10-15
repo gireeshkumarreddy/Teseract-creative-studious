@@ -1,0 +1,39 @@
+/* Motion system. Everything is opt-in through html.motion (set in <head> only when the visitor
+   has not asked for reduced motion), so content is never hidden without JS. */
+
+/* Appear / scroll reveal — reference appear: opacity .001→1 + y offset, spring 400/30/1. */
+.motion [data-reveal]{opacity:.001;transform:translate3d(0,var(--y,40px),0) scale(var(--s,1));filter:blur(var(--reveal-blur,0));
+  transition:opacity calc(var(--spring-d) * 1.1) cubic-bezier(.25,.1,.25,1) var(--d,0ms),transform var(--spring-d) var(--spring) var(--d,0ms),filter var(--spring-d) var(--ease) var(--d,0ms);will-change:opacity,transform}
+.motion [data-reveal=fade]{--y:0px}
+.motion [data-reveal=blur]{--reveal-blur:8px;--y:24px}
+.motion [data-reveal=scale]{--y:24px;--s:.96}
+.motion [data-reveal].is-in{opacity:1;transform:none;filter:none;will-change:auto}
+
+/* Line/word rise for display headings marked data-split (JS wraps words). */
+[data-split] .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+[data-split] .w__i{display:inline-block}
+.motion [data-split] .w__i{transform:translate3d(0,108%,0);transition:transform 1.05s var(--ease) calc(var(--d,0ms) + var(--i,0) * 38ms)}
+.motion [data-split].is-in .w__i{transform:none}
+
+/* Image reveal — ZIP technique (scale 1.1→1 over 1.3s) plus the recommended fade so lazy images never pop. */
+.reveal-image{overflow:hidden;background:var(--surface-2)}
+.reveal-image img,.reveal-image video{transform:scale(1);transition:transform 1.3s var(--ease),opacity .7s ease}
+.motion .reveal-image:not(.is-in) img,.motion .reveal-image:not(.is-in) video{transform:scale(1.1);opacity:0}
+
+/* Clip reveal for framed media (used on case-study frames and the idea laptop). */
+.motion [data-clip]{clip-path:inset(12% 6% 12% 6% round 24px);transition:clip-path 1.25s var(--ease) var(--d,0ms)}
+.motion [data-clip].is-in{clip-path:inset(0 0 0 0 round 0)}
+
+/* Page transitions (ZIP leave-shade on the black page, plus an enter fade). */
+.page-shade{position:fixed;inset:0;z-index:300;pointer-events:none;background:var(--bg);opacity:0;transition:opacity .26s ease}
+.is-leaving .page-shade{opacity:1}
+.motion.is-entering .page-shade{opacity:1;transition:none}
+
+@keyframes ts-spin{to{transform:rotate(360deg)}}
+@keyframes ts-pulse{0%{transform:scale(1);opacity:.84}70%{transform:scale(3);opacity:0}100%{transform:scale(3);opacity:0}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0ms!important}
+  .page-shade{display:none}
+}

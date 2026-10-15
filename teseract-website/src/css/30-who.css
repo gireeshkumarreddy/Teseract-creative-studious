@@ -1,0 +1,757 @@
+/* ==========================================================================
+   Inner pages (who-we-are, contact, privacy, terms, 404) — shared bits (.pg-*)
+   Reference vocabulary: hero lockup (ref-hero-nav §4), frame + price-card (§1),
+   checklist seal rows, toggle-row boxes.
+   Black theme (DARK-THEME.md): --ink type on the black page and the layered near-black cards,
+   --ink-2 secondary copy, --muted-strong small labels, hairline row boxes instead of #f3f3f3,
+   dark/soft shadows instead of grey drop shadows, red only for dots and the promise underline.
+   ========================================================================== */
+
+/* ---------- Page hero: pill → H1 72/0.95/-0.05em → 18px balanced sub (reference hero lockup) */
+.pg-hero{position:relative;padding:64px 0 56px}
+.pg-hero__inner{display:flex;flex-direction:column;align-items:center;gap:24px;padding:16px;text-align:center}
+.pg-hero__title{width:100%;max-width:880px;font-size:72px;line-height:.95;letter-spacing:-.05em;color:var(--ink);text-wrap:balance}
+.pg-hero__sub{width:100%;max-width:600px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:balance}
+.pg-hero__sub strong{color:var(--ink)}
+@media (max-width:1439.98px){.pg-hero__inner{gap:28px}.pg-hero__inner>.pg-hero__title{margin-top:-4px}}
+@media (max-width:1023.98px){.pg-hero__title{font-size:64px}}
+@media (max-width:809.98px){.pg-hero__sub{font-size:16px}}
+@media (max-width:799.98px){.pg-hero{padding:48px 0 40px}.pg-hero__inner{padding:0;gap:24px}}
+@media (max-width:719.98px){.pg-hero__title{max-width:none;font-size:32px;line-height:1.05}}
+
+/* ---------- Reference checklist seal (20x29; dark seal + --ink tick, colours in pages/who.py SEAL) */
+.seal{display:block;width:20px;height:29px;flex:none}
+
+/* ---------- Flat brand mark in a black tile (nav logo-tile treatment) */
+.pg-mark svg{width:100%;height:100%}
+
+/* Two-tone display copy: the muted half of a headline, ~50% of --ink. 4.9:1 on the black page and
+   4.3:1 on the lightest card surface (#141414), so it clears the 3:1 large-text minimum everywhere. */
+:root{--pg-grey-lg:#7a7a78}
+
+/* ==========================================================================
+   WHO WE ARE (/who-we-are/) — images 5, 6 and 7 on black. Markup: scripts/pages/who.py, JS: 30-who.js.
+   One typeface (var(--font)) in one light weight (Client update 6, src/css/95-typography.css): this file declares no
+   font-weight; hierarchy comes from size, case, tracking, boxes and colour. Small labels are uppercase + tracking.
+   >= 1200px  image-6 boards (.who-board, 1333 design px wide, --u = 1 dpx) and the image-7 editorial
+              (.who-ed, 1125 design px, --v) place every element at its measured design position
+              (--x/--y/--w/--h on .at elements).
+   <  1200px  everything flows: tablet two-column re-flow, phone single column; leader lines, nodes and
+              grid crosses give way to quiet hairlines.
+   Colour: --ink type, --ink-2 secondary, --muted-strong small labels, white hairlines; the hero keeps
+   image 5's photographic orange (page-local --who-accent for the display full stop); red appears once
+   per band (one node, the boxed question, the promise underline).
+   ========================================================================== */
+.page-who{
+  --who-accent:#f75817;               /* image 5 full stop (6.36:1 on black) */
+  --who-glow:255,118,46;              /* image 5 streak peak #FF762E */
+  --who-amber:255,196,140;            /* hot core under the monitor #FFC48C */
+  --who-grid:rgba(255,255,255,.07);   /* poster hairlines (decorative) */
+  --who-cross:rgba(255,255,255,.22);
+  --who-line:rgba(255,255,255,.22);   /* annotation boxes, frames */
+  --who-lead:rgba(255,255,255,.34);   /* leader lines */
+  --who-bar:rgba(255,255,255,.09);    /* /01 header bar */
+}
+.who-hero,.who-fdr,.who-intro,.who-why,.who-phil,.who-think,.who-promise{position:relative;container-type:inline-size}
+/* overflow-x:clip (never hidden): the founder aside is sticky on >= 800px */
+.who-fdr,.who-intro,.who-why,.who-phil,.who-think,.who-promise{overflow-x:clip}
+.page-who :where(.who-board,.who-ed) :where(ul,ol){margin:0;padding:0;list-style:none}
+
+/* ==========================================================================
+   1. HERO (image 5): artboard 3:2 (--aw x --ah) = light layer + monitor; the display H1 sits on black
+   below the ledge light. Header band (top 7.8 %) stays clear.
+   ========================================================================== */
+.who-hero{margin-top:calc(-1 * var(--nav-h));background:#000;overflow:clip}
+/* artboard 3:2: as wide as the viewport, but never taller than the first screen (the display baseline at 89 % must
+   be visible) and never wider than 1800px (monitor <= 900px = 1.17x its 768px cut-out). The stage follows the
+   artboard, so the H1 is never clipped. */
+.who-hero__stage{--aw:min(100cqw,150svh,1800px);--ah:calc(var(--aw) / 1.5);--top:0px;position:relative;height:calc(var(--ah) + var(--top));min-height:520px}
+.who-hero__art{position:absolute;left:50%;top:var(--top);width:var(--aw);height:var(--ah);margin-left:calc(var(--aw) / -2);pointer-events:none}
+.who-hero__light{position:absolute;inset:0}
+.who-hero__lightin{position:absolute;inset:0}
+.who-hero__raster{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:fill;opacity:.92;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}
+/* CSS light streaks (art coordinates; the main streak's peak follows y = 191 + .24x dpx, 13.5deg) */
+.who-hero__beam{position:absolute;left:-45%;width:190%;pointer-events:none;mix-blend-mode:screen;transform:rotate(13.5deg);transform-origin:50% 50%}
+.who-hero__beam--main{top:calc(36.65% - 12%);height:24%;filter:blur(9px);
+  background:linear-gradient(180deg,transparent 0%,rgba(var(--who-glow),.05) 22%,rgba(var(--who-glow),.24) 38%,rgba(var(--who-glow),.62) 47%,rgba(255,168,104,.95) 50%,rgba(var(--who-glow),.32) 52.6%,transparent 56%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 4%,#000 22%,rgba(0,0,0,.55) 40%,rgba(0,0,0,.4) 52%,#000 68%,#000 82%,transparent 97%);mask-image:linear-gradient(90deg,transparent 4%,#000 22%,rgba(0,0,0,.55) 40%,rgba(0,0,0,.4) 52%,#000 68%,#000 82%,transparent 97%)}
+.who-hero__beam--core{top:calc(36.65% - 2px);height:3px;filter:blur(1.2px);
+  background:linear-gradient(90deg,transparent 6%,rgba(255,196,150,.75) 20%,rgba(255,160,100,.35) 38%,transparent 48%,transparent 60%,rgba(255,170,110,.5) 72%,rgba(255,206,170,.85) 84%,transparent 96%)}
+.who-hero__beam--up{top:calc(24% - 9%);height:18%;transform:rotate(9deg);filter:blur(26px);opacity:.75;
+  background:linear-gradient(180deg,transparent,rgba(var(--who-glow),.28) 55%,rgba(var(--who-glow),.5) 72%,transparent 80%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 8%,#000 22%,#000 34%,transparent 46%);mask-image:linear-gradient(90deg,transparent 8%,#000 22%,#000 34%,transparent 46%)}
+/* travelling sheen along the main streak (idle) */
+.who-hero__sheen{position:absolute;left:0;top:44%;width:16%;height:12%;border-radius:50%;opacity:0;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(255,226,196,.95),rgba(255,170,110,.45) 45%,transparent 72%);filter:blur(4px)}
+.who-hero__ledge{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.who-hero__ledge path{fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.who-hero__ledge-glow{stroke:rgb(var(--who-glow));stroke-width:18px;opacity:.42;filter:blur(10px)}
+.who-hero__ledge-line{stroke:rgb(var(--who-amber));stroke-width:2px;opacity:.9;filter:blur(.6px)}
+.who-hero__amber{position:absolute;left:27%;top:57%;width:30%;height:17%;mix-blend-mode:screen;
+  background:radial-gradient(closest-side,rgba(var(--who-amber),.55),rgba(var(--who-glow),.28) 48%,transparent 100%)}
+/* light sweep: a black curtain (soft leading edge, skewed to the 13.5deg streak) slides off to the right; its edge
+   travels from -35 % to +135 % of the artboard (translateX 85 % of its 200 % width) */
+.who-hero__curtain{position:absolute;top:-30%;bottom:-30%;left:-35%;width:200%;background:linear-gradient(90deg,transparent 0,#000 6%);
+  transform:translateX(85%) skewX(-13.5deg);pointer-events:none;display:none}
+.who-hero__monitor{position:absolute;left:26.89%;top:10.74%;width:50%;aspect-ratio:768/598}
+.who-hero__tilt{width:100%;height:100%}
+.who-hero__img{width:100%;height:auto}
+
+/* Display H1 "who we are." — the site face in the one light weight (95-typography.css), gradient fill per letter
+   (clip safe while letters move) */
+.who-display{position:absolute;z-index:2;margin:0;left:max(var(--page-pad),calc(50% - var(--aw) * .432));
+  top:calc(var(--top) + var(--ah) * .89 - .755em);font-size:calc(var(--aw) * .1797);line-height:.8;   /* light 300: spans 88 % of the artboard like image 5 */
+  letter-spacing:-.06em;white-space:nowrap;color:var(--ink);font-kerning:normal}
+.who-display__txt{display:inline}
+.who-display__w{display:inline-block;clip-path:inset(-60% -12% 0 -12%)}
+.who-display__l{display:inline-block;padding:.24em 0 .1em;margin:-.24em 0 -.1em}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .who-display__l{color:transparent;-webkit-background-clip:text;background-clip:text;
+    background-image:linear-gradient(180deg,#f4f4f2 0%,#f4f4f2 52%,rgba(244,244,242,.46) 100%)}
+}
+/* the full stop: image 5's round dot (Ø 48 dpx = .175em, sitting on the baseline); the "." glyph is kept for the
+   accessible name but visually replaced (the site face's period is square) */
+.who-display__dot{display:inline-block;padding-left:.035em}
+.who-display__dot::before{content:"";display:inline-block;width:.175em;height:.175em;border-radius:50%;background:var(--who-accent);
+  box-shadow:0 0 .16em rgba(247,88,23,.5)}
+.who-display__p{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.font-hn .who-display{letter-spacing:-.04em}
+
+/* Hero motion (html.motion only): light sweep, monitor rise, letters rise, the full stop pops. */
+.motion .who-hero__curtain{display:block}
+.motion .who-hero:not(.is-on) .who-hero__curtain{transform:translateX(0) skewX(-13.5deg)}
+.motion .who-hero__curtain{transition:transform 1.35s cubic-bezier(.45,0,.2,1)}
+.motion .who-hero:not(.is-on) .who-hero__lightin{opacity:0}
+.motion .who-hero__lightin{transition:opacity .9s var(--ease)}
+.motion .who-hero:not(.is-on) .who-hero__img{opacity:0;transform:translate3d(0,24px,0) scale(.97)}
+.motion .who-hero__img{transition:opacity .9s var(--ease) .4s,transform 1.2s var(--ease) .4s}   /* rises as the light reaches it */
+.motion .who-hero:not(.is-on) .who-display__l{transform:translate3d(0,112%,0)}
+.motion .who-display__l{transition:transform 1s var(--ease) calc(.55s + var(--i) * 38ms)}
+.motion .who-hero:not(.is-on) .who-display__dot::before{transform:scale(0)}
+.motion .who-display__dot::before{transition:transform .6s var(--spring) 1.02s;transform-origin:50% 50%}
+/* idle: the light breathes, the amber core flickers, a sheen travels the streak; paused off-screen */
+.motion .who-hero__light{animation:who-breathe 7s ease-in-out infinite alternate}
+.motion .who-hero__amber{animation:who-flicker 5s ease-in-out infinite alternate}
+.motion .who-hero.is-on .who-hero__sheen{animation:who-sheen 9s cubic-bezier(.45,0,.25,1) 2.2s infinite}
+.who-hero.is-off *{animation-play-state:paused!important}
+@keyframes who-breathe{from{opacity:.86}to{opacity:1}}
+@keyframes who-flicker{0%{opacity:.9}40%{opacity:1}55%{opacity:.93}100%{opacity:1}}
+@keyframes who-sheen{0%{transform:translateX(-10vw);opacity:0}6%{opacity:1}30%{opacity:.9}38%{transform:translateX(calc(var(--sheen-to,180vw)));opacity:0}100%{transform:translateX(calc(var(--sheen-to,180vw)));opacity:0}}
+.who-hero__sheen{--sheen-to:calc(var(--aw) * 1.7)}
+
+/* tablet: artboard 130 % wide, display one line at 16.3vw; phone: 175 %, display on two lines */
+@media (max-width:1199.98px){
+  .who-hero__stage{--aw:min(130cqw,150svh);--top:12px;height:calc(var(--ah) + var(--top) + 32px)}   /* landscape tablets: H1 above the fold */
+  .who-display{left:var(--page-pad);font-size:min(17.9cqw,var(--aw) * .1797)}
+}
+@media (max-width:799.98px){
+  .who-hero__stage{--aw:min(175cqw,150svh);--top:28px;height:auto;min-height:0;display:flex;flex-direction:column}
+  .who-hero__art{position:relative;left:auto;margin-left:calc(50% - var(--aw) / 2);flex:none}
+  .who-display{position:relative;top:auto;left:auto;margin:calc(var(--ah) * -.235) 0 0;padding:0 var(--page-pad) 40px;
+    font-size:min(28cqw,124px);line-height:.82;white-space:normal}
+  .who-display__w:first-child{display:block;width:max-content}
+}
+
+/* ==========================================================================
+   2–4. IMAGE 6 BOARDS: intro (A+B), statement (C), why, philosophy (D)
+   ========================================================================== */
+/* ---- shared annotation vocabulary (flow sizes; the desktop boards override with design px) */
+.who-note{font-size:15px;line-height:1.35;color:var(--ink-2);letter-spacing:-.005em}
+.who-note--work,.who-note--tagline{font-size:13px;line-height:1.28;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+.who-intro__title{font-size:clamp(40px,8.6cqw,74px);line-height:.88;letter-spacing:-.045em;text-transform:uppercase;color:var(--ink)}
+.font-hn .who-intro__title{letter-spacing:-.03em}
+.who-whobox__label{font-size:20px;line-height:1;letter-spacing:-.01em;text-transform:uppercase;color:var(--ink);margin-bottom:12px}
+.who-whobox__label::before{content:"[ "}
+.who-whobox__label::after{content:" ]"}
+.who-whobox__box{display:flex;gap:14px;align-items:flex-start;padding:8px 12px 8px 8px;border:1px solid var(--who-line);background:#050505}
+.who-whobox__thumb{flex:none;width:94px;height:94px;overflow:hidden}
+.who-whobox__thumb img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05)}
+.who-whobox__text{font-size:13px;line-height:1.33;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);padding-top:4px}
+.who-tag__box{display:inline-block;white-space:nowrap;padding:5px 10px;border:1px solid var(--who-line);font-size:12px;line-height:1.3;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.who-tag__box span{color:var(--muted-strong);padding:0 .25em}
+.who-time__in{display:flex;flex-direction:column;align-items:flex-end;font-size:12px;line-height:1.3;letter-spacing:.06em;text-transform:uppercase;font-variant-numeric:tabular-nums;white-space:nowrap}
+.who-time__in[hidden]{display:none}
+.who-time__l{color:var(--muted-strong)}
+.who-time__t{color:var(--ink)}
+.who-globe,.who-sphere{display:block;color:var(--muted)}
+.who-globe svg,.who-sphere svg{width:100%;height:auto}
+.who-plus{display:block;aspect-ratio:1;border:1px solid var(--who-line);position:relative}
+.who-plus::before,.who-plus::after{content:"";position:absolute;left:50%;top:50%;width:36%;height:1px;background:var(--muted-strong);transform:translate(-50%,-50%)}
+.who-plus::after{transform:translate(-50%,-50%) rotate(90deg)}
+.who-b01{position:relative;border:1px solid var(--who-line);background:#050505;padding:8px 8px 12px;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%)}
+.who-b01::before{content:"";position:absolute;right:0;bottom:0;width:13px;height:13px;
+  background:linear-gradient(135deg,transparent calc(50% - .7px),var(--who-line) calc(50% - .5px),var(--who-line) calc(50% + .5px),transparent calc(50% + .7px))}
+.who-b01__head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:3px 8px;background:var(--who-bar);margin-bottom:10px}
+.who-b01__head b{font-size:18px;letter-spacing:-.02em;color:var(--ink)}
+.who-b01__head span{font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.who-b01__list{display:grid;gap:2px;padding-left:8px}
+.who-b01__list li{display:flex;gap:14px;font-size:15px;line-height:1.3;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2)}
+.who-b01__list li::before{content:"+";color:var(--muted-strong);width:1ch}
+.who-note--tagline{position:relative}
+
+/* rock + glass tile + ground glow */
+.who-rock{position:relative;pointer-events:none}
+.who-rock__par,.who-rock__float{width:100%;height:100%}
+.who-rock__float{position:relative}
+.who-rock__img{width:100%;height:auto;filter:drop-shadow(0 40px 50px rgba(0,0,0,.9))}
+.who-rock__glass{position:absolute;left:12.3%;top:45.6%;width:11.6%;height:17.8%;border:1px solid rgba(255,255,255,.38);
+  background:rgba(255,255,255,.07);-webkit-backdrop-filter:blur(3px) brightness(1.25);backdrop-filter:blur(3px) brightness(1.25);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.who-rock__glow{position:absolute;left:-10%;right:-10%;bottom:-12%;height:40%;
+  background:radial-gradient(50% 45% at 50% 70%,rgba(255,255,255,.07),transparent 75%)}
+.motion .who-rock__float{animation:who-float 6.5s ease-in-out infinite alternate}
+.who-board.is-off .who-rock__float,.who-board.is-off .who-sphere svg{animation-play-state:paused}
+@keyframes who-float{from{transform:translate3d(0,-5px,0) rotate(-.6deg)}to{transform:translate3d(0,5px,0) rotate(.6deg)}}   /* 10 px travel */
+.motion .who-board:not(.is-in) .who-rock{opacity:0;transform:translate3d(0,36px,0) scale(.96)}
+.motion .who-rock{transition:opacity 1.1s var(--ease) .15s,transform 1.4s var(--ease) .15s}
+
+/* statement (band C) — boxed words with drawn frames + small line icons */
+.who-stmt{font-size:clamp(32px,5.6cqw,56px);line-height:1.08;letter-spacing:-.035em;color:var(--ink);text-wrap:pretty}
+.font-hn .who-stmt{letter-spacing:-.025em}
+.who-bx{position:relative;display:inline-block;padding:0 .09em;margin:0 .02em;line-height:.98}
+.who-bx::before,.who-bx::after{content:"";position:absolute;inset:0;pointer-events:none}
+.who-bx::before{border-top:1px solid rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.58);transform-origin:0 50%}
+.who-bx::after{border-left:1px solid rgba(255,255,255,.58);border-right:1px solid rgba(255,255,255,.58);transform-origin:50% 0}
+.who-bx--red::before,.who-bx--red::after{border-color:var(--red)}
+.who-nw{white-space:nowrap}
+.who-ic{display:inline-block;vertical-align:-.08em;line-height:1;color:var(--ink)}
+.who-ic svg{display:inline-block;height:1em;width:auto}
+.who-ic--spark svg{height:.62em;vertical-align:.05em}
+.who-ic--cube svg{height:.92em}
+.who-ic--rings svg{height:.78em}
+.who-ic--arrow svg{height:.62em;vertical-align:.04em}
+.who-ic--cube path,.who-ic--rings path{stroke-width:1.4}
+.motion .who-bx::before{transform:scaleX(0);transition:transform .55s var(--ease) calc(.5s + var(--n,0) * 160ms)}
+.motion .who-bx::after{transform:scaleY(0);transition:transform .45s var(--ease) calc(.8s + var(--n,0) * 160ms)}
+.motion .is-in .who-bx::before,.motion .is-in .who-bx::after,.motion .who-bx:is(.is-in *)::before{transform:none}
+.motion [data-split].is-in .who-bx::before,.motion [data-split].is-in .who-bx::after{transform:none}
+.motion .who-ic svg{transition:transform .8s var(--ease) .55s,opacity .6s ease .55s}
+.motion .who-stmt:not(.is-in) .who-ic--spark svg{transform:rotate(-90deg) scale(.6);opacity:0}
+.motion .who-stmt:not(.is-in) .who-ic--arrow svg{transform:translate(-4px,4px);opacity:0}
+.motion .who-ic--cube path{stroke-dasharray:1;stroke-dashoffset:0;transition:stroke-dashoffset 1s var(--ease) .7s}
+.motion .who-stmt:not(.is-in) .who-ic--cube path{stroke-dashoffset:1}
+.motion .who-ic--rings path{transition:transform .9s var(--ease) .75s}
+.motion .who-stmt:not(.is-in) .who-ic--rings path:first-child{transform:translateX(-6px)}
+.motion .who-stmt:not(.is-in) .who-ic--rings path:last-child{transform:translateX(6px)}
+
+.who-chips{display:flex;flex-wrap:wrap;gap:10px}
+.who-chips li{padding:3px 10px;border:1px solid var(--who-line);border-radius:8px;font-size:12px;line-height:1.35;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.who-collab{border:1px solid var(--who-line);background:#050505;padding:10px 12px 12px}
+.who-collab__head{display:flex;align-items:center;justify-content:space-between;color:var(--ink);margin-bottom:10px}
+.who-collab__crenel{width:min(58%,112px);height:auto}
+.who-collab__burst{width:13px;height:13px}
+.who-collab__list li,.who-collab__foot{font-size:12px;line-height:1.3;letter-spacing:.05em;text-transform:uppercase}
+.who-collab__list li{color:var(--ink)}
+.who-collab__foot{margin-top:9px;padding-top:9px;border-top:1px solid var(--who-line);color:var(--muted-strong)}
+.who-collage{position:relative}
+.who-dial{color:rgba(255,255,255,.3)}
+.who-dial svg{width:100%;height:100%;overflow:visible;transform:rotate(var(--dial,0deg));will-change:transform}
+.who-sphere svg{transform-origin:50% 50%}
+.motion .who-sphere svg{animation:who-sphere 18s linear infinite}
+@keyframes who-sphere{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+/* image 6 end-mark: globe tile + checker chip (decorative) */
+.who-endmark{display:flex;align-items:stretch}
+.who-endmark>span{display:grid;place-items:center;border:1px solid var(--who-line)}
+.who-endmark svg{display:block;width:100%;height:auto}
+.who-endmark__g{flex:0 0 40%;padding:0 9%;border-right:0!important;color:var(--muted-strong);background:#050505}
+.who-endmark__c{flex:1;padding:0 7%;color:var(--ink);background:rgba(255,255,255,.06)}
+
+/* why TESERACT exists (WHO.why, the owner's founder content; the restore box and quote 2 are 26-founder.css blocks).
+   The H2 is the inverted bar; the statement's lead clause is grey, "exactly the same." keeps the red drawn box. */
+.who-b02{width:fit-content;max-width:420px;border:1px solid var(--who-line);background:#050505}
+.who-b02__head{display:flex;align-items:stretch;font-size:13px;line-height:1;letter-spacing:.06em;text-transform:uppercase}
+.who-b02__head>span:first-child{flex:1;padding:6px 8px;background:var(--ink);color:#000}
+.who-b02__n{padding:6px 8px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.who-q{font-size:clamp(30px,5cqw,52px);line-height:1.08;letter-spacing:-.035em;color:var(--ink);text-wrap:pretty}
+.font-hn .who-q{letter-spacing:-.025em}
+.who-q__lead{color:var(--pg-grey-lg)}
+.who-ab__a,.who-ab__b{display:block}
+.who-ab__a{font-size:26px;line-height:1.15;letter-spacing:-.025em;color:var(--ink);text-wrap:balance}
+.who-ab__b{margin-top:12px;font-size:17px;line-height:1.5;letter-spacing:-.01em;color:var(--ink-2);max-width:44ch;text-wrap:pretty}
+.who-close{border:1px solid var(--who-line);background:#050505;padding:10px 12px 14px}
+.who-close__head{display:flex;align-items:center;justify-content:space-between;color:var(--ink);margin-bottom:12px}
+.who-close__crenel{width:min(52%,112px);height:auto}
+.who-close__burst{width:13px;height:13px;color:var(--ink)}
+.who-close__t{color:var(--ink)}
+.who-close__h{display:block;margin-bottom:10px;font-size:14px;line-height:1.3;letter-spacing:.05em;text-transform:uppercase}
+/* the three goals: "+" markers that fill to node squares as the box arrives */
+.who-close__ln{display:flex;gap:12px;font-size:20px;line-height:1.3;letter-spacing:-.02em;text-wrap:balance}
+.who-close__ln+.who-close__ln{margin-top:6px}
+.who-close__ln::before{content:"";flex:none;width:11px;height:11px;margin-top:.32em;border:1px solid var(--who-lead);
+  background:linear-gradient(var(--ink),var(--ink)) 50% 50%/5px 5px no-repeat,
+    linear-gradient(var(--muted-strong),var(--muted-strong)) 50% 50%/1px 5px no-repeat,
+    linear-gradient(var(--muted-strong),var(--muted-strong)) 50% 50%/5px 1px no-repeat}
+.motion.is-ready .who-close:not(.is-in) .who-close__ln::before{background-size:0 0,1px 5px,5px 1px}
+.motion .who-close__ln::before{transition:background-size .4s var(--spring) calc(600ms + var(--i,0) * 120ms)}
+
+/* founder (#founder): phone = one column (bar, plate, roles | board, list, quote 1, bio); nothing sticks below 800px */
+.who-board.who-board--f{display:block;padding:56px var(--page-pad) 72px}
+.who-fdr__aside .fdr-frame{margin-top:20px}
+.who-fdr__aside .fdr-roles{margin-top:16px}
+.who-fdr__main{margin-top:48px}
+.who-fdr .fdr-q{margin-top:56px}
+.who-fdr .fdr-bio{margin-top:48px}
+
+/* philosophy */
+.who-b03{position:relative;border:1px solid var(--who-line);background:#050505}
+.who-b03__head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--who-line);
+  font-size:19px;line-height:1;letter-spacing:-.01em;text-transform:uppercase;color:var(--ink)}
+.who-b03__n{font-size:15px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.who-b03__img{width:197px;max-width:100%;background:#0d0d0d}
+.who-b03__img img{width:100%;height:auto}
+.who-panel6{background:#000;border:1px solid var(--who-line);padding:22px 24px 24px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9)}
+.who-panel6__title,.who-panel6__body{font-size:17px;line-height:1.24;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.who-panel6__title{margin-bottom:12px}
+.who-panel6__ln{display:block}
+.who-panel6__body{color:var(--ink-2)}
+.who-steps{display:grid;gap:22px}
+.who-step{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:22px}
+.who-step__n{display:grid;place-items:center;width:52px;height:46px;border:1px solid rgba(255,255,255,.36);font-size:20px;letter-spacing:-.01em;
+  color:var(--ink);font-variant-numeric:tabular-nums;transition:background-color .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
+.who-step__t{font-size:20px;line-height:1.25;letter-spacing:-.02em;color:var(--ink)}
+.who-step.is-done .who-step__n{background:var(--ink);color:#000;border-color:var(--ink)}
+/* descriptive text links: the underline sits on the text (wraps per line on phones), arrow nudges on hover;
+   12px vertical padding keeps the tap target >= 44px */
+.who-link{display:inline-block;padding:12px 0;font-size:16px;line-height:1.35;letter-spacing:-.01em;color:var(--ink)}
+.who-link__t{background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:2px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .5s var(--ease)}
+.who-link .who-arr{display:inline-block;width:14px;height:14px;margin-left:8px;vertical-align:-1px;transition:transform .45s var(--ease)}
+.who-link:hover .who-link__t{background-size:0 1px;background-position:100% 100%}
+.who-link:hover .who-arr{transform:translate(2px,-2px)}
+
+/* ---- leader lines, nodes, grid (desktop boards only) */
+.who-wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;display:none}
+.who-wire{fill:none;stroke:var(--who-lead);stroke-width:1;stroke-linejoin:miter}
+.who-wire--soft{stroke:var(--who-grid)}
+.who-wire--head{stroke-linecap:square}
+.who-node__o{fill:#000;stroke:var(--who-lead);stroke-width:1}
+.who-node__i{fill:var(--ink)}
+.who-node--red .who-node__i{fill:var(--red)}
+.who-node--red .who-node__o{stroke:rgba(251,38,41,.6)}
+.who-node{transform-box:fill-box;transform-origin:50% 50%}
+.motion .who-wire{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .8s var(--ease) var(--d,0ms)}
+.motion .is-in>.who-deco .who-wire,.motion .is-in .who-wire{stroke-dashoffset:0}
+.motion .who-node{opacity:0;transform:scale(.4);transition:opacity .3s ease var(--d,0ms),transform .5s var(--spring) var(--d,0ms)}
+.motion .is-in .who-node{opacity:1;transform:none}
+.who-grid{position:absolute;inset:0;pointer-events:none;display:none}
+.who-grid__v,.who-grid__h,.who-grid__c{position:absolute;display:block}
+.who-grid__v{top:0;bottom:0;width:1px;background:var(--who-grid);transform-origin:50% 0}
+.who-grid__h{height:1px;left:calc(50% - 50cqw);width:100cqw;background:var(--who-grid);transform-origin:0 50%}
+.who-grid__c{width:9px;height:9px;margin:-4px 0 0 -4px}
+.who-grid__c::before,.who-grid__c::after{content:"";position:absolute;background:var(--who-cross)}
+.who-grid__c::before{left:4px;top:0;width:1px;height:9px}
+.who-grid__c::after{top:4px;left:0;width:9px;height:1px}
+.motion .who-grid__v{transform:scaleY(0);transition:transform 1.4s var(--ease)}
+.motion .who-grid__h{transform:scaleX(0);transition:transform 1.4s var(--ease) .12s}
+.motion .who-grid__c{opacity:0;transition:opacity .6s ease .7s}
+.motion .is-in>.who-grid .who-grid__v,.motion .is-in>.who-grid .who-grid__h{transform:none}
+.motion .is-in>.who-grid .who-grid__c{opacity:1}
+
+/* ---------------- desktop: measured image-6 boards (1 dpx = --u) */
+@media (min-width:1200px){
+  .who-board{--u:calc(min(100cqw,1440px) / 1333);position:relative;width:calc(1333 * var(--u));margin-inline:auto}
+  .who-board--ab{height:calc(824 * var(--u))}
+  .who-board--c{height:calc(700 * var(--u))}
+  .who-board--d{height:calc(520 * var(--u))}
+  .who-board .at{position:absolute;left:calc(var(--x) * var(--u));top:calc(var(--y) * var(--u));margin:0}
+  .who-board .at[style*="--w"]{width:calc(var(--w) * var(--u))}
+  .who-board .at[style*="--h"]{height:calc(var(--h) * var(--u))}
+  .who-wires,.who-grid{display:block}
+  .who-grid__v{left:calc(var(--x) * var(--u))}
+  .who-grid__h{top:calc(var(--y) * var(--u))}
+  .who-grid__c{left:calc(var(--x) * var(--u));top:calc(var(--y) * var(--u))}
+  /* the verticals run through the board stack (top board starts after the hero) */
+
+  /* band A+B */
+  .who-intro__title{font-size:calc(86 * var(--u));line-height:.872}
+  .who-note--lead{font-size:calc(17 * var(--u));line-height:1.36}
+  .who-whobox__label{font-size:calc(25 * var(--u));margin-bottom:calc(14 * var(--u))}
+  .who-whobox__box{gap:calc(14 * var(--u));padding:calc(8 * var(--u)) calc(10 * var(--u)) calc(8 * var(--u)) calc(10 * var(--u));min-height:calc(113 * var(--u))}
+  .who-whobox__thumb{width:calc(94 * var(--u));height:calc(94 * var(--u))}
+  .who-whobox__text{font-size:calc(14 * var(--u));padding-top:calc(4 * var(--u))}
+  .who-note--work,.who-note--tagline{font-size:calc(14 * var(--u))}
+  .who-note--tagline{font-size:calc(15 * var(--u));line-height:1.33}
+  .who-tag,.who-time{width:0;display:flex;justify-content:center}
+  .who-time{justify-content:flex-end}
+  .who-tag__box{font-size:max(12px,calc(13 * var(--u)));padding:calc(5 * var(--u)) calc(10 * var(--u))}
+  .who-time__in{font-size:calc(14 * var(--u))}
+  .who-b01{padding:calc(7 * var(--u)) calc(7 * var(--u)) calc(10 * var(--u))}
+  .who-b01__head{padding:calc(3 * var(--u)) calc(8 * var(--u));margin-bottom:calc(9 * var(--u))}
+  .who-b01__head b{font-size:calc(21 * var(--u))}
+  .who-b01__head span{font-size:calc(16 * var(--u))}
+  .who-b01__list{gap:0;padding-left:calc(9 * var(--u))}
+  .who-b01__list li{font-size:calc(17 * var(--u));line-height:calc(24.5 * var(--u));gap:calc(16 * var(--u))}
+
+  /* band C */
+  .who-stmt{font-size:calc(60 * var(--u));line-height:1.075}
+  .who-chips{gap:calc(8 * var(--u));flex-wrap:nowrap;justify-content:space-between}
+  .who-chips li{font-size:max(12px,calc(12 * var(--u)));padding:calc(3 * var(--u)) calc(9 * var(--u));border-radius:calc(8 * var(--u))}
+  /* the box sits ON the dial and the hand slides under it (image 6): above the collage layers (hand z1, laptop z2) */
+  .who-collab{z-index:3;padding:calc(10 * var(--u)) calc(12 * var(--u)) calc(12 * var(--u))}
+  .who-collab__burst{width:calc(13 * var(--u));height:calc(13 * var(--u))}
+  .who-collab__list li,.who-collab__foot{font-size:max(12px,calc(12.5 * var(--u)))}
+  .who-collage{position:absolute;inset:0;pointer-events:none}
+
+  /* founder + why: a 4-column grid snapped to the image-6 hairlines (columns start at 35 / 351 / 667.5 / 1005 dpx and
+     end at 1298); the absolute .who-grid children stay out of flow, so the hairlines and "+" crosses still draw */
+  .who-board.who-board--f,.who-board--w{display:grid;align-items:start;
+    grid-template-columns:calc(296 * var(--u)) calc(296.5 * var(--u)) calc(317.5 * var(--u)) calc(293 * var(--u));
+    column-gap:calc(20 * var(--u));padding-inline:calc(35 * var(--u))}
+  .who-board.who-board--f{padding-top:calc(96 * var(--u));padding-bottom:calc(140 * var(--u))}
+  /* the aside pins while the right column scrolls (the slot the portrait takes later); the 667.5 hairline divides */
+  .who-fdr__aside{grid-column:1/3;position:sticky;top:calc(var(--nav-h) + 24px);align-self:start}
+  .who-fdr__aside .fdr-bar{font-size:calc(14 * var(--u))}
+  .who-fdr__aside .fdr-frame{width:min(calc(612.5 * var(--u)),(100svh - var(--nav-h) - 196px) * .8)}
+  .who-fdr__aside .fdr-roles{display:block;font-size:calc(15 * var(--u))}
+  .who-fdr__aside .fdr-role::before{display:none}
+  .who-fdr__aside .fdr-roles__sep{position:static;width:auto;height:auto;margin:0 .3em;overflow:visible;clip:auto}
+  .who-fdr__main{grid-column:3/5;margin-top:0}
+  /* no inner container here: --u (100cqw-based) must resolve against the section, not the board */
+  .who-fdr .fdr-board{container-type:normal}
+  .who-fdr .fdr-board__row{font-size:calc(15 * var(--u))}
+  .who-fdr .fdr-flap{--fh:calc(96 * var(--u));font-size:calc(76 * var(--u))}
+  .who-fdr .fdr-flap__w{padding-inline:calc(20 * var(--u))}
+  .who-fdr .fdr-strip__fly{stroke-width:.9}
+  .who-fdr .fdr-dep__row{min-height:calc(72 * var(--u));grid-template-columns:calc(48 * var(--u)) minmax(0,1fr) 12px}
+  .who-fdr .fdr-dep__t{font-size:calc(30 * var(--u))}
+  .who-fdr .fdr-q{margin-top:calc(112 * var(--u))}
+  .who-fdr .fdr-q__t{font-size:calc(56 * var(--u))}
+  .who-fdr .fdr-q__o,.who-board--w .fdr-q__o{position:absolute;right:100%;top:.16em;width:.9em;margin:0 .22em 0 0}
+  .who-fdr .fdr-bio{display:grid;grid-template-columns:calc(317.5 * var(--u)) calc(293 * var(--u));column-gap:calc(20 * var(--u));
+    max-width:none;margin-top:calc(96 * var(--u))}
+  .who-fdr .fdr-bio__p{font-size:calc(17 * var(--u));line-height:1.45;margin-top:calc(48 * var(--u))}
+  .who-fdr .fdr-bio__p--lead{grid-column:1/-1;margin-top:0;font-size:calc(24 * var(--u));line-height:1.36;max-width:24em}
+
+  /* why */
+  .who-board--w{padding-top:calc(120 * var(--u));padding-bottom:calc(120 * var(--u))}
+  .who-b02{grid-column:1;grid-row:1}
+  .who-b02__head{font-size:calc(14 * var(--u))}
+  .who-b02__head>span:first-child,.who-b02__n{padding:calc(6 * var(--u)) calc(8 * var(--u))}
+  .who-q{grid-column:2/5;grid-row:1;font-size:calc(54 * var(--u));line-height:1.08}
+  .who-board--w .fdr-rs{grid-column:2;grid-row:2;margin-top:calc(72 * var(--u))}
+  .who-board--w .fdr-rs__a,.who-board--w .fdr-rs__r{font-size:calc(15 * var(--u))}
+  .who-board--w .fdr-rs__v{font-size:calc(46 * var(--u))}
+  .who-board--w .fdr-rs__line{min-height:calc(88 * var(--u))}
+  .who-ab{grid-column:3/5;grid-row:2;margin-top:calc(72 * var(--u))}
+  .who-ab__a{font-size:calc(28 * var(--u))}
+  .who-ab__b{font-size:calc(18 * var(--u));line-height:1.45;margin-top:calc(14 * var(--u))}
+  .who-board--w .fdr-q{grid-column:2/5;grid-row:3;margin-top:calc(96 * var(--u))}
+  .who-board--w .fdr-q__t{font-size:calc(68 * var(--u))}
+  .who-close{grid-column:3/5;grid-row:4;max-width:calc(560 * var(--u));margin-top:calc(72 * var(--u));
+    padding:calc(10 * var(--u)) calc(12 * var(--u)) calc(14 * var(--u))}
+  .who-close__h{font-size:calc(15 * var(--u))}
+  .who-close__ln{font-size:calc(20 * var(--u))}
+  .who-close__burst{width:calc(13 * var(--u));height:calc(13 * var(--u))}
+
+  /* philosophy */
+  .who-b03__head{height:calc(41 * var(--u));padding:0 calc(11 * var(--u));font-size:calc(21 * var(--u))}
+  .who-b03__n{font-size:calc(17 * var(--u))}
+  .who-b03__img{position:absolute;left:calc(10 * var(--u));top:calc(48 * var(--u));width:calc(197 * var(--u))}
+  .who-panel6{padding:calc(22 * var(--u)) calc(24 * var(--u)) calc(26 * var(--u))}
+  .who-panel6__title,.who-panel6__body{font-size:calc(19 * var(--u));line-height:1.3}
+  .who-panel6__title{margin-bottom:calc(14 * var(--u))}
+  .who-steps{gap:calc(26 * var(--u))}
+  .who-step{gap:calc(35 * var(--u))}
+  .who-step__n{width:calc(58 * var(--u));height:calc(52 * var(--u));font-size:calc(24 * var(--u))}
+  .who-step__t{font-size:calc(25 * var(--u))}
+  .who-link{font-size:calc(17 * var(--u))}
+}
+
+/* 1200-1330px: the 12px label floor makes the four chips wider than their 389-dpx row; tighter tracking keeps the
+   row inside 922-1311 dpx (the board edge) */
+@media (min-width:1200px) and (max-width:1329.98px){.who-chips li{letter-spacing:.025em}}
+
+/* ---------------- tablet + phone: re-flowed boards */
+@media (max-width:1199.98px){
+  .who-board{display:grid;gap:28px 32px;max-width:calc(1000px + var(--page-pad) * 2);margin-inline:auto;padding:72px var(--page-pad) 0}
+  .who-deco{display:contents}
+  .who-wires,.who-globe,.who-plus,.who-endmark,.who-grid{display:none}
+  .who-intro{padding-bottom:24px}
+  .who-board--ab{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"tag time" "title title" "lead lead" "rock rock" "who work" "b01 tagline";padding-top:72px}
+  .who-tag{grid-area:tag;align-self:center}
+  .who-time{grid-area:time;justify-self:end;align-self:center}
+  .who-intro__title{grid-area:title;margin-top:24px}
+  .who-note--lead{grid-area:lead;max-width:520px;font-size:18px}
+  .who-rock{grid-area:rock;justify-self:center;width:min(72%,600px);margin:8px 0 24px}
+  .who-whobox{grid-area:who}
+  .who-note--work{grid-area:work;align-self:end;padding:12px 0 12px 16px;border-left:1px solid var(--who-line)}
+  .who-b01{grid-area:b01}
+  .who-note--tagline{grid-area:tagline;align-self:center;padding:10px 0 10px 16px;border-left:1px solid var(--who-line)}
+  /* annotations as a tidy list: each note keeps a small connector node */
+  .who-note--work,.who-note--tagline{display:flex;gap:12px;align-items:flex-start}
+  .who-note--work::before,.who-note--tagline::before{content:"";flex:none;width:11px;height:11px;margin-top:.15em;padding:3px;
+    border:1px solid var(--who-lead);background:var(--ink) content-box}
+  .who-board--c{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"stmt stmt" "chips chips" "collage collab";padding-top:56px;row-gap:28px}
+  .who-stmt{grid-area:stmt}
+  .who-chips{grid-area:chips}
+  .who-collab{grid-area:collab;align-self:start;max-width:280px;justify-self:end;margin-top:24px}
+  /* the collage bleeds to the viewport's left edge so the wrist exits the screen as in image 6 (design x 0..460) */
+  .who-collage{grid-area:collage;position:relative;width:calc(100% + var(--page-pad));max-width:520px;margin-left:calc(-1 * var(--page-pad));aspect-ratio:460/605;overflow:hidden}
+  .who-collage .at{position:absolute;left:calc(var(--x) / 460 * 100%);top:calc((var(--y) - 61) / 605 * 100%);width:calc(var(--w) / 460 * 100%)}
+  .who-board--w{grid-template-columns:minmax(0,1fr);grid-template-areas:"b02" "q" "rs" "ab" "q2" "close";row-gap:0;padding:88px var(--page-pad) 104px}
+  .who-b02{grid-area:b02}
+  .who-q{grid-area:q;margin-top:28px;font-size:5.4cqw}
+  .who-board--w .fdr-rs{grid-area:rs;margin-top:40px;max-width:560px}
+  .who-ab{grid-area:ab;margin-top:48px}
+  .who-board--w .fdr-q{grid-area:q2;margin-top:72px}
+  .who-board--w .fdr-q__t{font-size:5.6cqw}
+  .who-close{grid-area:close;margin-top:56px;max-width:480px}
+  .who-board--d{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"b03 panel" "steps steps" "more more";padding-top:88px;align-items:start}
+  .who-b03{grid-area:b03;width:219px}
+  .who-b03__img{margin:10px}
+  .who-panel6{grid-area:panel;margin-top:40px;margin-left:-24px;position:relative;z-index:1;max-width:420px}
+  .who-steps{grid-area:steps;margin-top:16px}
+  .who-phil__more{grid-area:more}
+}
+@media (max-width:799.98px){
+  .who-board{gap:22px;padding-top:56px}
+  .who-board--ab{grid-template-columns:minmax(0,1fr);grid-template-areas:"tag" "time" "title" "lead" "rock" "who" "work" "b01" "tagline";padding-top:56px}
+  .who-time{justify-self:start}
+  .who-time__in{flex-direction:row;gap:.6em}
+  .who-intro__title{font-size:11cqw;margin-top:16px}
+  .who-note--lead{font-size:17px}
+  .who-rock{width:100%;max-width:420px;margin:0 0 8px}
+  .who-whobox__thumb{width:72px;height:72px}
+  .who-note--work,.who-note--tagline{border-left:0;padding:16px 0 0;border-top:1px solid var(--who-line)}
+  .who-board--c{grid-template-columns:minmax(0,1fr);grid-template-areas:"stmt" "chips" "collab" "collage";padding-top:48px}
+  .who-stmt{font-size:8.6cqw;line-height:1.1}
+  .who-bx{padding:0 .06em}
+  .who-ic svg{transform:scale(.92)}
+  .who-collab{justify-self:start;max-width:none;width:100%;margin-top:4px}
+  .who-collage{max-width:none}
+  .who-board--w{padding:72px var(--page-pad) 88px}
+  .who-q{margin-top:24px;font-size:8.2cqw}
+  .who-board--w .fdr-rs{margin-top:32px;max-width:none}
+  .who-ab{margin-top:40px}
+  .who-board--w .fdr-q{margin-top:56px}
+  .who-board--w .fdr-q__t{font-size:min(9.4cqw,40px)}
+  .who-close{margin-top:48px;max-width:none}
+  .who-board--d{grid-template-columns:minmax(0,1fr);grid-template-areas:"b03" "panel" "steps" "more";padding-top:72px}
+  .who-panel6{margin:-36px 0 0 24px;padding:18px 18px 20px}
+  .who-panel6__title,.who-panel6__body{font-size:16px}
+  .who-step__n{width:44px;height:44px;font-size:17px}
+  .who-step{gap:16px}
+  .who-step__t{font-size:17px}
+}
+
+/* founder on tablets: two columns, the aside (bar, plate, roles) pinned while the board, quote and bio scroll */
+@media (min-width:800px) and (max-width:1199.98px){
+  .who-board.who-board--f{display:grid;grid-template-columns:minmax(0,44fr) minmax(0,52fr);column-gap:4%;align-items:start;padding:72px var(--page-pad) 104px}
+  .who-fdr__aside{position:sticky;top:calc(var(--nav-h) + 24px)}
+  .who-fdr__aside .fdr-frame{width:clamp(200px,(100svh - var(--nav-h) - 196px) * .8,100%)}
+  .who-fdr__main{margin-top:0}
+  .who-fdr .fdr-dep__t{font-size:26px}
+  .who-fdr .fdr-q__t{font-size:clamp(30px,4.4cqw,40px)}
+}
+/* the roles close the pinned aside, near the screen's bottom edge: a short rise keeps their (transformed) box inside
+   the reveal observer's zone, otherwise they could never reveal on a short screen */
+@media (min-width:800px){.who-fdr__aside .fdr-roles{--y:8px}}
+/* short screens >= 800px wide (landscape phones, e.g. 844 x 390): the aside still pins, compacted so the bar, the
+   whole plate and the roles fit the visible height under the nav (the plate is sized by height, the roles run
+   inline); the left column is never empty while the board, quote and bio scroll */
+@media (min-width:800px) and (max-height:540px){
+  .who-fdr__aside{top:calc(var(--nav-h) + 12px)}
+  .who-fdr__aside .fdr-frame{margin-top:12px;width:min(100%,(100svh - var(--nav-h) - 112px) * .8)}
+  .who-fdr__aside .fdr-roles{display:block;margin-top:12px}
+  .who-fdr__aside .fdr-role::before{display:none}
+  .who-fdr__aside .fdr-roles__sep{position:static;width:auto;height:auto;margin:0 .3em;overflow:visible;clip:auto}
+}
+/* too short to pin anything (< 360px tall): the aside scrolls with the page */
+@media (min-width:800px) and (max-height:359.98px){.who-fdr__aside{position:static}.who-fdr__aside .fdr-frame{width:min(100%,240px)}}
+/* why from 960px: the restore box and Gireesh's answer side by side */
+@media (min-width:960px) and (max-width:1199.98px){
+  .who-board--w{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);grid-template-areas:"b02 b02" "q q" "rs ab" "q2 q2" "close close";column-gap:32px}
+  .who-board--w .fdr-rs{max-width:none}
+  .who-ab{margin-top:40px}
+}
+
+/* ==========================================================================
+   5–6. IMAGE 7 EDITORIAL: how we think + our promise (1 dpx = --v of a 1125 canvas)
+   ========================================================================== */
+.who-ed{--v:calc(min(100cqw,1440px) / 1125);position:relative;margin-inline:auto;padding-inline:var(--page-pad)}
+.who-ed__grid{position:absolute;inset:0;pointer-events:none;display:none}
+.who-ed__grid i{position:absolute;top:0;bottom:0;width:1px;background:var(--who-grid)}
+.who-ed__top{position:relative;display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 32px;padding:96px 0 14px;border-bottom:1px solid var(--line)}
+.who-ed__label{font-size:17px;line-height:1.1;letter-spacing:-.02em;text-transform:lowercase;color:var(--ink)}
+.who-ed__link{transition:color .3s ease;background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .45s var(--ease)}
+.who-ed__link{padding:13px 0;margin:-13px 0;background-origin:content-box;background-clip:content-box}
+.who-ed__link:hover{background-size:100% 1px}
+.who-ed__brand{margin-left:auto}
+.motion .who-ed__top:not(.is-in) .who-ed__label{opacity:0;transform:translate3d(0,10px,0)}
+.motion .who-ed__label{transition:opacity .6s ease,transform .8s var(--ease)}
+.motion .who-ed__label:nth-child(2){transition-delay:60ms}
+.motion .who-ed__label:nth-child(3){transition-delay:120ms}
+
+/* spreads (flow default: phone/tablet) */
+.who-sp{position:relative;display:grid;grid-template-columns:minmax(0,1fr);padding:56px 0 64px}
+.who-sp+.who-sp{border-top:1px solid var(--line-2)}
+.who-sp__rail{display:flex;align-items:baseline;gap:24px;margin-bottom:20px}
+.who-sp__count{font-size:15px;line-height:1;letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.who-sp__roll{display:inline-flex;overflow:hidden;height:1em;vertical-align:top}
+.who-sp__roll>span{display:block}
+.who-sp__dash{color:var(--muted-strong)}
+.motion .who-sp__roll>span{transition:transform .8s var(--ease) .25s}
+.motion .who-sp:not(.is-in) .who-sp__roll>span{transform:translateY(100%)}
+.who-sp__raillink{font-size:15px;line-height:1.05;letter-spacing:-.01em;text-transform:lowercase;color:var(--ink);min-height:44px;display:inline-flex;align-items:center}
+.who-sp__raillink br{display:none}
+.who-sp__raillink:hover{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+.who-sp__title{font-size:min(11cqw,168px);line-height:.82;letter-spacing:-.045em;color:var(--ink)}
+.font-hn .who-sp__title{letter-spacing:-.03em}
+/* word-rise mask sized for the .77-.82 line-height: room for descenders and ascenders (box sizes unchanged),
+   and the hidden word starts lower so it stays out of the taller mask before the reveal */
+.who-sp__title .w{padding-top:.04em;margin-top:-.04em;padding-bottom:.26em;margin-bottom:-.26em;padding-right:.02em;margin-right:-.02em}
+.motion .who-sp__title:not(.is-in) .w__i{transform:translate3d(0,140%,0)}
+.who-sp__ln{display:block;width:max-content;max-width:100%}
+.who-sp__low{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;margin-top:32px}
+.who-sp__side{display:flex;align-items:center;gap:14px}
+.who-sp__tag,.who-sp__idx{font-size:13px;line-height:1.2;letter-spacing:-.01em;color:var(--muted-strong)}
+.who-sp__abs{display:block;width:72px;flex:none}
+.who-sp__abs img{width:100%;height:auto}
+.who-sp__main{display:flex;flex-direction:column}
+.who-sp__tag--main{margin-bottom:14px}
+.who-sp__lead{font-size:clamp(26px,3.7cqw,46px);line-height:1.08;letter-spacing:-.04em;color:var(--ink)}
+.font-hn .who-sp__lead{letter-spacing:-.03em}
+.who-sp__s{display:inline;text-wrap:balance}
+.who-sp__cols{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:28px}
+.who-sp__body{font-size:16px;line-height:1.4;letter-spacing:-.01em;color:var(--ink-2);max-width:36ch;text-wrap:pretty}
+.who-sp__more .who-link{font-size:15px}
+
+/* non-person visual panel: near-black plate, soft brand light, the TESERACT mark */
+.who-pnl{position:relative;overflow:hidden;aspect-ratio:4/5;background:#070707;border:1px solid var(--who-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);isolation:isolate}
+.who-pnl__light{position:absolute;inset:-12%;transform:translate3d(var(--lx,0),var(--ly,0),0);transition:transform .9s var(--ease)}
+.who-pnl--1 .who-pnl__light{background:radial-gradient(58% 46% at 66% 30%,rgba(var(--who-glow),.42),transparent 72%),radial-gradient(40% 30% at 30% 86%,rgba(var(--who-glow),.12),transparent 70%)}
+.who-pnl--2 .who-pnl__light{background:radial-gradient(52% 40% at 30% 30%,rgba(244,244,242,.2),transparent 72%),radial-gradient(46% 36% at 72% 74%,rgba(244,244,242,.12),transparent 70%)}
+.who-pnl--3 .who-pnl__light{background:radial-gradient(56% 44% at 50% 40%,rgba(251,38,41,.32),transparent 72%),radial-gradient(40% 28% at 70% 90%,rgba(251,38,41,.12),transparent 70%)}
+.who-pnl__grid{position:absolute;inset:0;opacity:.5;
+  background:linear-gradient(var(--who-grid),var(--who-grid)) 50% 0/1px 100% no-repeat,linear-gradient(var(--who-grid),var(--who-grid)) 0 50%/100% 1px no-repeat}
+.who-pnl__vis{position:absolute;left:50%;top:50%;width:58%;transform:translate(-50%,-50%) rotate(var(--rot,0deg));will-change:transform}
+.who-pnl__mark{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.65))}
+.who-pnl--2 .who-pnl__vis{width:118%;left:32%;top:64%}   /* close-up of the mark (<= 1.25x its 515 px) */
+.who-pnl--2 .who-pnl__mark{filter:drop-shadow(0 30px 40px rgba(0,0,0,.65)) brightness(.95)}
+.who-pnl__flat{display:block;color:var(--ink);opacity:.92}
+.who-pnl__flat svg{width:100%;height:auto}
+.motion .who-pnl{transition:opacity 1s ease,transform 1.3s var(--ease)}
+.motion .who-sp:not(.is-in) .who-pnl{opacity:0;transform:scale(1.04)}
+
+/* promise */
+.who-ed--promise{padding-bottom:120px}
+.who-promise__labels{display:flex;justify-content:space-between;gap:16px;padding:40px 0 18px;border-bottom:1px solid var(--line-2)}
+.who-promise__labels li{font-size:13px;line-height:1.2;color:var(--muted-strong)}
+.who-promise__body{padding-top:56px}
+.who-promise__rail{font-size:15px;line-height:1.1;letter-spacing:-.01em;text-transform:lowercase;color:var(--muted-strong);margin-bottom:22px}
+.who-promise__title{max-width:22ch;font-size:clamp(30px,4.6cqw,60px);line-height:1.06;letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
+.font-hn .who-promise__title{letter-spacing:-.025em}
+.who-promise__title::before{content:"{";color:var(--muted-strong);margin-right:.04em}
+.who-promise__title::after{content:"}";color:var(--muted-strong);margin-left:.04em}
+.motion .who-promise__title::before,.motion .who-promise__title::after{display:inline-block;transition:opacity .6s ease,transform .9s var(--ease)}
+.motion .who-promise__title:not(.is-in)::before{opacity:0;transform:translateX(-10px)}
+.motion .who-promise__title:not(.is-in)::after{opacity:0;transform:translateX(10px)}
+.who-promise .who-promise__lines{display:grid;gap:4px;margin:32px 0 0;padding:0;font-size:clamp(17px,1.5cqw,22px);line-height:1.4;letter-spacing:-.01em;color:var(--ink-2)}
+.who-promise__q{position:relative;display:inline-block;margin-top:20px;padding:0 4px 20px;font-size:clamp(36px,5.4cqw,76px);line-height:1.05;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
+.font-hn .who-promise__q{letter-spacing:-.03em}
+.who-promise__q em{font-style:italic}   /* real italic cuts of the one typeface (Helvetica Neue Medium Italic / Inter Tight italic) */
+.who-promise__line{position:absolute;left:0;right:0;bottom:0;width:100%;height:20px;overflow:visible}
+.who-promise__line path{fill:none;stroke:var(--red);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:1 1;stroke-dashoffset:0;filter:drop-shadow(0 0 6px rgba(251,38,41,.35))}
+.motion .who-promise__q .who-promise__line path{stroke-dashoffset:1;transition:stroke-dashoffset 1.1s var(--ease) calc(var(--d,0ms) + 420ms)}
+.motion .who-promise__q.is-in .who-promise__line path{stroke-dashoffset:0}
+
+/* tablet editorial */
+@media (min-width:800px) and (max-width:1199.98px){
+  .who-sp{padding:80px 0 88px}
+  .who-sp__title{font-size:13cqw}
+  .who-sp--1 .who-sp__title{font-size:18cqw;line-height:.78}
+  .who-sp__title .who-sp__ln:nth-child(2){padding-left:.1em}
+  .who-sp__title .who-sp__ln:nth-child(3){padding-left:.2em}
+  .who-sp__low{grid-template-columns:minmax(0,7fr) minmax(0,5fr);grid-template-areas:"side side" "main pnl";gap:24px 40px;margin-top:48px}
+  .who-sp__side{grid-area:side}
+  .who-sp__main{grid-area:main}
+  .who-pnl{grid-area:pnl;aspect-ratio:.727}
+  .who-sp__cols{grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:16px 32px}
+}
+
+/* desktop editorial: the image-7 columns (x 45 / 265.5 / 695 / 838 / 1073.5 / 1110 of 1125) */
+@media (min-width:1200px){
+  .who-ed{width:calc(1125 * var(--v));padding-inline:0}
+  .who-ed__grid{display:block}
+  .who-ed__grid i:nth-child(1){left:calc(45 * var(--v));top:calc(380 * var(--v))}
+  .who-ed__grid i:nth-child(2){left:calc(265.5 * var(--v))}
+  .who-ed__grid i:nth-child(3){left:calc(838 * var(--v))}
+  .who-ed__grid i:nth-child(4){left:calc(1073.5 * var(--v));top:calc(660 * var(--v))}
+  .who-ed--promise .who-ed__grid i{top:0}
+  .who-ed__top{display:block;height:calc(99 * var(--v) + 96px);padding:0;border:0}
+  .who-ed__top::after{content:"";position:absolute;left:calc(245 * var(--v));right:calc(-1 * max(0px,(100cqw - 1440px) / 2));bottom:0;height:1px;background:var(--line)}
+  .motion .who-ed__top::after{transform-origin:0 50%;transition:transform 1.2s var(--ease)}
+  .motion .who-ed__top:not(.is-in)::after{transform:scaleX(0)}
+  .who-ed__label{position:absolute;bottom:calc(5 * var(--v));font-size:calc(22.6 * var(--v));letter-spacing:-.03em}
+  .who-ed__label--h{left:calc(37 * var(--v))}
+  .who-ed__link{left:calc(246 * var(--v))}
+  .who-ed__brand{right:calc(44 * var(--v))}
+
+  .who-sp{grid-template-columns:calc(45 * var(--v)) calc(220.5 * var(--v)) calc(429.5 * var(--v)) calc(415 * var(--v)) 1fr;
+    grid-template-areas:". rail title title title" ". low low low low";grid-template-rows:auto auto;padding:calc(150 * var(--v)) 0 calc(120 * var(--v))}
+  .who-sp+.who-sp{border-top:0;padding-top:calc(60 * var(--v))}
+  .who-sp__rail{grid-area:rail;display:block;margin:0;padding-left:calc(-7 * var(--v))}
+  .who-sp__count{position:sticky;top:calc(var(--nav-h) + 24px);font-size:calc(21 * var(--v))}
+  .who-sp__raillink{margin-top:calc(200 * var(--v));font-size:calc(21 * var(--v));line-height:1;min-height:0;display:block}
+  .who-sp__raillink br{display:inline}
+  .who-sp__title{grid-area:title;margin-left:calc(-22.5 * var(--v));font-size:calc(140 * var(--v));line-height:.8}
+  .who-sp--1 .who-sp__title{font-size:calc(234 * var(--v));line-height:.77;margin-top:calc(50 * var(--v))}
+  .who-sp__title .who-sp__ln:nth-child(2){padding-left:.21em}
+  .who-sp__title .who-sp__ln:nth-child(3){padding-left:.42em}
+  .who-sp__low{grid-area:low;display:grid;grid-template-columns:calc(220.5 * var(--v)) calc(429.5 * var(--v)) calc(415 * var(--v));margin-top:calc(96 * var(--v));gap:0}
+  .who-sp--1 .who-sp__low{margin-top:calc(110 * var(--v))}
+  .who-sp__side{flex-direction:column;align-items:flex-start;gap:0;padding:calc(17 * var(--v)) 0 0 calc(-2 * var(--v))}
+  .who-sp__tag,.who-sp__idx{font-size:calc(13 * var(--v))}
+  .who-sp__abs{width:min(calc(149 * var(--v)),186px);margin:calc(28 * var(--v)) 0 calc(18 * var(--v))}
+  .who-sp__idx{margin-top:calc(14 * var(--v))}
+  .who-sp__abs+.who-sp__idx{margin-top:0}
+  .who-sp__main{padding:calc(17 * var(--v)) calc(18 * var(--v)) 0 calc(7.5 * var(--v))}
+  .who-sp__tag--main{margin-bottom:calc(64 * var(--v))}
+  .who-sp__lead{font-size:calc(44 * var(--v));line-height:1.1}
+  .who-sp__s{display:block}
+  .who-sp__cols{grid-template-columns:calc(178 * var(--v)) 1fr;gap:calc(40 * var(--v));margin-top:calc(80 * var(--v))}
+  .who-sp__body{font-size:max(15px,calc(15.5 * var(--v)));line-height:1.36}
+  .who-sp__more .who-link{font-size:max(15px,calc(15.5 * var(--v)));padding-top:0}
+  .who-pnl{aspect-ratio:415/571}
+  .who-sp--2 .who-pnl,.who-sp--3 .who-pnl{aspect-ratio:415/500}
+
+  .who-ed--promise{padding-bottom:calc(150 * var(--v))}
+  .who-ed--promise{padding-top:calc(40 * var(--v))}
+  .who-promise__labels{position:relative;display:block;height:calc(40 * var(--v));padding:0;border:0}
+  .who-promise__labels li{position:absolute;top:0;font-size:calc(13 * var(--v))}
+  .who-promise__labels li:nth-child(1){left:calc(47 * var(--v))}
+  .who-promise__labels li:nth-child(2){left:calc(497 * var(--v))}
+  .who-promise__labels li:nth-child(3){right:calc(61 * var(--v))}
+  .who-promise__body{padding:calc(70 * var(--v)) 0 0 calc(46 * var(--v))}
+  .who-promise__rail{font-size:calc(21 * var(--v));margin-bottom:calc(30 * var(--v))}
+  .who-promise__title{font-size:calc(46 * var(--v));max-width:calc(900 * var(--v))}
+  .who-promise .who-promise__lines{font-size:calc(18 * var(--v));margin-top:calc(36 * var(--v));padding-left:calc(219.5 * var(--v))}
+  .who-promise__q{font-size:calc(66 * var(--v));margin:calc(22 * var(--v)) 0 0 calc(219.5 * var(--v))}
+}
+@media (max-width:799.98px){
+  .who-ed__top{padding-top:72px}
+  .who-sp{padding:48px 0 56px}
+  .who-sp__title{font-size:12cqw}
+  .who-sp--1 .who-sp__title{font-size:21cqw;line-height:.78}
+  .who-sp__lead{font-size:28px}
+  .who-sp--2 .who-pnl,.who-sp--3 .who-pnl{aspect-ratio:1}
+  .who-sp__body{font-size:16px}
+  .who-promise__labels{flex-wrap:wrap;justify-content:flex-start;gap:6px 14px}
+  .who-promise__title{font-size:26px}
+  .who-promise .who-promise__lines{font-size:17px}
+  .who-promise__q{font-size:min(40px,calc((100cqw - var(--page-pad) * 2 - 8px) / 11));padding-bottom:14px}
+  .who-promise__line{height:14px}
+  .who-ed--promise{padding-bottom:88px}
+}
+
+/* reduced motion / no motion: everything static and visible */
+@media (prefers-reduced-motion:reduce){
+  .who-hero__curtain{display:none!important}
+  .who-rock__float,.who-sphere svg,.who-hero__light,.who-hero__amber,.who-hero__sheen{animation:none!important}
+  .who-dial svg,.who-pnl__vis{transform:none!important}
+  .who-pnl--2 .who-pnl__vis{transform:translate(-50%,-50%)!important}
+  .who-pnl__vis{transform:translate(-50%,-50%)!important}
+}

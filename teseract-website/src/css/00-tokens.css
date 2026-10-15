@@ -1,0 +1,99 @@
+/* Fonts — a single typeface across the site: Helvetica Neue (reference images). Installed Helvetica Neue
+   cuts are used via 'TS Sans' below; Inter Tight is the one stand-in where it is missing. */
+/* Inter Tight (SIL OFL, self-hosted): the closest free match to Helvetica Neue's proportions and spacing with
+   the full 100–900 range — the single stand-in wherever Helvetica Neue is not installed (Windows/Android).
+   Chosen against the client's images in a side-by-side comparison (Geist, Arial, Inter, Roboto, Instrument Sans, Arimo). */
+@font-face{font-family:'Inter Tight';src:url('./assets/inter-tight-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Inter Tight';src:url('./assets/inter-tight-latin-italic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+/* "TS Sans": Helvetica Neue cuts picked by weight where installed (macOS/iOS). If a cut is
+   missing the browser falls through to Inter Tight (next in --font) for that weight. */
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue-Thin'),local('Helvetica Neue Thin');font-weight:200;font-style:normal}
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue-Light'),local('Helvetica Neue Light');font-weight:300;font-style:normal}
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue'),local('Helvetica Neue');font-weight:400;font-style:normal}
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue-Medium'),local('Helvetica Neue Medium');font-weight:500 600;font-style:normal}
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue-Bold'),local('Helvetica Neue Bold');font-weight:700 900;font-style:normal}
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue-LightItalic'),local('Helvetica Neue Light Italic');font-weight:300;font-style:italic}
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue-Italic'),local('Helvetica Neue Italic');font-weight:400;font-style:italic}
+@font-face{font-family:'TS Sans';src:local('HelveticaNeue-MediumItalic'),local('Helvetica Neue Medium Italic');font-weight:500 600;font-style:italic}
+
+:root{
+  color-scheme:dark;
+
+  /* Palette — black theme. True-black page, layered near-black surfaces for depth (not an
+     inversion of the light theme), soft-white type, hairline borders, brand red as the accent. */
+  --bg:#000;                /* page */
+  --bg-1:#060606;           /* quiet alternate band */
+  --surface-1:#0d0d0d;      /* cards on the page */
+  --surface-2:#141414;      /* raised cards, inputs */
+  --surface-3:#1c1c1c;      /* chips, hover states */
+  --paper:var(--surface-1); /* legacy name used by components */
+  --bg-soft:var(--surface-2);
+  --ink:#f4f4f2;            /* primary text */
+  --ink-2:rgba(244,244,242,.74);   /* secondary copy (AA on all surfaces) */
+  --text-2:var(--ink-2);
+  --muted:rgba(244,244,242,.4);    /* decorative only */
+  --muted-strong:rgba(244,244,242,.62); /* informational small text, AA on --bg..--surface-3 */
+  --black:#000;
+  --white:#fff;
+  --red:#fb2629;            /* brand red (image 3) — 5.0:1 on black */
+  --red-deep:#970102;       /* brand deep red (image 3 swatch) */
+  --red-dot:#ff3b3b;        /* status dot */
+  --line:rgba(255,255,255,.1);     /* hairline borders */
+  --line-2:rgba(255,255,255,.06);
+  --line-3:rgba(255,255,255,.16);  /* interactive borders */
+  --frame:rgba(255,255,255,.035);  /* framed groups */
+  --glow:0 0 0 1px rgba(255,255,255,.06),0 30px 60px -30px rgba(0,0,0,.9);
+
+  /* Type */
+  /* ONE typeface for the whole site (client instruction): Helvetica Neue — the face in the reference images.
+     'TS Sans' maps the installed Helvetica Neue cuts by weight (macOS/iOS, or licensed webfont files in
+     public/assets/fonts/, see README); where it is not available the single stand-in is Inter Tight. */
+  --font:'TS Sans','Helvetica Neue','HelveticaNeue','Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-menu:var(--font);   /* single typeface: the menu uses the site font */
+  --mono:var(--font);        /* single typeface: small labels use the site font (uppercase + tracking), not a monospace */
+  --track-tight:-.05em;     /* reference H1 */
+  --track-head:-.04em;
+
+  /* Layout. --page-pad never runs into a notch or rounded corner (viewport-fit=cover, chrome.py): on a landscape
+     iPhone the safe-area inset (~47px) wins over the 40px tablet gutter. */
+  --page-pad:max(48px,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px));
+  --maxw:1344px;
+  --radius-s:12px;
+  --radius:16px;
+  --radius-l:24px;
+  --radius-xl:32px;
+  --nav-h:80px;
+  /* Phone page H1 (< 720px; hero, page heroes, Work, project heads): ~1.3x the 32px section H2s, as on desktop
+     (72 : 56). Applied by the section files inside their own @media (max-width:719.98px). The 42px floor keeps
+     1.31 : 1 on 360-396px phones too (a 38px floor gave 1.19 at 360); it grows to 46px from 434px. */
+  --h1-phone:clamp(42px,10.6vw,46px);
+  --h1-phone-lh:1.02;
+
+  /* Motion. Framer spring 400/30/1 (reference appear) expressed as a CSS linear() curve. */
+  --spring:linear(0,.048,.162,.302,.446,.581,.703,.799,.875,.934,.973,1,1.016,1.025,1.027,1.027,1.024,1.02,1.016,1.012,1.009,1.006,1.004,1.002,1);
+  --spring-d:400ms;   /* the linear() curve above is the 400 ms sampling of spring 400/30/1 */
+  --spring-soft:linear(0,.132,.326,.494,.622,.719,.791,.845,.884,.914,.936,.953,.965,.974,.981,.985,.989,.992,.994,.996,.997,.998,.998,.999,1); /* hover 500/60/1 */
+  --ease:cubic-bezier(.22,1,.36,1);        /* ZIP shared easing */
+  --ease-io:cubic-bezier(.44,0,.56,1);     /* reference pill roll */
+  --ease-menu:cubic-bezier(.76,0,.24,1);
+  /* Intro logo animation (04-intro.css / 01-intro.js): seat overshoot, the FLIP flight's two axes, the stage lift. */
+  --ease-lock:cubic-bezier(.3,1.25,.55,1);
+  --ease-fly-x:cubic-bezier(.62,0,.18,1);
+  --ease-fly-y:cubic-bezier(.4,0,.1,1);
+  --ease-lift:cubic-bezier(.7,0,.2,1);
+
+  /* Header logo lockup (10-header.css). Shared with the intro, whose lockup is an exact k-times copy of it,
+     so the intro's flight into the header is a uniform scale + translate at every breakpoint. */
+  --brand-mark:28px;
+  --brand-gap:14px;
+  --brand-word:152px;
+}
+@supports not (transition-timing-function:linear(0,1)){
+  :root{--spring:cubic-bezier(.22,1,.36,1);--spring-soft:cubic-bezier(.25,.8,.35,1)}
+}
+@media (max-width:1439.98px){:root{--page-pad:max(40px,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px))}}
+@media (max-width:799.98px){:root{--page-pad:max(16px,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px));--nav-h:64px;--brand-mark:24px;--brand-gap:11px;--brand-word:122px}}
+@media (max-width:359.98px){:root{--brand-word:104px}}
+/* Phones held sideways (e.g. 844 x 390): a 56px header instead of the 80px desktop bar (a fifth of the screen). The
+   logo keeps the width breakpoint's --brand-* size: the intro's dock keyframes (04-intro.css) are derived from them. */
+@media (max-height:500px) and (orientation:landscape){:root{--nav-h:56px}}

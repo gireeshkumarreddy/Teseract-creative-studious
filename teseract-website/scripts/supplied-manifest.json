@@ -1,0 +1,176 @@
+{
+ "images": {
+  "website-design": {
+   "variants": [
+    {
+     "file": "assets/supplied/website-design-640.webp",
+     "width": 640,
+     "height": 480,
+     "bytes": 22524
+    },
+    {
+     "file": "assets/supplied/website-design-1200.webp",
+     "width": 1200,
+     "height": 900,
+     "bytes": 52584
+    }
+   ],
+   "source": {
+    "file": "website-design.jpg",
+    "width": 1200,
+    "height": 900,
+    "crop": null,
+    "sha256": "1bdbd065c3e345b59cbe341b5db4847b8140f88f0dd8855cf8811fd9b5f2dee8"
+   }
+  },
+  "website-development": {
+   "variants": [
+    {
+     "file": "assets/supplied/website-development-640.webp",
+     "width": 640,
+     "height": 427,
+     "bytes": 17474
+    },
+    {
+     "file": "assets/supplied/website-development-1280.webp",
+     "width": 1280,
+     "height": 853,
+     "bytes": 50138
+    },
+    {
+     "file": "assets/supplied/website-development-1536.webp",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 67350
+    }
+   ],
+   "source": {
+    "file": "website-development.jpg",
+    "width": 1536,
+    "height": 1024,
+    "crop": null,
+    "sha256": "0de7ad3500d2483b633b72b106bb94f044784995df7e7171945388b7cbe65af8"
+   }
+  },
+  "interactive-3d-1-obscura": {
+   "variants": [
+    {
+     "file": "assets/supplied/interactive-3d-1-obscura-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 24194
+    },
+    {
+     "file": "assets/supplied/interactive-3d-1-obscura-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 65896
+    },
+    {
+     "file": "assets/supplied/interactive-3d-1-obscura-1600.webp",
+     "width": 1600,
+     "height": 900,
+     "bytes": 88752
+    }
+   ],
+   "source": {
+    "file": "interactive-3d-1-obscura.jpg",
+    "width": 1600,
+    "height": 900,
+    "crop": null,
+    "sha256": "6d154b08d39b7b57b6cfa465aae2ebcc7751506bb9eac4c6cbc91329959b963e"
+   }
+  },
+  "interactive-3d-2-faipy": {
+   "variants": [
+    {
+     "file": "assets/supplied/interactive-3d-2-faipy-640.webp",
+     "width": 640,
+     "height": 351,
+     "bytes": 36764
+    },
+    {
+     "file": "assets/supplied/interactive-3d-2-faipy-1280.webp",
+     "width": 1280,
+     "height": 701,
+     "bytes": 102554
+    },
+    {
+     "file": "assets/supplied/interactive-3d-2-faipy-1573.webp",
+     "width": 1573,
+     "height": 862,
+     "bytes": 133072
+    }
+   ],
+   "source": {
+    "file": "interactive-3d-2-faipy.jpg",
+    "width": 1573,
+    "height": 1000,
+    "crop": [
+     0,
+     0,
+     1573,
+     862
+    ],
+    "sha256": "f5058a778653364a74a3cf3d2ca8f6f1b04ba0bf564aaede68f818682e8a8a41"
+   }
+  },
+  "ecommerce-vyrn-categories": {
+   "variants": [
+    {
+     "file": "assets/supplied/ecommerce-vyrn-categories-640.webp",
+     "width": 640,
+     "height": 330,
+     "bytes": 10986
+    },
+    {
+     "file": "assets/supplied/ecommerce-vyrn-categories-1280.webp",
+     "width": 1280,
+     "height": 660,
+     "bytes": 24026
+    },
+    {
+     "file": "assets/supplied/ecommerce-vyrn-categories-1920.webp",
+     "width": 1920,
+     "height": 990,
+     "bytes": 37192
+    }
+   ],
+   "source": {
+    "file": "ecommerce-vyrn-categories.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": [
+     0,
+     10,
+     1920,
+     1000
+    ],
+    "sha256": "27ee7a2cb58f6373b806503a9fcd337888cfc019ca576c647067ed0c82617f0f"
+   }
+  },
+  "founder-portrait": {
+   "variants": [
+    {
+     "file": "assets/supplied/founder-portrait-640.webp",
+     "width": 640,
+     "height": 800,
+     "bytes": 48138
+    },
+    {
+     "file": "assets/supplied/founder-portrait-650.webp",
+     "width": 650,
+     "height": 812,
+     "bytes": 50258
+    }
+   ],
+   "source": {
+    "file": "founder-gireesh.png",
+    "width": 650,
+    "height": 812,
+    "crop": null,
+    "sha256": "1d44fb7a3fc76103e6304377a896802e8d0ee7bc20bea08324eaccea2f7b041a"
+   }
+  }
+ }
+}

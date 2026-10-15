@@ -1,0 +1,90 @@
+/* ==========================================================================
+   WHAT WE CREATE page (/what-we-create/) — .create-*
+   Markup: scripts/pages/create.py. Service rows use the shared .svc-* cards (22-services.css).
+   Black theme: --ink display type, --ink-2 sub copy; the service index chips rest as dark glass with
+   a hairline and brighten to the white high-emphasis fill on hover/focus (the light theme's
+   white→black flip, inverted); the CTA uses the shared dark .frame/.card.
+   ========================================================================== */
+
+/* ---------- Hero: pill → H1 72/0.95/-0.05em → 18px sub → service index (reference hero lockup) */
+.create-hero{position:relative;padding:64px 0 72px}
+.create-hero__inner{display:flex;flex-direction:column;align-items:center;gap:24px;width:100%;max-width:1440px;margin-inline:auto;padding:16px 48px;text-align:center}
+.create-hero__title{width:100%;max-width:900px;font-size:72px;font-weight:600;line-height:.95;letter-spacing:-.05em;color:var(--ink);text-wrap:balance}
+.create-hero__title em{font-style:italic;font-weight:600;padding-right:.06em}
+.create-hero__sub{width:100%;max-width:600px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:balance}
+.create-hero__line{display:block}
+
+/* Service index: anchor chips in the reference chip vocabulary */
+.create-index{width:100%;max-width:880px;margin-top:16px}
+.create-index__list{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0;padding:0;list-style:none}
+.create-index__link{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 10px;border-radius:12px;background:rgba(255,255,255,.05);
+  font-size:14px;font-weight:500;letter-spacing:-.3px;color:var(--ink);white-space:nowrap;
+  box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.05),0 8px 16px -10px rgba(0,0,0,.9);
+  transition:background-color .3s var(--ease),color .3s var(--ease),box-shadow .3s var(--ease)}
+.create-index__n{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--muted-strong);letter-spacing:.02em;transition:color .3s var(--ease)}
+.create-index__link:hover,.create-index__link:focus-visible{background:#f4f4f2;color:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,0),inset 0 1px 0 rgba(255,255,255,0),0 10px 26px -10px rgba(255,255,255,.28)}
+/* red number on the white fill: the brand deep red (8:1 on #f4f4f2; the bright red is 3.5:1 there) */
+.create-index__link:hover .create-index__n,.create-index__link:focus-visible .create-index__n{color:var(--red-deep)}
+
+/* ---------- Service rows */
+.create-list{padding:0 120px 120px}
+.create-list__inner{margin-inline:auto}
+.create-list .svc-info__title{font-size:32px}
+
+/* ---------- CTA: reference frame + white card (corner dots), copy left / lines + button right */
+.create-cta{padding:0 120px 160px}
+.create-cta__inner{width:100%;max-width:1200px;margin-inline:auto}
+.create-cta__frame.frame{max-width:928px;margin-inline:auto}
+.create-cta__frame{width:100%}
+.create-cta__card{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding:48px}
+.create-cta__copy{display:flex;flex-direction:column;align-items:flex-start;gap:28px;max-width:400px}
+.create-cta__icon{display:block;width:56px;height:56px;filter:drop-shadow(0 10px 16px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(255,255,255,.08))}
+.create-cta__mark{width:56px;height:auto;transition:transform .8s var(--spring)}
+.create-cta__card:hover .create-cta__mark{transform:rotate(-120deg)}
+.create-cta__title{font-size:56px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
+.create-cta__side{display:flex;flex-direction:column;align-items:flex-start;gap:28px;max-width:400px}
+.create-cta__lines{display:flex;flex-direction:column;gap:2px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink)}
+.create-cta__lines p{text-wrap:balance}
+.create-cta__lead{font-weight:600;color:var(--ink)}
+.create-cta__line{color:var(--ink-2)}
+
+@media (max-width:1439.98px){
+  .create-hero__inner{gap:28px}
+  .create-list{padding-inline:clamp(48px,8.33vw,120px)}
+  .create-cta{padding-inline:clamp(48px,8.33vw,120px)}
+}
+@media (max-width:1199.98px){
+  .create-list,.create-cta{padding-inline:48px}
+  .create-cta__card{flex-direction:column;align-items:flex-start;gap:32px;padding:48px}
+  .create-cta__side{max-width:none}
+}
+@media (max-width:1023.98px){
+  .create-hero__title{font-size:64px}
+  .create-cta__title{font-size:48px}
+}
+@media (max-width:809.98px){
+  .create-hero__sub,.create-cta__lines{font-size:16px}
+}
+@media (max-width:799.98px){
+  .create-hero{padding:48px 0 48px}
+  .create-hero__inner{padding:0 16px;gap:24px}
+  .create-hero__line{display:inline}
+  .create-index{margin-top:8px}
+  .create-index__link{height:44px;padding:0 14px 0 12px;border-radius:14px}
+  .create-list{padding:0 16px 80px}
+  .create-list .svc__rows{gap:12px}
+  .create-cta{padding:0 16px 96px}
+  .create-cta__frame.frame{background:var(--frame);padding:8px;border-radius:40px}
+  .create-cta__frame.frame::after{display:block}
+  .create-cta__card{padding:32px 28px;border-radius:32px;gap:28px}
+  .create-cta__side .btn{width:100%}
+}
+@media (max-width:719.98px){
+  .create-hero__title{font-size:32px;line-height:1.05;max-width:none}
+  .create-cta__title{font-size:32px}
+  .create-list .svc-info__title{font-size:28px}
+}
+/* touch layouts at any width (tablet portrait included): 44px tap targets for the service index */
+@media (pointer:coarse){
+  .create-index__link{height:44px;border-radius:14px}
+}

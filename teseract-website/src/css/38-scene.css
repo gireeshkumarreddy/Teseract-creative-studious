@@ -1,0 +1,593 @@
+/* ==========================================================================
+   DEVICE SCENES — prefix scn- (scripts/lib.py scene() / plain_frame(); ported from the scene prototype the
+   owner approved on 13 Oct). A scene = backdrop (CSS gradients + SVG noise/lighting) + a studio monitor or
+   laptop drawn in CSS 3D whose 16:9 screen shows the project's own media (a gallery still or its site
+   recording). No WebGL, no raster textures, no third-party photos. The figure is an inline-size container:
+   every size inside is in container units, the stage keeps a fixed aspect (16:10, 4:5 below 640px), so a
+   scene is fluid at any width and never shifts layout. Captions use the site typeface; weights come from
+   95-typography.css. The SVG backdrops reference the gradients/filters of lib.SCENE_DEFS (once per page).
+   ========================================================================== */
+
+/* ---------- 1. Scene root: an inline-size container; inner sizes are container units */
+.scn{
+  /* placement on the stage (stage units) */
+  --dw:46cqw;            /* device width: monitor panel / laptop lid */
+  --dx:0cqw;             /* horizontal offset from centre */
+  --floor:20cqh;         /* height of the surface the device stands on, from the stage bottom */
+  /* camera (device units: 100 = device width) */
+  --persp-n:560;         /* camera distance; larger = longer lens, flatter perspective */
+  --cam-h:20;            /* camera height above the surface the device stands on */
+  --cam-x:50%;           /* camera position across the device */
+  --yaw:0deg;            /* turn the device; positive = its left side comes towards the camera */
+  --pitch:0deg;
+  --lean:10deg;          /* laptop lid lean-back */
+  /* device finish (silver by default) */
+  --alu-hi:#eceef0; --alu:#c3c5c9; --alu-lo:#7d8085;
+  --rim-a:165deg;        /* direction of the light across the aluminium frame */
+  --rim-l:#9a9da2; --rim-r:#9a9da2; --rim-t:#d9dbde; --rim-b:#55575b;
+  --glass:#050506;
+  --deck-hi:#d4d6d9; --deck:#bfc1c5; --deck-lo:#a3a5aa; --key:#141416; --key-gap:#34353a;
+  /* light on the scene */
+  --contact:rgba(0,0,0,.62);   /* tight contact shadow */
+  --ambient:rgba(0,0,0,.30);   /* soft occlusion around it */
+  --amb-blur:16cqw; --amb-spread:8cqw;
+  --spill:rgba(255,255,255,.08);/* light the screen throws on the surface (set per media) */
+  --glare-o:.07; --glare-a:118deg; /* glass reflection on the display */
+  /* page integration */
+  --radius:clamp(24px,2.4cqw,40px);
+  --frame-line:rgba(255,255,255,.07);
+  --cap-ink:#f4f4f2;
+  --cap-pill-bg:radial-gradient(50% 202% at 50% 50%,#2b2b2b 0%,#0b0b0b 100%);
+  --cap-pill-line:rgba(255,189,143,.2);
+  --cap-dot:rgba(255,255,255,.16);
+  --grain:.42; --grain-blend:overlay;
+  --vig:.5;
+  --scn-noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='g' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0' intercept='1'/></feComponentTransfer></filter><rect width='256' height='256' filter='url(%23g)'/></svg>");
+  container:scn/inline-size;
+  position:relative;display:block;margin:0;
+  font-family:inherit;
+}
+
+/* ---------- 2. Stage: fixed aspect (16:10; 4:5 when the scene is narrower than 640px) */
+.scn-stage{position:relative;container:stage/size;aspect-ratio:16/10;overflow:hidden;
+  border-radius:var(--radius);background:#000;isolation:isolate;box-shadow:0 0 0 1px var(--frame-line)}
+@container scn (max-width:639.98px){.scn-stage{aspect-ratio:4/5}}
+
+/* ---------- 3. Backdrop layers */
+.scn-bg{position:absolute;inset:0;z-index:0;isolation:isolate;pointer-events:none;overflow:hidden}
+.scn-bg>*{position:absolute;display:block}
+.scn-wall{inset:0}
+.scn-grain{inset:0;background:var(--scn-noise) 0 0/256px 256px;mix-blend-mode:var(--grain-blend);opacity:var(--grain)}
+.scn-vig{inset:0;background:radial-gradient(130% 105% at 50% 42%,transparent 52%,rgba(0,0,0,var(--vig)) 100%)}
+.scn-bg svg{overflow:visible}
+
+/* ---------- 4. Device frame: a container, so every part is sized in device units (cqw) */
+.scn-dev{position:absolute;z-index:2;width:var(--dw);left:calc(50% - var(--dw) / 2 + var(--dx));
+  bottom:var(--floor);container:dev/inline-size}
+.scn-monitor{aspect-ratio:100/82;--base:82cqw}
+.scn-laptop{aspect-ratio:100/59.75;--base:61.25cqw;
+  /* the deck projects below the hinge; lift the hinge so the deck's front edge lands on --floor */
+  bottom:calc(var(--floor) + (var(--cam-h) * 69 + 1.5 * var(--persp-n)) / (var(--persp-n) - 69) * var(--dw) / 100)}
+.scn-rig{position:absolute;inset:0;perspective:calc(var(--persp-n) * 1cqw);
+  perspective-origin:var(--cam-x) calc(100% - var(--cam-h) * 1cqw)}
+.scn-laptop .scn-rig{perspective-origin:var(--cam-x) calc(59.75cqw - var(--cam-h) * 1cqw)}
+.scn-body{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:50% 100% 0;
+  transform:rotateX(var(--pitch)) rotateY(var(--yaw))}
+.scn-body i,.scn-body b,.scn-body div{position:absolute;display:block}
+.scn-face{backface-visibility:hidden}
+
+/* ---------- 5. Screen (shared): media + glass */
+.scn-screen{overflow:hidden;background:#000;transform:translateZ(.02cqw)}
+.scn-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block;border:0}
+.scn-glass{inset:0;pointer-events:none;
+  background:
+    linear-gradient(var(--glare-a),rgba(255,255,255,var(--glare-o)) 0%,rgba(255,255,255,calc(var(--glare-o) * .4)) 30%,rgba(255,255,255,0) 47%),
+    radial-gradient(140% 120% at 50% 35%,transparent 62%,rgba(0,0,0,.14) 100%);
+  box-shadow:inset 0 0 0 .07cqw rgba(0,0,0,.75),inset 0 .12cqw .5cqw rgba(0,0,0,.28)}
+
+/* placeholder screen (a project not captured yet): a dark UI skeleton, no brand, no text */
+.scn-ph{background:
+    radial-gradient(42% 62% at 76% 40%,rgba(132,98,255,.22),rgba(132,98,255,0) 70%),
+    radial-gradient(60% 70% at 0% 100%,rgba(46,30,170,.28),rgba(46,30,170,0) 70%),
+    linear-gradient(165deg,#13102a 0%,#0b0a17 48%,#070610 100%)}
+.scn-ph i{position:absolute;display:block}
+.scn-ph-nav{left:5%;right:5%;top:5.5%;height:3%;border-bottom:1px solid rgba(255,255,255,.06);
+  background:
+    linear-gradient(rgba(255,255,255,.26),rgba(255,255,255,.26)) 0 0/5.5% 58% no-repeat,
+    linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)) 64% 0/5% 40% no-repeat,
+    linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)) 74% 0/6% 40% no-repeat,
+    linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)) 85% 0/4.5% 40% no-repeat,
+    linear-gradient(rgba(170,148,255,.5),rgba(170,148,255,.5)) 100% 0/6.5% 58% no-repeat;padding-bottom:2.2%}
+.scn-ph-h1{left:8%;top:27%;width:44%;height:8.5%;border-radius:.35cqw;background:linear-gradient(90deg,rgba(255,255,255,.17),rgba(255,255,255,.08))}
+.scn-ph-h2{left:8%;top:38.5%;width:31%;height:8.5%;border-radius:.35cqw;background:linear-gradient(90deg,rgba(176,150,255,.62),rgba(120,86,255,.16))}
+.scn-ph-p{left:8%;top:52%;width:27%;height:5.4%;
+  background:linear-gradient(rgba(255,255,255,.1),rgba(255,255,255,.1)) 0 0/100% 26% no-repeat,
+             linear-gradient(rgba(255,255,255,.1),rgba(255,255,255,.1)) 0 100%/70% 26% no-repeat}
+.scn-ph-btn{left:8%;top:63%;width:10.5%;height:5.6%;border-radius:99px;background:rgba(150,120,255,.22);
+  box-shadow:inset 0 0 0 1px rgba(186,166,255,.55),0 0 2cqw rgba(132,98,255,.35)}
+.scn-ph-glow{left:58%;top:19%;width:30%;height:53.3%;border-radius:50%;
+  background:radial-gradient(circle at 40% 36%,rgba(214,198,255,.42) 0%,rgba(132,98,255,.3) 28%,rgba(70,44,190,.16) 52%,rgba(70,44,190,0) 70%)}
+.scn-ph-card{top:80%;height:20%;width:26.5%;border-radius:.5cqw .5cqw 0 0;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.scn-ph-card--1{left:8%}.scn-ph-card--2{left:36.75%}.scn-ph-card--3{left:65.5%}
+
+/* ---------- 6. Studio monitor: 16:9 panel, 1.9% bezel, slab stand, flat foot */
+.scn-panel{left:0;top:0;width:100cqw;height:57.9cqw;border-radius:1.2cqw;transform-style:preserve-3d;
+  background:linear-gradient(var(--rim-a),var(--alu-hi) 0%,var(--alu) 42%,var(--alu-lo) 100%)}
+.scn-panel::before,.scn-lid::before{content:"";position:absolute;inset:.24cqw;border-radius:1cqw;
+  background:linear-gradient(var(--glare-a),rgba(255,255,255,.07),rgba(255,255,255,0) 36%),var(--glass);
+  box-shadow:inset 0 0 0 .06cqw rgba(255,255,255,.07)}
+.scn-panel .scn-screen{left:1.9cqw;top:1.9cqw;width:96.2cqw;height:54.1cqw;border-radius:.3cqw}
+/* panel depth 1.7 — four side faces; back-facing ones are culled */
+.scn-panel .scn-e-t{left:1.2cqw;right:1.2cqw;top:-1.7cqw;height:1.7cqw;transform-origin:50% 100%;transform:rotateX(90deg);
+  background:linear-gradient(0deg,var(--rim-t),var(--alu-lo))}
+.scn-panel .scn-e-b{left:1.2cqw;right:1.2cqw;top:100%;height:1.7cqw;transform-origin:50% 0;transform:rotateX(-90deg);
+  background:linear-gradient(180deg,var(--rim-b),#0c0c0d)}
+.scn-panel .scn-e-l{top:1.2cqw;bottom:1.2cqw;right:100%;width:1.7cqw;transform-origin:100% 50%;transform:rotateY(-90deg);
+  background:linear-gradient(270deg,var(--rim-l),var(--alu-lo) 70%,#1a1a1c)}
+.scn-panel .scn-e-r{top:1.2cqw;bottom:1.2cqw;left:100%;width:1.7cqw;transform-origin:0 50%;transform:rotateY(90deg);
+  background:linear-gradient(90deg,var(--rim-r),var(--alu-lo) 70%,#1a1a1c)}
+/* neck: a flat slab behind the panel, shaded where the panel shades it, chamfer highlights */
+.scn-neck{left:40cqw;width:20cqw;top:24cqw;height:57cqw;transform:translateZ(-8cqw);transform-style:preserve-3d;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.55) 59.4%,rgba(0,0,0,.3) 61%,rgba(0,0,0,.1) 70%,rgba(0,0,0,0) 86%,rgba(0,0,0,.14) 100%),
+    linear-gradient(90deg,rgba(255,255,255,.05),rgba(0,0,0,.08)),
+    var(--alu);
+  box-shadow:inset .22cqw 0 0 rgba(255,255,255,.22),inset -.22cqw 0 0 rgba(0,0,0,.22)}
+.scn-neck .scn-e-l{top:0;bottom:0;right:100%;width:2cqw;transform-origin:100% 50%;transform:rotateY(-90deg);
+  background:linear-gradient(180deg,#0b0b0c 58%,var(--rim-l))}
+.scn-neck .scn-e-r{top:0;bottom:0;left:100%;width:2cqw;transform-origin:0 50%;transform:rotateY(90deg);
+  background:linear-gradient(180deg,#0b0b0c 58%,var(--rim-r))}
+/* foot: a flat plate on the surface (y 81..82), z from -17 to +7 */
+.scn-foot{left:33cqw;width:34cqw;top:81cqw;height:24cqw;border-radius:1.8cqw;transform-origin:50% 0;
+  transform:translateZ(-17cqw) rotateX(90deg);transform-style:preserve-3d;
+  background:linear-gradient(180deg,var(--alu-lo) 0%,var(--alu) 40%,var(--alu-hi) 100%)}
+.scn-foot .scn-e-f{left:1.8cqw;right:1.8cqw;top:100%;height:1cqw;transform-origin:50% 0;transform:rotateX(-90deg);
+  background:linear-gradient(180deg,var(--alu-hi) 0%,var(--alu) 35%,var(--alu-lo) 100%)}
+.scn-monitor .scn-shadow{left:31cqw;width:38cqw;top:82cqw;height:26cqw;border-radius:2.4cqw;transform-origin:50% 0;
+  transform:translateY(-.01cqw) translateZ(-18cqw) rotateX(90deg);background:var(--contact);
+  box-shadow:0 0 1.6cqw .5cqw var(--contact),0 0 var(--amb-blur) var(--amb-spread) var(--ambient)}
+.scn-monitor .scn-spill{left:-10cqw;width:120cqw;top:82cqw;height:50cqw;transform-origin:50% 0;
+  transform:translateY(-.03cqw) rotateX(90deg);
+  background:radial-gradient(56cqw 36cqw at 50% 0%,var(--spill),transparent 100%)}
+
+/* ---------- 7. Laptop: 16:9 screen (matches 1920x1080 stills and 16:9 video exactly), lid leans back, deck lies flat in 3D */
+.scn-lid{left:0;top:0;width:100cqw;height:59.75cqw;border-radius:2.6cqw 2.6cqw .8cqw .8cqw;transform-origin:50% 100%;
+  transform:rotateX(var(--lean));transform-style:preserve-3d;
+  background:linear-gradient(var(--rim-a),var(--alu-hi) 0%,var(--alu) 42%,var(--alu-lo) 100%)}
+.scn-lid::before{inset:.3cqw;border-radius:2.3cqw 2.3cqw .55cqw .55cqw}
+.scn-lid::after{content:"";position:absolute;left:1.2cqw;right:1.2cqw;bottom:.3cqw;height:1.25cqw;border-radius:0 0 .5cqw .5cqw;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.4))}
+.scn-lid .scn-screen{left:2.4cqw;top:2.6cqw;width:95.2cqw;height:53.55cqw;border-radius:.7cqw .7cqw .25cqw .25cqw}
+.scn-lid .scn-cam{left:calc(50% - .32cqw);top:1cqw;width:.64cqw;height:.64cqw;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#2a3140 0 30%,#0a0b0e 60%);box-shadow:0 0 0 .1cqw rgba(255,255,255,.04)}
+.scn-lid .scn-e-t{left:2.6cqw;right:2.6cqw;top:-.7cqw;height:.7cqw;transform-origin:50% 100%;transform:rotateX(90deg);
+  background:linear-gradient(0deg,var(--rim-t),var(--alu-lo))}
+.scn-lid .scn-e-l{top:2.6cqw;bottom:.8cqw;right:100%;width:.7cqw;transform-origin:100% 50%;transform:rotateY(-90deg);
+  background:linear-gradient(270deg,var(--rim-l),var(--alu-lo))}
+.scn-lid .scn-e-r{top:2.6cqw;bottom:.8cqw;left:100%;width:.7cqw;transform-origin:0 50%;transform:rotateY(90deg);
+  background:linear-gradient(90deg,var(--rim-r),var(--alu-lo))}
+.scn-deck{left:0;top:100%;width:100cqw;height:69cqw;border-radius:.8cqw .8cqw 2.6cqw 2.6cqw;transform-origin:50% 0;
+  transform:rotateX(90deg);transform-style:preserve-3d;
+  background:
+    radial-gradient(70cqw 30cqw at 50% 0%,var(--spill),transparent 100%),
+    linear-gradient(180deg,var(--deck-lo) 0%,var(--deck) 30%,var(--deck-hi) 100%)}
+.scn-kb{left:12.5cqw;width:75cqw;top:4.6cqw;height:29cqw;border-radius:.9cqw;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 4.9cqw,var(--key-gap) 4.9cqw 5.357cqw),
+    repeating-linear-gradient(180deg,transparent 0 4.35cqw,var(--key-gap) 4.35cqw 4.833cqw),
+    var(--key);
+  box-shadow:0 0 0 .35cqw var(--key-gap),0 0 0 .5cqw rgba(0,0,0,.18)}
+.scn-spk{top:4.6cqw;height:29cqw;width:6.6cqw;
+  background:radial-gradient(circle,rgba(0,0,0,.42) 0 32%,transparent 40%) 0 0/.82cqw .82cqw}
+.scn-spk--l{left:3.6cqw}.scn-spk--r{right:3.6cqw}
+.scn-pad{left:29cqw;width:42cqw;top:38.5cqw;height:25.5cqw;border-radius:1.5cqw;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.05));box-shadow:inset 0 0 0 .14cqw rgba(0,0,0,.16)}
+.scn-deck .scn-e-f{left:2.6cqw;right:2.6cqw;top:100%;height:1.5cqw;transform-origin:50% 0;transform:rotateX(-90deg);
+  background:
+    radial-gradient(6cqw 1.2cqw at 50% 0%,rgba(0,0,0,.5),transparent 100%),
+    linear-gradient(180deg,var(--alu-hi) 0%,var(--alu) 30%,var(--alu-lo) 100%)}
+.scn-deck .scn-e-l{right:100%;width:1.5cqw;top:.8cqw;bottom:2.6cqw;transform-origin:100% 50%;transform:rotateY(-90deg);
+  background:linear-gradient(270deg,var(--rim-l),var(--alu-lo))}
+.scn-deck .scn-e-r{left:100%;width:1.5cqw;top:.8cqw;bottom:2.6cqw;transform-origin:0 50%;transform:rotateY(90deg);
+  background:linear-gradient(90deg,var(--rim-r),var(--alu-lo))}
+.scn-laptop .scn-shadow{left:1cqw;width:98cqw;top:61.25cqw;height:67cqw;border-radius:2.6cqw;transform-origin:50% 0;
+  transform:translateY(-.01cqw) translateZ(1.2cqw) rotateX(90deg);background:var(--contact);
+  box-shadow:0 0 .5cqw .3cqw var(--contact),0 0 2.4cqw .8cqw var(--contact),0 0 var(--amb-blur) var(--amb-spread) var(--ambient)}
+.scn-laptop .scn-spill{left:-10cqw;width:120cqw;top:61.25cqw;height:46cqw;transform-origin:50% 0;
+  transform:translateY(-.03cqw) translateZ(69cqw) rotateX(90deg);
+  background:radial-gradient(56cqw 30cqw at 50% 0%,var(--spill),transparent 100%)}
+
+/* ---------- 7b. 16:10 screen (scn--tall, lib.scene aspect): sites captured at 1440x900 fill the screen uncropped.
+   Monitor: the panel grows downwards over the neck (the stand keeps its place; the panel's shadow on the neck
+   moves with it). Laptop: the lid grows upwards from the hinge, as on a 16:10 notebook; the deck is unchanged. */
+.scn--tall .scn-panel{height:63.925cqw}
+.scn--tall .scn-panel .scn-screen{height:60.125cqw}
+.scn--tall .scn-neck{background:
+    linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.55) 70%,rgba(0,0,0,.3) 71.6%,rgba(0,0,0,.1) 78%,rgba(0,0,0,0) 90%,rgba(0,0,0,.14) 100%),
+    linear-gradient(90deg,rgba(255,255,255,.05),rgba(0,0,0,.08)),
+    var(--alu)}
+.scn--tall .scn-neck .scn-e-l{background:linear-gradient(180deg,#0b0b0c 69%,var(--rim-l))}
+.scn--tall .scn-neck .scn-e-r{background:linear-gradient(180deg,#0b0b0c 69%,var(--rim-r))}
+.scn--tall .scn-lid{top:-5.95cqw;height:65.7cqw}
+.scn--tall .scn-lid .scn-screen{height:59.5cqw}
+
+/* ---------- 8. 3D props sharing the device camera: boxes (pedestal, blocks, desk, glass stand)
+   --bw width, --bd depth, --bh height (downwards), --bx centre x, --by top y, --bz back z (device units) */
+.scn-box{left:calc(50cqw + var(--bx,0cqw) - var(--bw) / 2);width:var(--bw);top:var(--by,var(--base));height:0;transform-style:preserve-3d}
+.scn-box>*{position:absolute;backface-visibility:hidden}
+.scn-box .scn-b-top{left:0;top:0;width:100%;height:var(--bd);transform-origin:50% 0;transform:translateZ(var(--bz)) rotateX(90deg)}
+.scn-box .scn-b-front{left:0;top:0;width:100%;height:var(--bh);transform:translateZ(calc(var(--bz) + var(--bd)))}
+.scn-box .scn-b-left{left:0;top:0;width:var(--bd);height:var(--bh);transform-origin:0 50%;transform:translateZ(var(--bz)) rotateY(-90deg)}
+.scn-box .scn-b-right{left:100%;top:0;width:var(--bd);height:var(--bh);transform-origin:0 50%;transform:translateZ(calc(var(--bz) + var(--bd))) rotateY(90deg)}
+
+/* ---------- 9. Caption (site typography only) */
+.scn-cap{position:absolute;z-index:4;left:3.4cqw;top:3.4cqw;display:flex;flex-direction:column;align-items:flex-start;gap:1.1cqw;
+  color:var(--cap-ink);font-family:inherit;pointer-events:none}
+.scn-pill{position:relative;display:inline-flex;align-items:center;gap:8px;padding:6px 11px 6px 7px;border-radius:57px;
+  background:var(--cap-pill-bg);font-size:clamp(10px,.86cqw,12px);line-height:1.2;letter-spacing:.04em;
+  text-transform:uppercase;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.scn-pill::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid var(--cap-pill-line)}
+.scn-pill i{position:relative;width:14px;height:14px;border-radius:50%;background:var(--cap-dot);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.scn-pill i::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:rgba(0,0,0,.7)}
+/* the label's kind (projects.label_kind): a red core for the concepts group, so client vs concept reads at a glance */
+.scn-pill--interactive i::after,.scn-pill--concept i::after,.scn-pill--personal i::after{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--red-dot)}
+/* an Interactive Concept's small "Unofficial, ..." line under the pill (lib.scene_caption note=True: the next-project
+   tile), plain case on the pill's own ground */
+.scn-note{position:relative;max-width:min(100%,34em);margin-top:-.4cqw;padding:5px 11px;border-radius:12px;background:var(--cap-pill-bg);
+  box-shadow:inset 0 0 0 1px var(--cap-pill-line);font-size:clamp(10px,.8cqw,12px);line-height:1.35;letter-spacing:.01em}
+.scn-name{font-size:clamp(20px,2.3cqw,34px);line-height:1.02;letter-spacing:-.035em}
+/* a long name (lib.SCENE_NAME_LONG) wraps in a column left of the device, whose lid / panel starts at ~24cqw; in the
+   4:5 stage (under 640px) the device sits lower and the name wraps over the full width as before */
+.scn-name--long{max-width:18cqw}
+@container scn (max-width:639.98px){.scn-cap{left:5.5cqw;top:5.5cqw;gap:2.4cqw}.scn-name{font-size:clamp(20px,6.4cqw,30px)}
+  .scn-name--long{max-width:none}}
+/* the grey-wall plaster is mid-grey under the window light: a soft shade keeps the white name legible */
+.scn--grey-wall .scn-name{text-shadow:0 1px 14px rgba(0,0,0,.4)}
+/* caption on a light backdrop; its screen is pale until the lazy still / poster has decoded */
+.scn--light .scn-screen{background:#e9e4dc}
+.scn--light{--cap-ink:#121212;--cap-pill-bg:rgba(255,255,255,.55);--cap-pill-line:rgba(0,0,0,.1);--cap-dot:rgba(0,0,0,.08);--frame-line:rgba(255,255,255,.1)}
+.scn--light .scn-pill i::after{background:rgba(0,0,0,.55)}
+.scn--light .scn-pill--interactive i::after,.scn--light .scn-pill--concept i::after,.scn--light .scn-pill--personal i::after{background:#e0161a}
+
+/* ---------- 10. Device defaults + portrait (4:5) */
+.scn--laptop{--dw:52cqw;--floor:22cqh;--persp-n:1000;--cam-h:80}
+@container scn (max-width:639.98px){
+  .scn--monitor .scn-stage{--dw:80cqw;--floor:17cqh}
+  .scn--laptop .scn-stage{--dw:84cqw;--floor:22cqh}
+}
+
+/* =====================================================================================
+   STYLES — each sets light, finish, camera and its own props
+   ===================================================================================== */
+
+/* ---------- red-horizon — cinematic/dark: crimson falloff behind a black ridge */
+.scn--red-horizon{
+  --alu-hi:#55565b;--alu:#2b2c30;--alu-lo:#121215;--rim-l:#5a1513;--rim-r:#5a1513;--rim-t:#8a2a26;--rim-b:#0b0b0c;
+  --deck-hi:#3a3b3f;--deck:#2a2b2f;--deck-lo:#1c1d20;--key:#0b0b0c;--key-gap:#232427;
+  --glass:#030304;--glare-o:.05;--contact:rgba(0,0,0,.9);--ambient:rgba(0,0,0,.55);
+  --floor:22cqh;--cam-h:12;--persp-n:640;--vig:.55;--grain:.5;
+}
+.scn--red-horizon.scn--laptop{--floor:20cqh;--cam-h:34;--persp-n:1000;--lean:12deg}
+.scn--red-horizon .scn-wall{background:
+  radial-gradient(58% 42% at 50% 76%,rgba(255,74,52,.9) 0%,rgba(251,38,41,.55) 35%,rgba(251,38,41,0) 75%),
+  radial-gradient(150% 120% at 50% 94%,#c9060c 0%,#9b0309 24%,#5c0105 46%,#2a0002 70%,#0e0000 92%,#070000 100%)}
+.scn--red-horizon .scn-dune{left:-4%;width:108%;top:calc(100% - var(--floor) - 3.4cqh);height:calc(var(--floor) + 4cqh)}
+.scn--red-horizon .scn-sheen{left:10%;right:10%;top:calc(100% - var(--floor) - 2cqh);height:12cqh;
+  background:radial-gradient(50% 60% at 50% 0%,rgba(255,60,40,.22),rgba(255,60,40,0) 100%)}
+@container scn (max-width:639.98px){
+  .scn--red-horizon.scn--monitor .scn-stage{--floor:22cqh}
+  .scn--red-horizon.scn--laptop .scn-stage{--floor:24cqh}
+}
+
+/* ---------- blue-studio — tech: steel-blue cyclorama, hard horizon ledge, glossy floor */
+.scn--blue-studio{
+  --alu-hi:#4a5258;--alu:#22272b;--alu-lo:#0e1114;--rim-l:#2d4c5c;--rim-r:#2d4c5c;--rim-t:#6f97ab;--rim-b:#0b0d0f;
+  --deck-hi:#3b4247;--deck:#2a3035;--deck-lo:#1b1f23;--key:#0b0c0e;--key-gap:#252a2e;
+  --glare-o:.08;--contact:rgba(4,18,28,.78);--ambient:rgba(6,26,40,.32);--spill:rgba(220,235,245,.06);
+  --floor:16cqh;--hz:23cqh;--cam-h:16;--vig:.42;--grain:.38;
+}
+.scn--blue-studio.scn--laptop{--floor:15cqh;--hz:27cqh;--cam-h:60}
+.scn--blue-studio .scn-wall{background:
+  radial-gradient(52% 50% at 50% 46%,rgba(126,192,222,.32),rgba(126,192,222,0) 70%),
+  linear-gradient(180deg,#0c2230 0%,#163a4f 30%,#245873 62%,#3b7895 100%)}
+.scn--blue-studio .scn-floor{left:0;right:0;bottom:0;height:var(--hz);background:
+  radial-gradient(38% 46% at 50% 108%,rgba(255,176,160,.34),rgba(255,176,160,0) 100%),
+  radial-gradient(70% 90% at 50% 0%,rgba(150,205,228,.28),rgba(150,205,228,0) 70%),
+  linear-gradient(180deg,#3f82a1 0%,#2f6a87 35%,#22566f 100%)}
+.scn--blue-studio .scn-ledge{left:0;right:0;bottom:var(--hz);height:max(2px,.32cqh);background:#06131b;
+  box-shadow:0 1px 0 rgba(170,220,240,.18),0 .6cqh 1.4cqh rgba(0,10,20,.35)}
+.scn--blue-studio .scn-monitor{-webkit-box-reflect:below 0 linear-gradient(transparent 52%,rgba(0,0,0,.34))}
+.scn--blue-studio .scn-laptop{-webkit-box-reflect:below calc((var(--cam-h) * 69 + 1.5 * var(--persp-n)) / (var(--persp-n) - 69) * var(--dw) / 50) linear-gradient(transparent 50%,rgba(0,0,0,.24))}
+@container scn (max-width:639.98px){
+  .scn--blue-studio.scn--monitor .scn-stage{--floor:15cqh;--hz:21cqh}
+  .scn--blue-studio.scn--laptop .scn-stage{--floor:17cqh;--hz:27cqh}
+}
+
+/* ---------- stone-red — cinematic/dark: black void, raking red light, rough stone blocks */
+.scn--stone-red{
+  --alu-hi:#5d5f64;--alu:#2a2b2f;--alu-lo:#0f0f11;--rim-l:#3a3c41;--rim-r:#d0262a;--rim-t:#7a2224;--rim-b:#0a0a0b;
+  --deck-hi:#35363a;--deck:#26272a;--deck-lo:#18181b;--key:#0a0a0b;--key-gap:#202124;
+  --glare-o:.06;--glare-a:250deg;--contact:rgba(0,0,0,.9);--ambient:rgba(0,0,0,.5);--spill:rgba(255,255,255,.05);
+  --floor:15cqh;--yaw:16deg;--cam-h:24;--cam-x:58%;--persp-n:440;--vig:.6;--grain:.5;
+  --stone:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='900'><filter id='s' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.0055 .008' numOctaves='8' seed='11' stitchTiles='stitch'/><feDiffuseLighting surfaceScale='12' diffuseConstant='1.15' lighting-color='%23fff'><feDistantLight azimuth='320' elevation='30'/></feDiffuseLighting></filter><rect width='900' height='900' filter='url(%23s)'/></svg>");
+}
+.scn--stone-red.scn--laptop{--yaw:18deg;--cam-h:70;--persp-n:760;--floor:16cqh}
+.scn--stone-red .scn-wall{background:
+  radial-gradient(34% 52% at 80% 50%,rgba(251,38,41,.85) 0%,rgba(200,14,20,.42) 40%,rgba(120,0,6,0) 78%),
+  radial-gradient(70% 80% at 72% 56%,#2a0204 0%,#090000 58%,#000 100%)}
+.scn--stone-red .scn-box>*{background-size:110cqw 110cqw;background-blend-mode:overlay,normal}
+.scn--stone-red .scn-box--ped{--bw:118cqw;--bd:72cqw;--bh:120cqw;--bz:-36cqw}
+.scn--stone-red .scn-laptop .scn-box--ped{--bw:136cqw;--bd:122cqw;--bz:-30cqw}
+.scn--stone-red .scn-box--ped .scn-b-top{background-image:var(--stone),linear-gradient(180deg,#5a1012 0%,#2a0708 30%,#120606 70%,#0d0707 100%)}
+.scn--stone-red .scn-box--ped .scn-b-front{background-image:var(--stone),linear-gradient(90deg,#0a0909 0%,#0d0a0a 55%,#260708 82%,#4a0a0c 100%);
+  box-shadow:inset 0 .3cqw .2cqw -.1cqw rgba(255,70,64,.4)}
+.scn--stone-red .scn-box--ped .scn-b-left{background-image:var(--stone),linear-gradient(90deg,#0c0b0b,#060505)}
+.scn--stone-red .scn-box--ped .scn-b-right{background-image:var(--stone),linear-gradient(90deg,#7a1214,#320506 70%)}
+.scn--stone-red .scn-box--l{--bw:44cqw;--bd:44cqw;--bh:400cqw;--bz:-80cqw;--bx:-112cqw;--by:calc(var(--base) - 150cqw)}
+.scn--stone-red .scn-box--l .scn-b-front{background-image:var(--stone),linear-gradient(90deg,#0c0b0b,#151010 70%,#221010)}
+.scn--stone-red .scn-box--l .scn-b-right{background-image:var(--stone),linear-gradient(90deg,#5a0a0d,#24090a 80%)}
+.scn--stone-red .scn-box--r{--bw:70cqw;--bd:70cqw;--bh:300cqw;--bz:-40cqw;--bx:140cqw;--by:calc(var(--base) - 26cqw)}
+.scn--stone-red .scn-box--r .scn-b-front{background-image:var(--stone),linear-gradient(90deg,#0d0909,#0a0808 40%);box-shadow:inset 0 .7cqw .6cqw -.2cqw rgba(255,60,56,.55),inset .6cqw 0 .6cqw -.2cqw rgba(255,60,56,.3)}
+.scn--stone-red .scn-box--r .scn-b-left{background-image:var(--stone),linear-gradient(90deg,#0a0707,#1c0808)}
+.scn--stone-red .scn-box--r .scn-b-top{background-image:var(--stone),linear-gradient(180deg,#6a0e10,#1a0606)}
+@container scn (max-width:639.98px){
+  .scn--stone-red.scn--monitor .scn-stage{--floor:17cqh;--dw:76cqw}
+  .scn--stone-red.scn--laptop .scn-stage{--floor:20cqh;--dw:80cqw}
+}
+
+/* ---------- white-glass — fashion/luxury: warm seamless studio, raking key light, bent-glass "waterfall" riser */
+.scn--white-glass{
+  --alu-hi:#fbfbfc;--alu:#dcdde0;--alu-lo:#a4a6ab;--rim-l:#f4f4f5;--rim-r:#adafb4;--rim-t:#ffffff;--rim-b:#8e9095;
+  --deck-hi:#e8e9ec;--deck:#d4d6d9;--deck-lo:#b2b4b8;--key:#1a1a1c;--key-gap:#3a3b3f;
+  --glare-o:.1;--contact:rgba(46,44,38,.42);--ambient:rgba(60,56,48,.16);--amb-blur:9cqw;--amb-spread:2cqw;
+  --floor:34cqh;--yaw:-13deg;--cam-h:3;--cam-x:44%;--persp-n:440;--vig:.3;--grain:.32;--grain-blend:soft-light;
+  --wg-t:3.2cqw;--wg-r:7cqw;   /* glass thickness and outer bend radius (device units) */
+}
+.scn--white-glass.scn--laptop{--floor:36cqh;--yaw:-12deg;--cam-h:46;--persp-n:800}
+/* device widths: the riser lifts the device, so a full-size panel / lid reached the stage top and the caption */
+.scn--white-glass.scn--monitor{--dw:40cqw}
+.scn--white-glass.scn--laptop{--dw:47cqw}
+.scn--white-glass .scn-wall{background:
+  linear-gradient(108deg,rgba(255,255,255,0) 14%,rgba(255,253,247,.5) 27%,rgba(255,253,247,.16) 36%,rgba(255,255,255,0) 46%),
+  radial-gradient(44% 58% at 36% 36%,rgba(255,253,248,.95) 0%,rgba(255,252,246,.5) 42%,rgba(255,252,246,0) 76%),
+  radial-gradient(70% 90% at 104% 0%,rgba(96,88,76,.44),rgba(96,88,76,0) 66%),
+  radial-gradient(90% 55% at 60% 106%,rgba(96,88,76,.34),rgba(96,88,76,0) 72%),
+  linear-gradient(180deg,#cdc8bf 0%,#ddd9d1 38%,#d8d3ca 60%,#c6c1b7 76%,#b0aa9f 100%)}
+.scn--white-glass .scn-box{--bw:70cqw;--bd:46cqw;--bz:-25cqw;--bh:30cqw}
+.scn--white-glass .scn-laptop .scn-box{--bw:116cqw;--bd:90cqw;--bz:-16cqw;--bh:27cqw}
+.scn-wg>*{backface-visibility:visible}
+/* top sheet: the flat run between the two bends */
+.scn-wg-top{left:var(--wg-r);width:calc(100% - 2 * var(--wg-r));top:0;height:var(--bd);transform-origin:50% 0;transform:translateZ(var(--bz)) rotateX(90deg);
+  background:linear-gradient(180deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.08) 26%,rgba(255,255,255,0) 55%,rgba(255,255,255,.2) 100%),rgba(186,216,202,.13)}
+/* the right-hand bend, six facets of a 7-unit radius; the left bend is hidden behind the device */
+.scn-wg-bend{top:0;height:var(--bd);transform-origin:0 0}
+.scn-wg-bend--1{left:calc(100% - 7cqw);top:0;width:1.887cqw;transform:translateZ(var(--bz)) rotateZ(7.5deg) rotateX(90deg);background:rgba(255,255,255,.5)}
+.scn-wg-bend--2{left:calc(100% - 5.188cqw);top:.239cqw;width:1.887cqw;transform:translateZ(var(--bz)) rotateZ(22.5deg) rotateX(90deg);background:rgba(255,255,255,.78)}
+.scn-wg-bend--3{left:calc(100% - 3.5cqw);top:.938cqw;width:1.887cqw;transform:translateZ(var(--bz)) rotateZ(37.5deg) rotateX(90deg);background:rgba(240,250,246,.5)}
+.scn-wg-bend--4{left:calc(100% - 2.05cqw);top:2.05cqw;width:1.887cqw;transform:translateZ(var(--bz)) rotateZ(52.5deg) rotateX(90deg);background:rgba(220,236,230,.22)}
+.scn-wg-bend--5{left:calc(100% - .938cqw);top:3.5cqw;width:1.887cqw;transform:translateZ(var(--bz)) rotateZ(67.5deg) rotateX(90deg);background:rgba(200,222,214,.12)}
+.scn-wg-bend--6{left:calc(100% - .239cqw);top:5.188cqw;width:1.887cqw;transform:translateZ(var(--bz)) rotateZ(82.5deg) rotateX(90deg);background:rgba(200,222,214,.08)}
+/* glass sheets of the legs: outer face of the right leg, inner face of the left leg (seen through the opening) */
+.scn-wg-side,.scn-wg-inner{top:var(--wg-r);width:var(--bd);height:calc(var(--bh) - var(--wg-r));transform-origin:0 0;
+  transform:translateZ(calc(var(--bz) + var(--bd))) rotateY(90deg)}
+.scn-wg-side{left:100%;background:
+  linear-gradient(90deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,0) 10%,rgba(255,255,255,0) 56%,rgba(255,255,255,.3) 63%,rgba(255,255,255,.06) 68%,rgba(255,255,255,0) 76%),
+  linear-gradient(180deg,rgba(200,222,214,.05),rgba(170,200,188,.12))}
+.scn-wg-inner{left:var(--wg-t);background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(255,255,255,.1)),rgba(190,214,204,.04)}
+/* the slab's cut edge, front and back: a thick clear band bent into an arch (border ring masked to its outline) */
+.scn-wg-front,.scn-wg-back{left:0;top:0;width:100%;height:var(--bh);box-sizing:border-box;
+  border:var(--wg-t) solid transparent;border-bottom:0;border-radius:var(--wg-r) var(--wg-r) 0 0;background-origin:border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0) border-box;-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0) border-box}
+.scn-wg-front{transform:translateZ(calc(var(--bz) + var(--bd)));background:
+  linear-gradient(180deg,#fff 0 .2cqw,rgba(255,255,255,.5) .45cqw,rgba(255,255,255,0) .9cqw) 0 0/100% var(--wg-t) no-repeat,
+  linear-gradient(0deg,rgba(255,255,255,.85) 0 .16cqw,rgba(255,255,255,0) .65cqw) 0 0/100% var(--wg-t) no-repeat,
+  linear-gradient(90deg,rgba(255,255,255,.95) 0 .2cqw,rgba(255,255,255,0) .8cqw) 0 0/var(--wg-t) 100% no-repeat,
+  linear-gradient(270deg,rgba(255,255,255,.9) 0 .2cqw,rgba(255,255,255,0) .8cqw) 100% 0/var(--wg-t) 100% no-repeat,
+  linear-gradient(270deg,rgba(255,255,255,.55) 0 .14cqw,rgba(255,255,255,0) .5cqw) 0 0/var(--wg-t) 100% no-repeat,
+  linear-gradient(90deg,rgba(255,255,255,.55) 0 .14cqw,rgba(255,255,255,0) .5cqw) 100% 0/var(--wg-t) 100% no-repeat,
+  linear-gradient(180deg,rgba(40,74,62,0) 50%,rgba(40,74,62,.32) 58%,rgba(40,74,62,0) 68%) 0 0/100% var(--wg-t) no-repeat,
+  linear-gradient(90deg,rgba(40,74,62,0) 34%,rgba(40,74,62,.3) 46%,rgba(40,74,62,0) 58%) 0 0/var(--wg-t) 100% no-repeat,
+  linear-gradient(270deg,rgba(40,74,62,0) 34%,rgba(40,74,62,.3) 46%,rgba(40,74,62,0) 58%) 100% 0/var(--wg-t) 100% no-repeat,
+  linear-gradient(180deg,rgba(226,246,238,0) 62%,rgba(236,252,245,.8) 100%),
+  linear-gradient(90deg,rgba(255,255,255,0) 20%,rgba(255,255,255,.4) 30%,rgba(255,255,255,0) 40%),
+  linear-gradient(180deg,rgba(116,150,138,.5),rgba(104,142,128,.56))}
+.scn-wg-back{transform:translateZ(var(--bz));opacity:.42;background:
+  linear-gradient(180deg,rgba(255,255,255,.8) 0 .2cqw,rgba(255,255,255,0) .7cqw) 0 0/100% var(--wg-t) no-repeat,
+  linear-gradient(180deg,rgba(130,160,150,.5),rgba(116,150,138,.56))}
+/* floor under the riser: leg contact lines, the caustic the glass throws, the device's soft shadow through the glass */
+.scn-wg-floor{left:-40cqw;width:calc(100% + 80cqw);top:var(--bh);height:calc(var(--bd) + 70cqw);transform-origin:50% 0;
+  transform:translateZ(calc(var(--bz) - 20cqw)) rotateX(90deg);background:
+  linear-gradient(90deg,rgba(40,38,32,0),rgba(40,38,32,.5) 35% 65%,rgba(40,38,32,0)) 39cqw 20cqw/calc(var(--wg-t) + 2cqw) var(--bd) no-repeat,
+  linear-gradient(90deg,rgba(40,38,32,0),rgba(40,38,32,.5) 35% 65%,rgba(40,38,32,0)) calc(100% - 39cqw) 20cqw/calc(var(--wg-t) + 2cqw) var(--bd) no-repeat,
+  linear-gradient(90deg,rgba(236,255,246,0),rgba(236,255,246,.55) 30%,rgba(236,255,246,0)) calc(40cqw + var(--wg-t)) 24cqw/7cqw calc(var(--bd) + 4cqw) no-repeat,
+  linear-gradient(90deg,rgba(236,255,246,0),rgba(236,255,246,.4) 30%,rgba(236,255,246,0)) calc(100% - 40cqw + .2cqw) 22cqw/4cqw calc(var(--bd) - 2cqw) no-repeat,
+  radial-gradient(closest-side,rgba(70,64,54,.26),rgba(70,64,54,.1) 60%,rgba(70,64,54,0)) 50cqw 26cqw/calc(100% - 82cqw) calc(var(--bd) + 6cqw) no-repeat,
+  radial-gradient(closest-side,rgba(70,64,54,.16),rgba(70,64,54,.06) 55%,rgba(70,64,54,0)) calc(100% - 4cqw) 18cqw/70cqw calc(var(--bd) + 12cqw) no-repeat}
+@container scn (max-width:639.98px){
+  .scn--white-glass.scn--monitor .scn-stage{--floor:26cqh;--dw:72cqw}
+  .scn--white-glass.scn--laptop .scn-stage{--floor:34cqh}
+}
+
+/* ---------- grey-wall — editorial/warm: plaster wall, window light, a concrete waterfall desk against the wall */
+.scn--grey-wall{
+  --alu-hi:#f2f2f2;--alu:#c9cacc;--alu-lo:#85878b;--rim-l:#e6e6e6;--rim-r:#8a8c90;--rim-t:#f4f4f4;--rim-b:#56585c;
+  --glare-o:.09;--glare-a:105deg;--contact:rgba(18,18,18,.7);--ambient:rgba(20,20,20,.24);--spill:rgba(255,255,255,.05);
+  --floor:24cqh;--cam-h:46;--persp-n:640;--vig:.38;--grain:.45;
+  --concrete:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='c' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.07' numOctaves='4' seed='5' stitchTiles='stitch'/><feDiffuseLighting surfaceScale='.7' diffuseConstant='1.05' lighting-color='%23fff'><feDistantLight azimuth='225' elevation='60'/></feDiffuseLighting></filter><filter id='b' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.008' numOctaves='4' seed='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='600' height='600' filter='url(%23c)'/><rect width='600' height='600' filter='url(%23b)' opacity='.35'/></svg>");
+  /* desk (device units, 0 = device centre): slab from x -160 to +72, 9 thick, 60 deep, back edge against the wall
+     at z -30; a 9-unit leg drops from its right end */
+  --dk-l:-160cqw;--dk-r:72cqw;--dk-t:9cqw;--dk-d:60cqw;--dk-z:-30cqw;
+}
+.scn--grey-wall.scn--laptop{--floor:24cqh;--cam-h:70;--persp-n:1000;--dk-d:120cqw;--dk-z:-30cqw}
+.scn--grey-wall .scn-wall{background:
+  radial-gradient(80% 70% at 35% 30%,rgba(255,250,240,.06),transparent 70%),
+  linear-gradient(180deg,#5c5a57 0%,#55534f 50%,#4c4a47 100%)}
+.scn--grey-wall .scn-gobo{left:-14cqw;top:-10cqh;width:66cqw;height:84cqh;transform:skewX(-26deg);
+  background:linear-gradient(90deg,transparent 0 6%,rgba(255,240,220,.17) 13% 41%,transparent 43% 46%,rgba(255,240,220,.15) 48% 73%,transparent 80%);
+  -webkit-mask:linear-gradient(180deg,transparent 0,#000 16%,#000 31%,transparent 33% 35%,#000 37%,#000 68%,transparent 92%);
+          mask:linear-gradient(180deg,transparent 0,#000 16%,#000 31%,transparent 33% 35%,#000 37%,#000 68%,transparent 92%);
+  filter:blur(.7cqw)}
+/* the device's soft shadow on the wall (window light from the upper left) */
+.scn--grey-wall .scn-cast{left:calc(50% - var(--dw) / 2 + var(--dx) + var(--dw) * .11);width:var(--dw);
+  bottom:calc(var(--floor) + var(--dw) * .17);height:calc(var(--dw) * .58);border-radius:calc(var(--dw) * .015);
+  background:rgba(24,20,16,.26);filter:blur(calc(var(--dw) * .03));transform:skewX(-12deg)}
+.scn--grey-wall .scn-cast::after{content:"";position:absolute;left:43%;width:19%;top:100%;height:calc(var(--dw) * .16);background:inherit}
+.scn--grey-wall.scn--laptop .scn-cast{bottom:calc(var(--floor) + var(--dw) * .1);height:calc(var(--dw) * .6);left:calc(50% - var(--dw) / 2 + var(--dx) + var(--dw) * .09)}
+.scn--grey-wall.scn--laptop .scn-cast::after{display:none}
+.scn--grey-wall .scn-desk{--bw:calc(var(--dk-r) - var(--dk-l));--bx:calc((var(--dk-l) + var(--dk-r)) / 2);--bd:var(--dk-d);--bh:var(--dk-t);--bz:var(--dk-z)}
+.scn--grey-wall .scn-leg{--bw:var(--dk-t);--bx:calc(var(--dk-r) - var(--dk-t) / 2);--bd:var(--dk-d);--bh:300cqw;--bz:var(--dk-z);--by:calc(var(--base) + var(--dk-t))}
+.scn--grey-wall .scn-desk .scn-b-top{background:
+  linear-gradient(98deg,transparent 6%,rgba(255,242,222,.16) 11% 21%,transparent 25% 27%,rgba(255,242,222,.13) 30% 38%,transparent 43%),
+  var(--concrete) 0 0/34cqw 34cqw,
+  linear-gradient(180deg,#696763 0%,#7b7975 55%,#86847f 100%);background-blend-mode:normal,soft-light,normal}
+/* slab and leg front faces: one continuous concrete surface, the bevel catching the light */
+.scn--grey-wall .scn-desk .scn-b-front{background:var(--concrete) 0 0/34cqw 34cqw,linear-gradient(180deg,#8a8884 0,#6c6a66 .5cqw,#5a5854 2cqw,#484643 100%);
+  background-blend-mode:soft-light,normal;box-shadow:inset 0 .16cqw 0 rgba(255,255,255,.22)}
+.scn--grey-wall .scn-leg .scn-b-front{background:var(--concrete) 0 0/34cqw 34cqw,linear-gradient(180deg,#46443f 0,#3e3c39 30cqw,#363431 100%);
+  background-blend-mode:soft-light,normal;box-shadow:inset .14cqw 0 0 rgba(255,255,255,.1)}
+.scn--grey-wall .scn-leg .scn-b-left{background:var(--concrete) 0 0/34cqw 34cqw,linear-gradient(90deg,#2a2826 0%,#302e2b 60%,#3a3835 100%);background-blend-mode:soft-light,normal}
+/* on the wall (z = the desk's back edge): contact shadow above the desk, the cavity under it, the leg's cast shadow */
+.scn-gw-ao,.scn-gw-under,.scn-gw-legcast{transform:translateZ(var(--dk-z))}
+.scn-gw-ao{left:calc(50cqw + var(--dk-l));width:calc(var(--dk-r) - var(--dk-l));top:calc(var(--base) - 14cqw);height:14cqw;
+  background:linear-gradient(0deg,rgba(14,12,10,.42) 0,rgba(14,12,10,.16) 22%,rgba(14,12,10,0) 100%)}
+.scn-gw-under{left:calc(50cqw + var(--dk-l));width:calc(var(--dk-r) - var(--dk-l) - var(--dk-t) + .2cqw);top:calc(var(--base) + var(--dk-t) - .2cqw);height:240cqw;
+  background:
+    radial-gradient(60% 30% at 92% 0%,rgba(8,7,6,.3),rgba(8,7,6,0) 100%),
+    linear-gradient(180deg,rgba(10,9,8,.64) 0,rgba(10,9,8,.42) 5cqw,rgba(10,9,8,.26) 18cqw,rgba(10,9,8,.18) 40cqw)}
+.scn-gw-legcast{left:calc(50cqw + var(--dk-r));width:30cqw;top:calc(var(--base) + 2cqw);height:240cqw;transform-origin:0 0;
+  background:linear-gradient(90deg,rgba(16,14,12,.42),rgba(16,14,12,.14) 40%,rgba(16,14,12,0));transform:translateZ(var(--dk-z)) skewY(18deg);filter:blur(.9cqw)}
+@container scn (max-width:639.98px){
+  .scn--grey-wall.scn--monitor .scn-stage{--floor:24cqh}
+  .scn--grey-wall.scn--laptop .scn-stage{--floor:26cqh}
+}
+
+/* ---------- violet-rock — tech/AI: indigo-to-lavender sky, dark faceted rock */
+.scn--violet-rock{
+  --alu-hi:#f6f5fb;--alu:#cfcdd8;--alu-lo:#8a879a;--rim-l:#6c5bd0;--rim-r:#f1ecff;--rim-t:#ffffff;--rim-b:#3a3550;
+  --deck-hi:#dcdae4;--deck:#c4c2cf;--deck-lo:#a7a4b5;
+  --glare-o:.08;--glare-a:140deg;--contact:rgba(6,4,14,.85);--ambient:rgba(8,6,24,.3);--amb-blur:8cqw;--amb-spread:3cqw;--spill:rgba(255,255,255,0);
+  --floor:22cqh;--yaw:-6deg;--cam-h:10;--persp-n:560;--vig:.35;--grain:.42;
+}
+.scn--violet-rock.scn--laptop{--floor:23cqh;--cam-h:80;--persp-n:1000;--dw:42cqw}
+.scn--violet-rock .scn-wall{background:
+  radial-gradient(62% 68% at 92% 2%,#fffbff 0%,#f1e9fc 16%,#cdb9f3 34%,rgba(146,112,236,.5) 52%,rgba(98,70,220,0) 70%),
+  radial-gradient(90% 90% at 10% 100%,#120848 0%,rgba(18,8,72,0) 70%),
+  linear-gradient(205deg,#7b62ea 0%,#4b30cf 38%,#2a17a0 72%,#170b60 100%)}
+.scn--violet-rock .scn-rock{left:calc(50% + var(--dx) - var(--dw));width:calc(var(--dw) * 2);top:calc(100% - var(--floor) - var(--dw) * .07)}
+.scn--violet-rock.scn--laptop .scn-rock{left:calc(50% + var(--dx) - var(--dw) * 1.1);width:calc(var(--dw) * 2.2);top:calc(100% - var(--floor) - var(--dw) * .16)}
+@container scn (max-width:639.98px){
+  .scn--violet-rock.scn--monitor .scn-stage{--floor:24cqh}
+  .scn--violet-rock.scn--laptop .scn-stage{--floor:28cqh}
+}
+
+/* ---------- violet-white — fashion/product: violet sky falling into a white studio, white plinth */
+.scn--violet-white{
+  --alu-hi:#ffffff;--alu:#dfe0e4;--alu-lo:#a6a8b0;--rim-l:#f4f4f8;--rim-r:#b6b4c8;--rim-t:#ffffff;--rim-b:#8e8fa0;
+  --deck-hi:#eceef2;--deck:#d9dbe0;--deck-lo:#c0c2c8;--key:#18181b;--key-gap:#38393e;
+  --glare-o:.09;--contact:rgba(34,30,64,.62);--ambient:rgba(54,44,104,.2);--amb-blur:14cqw;--amb-spread:5cqw;--spill:rgba(255,255,255,0);
+  --floor:24cqh;--yaw:-11deg;--cam-h:23;--cam-x:42%;--persp-n:520;--vig:0;--grain:.32;--grain-blend:soft-light;
+  --frame-line:rgba(255,255,255,.1);
+}
+.scn--violet-white.scn--laptop{--floor:26cqh;--yaw:-14deg;--cam-h:96;--persp-n:900}
+.scn--violet-white .scn-wall{background:
+  linear-gradient(180deg,#22109a 0%,#3a22c9 16%,#6a52ec 30%,#a998f6 42%,#dcd6fc 52%,#f6f5fd 62%,#fbfbfd 74%,#ececf0 100%)}
+.scn--violet-white .scn-plinth{left:calc(50% + var(--dx) - var(--dw) * .8);width:calc(var(--dw) * 1.6);top:calc(100% - var(--floor) - var(--dw) * .092)}
+@container scn (max-width:639.98px){
+  .scn--violet-white.scn--monitor .scn-stage{--floor:20cqh}
+  .scn--violet-white.scn--laptop .scn-stage{--floor:24cqh}
+}
+
+/* ---------- green-white — owner, 15 Oct (SAN Media's white + leaf-green site): leaf-green sky falling into a white
+   studio, the violet-white plinth tinted green */
+.scn--green-white{
+  --alu-hi:#ffffff;--alu:#dfe2df;--alu-lo:#a7aca6;--rim-l:#f5f7f4;--rim-r:#b5c0b0;--rim-t:#ffffff;--rim-b:#8f988b;
+  --deck-hi:#edf0ec;--deck:#d9ddd8;--deck-lo:#c0c5be;--key:#18181b;--key-gap:#38393e;
+  --glare-o:.09;--contact:rgba(30,52,24,.58);--ambient:rgba(40,78,30,.18);--amb-blur:14cqw;--amb-spread:5cqw;--spill:rgba(255,255,255,0);
+  --floor:24cqh;--yaw:-11deg;--cam-h:23;--cam-x:42%;--persp-n:520;--vig:0;--grain:.32;--grain-blend:soft-light;
+  --frame-line:rgba(255,255,255,.1);
+}
+.scn--green-white.scn--laptop{--floor:26cqh;--yaw:-14deg;--cam-h:96;--persp-n:900}
+.scn--green-white .scn-wall{background:
+  linear-gradient(180deg,#14420f 0%,#256a16 15%,#4f9a2a 28%,#9dcf6c 40%,#d8edc3 51%,#f4f9ef 61%,#fbfcfa 74%,#ecedeb 100%)}
+.scn--green-white .scn-plinth{left:calc(50% + var(--dx) - var(--dw) * .8);width:calc(var(--dw) * 1.6);top:calc(100% - var(--floor) - var(--dw) * .092)}
+@container scn (max-width:639.98px){
+  .scn--green-white.scn--monitor .scn-stage{--floor:20cqh}
+  .scn--green-white.scn--laptop .scn-stage{--floor:24cqh}
+}
+
+/* ---------- sky-white — owner, 15 Oct (Careers at Aeroskys' white + sky-blue site): sky-blue sky falling into a white
+   studio, the plinth tinted cool blue */
+.scn--sky-white{
+  --alu-hi:#ffffff;--alu:#dde2e8;--alu-lo:#a5adb7;--rim-l:#f4f7fa;--rim-r:#afbccb;--rim-t:#ffffff;--rim-b:#8a95a3;
+  --deck-hi:#ecf0f4;--deck:#d8dee5;--deck-lo:#bfc6cf;--key:#18181b;--key-gap:#38393e;
+  --glare-o:.09;--contact:rgba(18,38,64,.58);--ambient:rgba(30,60,104,.18);--amb-blur:14cqw;--amb-spread:5cqw;--spill:rgba(255,255,255,0);
+  --floor:24cqh;--yaw:-11deg;--cam-h:23;--cam-x:42%;--persp-n:520;--vig:0;--grain:.32;--grain-blend:soft-light;
+  --frame-line:rgba(255,255,255,.1);
+}
+.scn--sky-white.scn--laptop{--floor:26cqh;--yaw:-14deg;--cam-h:96;--persp-n:900}
+.scn--sky-white .scn-wall{background:
+  linear-gradient(180deg,#0a3266 0%,#1556a6 15%,#3d8fdc 28%,#93c6f1 40%,#d6eafb 51%,#f3f8fd 61%,#fbfcfd 74%,#eceef1 100%)}
+.scn--sky-white .scn-plinth{left:calc(50% + var(--dx) - var(--dw) * .8);width:calc(var(--dw) * 1.6);top:calc(100% - var(--floor) - var(--dw) * .092)}
+@container scn (max-width:639.98px){
+  .scn--sky-white.scn--monitor .scn-stage{--floor:20cqh}
+  .scn--sky-white.scn--laptop .scn-stage{--floor:24cqh}
+}
+
+/* ---------- amber-rock — owner, 15 Oct (the earlier Gireesh portfolio: dark with rust / orange): warm ember sky,
+   the same dark faceted rock lit amber */
+.scn--amber-rock{
+  --alu-hi:#fbf7f4;--alu:#d6cfca;--alu-lo:#968a82;--rim-l:#d0602a;--rim-r:#ffeee0;--rim-t:#ffffff;--rim-b:#4a3328;
+  --deck-hi:#e2dcd8;--deck:#cbc3be;--deck-lo:#ada39c;
+  --glare-o:.08;--glare-a:140deg;--contact:rgba(14,6,2,.85);--ambient:rgba(24,10,4,.3);--amb-blur:8cqw;--amb-spread:3cqw;--spill:rgba(255,255,255,0);
+  --floor:22cqh;--yaw:-6deg;--cam-h:10;--persp-n:560;--vig:.35;--grain:.42;
+}
+.scn--amber-rock.scn--laptop{--floor:23cqh;--cam-h:80;--persp-n:1000;--dw:42cqw}
+.scn--amber-rock .scn-wall{background:
+  radial-gradient(62% 68% at 92% 2%,#fff8f0 0%,#fde3c8 16%,#f3ad74 34%,rgba(226,110,48,.5) 52%,rgba(190,72,24,0) 70%),
+  radial-gradient(90% 90% at 10% 100%,#2a0d04 0%,rgba(42,13,4,0) 70%),
+  linear-gradient(205deg,#e0703a 0%,#b0441a 38%,#6a230b 72%,#2c0e05 100%)}
+.scn--amber-rock .scn-rock{left:calc(50% + var(--dx) - var(--dw));width:calc(var(--dw) * 2);top:calc(100% - var(--floor) - var(--dw) * .07)}
+.scn--amber-rock.scn--laptop .scn-rock{left:calc(50% + var(--dx) - var(--dw) * 1.1);width:calc(var(--dw) * 2.2);top:calc(100% - var(--floor) - var(--dw) * .16)}
+@container scn (max-width:639.98px){
+  .scn--amber-rock.scn--monitor .scn-stage{--floor:24cqh}
+  .scn--amber-rock.scn--laptop .scn-stage{--floor:28cqh}
+}
+
+/* ---------- reduced motion: nothing animates; videos never autoplay (see markup script) */
+@media (prefers-reduced-motion:reduce){.scn *{transition:none!important;animation:none!important}}
+
+/* =====================================================================================
+   SITE INTEGRATION
+   ===================================================================================== */
+/* base.css gives img/svg/video max-width:100% and img height:auto - the scene sizes its own parts */
+.scn svg,.scn img,.scn video{max-width:none}
+.scn img.scn-media,.scn video.scn-media{height:100%}
+.scn-defs{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+/* video screens (lib.video): the poster/clip fills the 16:9 screen like a still */
+.scn .media-video.scn-media{background:#050506}
+
+/* plain frame (no device): the still fills the same stage, cropped at its focal point on 4:5 */
+.scn--plain .scn-stage{background:var(--surface-2)}
+.scn--plain .scn-stage>.scn-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+/* a desktop still loses both edges on the 4:5 stage: the project's phone screen shows there instead */
+.scn--plain .scn-stage>.scn-media--narrow{display:none}
+@container scn (max-width:639.98px){
+  .scn--plain .scn-stage>.scn-media--wide{display:none}
+  .scn--plain .scn-stage>.scn-media--narrow{display:block}
+}
+.scn--plain .scn-stage::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
+
+/* Work cards / next-project tile: the link is the scene (rounded stage, no square plate behind it) */
+.wk-tile--scene{overflow:visible;background:none;border-radius:var(--radius,32px)}
+.wk-tile--scene::after{display:none}
+a.wk-tile--scene:focus-visible{outline-offset:6px;border-radius:clamp(24px,2.4vw,40px)}
+@media (prefers-reduced-motion:no-preference){
+  .wk-tile--scene .scn--plain .scn-media{transition:transform 1.3s var(--ease)}
+  .wk-tile--scene:hover .scn--plain .scn-media,
+  .wk-card:has(.wk-link:hover) .wk-tile--scene .scn--plain .scn-media{transform:scale(1.018)}
+}
+
+/* Project page hero: the scene fills the width but never grows taller than the viewport */
+.pj-hero .scn{width:100%;max-width:calc((100svh - 96px) * 1.6);min-width:min(100%,640px);margin-inline:auto}

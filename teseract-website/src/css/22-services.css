@@ -1,0 +1,367 @@
+/* ==========================================================================
+   WHAT WE CREATE — home overview + shared service cards (.svc-*)
+   Reference: ref-services-testimonials §2 (studio SERVICES section).
+   Markup: scripts/sections/home_services.py, scripts/sections/service_cards.py.
+   Layout: side-by-side rows from 1200px (spec §5, section-local), stacked 800–1199.98,
+   phone ≤799.98 (reference phone values).
+
+   Black theme (DARK-THEME.md): the reference's grey frame / white "pressed glass" cards become
+   three stacked near-blacks — page #000 → frame ≈#090909 (white 3.5%) → card #161616→#0e0e0e —
+   separated by hairlines and a top-lit rim instead of grey shadows. Text: --ink titles and lead,
+   --ink-2 body, --muted-strong labels; red stays an accent (dots, the index numbers on hover).
+   Former black-on-white controls flip intent: they rest as dark glass and brighten to the white
+   high-emphasis fill on hover/focus.
+   ========================================================================== */
+.svc,.create-list{
+  /* card surface: faint top-left light over a vertical near-black ramp */
+  --svc-card:radial-gradient(120% 70% at 0% 0%,rgba(255,255,255,.035) 0%,rgba(255,255,255,0) 60%),linear-gradient(180deg,#161616 0%,#0e0e0e 100%);
+  /* rim = top-lit gradient hairline drawn by ::after (mask-composite ring) */
+  --svc-rim:linear-gradient(180deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.07) 28%,rgba(255,255,255,.045) 100%);
+  --svc-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 -24px 40px -32px rgba(0,0,0,.7),0 0 0 1px rgba(0,0,0,.6),0 24px 48px -28px rgba(0,0,0,.95);
+  --svc-shadow-out:0 0 0 1px rgba(0,0,0,.6),0 24px 48px -28px rgba(0,0,0,.95);
+  --svc-shadow-in:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.1);
+  --svc-chip-bg:rgba(255,255,255,.055);
+  --svc-chip-ink:rgba(244,244,242,.74);
+  --svc-chip-icon:rgba(244,244,242,.5);
+  --svc-hi:#f4f4f2;   /* high-emphasis white fill (hover/focus of former black-on-white controls) */
+  --svc-spring-in:cubic-bezier(.34,1.25,.64,1);   /* Framer spring 500/40 (slight overshoot) */
+  --svc-spring-out:cubic-bezier(.22,1,.36,1);     /* Framer spring 500/60 */
+}
+/* top-lit gradient hairline shared by the cards (replaces the light theme's 1px white rim);
+   browsers without mask compositing get a plain hairline */
+.svc-info::after,.svc-small::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;border:1px solid rgba(255,255,255,.07)}
+@supports ((mask-composite:exclude) or (-webkit-mask-composite:xor)){
+  .svc-info::after,.svc-small::after{border:0;padding:1px;background:var(--svc-rim);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+    mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+}
+
+/* ---------- Section (padding 120 · header→rows 80 · rows gap 16) */
+.svc.section{padding-block:120px;overflow:hidden;overflow:clip}
+.svc__inner{display:flex;flex-direction:column;align-items:center;gap:80px;width:100%;max-width:1440px;margin-inline:auto;padding-inline:120px}
+.svc__head{max-width:800px}
+/* italic emphasis (reference: same weight, italic); keep the slanted word clear of the word-rise mask */
+.svc__title em{font-weight:600}
+.svc__title em .w{padding-right:.14em;margin-right:-.14em}
+.svc__sub{max-width:600px}
+.svc__line{display:block}
+.svc__rows{display:flex;flex-direction:column;gap:16px;width:100%;max-width:1200px}
+.svc__more{display:flex;justify-content:center;margin-top:-32px}
+
+/* ---------- Outer frame (§2.4): the reference grey frame as a white-3.5% tray with a hairline */
+.svc-frame{position:relative;display:flex;gap:16px;width:100%;padding:16px;border-radius:48px;
+  background:linear-gradient(180deg,rgba(255,255,255,.042) 0%,rgba(255,255,255,.028) 100%)}
+.svc-frame::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid var(--line-2);box-shadow:inset 0 1px 0 rgba(255,255,255,.035);pointer-events:none}
+.svc-row{flex-direction:row;align-items:flex-start;overflow:hidden;overflow:clip}
+.svc-row--flip{flex-direction:row-reverse}
+.svc-smalls{flex-direction:row;align-items:stretch}
+
+/* ---------- Info card (§2.5) */
+.svc-info{position:relative;z-index:2;flex:1 0 0;width:1px;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-start;gap:32px;
+  padding:40px;border-radius:40px;background:var(--svc-card);box-shadow:var(--svc-shadow);overflow:hidden}
+.svc-info__text{display:flex;flex-direction:column;gap:12px;width:100%}
+.svc-info__top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.svc-info__num{font-family:var(--mono);font-size:12px;font-weight:500;line-height:16px;letter-spacing:.02em;color:var(--muted-strong);padding-top:2px}
+.svc-info__num b{font-weight:600;color:var(--ink)}
+.svc-info__title{font-size:32px;font-weight:700;line-height:1.3;letter-spacing:-.05em;color:var(--ink);text-wrap:balance}
+/* body in --ink-2 with the doc's title line as an --ink lead: the two-tone hierarchy replaces the
+   light theme's single #161616 (weight alone separated them there) */
+.svc-info__desc,.svc-small__desc{font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:balance}
+.svc-info__desc{max-width:488px}
+.svc-lead{font-weight:500;color:var(--ink)}
+/* Interactive & 3D closing line ("Every interaction has a purpose.") */
+.svc-info__note{display:flex;align-items:center;gap:10px;margin-top:4px;font-size:16px;font-weight:500;line-height:1.5;letter-spacing:-.3px;color:var(--ink)}
+.svc-info__note i{width:8px;height:8px;flex:none;border-radius:50%;background:var(--red-dot);box-shadow:0 0 0 4px rgba(255,59,59,.16),0 0 14px 2px rgba(255,59,59,.28)}
+
+/* Footer deep link (What We Create page): "Start a Project" → contact with the service pre-selected.
+   Rests as dark glass with a hairline; hover/focus brighten to the white high-emphasis fill. */
+.svc-info__foot{display:flex;margin-top:auto}
+.svc-cta{position:relative;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 18px;border-radius:14px;background:rgba(255,255,255,.07);color:var(--ink);
+  font-size:15px;font-weight:500;line-height:20px;letter-spacing:-.3px;white-space:nowrap;
+  box-shadow:inset 0 0 0 1px var(--line-3),inset 0 1px 0 rgba(255,255,255,.06),0 8px 18px -10px rgba(0,0,0,.9);
+  transition:background-color .35s var(--ease),color .35s var(--ease),box-shadow .5s var(--spring-soft)}
+.svc-cta .roll{height:20px;line-height:20px}
+.svc-cta__icon{display:inline-flex;width:16px;height:16px;transition:transform .5s var(--ease)}
+.svc-cta__icon svg{width:100%;height:100%}
+.svc-cta:hover,.svc-cta:focus-visible{background:var(--svc-hi);color:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,0),inset 0 1px 0 rgba(255,255,255,0),0 12px 30px -12px rgba(255,255,255,.28)}
+.svc-cta:hover .svc-cta__icon,.svc-cta:focus-visible .svc-cta__icon{transform:translateX(3px)}
+.svc-cta:active{transform:scale(.98)}
+
+/* ---------- Tag chips with stroke icons (§2.5 "row 1" chip): white 5.5% wash + inner hairline */
+.svc-chips{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin:0;padding:0;list-style:none}
+.svc-chip{display:inline-flex;align-items:center;gap:6px;height:33px;padding:6px 10px 6px 8px;border-radius:10px;background:var(--svc-chip-bg);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.045);
+  font-size:14px;font-weight:500;line-height:1.5;letter-spacing:-.3px;color:var(--svc-chip-ink);white-space:nowrap}
+.svc-chip svg{width:20px;height:20px;flex:none;fill:none;stroke:var(--svc-chip-icon);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* compact variant (home small cards): first three tags + "+N" link to the full entry */
+.svc-chips--compact{gap:6px}
+.svc-chips--compact .svc-chip{height:30px;padding:5px 9px 5px 7px;gap:5px;font-size:13px;letter-spacing:-.25px}
+.svc-chips--compact .svc-chip svg{width:16px;height:16px}
+/* "+N" link chip: the one interactive chip — brighter glass at rest, white fill on hover/focus */
+.svc-chip--more{position:relative;gap:3px;padding:5px 8px 5px 10px!important;background:rgba(255,255,255,.1);color:var(--ink);
+  box-shadow:inset 0 0 0 1px var(--line-3),inset 0 1px 0 rgba(255,255,255,.06);transition:background-color .3s var(--ease),color .3s var(--ease),box-shadow .3s var(--ease)}
+.svc-chip--more::before{content:"";position:absolute;inset:-7px -4px}
+.svc-chip--more svg{width:12px!important;height:12px!important;stroke:currentColor;transition:transform .45s var(--ease)}
+.svc-chip--more:hover,.svc-chip--more:focus-visible{background:var(--svc-hi);color:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,0),0 8px 20px -10px rgba(255,255,255,.3)}
+.svc-chip--more:hover svg,.svc-chip--more:focus-visible svg{transform:translate(1px,-1px)}
+
+/* ---------- Folder icon 47×48 (§2.6): papers lift out on hover — in spring 500/40, out 500/60 */
+.svc-folder{position:relative;display:block;width:47px;height:48px;flex:none}
+.svc-folder__back{position:absolute;inset:0;width:100%;height:100%}
+.svc-folder__paper{position:absolute;display:block;border-radius:4px;transform-origin:50% 60%;transition:transform .45s var(--svc-spring-out)}
+/* on the black theme the graphite folder is lifted a step (lighter body, brighter top edge, a soft
+   ground shadow) so it separates from the #161616 card; the papers stay paper-white objects */
+.svc-folder::before{content:"";position:absolute;left:4px;right:4px;bottom:-3px;height:8px;border-radius:50%;background:rgba(0,0,0,.65);filter:blur(4px)}
+.svc-folder__back{filter:drop-shadow(0 0 .5px rgba(255,255,255,.18))}
+.svc-folder__paper--back{top:2px;left:4px;width:40px;height:40px;background:linear-gradient(180deg,#d4d4d1 0%,#bdbdba 100%);box-shadow:0 0 0 .25px #a9a9a6}
+.svc-folder__paper--front{top:2.5px;left:3px;width:40px;height:39px}
+.svc-folder__paper--front svg{display:block;width:100%;height:100%}
+.svc-folder__lip{position:absolute;left:50%;bottom:2px;width:42px;height:26px;margin-left:-21px;border-radius:6px;background:linear-gradient(180deg,#77797c 0%,#535558 100%)}
+.svc-folder__front{position:absolute;left:0;right:0;bottom:0;height:31px;border-radius:8.04px;
+  background:linear-gradient(174deg,rgba(98,101,106,.86) 0%,rgba(54,57,63,.88) 78.4%,rgba(46,49,55,.9) 100%);
+  -webkit-backdrop-filter:blur(1.15px);backdrop-filter:blur(1.15px);box-shadow:inset 0 .5px 1.15px rgba(252,255,255,.6),inset 0 0 0 .5px rgba(255,255,255,.08)}
+.svc-info:hover .svc-folder__paper,.svc-folder:hover .svc-folder__paper{transition:transform .5s var(--svc-spring-in)}
+.svc-info:hover .svc-folder__paper--back{transform:translate(-2px,-11px) rotate(-12deg)}
+.svc-info:hover .svc-folder__paper--front{transform:translate(2px,-12.5px) rotate(6deg)}
+
+/* ---------- Image card (§2.7): 50% of the frame, aspect 1.32727, r40, same shadow stack.
+   It stretches with the row when the info card is taller (the image is cover-fitted). */
+.svc-media{position:relative;flex:none;width:50%;aspect-ratio:1.32727;align-self:stretch}
+.svc-media__card{position:absolute;inset:0;display:block;border-radius:40px;overflow:hidden;background:var(--surface-2);box-shadow:var(--svc-shadow-out);isolation:isolate}
+/* imagery keeps its own colour; a white hairline + top highlight frames it on black (light mocks
+   and the black-ground letterboxes alike) */
+.svc-media__card::after{content:"";position:absolute;inset:0;z-index:2;border-radius:inherit;box-shadow:var(--svc-shadow-in);pointer-events:none}
+.svc-media__img{display:block;width:100%;height:100%;border-radius:inherit}
+.svc-media__img img{width:100%;height:100%;object-fit:cover}
+/* letterboxed site mocks on a black ground (service_cards.MEDIA 'contain') */
+.svc-media__card--dark,.svc-media__card--dark .svc-media__img{background:#010101}
+/* an owner design shown whole on its own page colour (scripts/supplied.json "fit": "contain" + "ground", e.g. OBSCURA's
+   black page): full card width, centred vertically (--ar = its aspect; margin % = card width), the letterbox
+   continuing the design's background so its headline is never cropped; "fade": "bottom" dissolves the design's bottom
+   edge into the ground (the mask sits on the image itself, so it fades at the image's own edge at every card size) */
+.svc-media__card.is-contain,.svc-media__card.is-contain .svc-media__img,.svc-art__card.is-contain{background:var(--ground,#000)}
+.svc-media__card.is-contain .svc-media__img{position:relative}
+.svc-media__card.is-contain img,.svc-art__card.is-contain img{position:absolute;left:0;top:50%;width:100%;height:auto;margin-top:calc(-50% / var(--ar,1.7778))}
+.is-contain.is-fade img{-webkit-mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 99%);mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 99%)}
+a.svc-media__card:hover .svc-media__img.is-in img,a.svc-media__card:focus-visible .svc-media__img.is-in img{transform:scale(1.018)}
+a.svc-media__card:focus-visible{outline:2px solid var(--red);outline-offset:4px;border-radius:40px}
+
+/* Project caption: small frosted pill, always visible, title rolls on hover (ZIP caption roll).
+   Black theme: dark smoked glass + hairline, so it reads over light mocks and black grounds alike. */
+.svc-cap{position:absolute;z-index:3;left:20px;bottom:20px;display:inline-flex;align-items:center;gap:8px;max-width:calc(100% - 40px);height:32px;padding:0 10px 0 12px;
+  border-radius:12px;background:rgba(10,10,10,.72);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.08),0 10px 24px -10px rgba(0,0,0,.8);color:var(--ink);
+  font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;pointer-events:none}
+.svc-cap__dot{width:6px;height:6px;flex:none;border-radius:50%;background:var(--red-dot);box-shadow:0 0 8px 1px rgba(255,59,59,.45)}
+.svc-cap__title{display:inline-flex;min-width:0;overflow:hidden}
+.svc-cap .roll{height:16px;line-height:16px}
+.svc-cap__icon{display:inline-flex;width:12px;height:12px;flex:none;transition:transform .5s var(--ease)}
+.svc-cap__icon svg{width:100%;height:100%}
+a:hover .svc-cap__icon,a:focus-visible .svc-cap__icon{transform:translate(2px,-2px)}
+
+/* ---------- Reference "works" stack + Tap Here badge (§2.7) on the Website Design image card.
+   Parked cards: next = corner at (84%, 90%) rot 3°; previous = (95%, −72%) rot 14°. Clicking a
+   peeking card (or the badge) brings it forward; spring 500/60 ≈ --spring-soft over 700ms. */
+.svc-media--stack{clip-path:inset(-6px -16px -16px -6px)}  /* -6px keeps the focus ring whole */
+.svc-media--stack .svc-media__card[data-pos]{z-index:1;
+  transform:translate(var(--tx,0%),var(--ty,0%)) rotate(var(--r,0deg)) scale(var(--sc,1));
+  transition:transform .7s var(--spring-soft),opacity .45s ease}
+.svc-media--stack .svc-media__card[data-pos="0"]{z-index:2}
+.svc-media--stack .svc-media__card[data-pos="1"]{--tx:84%;--ty:90%;--r:3deg;z-index:3;cursor:pointer}
+.svc-media--stack .svc-media__card[data-pos="2"]{--tx:99%;--ty:110%;--r:3deg}
+.svc-media--stack .svc-media__card[data-pos="-1"]{--tx:95%;--ty:-72%;--r:14deg;z-index:3;cursor:pointer}
+.svc-media--stack .svc-media__card[data-pos="-2"]{--tx:112%;--ty:-100%;--r:20deg;opacity:0}
+.svc-media--stack .svc-media__card[data-pos="3"]{--tx:112%;--ty:130%;--r:3deg;opacity:0}
+.svc-media--stack .svc-media__card:not([data-pos="0"]) .svc-cap{visibility:hidden}
+/* parked cards are mostly black letterbox on the black theme: a brighter rim and a soft cast shadow
+   onto the current card keep them reading as separate prints */
+.svc-media--stack .svc-media__card:not([data-pos="0"]){box-shadow:0 0 0 1px rgba(0,0,0,.6),-14px -10px 36px -10px rgba(0,0,0,.85)}
+.svc-media--stack .svc-media__card:not([data-pos="0"])::after{box-shadow:inset 0 0 0 1px rgba(255,255,255,.17),inset 0 1px 0 rgba(255,255,255,.16)}
+@media (hover:hover){
+  .svc-media--stack .svc-media__card[data-pos="1"]:hover{--sc:1.1;--r:-1deg;transition:transform var(--spring-d) var(--spring)}
+  .svc-media--stack .svc-media__card[data-pos="-1"]:hover{--sc:1.1;--r:12deg;transition:transform var(--spring-d) var(--spring)}
+}
+.svc-media--stack .svc-media__card[data-pos="1"]:active,.svc-media--stack .svc-media__card[data-pos="-1"]:active{--sc:1.06}
+.svc-tap{position:absolute;z-index:4;left:88%;top:83%;display:flex;align-items:center;gap:4px;width:99px;height:36px;margin:-18px 0 0 -49.5px;padding:0 9px 0 5px;
+  border-radius:12px;background:var(--svc-hi);color:#000;font-size:14px;font-weight:600;line-height:1.2;letter-spacing:-.01em;white-space:nowrap;
+  transform:rotate(-19deg);box-shadow:inset 0 -1px 0 rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.35),0 10px 24px -8px rgba(0,0,0,.85),0 0 28px -6px rgba(255,255,255,.22);
+  transition:transform var(--spring-d) var(--spring)}   /* black-on-white sticker: the one high-emphasis object on the stack (flipped from the light theme's black badge) */
+.svc-tap::before{content:"";position:absolute;inset:-6px -4px}
+.svc-tap:hover{transform:translateY(-11px) rotate(-27deg)}
+.svc-tap:focus-visible{outline-offset:4px}
+.svc-tap__icon{display:inline-flex;width:20px;height:20px;flex:none}
+.svc-tap__icon svg{width:100%;height:100%}
+/* the reference loops the wiggle forever; here it plays twice (4.8 s, inside WCAG 2.2.2's 5 s) each
+   time the stack scrolls into view (.is-cued, 22-services.js) and stops once the stack has been used */
+.motion .is-cued>.svc-tap{animation:svc-wiggle 2.4s 2}
+.motion .is-cued>.svc-tap .svc-tap__icon{animation:svc-wiggle-icon 2.4s 2}
+.svc-tap[hidden]{display:none}
+
+/* ---------- Brand panel: AI & Automation has no project — the 3D mark on a deep gradient with
+   construction rings, a slow orbit and (large card) its tags floating like the reference tag pills */
+.svc-brand,.svc-art__card.svc-brand,.svc-media__card.svc-brand{overflow:hidden;background:radial-gradient(95% 90% at 50% 8%,#353535 0%,#151515 52%,#040404 100%)}
+.svc-brand>i{position:absolute;pointer-events:none}
+.svc-brand__glow{left:50%;top:50%;height:70%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side,rgba(255,255,255,.16),rgba(255,255,255,0))}
+.svc-brand__ring,.svc-brand__orbit{left:50%;top:50%;aspect-ratio:1;border-radius:50%;translate:-50% -50%}
+.svc-brand__ring--1{height:58%;border:1px solid rgba(255,255,255,.13)}
+.svc-brand__ring--2,.svc-brand__orbit{height:88%}
+.svc-brand__ring--2{border:1px dashed rgba(255,255,255,.1)}
+.svc-brand__orbit b{position:absolute;left:50%;top:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff;box-shadow:0 0 12px 2px rgba(255,255,255,.45)}
+.svc-brand__orbit b+b{top:100%;width:5px;height:5px;background:var(--red);box-shadow:0 0 12px 2px rgba(251,38,41,.5)}
+/* ambient motion runs only while the card is hovered (no endless idle motion, no idle repaints) */
+.motion .svc-brand__orbit{animation:svc-orbit 16s linear infinite;animation-play-state:paused}
+.motion .svc-row:hover .svc-brand__orbit,.motion .svc-small:hover .svc-brand__orbit{animation-play-state:running}
+.svc-brand__axis{inset:0}
+.svc-brand__axis::before,.svc-brand__axis::after{content:"";position:absolute;background:rgba(255,255,255,.07)}
+.svc-brand__axis::before{left:0;right:0;top:50%;height:1px}
+.svc-brand__axis::after{top:0;bottom:0;left:50%;width:1px}
+.svc-brand__mark{position:absolute;z-index:1;left:50%;top:50%;width:auto;height:46%;max-width:none;translate:-50% -50%;filter:drop-shadow(0 22px 30px rgba(0,0,0,.55)) drop-shadow(0 2px 4px rgba(0,0,0,.4));
+  transition:transform .9s var(--spring-soft)}
+.svc-row:hover .svc-brand__mark,.svc-small:hover .svc-brand__mark{transform:translateY(-6px) rotate(-8deg)}
+.svc-pill{position:absolute;z-index:2;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px 0 8px;border-radius:10px;
+  background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13),0 8px 18px -10px rgba(0,0,0,.6);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:rgba(255,255,255,.86);
+  font-size:13px;font-weight:500;line-height:1;letter-spacing:-.2px;white-space:nowrap;
+  transform:rotate(var(--r));transition:transform .8s var(--spring-soft)}
+.svc-pill svg{width:16px;height:16px;flex:none;fill:none;stroke:rgba(255,255,255,.66);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.motion .svc-pill{animation:svc-float 6.5s ease-in-out infinite;animation-delay:calc(var(--i) * -1.1s);animation-play-state:paused}
+.motion .svc-row:hover .svc-pill{animation-play-state:running}
+.svc-row:hover .svc-pill{transform:translate(var(--dx),var(--dy)) rotate(calc(var(--r) * 1.5))}
+
+/* ---------- Small cards (§2.8–2.9): text + chips, then 210px artwork that rises on hover */
+.svc-small{position:relative;z-index:1;flex:1 0 0;width:1px;display:flex;flex-direction:column;overflow:hidden;overflow:clip;
+  border-radius:40px;background:var(--svc-card);box-shadow:var(--svc-shadow)}
+.svc-small::after{z-index:5}
+/* a soft ground light under the artwork so the prints read as objects on the dark card */
+.svc-small__art::before{content:"";position:absolute;left:8%;right:8%;bottom:-40%;height:90%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,255,255,.06),rgba(255,255,255,0))}
+/* the text layer sits above the artwork: on hover/focus-within the prints rise ~25px into the chip
+   rows on most widths, and must tuck under them rather than cover the "+N" link being hovered or
+   focused (opaque chip fills below keep the chips clean over the print edge) */
+.svc-small__text{position:relative;z-index:3;display:flex;flex-direction:column;gap:12px;padding:40px 40px 20px}
+.svc-small .svc-chip{background:#1f1f1f}
+.svc-small .svc-chip--more{background:#2a2a2a}
+.svc-small .svc-chip--more:hover,.svc-small .svc-chip--more:focus-visible{background:var(--svc-hi)}
+.svc-small__title{font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-.05em;color:var(--ink);text-wrap:balance}
+.svc-small__text .svc-chips{margin-top:8px}
+.svc-small__art{position:relative;flex:none;height:210px;margin-top:auto}
+.svc-art{position:absolute;inset:0;display:block}
+a.svc-art:focus-visible{outline:2px solid var(--red);outline-offset:-6px;border-radius:24px}
+/* prints: dark fallback while loading, larger/softer black shadows instead of grey drop shadows,
+   white hairline + top highlight as the edge */
+.svc-art__card{position:absolute;left:50%;display:block;border-radius:24px;overflow:hidden;background:var(--surface-2);
+  box-shadow:0 0 0 1px rgba(0,0,0,.55),0 10px 18px -8px rgba(0,0,0,.7),0 28px 44px -14px rgba(0,0,0,.85);
+  transition:transform .7s var(--spring-soft)}
+.svc-art__card::after{content:"";position:absolute;inset:0;z-index:2;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),inset 0 1px 0 rgba(255,255,255,.14);pointer-events:none}
+.svc-art__card img{width:100%;height:100%;object-fit:cover}
+.svc-art__card--front{z-index:2;top:52px;width:min(64%,270px);aspect-ratio:4/3;transform:translateX(-64%) rotate(-6deg)}
+.svc-art__card--back{z-index:1;top:18px;width:min(50%,210px);aspect-ratio:4/3;transform:translateX(-14%) rotate(7deg)}
+.svc-small:hover .svc-art__card--front,.svc-small:focus-within .svc-art__card--front{transform:translateX(-64%) translateY(-30px) rotate(-3deg)}
+.svc-small:hover .svc-art__card--back,.svc-small:focus-within .svc-art__card--back{transform:translateX(-14%) translateY(-46px) rotate(10deg)}
+/* AI & Automation back card: a dark dotted canvas (was a white sheet) — graphite step nodes and the
+   AI step flipped to the white high-emphasis node with the red accent square */
+.svc-art__card--paper{display:grid;place-items:center;background:linear-gradient(160deg,#202020 0%,#121212 100%);color:var(--ink)}
+.svc-brand .svc-brand__mark{width:auto;object-fit:contain}
+.svc-art--brand .svc-brand__mark{height:58%}
+.svc-small .svc-cap{left:20px;bottom:18px;z-index:4}
+/* a back print of ANOTHER project (Brand & Digital Identity: VELORA behind SAANJH) is its own link
+   (service_cards._art): only the print and its caption take the pointer, so the front link keeps the rest of the
+   artwork; its caption sits at the back print's top-right corner (right edge = 50% + .86 x the print's width) */
+.svc-art--back{pointer-events:none}
+.svc-art--back .svc-art__card,.svc-art--back .svc-cap{pointer-events:auto}
+.svc-small .svc-cap--back{left:auto;right:calc(50% - .86 * min(50%, 210px) + 10px);top:8px;bottom:auto}
+a.svc-art--back:focus-visible{outline:none}
+a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);outline-offset:3px}
+/* concept caption whose label does not fit the one-line pill: the full label on its own line under the name */
+.svc-cap.svc-cap--label{height:auto;flex-wrap:wrap;row-gap:3px;padding:8px 10px 9px 12px;white-space:normal}
+.svc-cap__label{flex:1 0 100%;padding-left:14px;font-size:10px;line-height:14px;letter-spacing:.03em;color:rgba(244,244,242,.72)}
+/* AI & Automation back card: automation flow; the wires run while the card is hovered */
+.svc-flow{width:100%;height:100%}
+.svc-flow__grid{fill:rgba(255,255,255,.16)}
+.svc-flow__node{fill:#262626;stroke:rgba(255,255,255,.14);stroke-width:.75}
+.svc-flow__node--ai{fill:var(--svc-hi);stroke:rgba(255,255,255,.4)}
+.svc-flow__sq{fill:rgba(244,244,242,.82)}
+.svc-flow__sq--ai{fill:var(--red)}
+.svc-flow__bar{fill:rgba(255,255,255,.3)}
+.svc-flow__bar--ai{fill:rgba(0,0,0,.28)}
+.svc-flow__pin{fill:rgba(244,244,242,.7)}
+.svc-flow__wire{fill:none;stroke:rgba(255,255,255,.34);stroke-width:1.1;stroke-dasharray:3 3}
+.motion .svc-flow__wire{animation:svc-dash 1.2s linear infinite;animation-play-state:paused}
+.motion .svc-small:hover .svc-flow__wire{animation-play-state:running}
+
+/* ---------- 1200–1439.98: keep the desktop rows, fluid side padding (spec §5) */
+@media (max-width:1439.98px){
+  .svc__inner{padding-inline:clamp(48px,8.33vw,120px)}
+  .svc-small__text{padding:32px 32px 18px}
+  .svc-small__title{font-size:28px;letter-spacing:-.04em}   /* at 28px -.05em joins the "ty" of Identity */
+  .svc-small__desc{font-size:17px}
+}
+
+/* ---------- Tablet 800–1199.98: stacked rows, wrapping small cards (min 320) */
+@media (max-width:1199.98px){
+  .svc.section{padding-block:120px}
+  .svc__inner{padding-inline:48px}
+  .svc-row,.svc-row--flip{flex-direction:column}
+  .svc-info{flex:none;width:100%;align-self:auto}
+  .svc-media{width:100%;align-self:auto}
+  .svc-smalls{flex-wrap:wrap}
+  .svc-small{flex:1 0 0;min-width:320px;width:auto}
+  .svc-small__text{padding:40px 40px 20px}
+  .svc-small__title{font-size:32px;letter-spacing:-.05em}
+  .svc-small__desc{font-size:18px}
+  .svc-info__desc{max-width:640px}
+}
+/* 800–1199.98: two cards per line, so the third always sits alone — lay it out horizontally */
+@media (min-width:800px) and (max-width:1199.98px){
+  .svc-smalls>.svc-small:nth-child(3){flex-basis:100%;flex-direction:row;align-items:stretch}
+  .svc-smalls>.svc-small:nth-child(3) .svc-small__text{flex:1 1 0;padding-right:16px}
+  .svc-smalls>.svc-small:nth-child(3) .svc-small__art{flex:1 1 0;height:auto;min-height:270px;margin-top:0}
+  .svc-smalls>.svc-small:nth-child(3) .svc-art__card--front{top:auto;bottom:-24px}
+  .svc-smalls>.svc-small:nth-child(3) .svc-art__card--back{top:auto;bottom:40px}
+  /* the back print's caption sits just above the front print's top-right corner, on the back print's visible top band:
+     art width = 50vw - 92px here, front print = min(64% of it, 270px), its corner .8 x that - 24px above the bottom */
+  .svc-smalls>.svc-small:nth-child(3) .svc-cap--back{top:auto;bottom:calc(.8 * min(32vw - 59px, 270px) - 22px)}
+}
+@media (max-width:809.98px){
+  .svc-info__desc,.svc-small__desc{font-size:16px}
+}
+
+/* ---------- Phone ≤799.98 (canvas 390) */
+@media (max-width:799.98px){
+  .svc.section{padding-block:80px}
+  .svc__inner{padding-inline:16px;gap:56px}
+  .svc__line{display:inline}
+  .svc__more{margin-top:-16px;width:100%}
+  .svc__more .btn{width:100%}
+  .svc-row,.svc-row--flip{border-radius:40px;padding:8px;gap:8px}
+  .svc-smalls{flex-direction:column;border-radius:44px;padding:8px;gap:8px}
+  .svc-info{border-radius:32px;padding:28px;gap:28px}
+  .svc-media{aspect-ratio:1.33061}
+  .svc-media--stack{clip-path:inset(-6px -8px -8px -6px)}
+  .svc-media__card{border-radius:32px}
+  a.svc-media__card:focus-visible{border-radius:32px}
+  .svc-small{flex:none;width:100%;min-width:0;border-radius:36px}
+  .svc-small__text{padding:28px 28px 16px}
+  .svc-small__art{height:200px}
+  .svc-cap{left:14px;bottom:14px;height:30px}
+  .svc-pill{height:26px;padding:0 9px 0 7px;font-size:12px;gap:4px}
+  .svc-pill svg{width:14px;height:14px}
+  .svc-pill:nth-of-type(n+5){display:none}
+  .svc-chip--more{padding:5px 10px 5px 12px!important}
+}
+@media (max-width:719.98px){
+  .svc-info__title,.svc-small__title{font-size:28px}
+  .svc-small__title{letter-spacing:-.04em}
+}
+
+/* Tap Here idle "attention wiggle": hold 2s, then 6°, −4°, 6°, −4°, 0° in 100ms steps */
+@keyframes svc-wiggle{0%,83%{rotate:0deg}87%{rotate:6deg}91%{rotate:-4deg}95%{rotate:6deg}98%{rotate:-4deg}100%{rotate:0deg}}
+@keyframes svc-wiggle-icon{0%,83%{rotate:0deg;translate:0 0}87%{rotate:-13deg;translate:0 -3px}91%{rotate:9deg;translate:0 3px}95%{rotate:-13deg;translate:0 -4px}98%{rotate:10deg;translate:0 3px}100%{rotate:0deg;translate:0 0}}
+@keyframes svc-orbit{to{rotate:360deg}}
+@keyframes svc-float{50%{translate:0 -5px}}
+@keyframes svc-dash{to{stroke-dashoffset:-12}}
+
+@media (prefers-reduced-motion:reduce){
+  .svc-tap,.svc-tap__icon,.svc-brand__orbit,.svc-pill,.svc-flow__wire{animation:none!important}
+}

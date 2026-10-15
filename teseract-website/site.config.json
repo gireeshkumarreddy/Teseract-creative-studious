@@ -1,0 +1,24 @@
+{
+  "brand": "TESERACT",
+  "brand_full": "TESERACT Creative Studios",
+  "brand_note": "Spelling follows the supplied logo (image 1). The content document and images 2/4 spell it TESSERACT; change 'brand' here to switch everywhere.",
+  "tagline": "Build beyond the ordinary.",
+  "menu_tagline": "Creativity meets functionality.",
+  "footer_line": "Digital experiences, built around you.",
+  "footer_motto": "BUILT DIFFERENT. BUILT FOR YOU.",
+  "description": "TESERACT Creative Studios designs and builds interactive, tailor-made websites and digital experiences for businesses that want to be different.",
+  "email": "gireesh.uiux@gmail.com",
+  "email_is_placeholder": false,
+  "socials": {
+    "instagram": "https://www.instagram.com/itsgireesh.uiux/",
+    "linkedin": "https://www.linkedin.com/in/gireesh-kumar-reddy-kolli-/",
+    "github": "https://github.com/gireeshkumarreddy",
+    "behance": ""
+  },
+  "form_endpoint": "",
+  "site_url": "",
+  "timezone": "",
+  "timezone_note": "Optional IANA zone (e.g. \"Europe/London\"). When set, the footer clock shows studio time; empty = the visitor's local time.",
+  "indexable": false,
+  "indexable_note": "Kept out of search engines (noindex + robots Disallow) until rights to the portfolio imagery carried over from the ZIP are confirmed. Set to true to allow indexing."
+}

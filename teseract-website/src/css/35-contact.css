@@ -1,0 +1,191 @@
+/* ==========================================================================
+   CONTACT — hero question bubbles, form card + "Before you send" card in the
+   reference frame (ref-plans-faq-footer §1 frame/price-card, §2 contact card,
+   outline buttons, toggle-row boxes; quote bubble from ref-hero-nav §4.1).
+   Black theme: fields are faint white washes with hairlines on the near-black card (brighten on
+   hover, --ink ring on focus, red ring when invalid); selected chips and pressed quick answers flip
+   to the white high-emphasis surface; errors use a lightened brand red that clears AA on the card.
+   ========================================================================== */
+:root{
+  --ct-field:rgba(255,255,255,.035);
+  --ct-field-hover:rgba(255,255,255,.055);
+  --ct-field-focus:rgba(255,255,255,.065);
+  --ct-border:rgba(255,255,255,.36);        /* field outline >= 3:1 on the card and on the field fill (WCAG 1.4.11) */
+  --ct-border-hover:rgba(255,255,255,.5);
+  --ct-err:#ff5c5e;          /* error copy: 6.0:1 on the card (#141414), 5.5:1 on a field */
+}
+
+/* ---------- Hero: the four questions as reference quote bubbles, then "Let's talk." */
+.ct-asks{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:640px;margin:8px 0 0;padding:0;list-style:none}
+.ct-ask{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:23px;background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.05);
+  font-size:14px;font-style:italic;font-weight:500;line-height:21px;letter-spacing:-.03em;color:var(--ink);white-space:nowrap}
+.ct-talk{display:inline-flex;align-items:center;gap:12px;margin-top:4px;font-size:20px;font-weight:600;line-height:1.4;letter-spacing:-.03em;color:var(--ink)}
+.ct-talk__dot{position:relative;width:12px;height:12px;flex:none}
+.ct-talk__dot::before,.ct-talk__dot i{content:"";position:absolute;inset:0;border-radius:10px;background:var(--red-dot)}
+.ct-talk__dot::before{box-shadow:0 0 20px 0 rgba(255,59,59,.55)}
+.ct-talk__dot i{opacity:.84}
+/* three pulses, then the dot rests (movement ends within 5 s, WCAG 2.2.2) */
+.motion .ct-talk__dot i{animation:ct-pulse 1.6s cubic-bezier(.12,.23,.5,1) .9s 3}
+@keyframes ct-pulse{0%{transform:scale(1);opacity:.84}44%{transform:scale(3);opacity:0}100%{transform:scale(3);opacity:0}}
+/* All four questions sit on one line where the 880px H1 box allows it (no orphaned last bubble). */
+@media (min-width:1024px){.ct-asks{max-width:880px}}
+@media (max-width:799.98px){.ct-asks{gap:6px}.ct-ask{white-space:normal;height:auto;min-height:32px;padding:5px 12px;text-align:center}}
+
+/* ---------- Section + frame */
+.ct-sec{position:relative;padding:24px 0 120px}
+@media (max-width:1439.98px){.ct-sec{padding-bottom:104px}}
+@media (max-width:799.98px){.ct-sec{padding:8px 0 80px}}
+.ct-frame{max-width:1184px;margin-inline:auto}
+.ct-grid{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(0,1fr);gap:16px;align-items:stretch}
+.ct-side{position:relative;min-width:0}
+@media (max-width:1099.98px){.ct-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Form card */
+.ct-card{display:flex;flex-direction:column;gap:32px;min-width:0}
+.ct-card__head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ct-card__title{font-size:32px;font-weight:600;line-height:1.2;letter-spacing:-.03em;color:var(--ink)}
+.ct-card__req{font-size:13px;font-weight:500;line-height:20px;color:var(--muted-strong)}
+/* Required mark (decorative, aria-hidden): the status-dot red, 5.2:1 on the card. */
+.ct-req{color:var(--red-dot);margin-left:2px}
+.ct-form__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
+.ct-field{min-width:0;margin:0}
+.ct-field--full{grid-column:1/-1}
+.ct-label{display:flex;align-items:baseline;gap:2px;margin-bottom:8px;font-size:14px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--ink)}
+.ct-hint{margin-left:auto;padding-left:12px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted-strong)}
+.ct-input{display:block;width:100%;height:52px;padding:0 16px;border-radius:14px;border:1px solid var(--ct-border);background:var(--ct-field);
+  font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--ink);caret-color:var(--red-dot);-webkit-appearance:none;appearance:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:background-color .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.ct-input::placeholder{color:var(--muted-strong);opacity:1}
+/* hover only where it exists: a tap never leaves a field, chip or quick answer half-lit (touch gets :active) */
+@media (hover:hover){.ct-input:hover{background:var(--ct-field-hover);border-color:var(--ct-border-hover)}}
+.ct-input:focus,.ct-input:focus-visible{outline:none;background:var(--ct-field-focus);border-color:rgba(244,244,242,.62);box-shadow:0 0 0 4px rgba(255,255,255,.08)}
+.ct-input[aria-invalid=true]{background:rgba(251,38,41,.05);border-color:var(--red);box-shadow:0 0 0 4px rgba(251,38,41,.16)}
+/* Browser autofill would paint a light/blue field: keep it on the dark field and in --ink. */
+.ct-input:-webkit-autofill,.ct-input:-webkit-autofill:hover,.ct-input:-webkit-autofill:focus{-webkit-text-fill-color:var(--ink);caret-color:var(--red-dot);
+  transition:background-color 600000s 0s,color 600000s 0s,border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.ct-textarea{height:auto;min-height:168px;padding:14px 16px;resize:vertical}
+.ct-select{position:relative}
+.ct-select::after{content:"";position:absolute;right:18px;top:50%;width:8px;height:8px;margin-top:-6px;border-right:1.6px solid var(--ink-2);border-bottom:1.6px solid var(--ink-2);transform:rotate(45deg);pointer-events:none;transition:border-color .3s var(--ease)}
+@media (hover:hover){.ct-select:hover::after{border-color:var(--ink)}}
+.ct-select:focus-within::after{border-color:var(--ink)}
+.ct-select select{padding-right:44px;cursor:pointer;text-overflow:ellipsis}
+.ct-select select:invalid,.ct-select select.is-empty{color:var(--muted-strong)}
+.ct-select option{color:var(--ink);background:#141414}
+.ct-err{display:flex;align-items:flex-start;gap:6px;margin-top:8px;font-size:13px;font-weight:500;line-height:18px;color:var(--ct-err)}
+.ct-err[hidden]{display:none}
+.ct-err svg{width:16px;height:16px;flex:none;margin-top:1px}
+.motion .ct-err:not([hidden]){animation:ct-err-in .35s var(--ease)}
+@keyframes ct-err-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* Chips (multi-select checkboxes) — reference service tags, selectable */
+.ct-fieldset{border:0;padding:0;min-width:0}
+.ct-fieldset legend{float:left;width:100%;padding:0}
+.ct-chips{clear:both;display:flex;flex-wrap:wrap;gap:8px}
+.ct-chip{position:relative;display:inline-flex;cursor:pointer}
+.ct-chip input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.ct-chip>span{display:inline-flex;align-items:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
+  font-size:14px;font-weight:500;letter-spacing:-.02em;color:var(--ink-2);white-space:nowrap;user-select:none;
+  transition:background-color .35s var(--ease),color .35s var(--ease),box-shadow .35s var(--ease)}
+.ct-chip__tick{display:inline-flex;width:0;height:16px;margin-right:0;opacity:0;overflow:hidden;
+  transition:width .45s var(--spring-soft),margin .45s var(--spring-soft),opacity .25s ease}
+.ct-chip__tick svg{width:16px;height:16px;flex:none}
+@media (hover:hover){.ct-chip:hover>span{background:rgba(255,255,255,.09);color:var(--ink);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}}
+.ct-chip:active>span{background:rgba(255,255,255,.12);color:var(--ink);transition-duration:.1s}
+.ct-chip input:checked+span{background:var(--ink);color:#000;box-shadow:0 0 0 1px rgba(255,255,255,.2),0 10px 24px -10px rgba(0,0,0,.9)}
+.ct-chip input:checked+span .ct-chip__tick{width:16px;margin-right:6px;opacity:1}
+.ct-chip input:focus-visible+span{outline:2px solid var(--red);outline-offset:2px}
+
+/* Budget: free text + two quick answers */
+.ct-budget{display:flex;align-items:center;gap:8px}
+.ct-budget .ct-input{flex:1 1 auto;min-width:0}
+.ct-quicks{display:flex;gap:8px;flex:none}
+.ct-quick{height:52px;padding:0 16px;border-radius:14px;border:1px solid var(--ct-border);background:rgba(255,255,255,.04);font-size:14px;font-weight:500;letter-spacing:-.02em;color:var(--ink);white-space:nowrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px -8px rgba(0,0,0,.8);transition:background-color .3s var(--ease),color .3s var(--ease),border-color .3s var(--ease),box-shadow .5s var(--spring-soft)}
+@media (hover:hover){.ct-quick:hover{background:rgba(255,255,255,.09);border-color:var(--ct-border-hover);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}}
+.ct-quick:active{background:rgba(255,255,255,.12);transition-duration:.1s}
+.ct-quick[aria-pressed=true]{background:var(--ink);color:#000;border-color:var(--ink);box-shadow:0 10px 24px -10px rgba(0,0,0,.9)}
+
+/* Honeypot (only meaningful when a form service is configured) */
+.ct-hp{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+/* Actions (the submit is .btn--dark = the white high-emphasis button) */
+.ct-actions{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+.ct-submit{width:100%;height:56px;gap:10px}
+.ct-submit .btn__icon{transition:transform .5s var(--ease)}
+.ct-submit:hover .btn__icon{transform:translateX(3px)}
+.ct-submit[disabled]{cursor:progress}
+.ct-submit.is-busy .btn__label,.ct-submit.is-busy .btn__icon{opacity:0}
+.ct-spinner{position:absolute;z-index:1;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2px solid rgba(0,0,0,.18);border-top-color:#000;opacity:0;pointer-events:none}
+.ct-submit.is-busy .ct-spinner{opacity:1;animation:ts-spin .8s linear infinite}
+.ct-note{font-size:13px;line-height:1.5;letter-spacing:-.1px;color:var(--ink-2);text-align:center;text-wrap:balance}
+.ct-link{color:var(--ink);text-decoration:underline;text-decoration-color:rgba(244,244,242,.35);text-underline-offset:3px;transition:text-decoration-color .3s var(--ease)}
+.ct-link:hover{text-decoration-color:currentColor}
+.ct-status{padding:12px 14px;border-radius:12px;background:rgba(251,38,41,.1);box-shadow:inset 0 0 0 1px rgba(251,38,41,.28);color:#ff9a9b;font-size:14px;font-weight:500;line-height:1.45}
+.ct-status[hidden]{display:none}
+.ct-status a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* Sent state */
+.ct-done{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:8px 0 4px}
+.ct-done[hidden]{display:none}
+.ct-done:focus{outline:none}
+.ct-done__icon .seal{width:40px;height:58px;margin:-8px 0 -10px}
+.ct-done__title{font-size:28px;font-weight:600;line-height:1.2;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.ct-done__text{max-width:520px;font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:pretty}
+.ct-done__text a{color:var(--ink);text-decoration:underline;text-decoration-color:rgba(244,244,242,.35);text-underline-offset:3px}
+.ct-done__text a:hover{text-decoration-color:currentColor}
+.ct-done__actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.ct-card.is-sent .ct-form,.ct-card.is-sent .ct-card__req{display:none}
+.motion .ct-card.is-sent .ct-done{animation:ct-err-in .6s var(--ease)}
+
+/* ---------- "Before you send" — reference FAQ contact card (radius 24, padding 40, gap 20) */
+.ct-before{position:sticky;top:calc(var(--nav-h) + 16px);display:flex;flex-direction:column;align-items:flex-start;gap:20px;border-radius:24px}
+.ct-before__avatar{display:grid;place-items:center;width:56px;height:56px;border-radius:12px;background:radial-gradient(95% 95% at 20% 0%,#383838 0%,#0b0b0b 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),inset 0 1px 0 rgba(255,255,255,.09),0 12px 24px -10px rgba(0,0,0,.9);transition:transform .6s var(--spring)}
+.ct-before__avatar:hover{transform:rotate(-4deg) scale(1.1)}
+.ct-before__mark{width:40px;height:auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
+.ct-before__label{margin-top:4px;font-size:12px;line-height:1;color:var(--muted-strong)}
+.ct-before__title{margin-top:-8px;font-size:24px;font-weight:600;line-height:1.3;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.ct-before__ok{margin-top:-8px;font-size:16px;font-weight:600;line-height:1.5;letter-spacing:-.3px;color:var(--ink)}
+.ct-check{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.ct-check li{display:flex;align-items:flex-start;gap:8px;font-size:16px;line-height:24px;letter-spacing:-.3px;color:var(--ink-2)}
+.ct-check .seal{margin-top:-2.5px}
+.ct-before__close{align-self:stretch;padding:12px;border-radius:12px;background:rgba(255,255,255,.045);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.04);
+  font-size:16px;font-weight:600;line-height:1.5;letter-spacing:-.3px;color:var(--ink)}
+
+/* Outline button (reference "Email Us": 48px, radius 16, hairline, tint blob + label row swap).
+   On black the blob is a faint white wash, so hover brightens. */
+.ct-out{position:relative;display:block;align-self:stretch;height:48px;border-radius:16px;overflow:hidden;isolation:isolate;color:var(--ink);transition:box-shadow .5s var(--spring-soft)}
+.ct-out::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid var(--line-3);pointer-events:none;transition:border-color .4s var(--ease)}
+.ct-out:hover::after,.ct-out:focus-visible::after{border-color:rgba(255,255,255,.26)}
+.ct-out__blob{position:absolute;z-index:-1;left:50%;top:50%;width:140%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.07);
+  transform:translate(-50%,-152%);transition:transform .7s var(--spring-soft)}
+.ct-out:hover .ct-out__blob,.ct-out:focus-visible .ct-out__blob{transform:translate(-50%,-50%)}
+.ct-out__win{position:absolute;left:0;right:0;top:calc(50% - 11px);height:22px;overflow:hidden}
+.ct-out__row{display:flex;align-items:center;justify-content:center;gap:6px;height:22px;margin-bottom:10px;font-size:16px;font-weight:600;line-height:22px;letter-spacing:-.3px;white-space:nowrap;
+  transition:transform .55s var(--spring-soft)}
+.ct-out__row+.ct-out__row{gap:4px}
+.ct-out:hover .ct-out__row,.ct-out:focus-visible .ct-out__row{transform:translateY(-32px)}
+.ct-out__icon{display:inline-flex;width:20px;height:20px}
+.ct-out__icon svg{width:100%;height:100%}
+
+/* ---------- Breakpoints */
+@media (max-width:1099.98px){.ct-before{position:relative;top:auto}}
+/* touch (incl. landscape phones and tablets): 44 px chips */
+@media (pointer:coarse){.ct-chip>span{height:44px}}
+@media (max-width:799.98px){
+  .ct-card{padding:24px;gap:24px}
+  .ct-card .dots,.ct-before .dots{display:none}
+  .ct-card__title{font-size:28px}
+  .ct-form__grid{grid-template-columns:minmax(0,1fr);gap:20px}
+  .ct-chip>span{height:44px}
+  .ct-budget{flex-direction:column;align-items:stretch}
+  .ct-quicks>.ct-quick{flex:1;height:44px}
+  .ct-note{font-size:15px}                 /* reading size on phones (desktop 13 px) */
+  .ct-before{padding:24px}
+  .ct-before__title{font-size:22px}
+  .ct-done__actions .btn{flex:1 1 100%}
+}

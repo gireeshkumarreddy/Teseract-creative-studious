@@ -1,0 +1,434 @@
+/* ==========================================================================
+   OUR APPROACH (/our-approach/) - image 4 flowchart. Markup: scripts/pages/approach.py
+   >= 1200px  .ap-poster is the 1333 x 2000 design canvas scaled by --u (= W / 1333); text blocks
+              sit at --x/--y (design px, box tops), lines/nodes/diamonds/burst in .ap-wires (SVG).
+   <  1200px  flow timeline: left rail + nodes, stacked notes/lists, compact decision rows.
+   Image 4 keeps its own blue accent locally (--approach-accent) and Geist metrics (all sizes were
+   fitted to Geist, so the poster uses it first on every platform).
+   Black theme: image 4 is redrawn as a white-on-black technical sheet. The panel is a near-black
+   plate (#070707) with a hairline edge and a soft top highlight; type steps down from --ink through
+   alpha whites; strokes are opaque greys (white at the stated alpha over the plate) so crossings,
+   arrowheads and the ghost spine never double up; the blue is lifted for black.
+   ========================================================================== */
+.ap{
+  --approach-accent:#4d79ff;        /* text, dots, rules, playhead: 5.2:1 on the plate */
+  --approach-accent-fill:#2f5bff;   /* YES discs + selection: white label 5.2:1, disc 3.9:1 vs plate */
+  --approach-accent-glow:77,121,255;
+  --ap-bg:#070707;
+  --ap-frame:#141414;               /* poster frame hairlines (white 5 %) */
+  --ap-ink:#f4f4f2;                                   /* headline, step names, numbers */
+  --ap-ink-2:rgba(244,244,242,.86);                   /* masthead word, kicker, intro, bracket lists */
+  --ap-ink-3:rgba(244,244,242,.8);                    /* spaced step subtitles */
+  --ap-ink-4:rgba(244,244,242,.66);                   /* notes, results, sign-off copy (7.6:1) */
+  --ap-ink-5:rgba(244,244,242,.58);                   /* disciplines, tag, diamond questions (6.3:1) */
+  --ap-line:#8a8a8a;                /* spine + solid connectors + arrowheads (white 53 %) */
+  --ap-line-2:#666;                 /* dotted loops, rings, diamonds, brackets, boxes (white 38 %) */
+  --ap-line-soft:#3a3a3a;           /* soft spine lead-in (white 20 %) */
+  --ap-rule:#8f8f8f;                /* heavy rules (launch arm, sign-off rule) */
+  --ap-rule-2:#585858;              /* vertical text rules (white 32 %) */
+  --ap-ray:#4c4c4c;                 /* launch burst rays (white 27 %) */
+  --ap-ghost:#1a1a1a;               /* undrawn spine / rail (white 7 %) */
+  --ap-ring-off:#262626;            /* node ring before it switches on */
+  --ap-disc-ink:#050505;            /* label on the white NO disc */
+  --ap-font:var(--font);   /* single site typeface */
+  --ap-out:cubic-bezier(.22,1,.36,1);
+  --ap-loop:cubic-bezier(.65,0,.35,1);
+  position:relative;container-type:inline-size;background:var(--ap-bg);color:var(--ap-ink);font-family:var(--ap-font);
+  border-radius:40px;overflow:clip;font-feature-settings:"ss01" 0;font-variant-numeric:lining-nums;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 0 0 1px rgba(255,255,255,.06)}
+.ap ::selection{background:var(--approach-accent-fill);color:#fff}
+.ap :focus-visible{outline-color:var(--approach-accent)}
+.ap-poster{position:relative}
+:where(.ap) :where(ul,ol){list-style:none;margin:0;padding:0}
+:where(.ap) :where(h1,h2){font-weight:inherit;margin:0}
+
+/* ---------- shared type (sizes are set per layout below) */
+.ap-word{color:var(--ap-ink-2);font-weight:400;letter-spacing:.39em;line-height:1;white-space:nowrap}
+.ap-disc{display:flex;font-weight:500;line-height:1;letter-spacing:.22em;text-transform:uppercase;color:var(--ap-ink-5)}
+.ap-tag{font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--ap-ink-5)}
+.ap-tag::before{content:"";position:absolute;width:1.5px;background:var(--approach-accent);transform-origin:50% 0}
+.ap-index,.ap-sign__index{font-weight:400;line-height:1;letter-spacing:0;color:var(--ap-ink-2);white-space:nowrap}
+.ap-kicker{font-weight:400;letter-spacing:-.02em;color:var(--ap-ink-2)}
+.ap-title{font-weight:460;color:var(--ap-ink)}
+.ap-title .l{display:block;overflow:hidden;padding:0 .12em .26em;margin:0 -.12em -.26em}
+.ap-title .l>span{display:inline-block;white-space:nowrap}
+.ap-title__dot{display:inline-block;border-radius:50%;background:var(--approach-accent)}
+.ap-intro{font-weight:400;letter-spacing:-.01em;color:var(--ap-ink-2)}
+.ap-num{display:block;font-weight:460;line-height:1;letter-spacing:-.08em;color:var(--ap-ink);white-space:nowrap}
+.ap-name{display:block;font-weight:460;line-height:1;letter-spacing:-.1em;color:var(--ap-ink);overflow:hidden;padding:0 .1em .22em;margin:0 -.1em -.22em}
+.ap-name>span{display:inline-block;white-space:nowrap}
+.ap-sub{font-weight:450;letter-spacing:.26em;text-transform:uppercase;color:var(--ap-ink-3);white-space:nowrap}   /* hard <br> lines; the tracking-in reveal never re-wraps (no layout shift) */
+.ap-note,.ap-dec__no{font-weight:400;letter-spacing:-.01em;color:var(--ap-ink-4)}
+.ap-result__label{font-weight:600;line-height:1;letter-spacing:.08em;text-transform:uppercase;color:var(--approach-accent)}
+.ap-result__text{color:var(--ap-ink-4);letter-spacing:-.01em}
+.ap-result{position:relative}
+.ap-result::before{content:"";position:absolute;transform-origin:50% 0}
+.ap-bullets li{position:relative}
+.ap-bullets li::before{content:"";position:absolute;left:0;border-radius:50%;background:currentColor}
+.ap-mini-result__label{font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--approach-accent)}
+.ap-list{position:relative;font-weight:450;letter-spacing:.15em;text-transform:uppercase;color:var(--ap-ink-3)}
+.ap-list::before,.ap-list::after{content:"";position:absolute;top:0;bottom:0;border:1px solid var(--ap-line-2);transform-origin:50% 50%}
+.ap-list::before{left:0;border-right:0}
+.ap-list::after{right:0;border-left:0}
+.ap-list li{white-space:nowrap}
+.ap-boxes li{display:grid;place-items:center;border:1px solid var(--ap-line-2);font-weight:400;line-height:1;letter-spacing:.03em;text-transform:uppercase;color:var(--ap-ink-2);white-space:nowrap}
+.ap-sign__title{font-weight:400;letter-spacing:-.085em;line-height:1;color:var(--ap-ink)}
+.ap-sign__title>span{display:inline-block;white-space:nowrap}
+.ap-sign__body{position:relative;color:var(--ap-ink-4);letter-spacing:-.01em}
+.ap-sign__body::before{content:"";position:absolute;width:1.5px;background:var(--ap-rule-2);transform-origin:50% 0}
+.ap-sign__index{color:var(--ap-ink-4)}
+
+/* ---------- overlay SVG (poster) */
+.ap-wires{display:none}
+.ap-wires text{font-family:var(--ap-font)}
+.ap-wires .w-frame{fill:none;stroke:var(--ap-frame);stroke-width:1}
+.ap-wires .w-col{fill:none;stroke:#0e0e0e;stroke-width:1}
+.ap-wires .w-ghost{fill:none;stroke:var(--ap-ghost);stroke-width:1}
+.ap-wires .w-solid{fill:none;stroke:var(--ap-line);stroke-width:1}
+.ap-wires .w-soft{fill:none;stroke:var(--ap-line-soft);stroke-width:1}
+.ap-wires .w-dot{fill:none;stroke:var(--ap-line-2);stroke-width:1;stroke-dasharray:2 4}
+.ap-wires .w-dash{stroke-dasharray:4 3}
+.ap-wires .w-heavy{fill:none;stroke:var(--ap-rule);stroke-width:1.5}
+.ap-wires .w-mask path{fill:none;stroke:#fff;stroke-width:12;stroke-dasharray:1 1;stroke-dashoffset:0}
+.ap-wires .w-ring{fill:var(--ap-bg);stroke:var(--ap-line-2);stroke-width:1}
+.ap-wires .w-pip{fill:var(--ap-ink)}
+.ap-wires .is-accent .w-pip,.ap-wires .w-top,.ap-wires .w-play,.ap-wires .w-trav,.ap-wires .w-rule-dot,
+.ap-wires .w-burst-disc,.ap-wires .w-burst-tick{fill:var(--approach-accent)}
+.ap-wires .w-ripple{fill:none;stroke:var(--approach-accent);stroke-width:1;opacity:0}
+.ap-wires .w-dia{fill:var(--ap-bg);stroke:var(--ap-line-2);stroke-width:1;stroke-dasharray:1 1;stroke-dashoffset:0}
+.ap-wires .w-dia-t{font-size:10.5px;font-weight:400;letter-spacing:-.01em;fill:var(--ap-ink-5);text-anchor:middle}
+.ap-wires .w-yes circle{fill:var(--approach-accent-fill)}
+.ap-wires .w-no circle{fill:var(--ap-ink)}
+.ap-wires .w-yes text,.ap-wires .w-no text{fill:#fff;font-weight:500;letter-spacing:.02em;text-anchor:middle}
+.ap-wires .w-no text{fill:var(--ap-disc-ink)}   /* NO flips with the theme: white disc, black label (image 4: black disc, white label) */
+.ap-wires .w-ah{fill:var(--ap-line)}
+.ap-wires .w-yes text{font-size:11px}
+.ap-wires .w-no text{font-size:10px}
+.ap-wires .w-trav{transform:translate(986px,549.5px)}
+.ap-wires .w-play{opacity:0}
+.ap-wires .w-ray{fill:none;stroke:var(--ap-ray);stroke-width:.8;stroke-dasharray:1 1;stroke-dashoffset:0}
+.ap-wires .w-burst-half{fill:var(--ap-ink)}
+.ap-wires .w-ring,.ap-wires .w-pip,.ap-wires .w-ripple,.ap-wires .w-yes,.ap-wires .w-no,.ap-wires .w-top,.ap-wires .w-play,
+.ap-wires .w-burst-half,.ap-wires .w-burst-disc,.ap-wires .w-rule-dot{transform-box:fill-box;transform-origin:50% 50%}
+.ap-wires .w-burst-tick{transform-box:fill-box;transform-origin:50% 100%}
+
+/* ---------- flow-mode pieces (hidden on the poster) */
+.ap-node,.ap-dec__mini,.ap-burst,.ap-sign__rule{display:none}
+.ap-dec__mini{width:100%;max-width:300px;height:auto;overflow:visible}
+.ap-dec__mini text{font-family:var(--ap-font)}
+.ap-dec__mini .m-solid{fill:none;stroke:var(--ap-line);stroke-width:1}
+.ap-dec__mini .m-dot{fill:none;stroke:var(--ap-line-2);stroke-width:1;stroke-dasharray:2 4}
+.ap-dec__mini .m-ah{fill:var(--ap-line)}
+.ap-dec__mini .m-dia{fill:var(--ap-bg);stroke:var(--ap-line-2);stroke-width:1}
+.ap-dec__mini .m-dia-t{font-size:12px;fill:var(--ap-ink-5);text-anchor:middle}
+.ap-dec__mini .m-no circle{fill:var(--ap-ink)}
+.ap-dec__mini .m-yes circle{fill:var(--approach-accent-fill)}
+.ap-dec__mini text:not(.m-dia-t){fill:#fff;font-weight:500;letter-spacing:.02em;text-anchor:middle;font-size:12px}
+.ap-dec__mini .m-no text{fill:var(--ap-disc-ink)}
+.ap-dec__mini .m-no,.ap-dec__mini .m-yes,.ap-dec__mini .m-dia{transform-box:fill-box;transform-origin:50% 50%}
+.ap-burst svg{width:100%;height:auto;overflow:visible}
+.ap-burst .w-ray{fill:none;stroke:var(--ap-ray);stroke-width:1}
+.ap-burst .w-burst-half{fill:var(--ap-ink)}
+.ap-burst .w-heavy{fill:none;stroke:var(--ap-rule);stroke-width:1.5}
+.ap-burst .w-burst-disc,.ap-burst .w-burst-tick{fill:var(--approach-accent)}
+
+/* ==========================================================================
+   POSTER (>= 1200px): image 4 at design coordinates
+   ========================================================================== */
+@media (min-width:1200px){
+  .ap{padding-bottom:16px}
+  .ap-poster{--W:min(100vw,1440px);--u:calc(var(--W) / 1333);width:var(--W);height:calc(2000 * var(--u));margin-inline:auto}
+  @supports (width:1cqi){.ap-poster{--W:min(100cqi,1440px)}}
+  .ap-wires{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:1}
+  .ap-at{position:absolute;z-index:2;left:calc(var(--x) * var(--u));top:calc(var(--y) * var(--u));white-space:nowrap}
+  .ap-mast,.ap-hero,.ap-side,.ap-extra,.ap-dec,.ap-sign{display:contents}
+  .ap-steps,.ap-step{position:static}
+
+  .ap-word{font-size:calc(20 * var(--u))}
+  .ap-disc{gap:calc(28 * var(--u));font-size:max(10px,calc(10 * var(--u)));letter-spacing:.18em}
+  .ap-tag{font-size:calc(12 * var(--u));line-height:calc(16 * var(--u))}
+  .ap-tag::before{left:calc(-34.5 * var(--u));top:calc(5.3 * var(--u));height:calc(39 * var(--u))}
+  .ap-index{font-size:calc(16 * var(--u))}
+  .ap-kicker{font-size:calc(18.5 * var(--u));line-height:calc(19 * var(--u))}
+  .ap-title{font-size:calc(131 * var(--u));line-height:calc(103 * var(--u));letter-spacing:-.11em}
+  .ap-title .l:nth-child(3)>span{letter-spacing:-.127em}   /* image 4 sets "Becomes" tighter (right edge x 524) */
+  .ap-title__dot{width:calc(27 * var(--u));height:calc(27 * var(--u));margin-left:calc(20 * var(--u));vertical-align:calc(-15.5 * var(--u))}
+  .ap-intro{font-size:calc(18 * var(--u));line-height:calc(22.3 * var(--u))}
+
+  .ap-num{font-size:calc(36 * var(--u))}
+  .ap-name{font-size:calc(46 * var(--u));margin-top:calc(3.5 * var(--u))}
+  .ap-sub{margin-top:calc(6 * var(--u));padding-left:calc(5 * var(--u));font-size:calc(14 * var(--u));line-height:calc(18.5 * var(--u))}
+  .ap-head--inline .ap-head__title{display:grid;grid-template-columns:calc(63 * var(--u)) auto;align-items:center}
+  .ap-head--inline .ap-name{margin-top:0}
+  .ap-head--inline .ap-sub{margin:calc(2 * var(--u)) 0 0 calc(63 * var(--u));padding-left:calc(4 * var(--u))}
+
+  .ap-note,.ap-result__text{font-size:calc(14 * var(--u));line-height:calc(17.75 * var(--u))}
+  .ap-dec__no{font-size:calc(14.5 * var(--u));line-height:calc(18 * var(--u))}
+  .ap-note--rule::before{content:"";position:absolute;left:calc(-18.5 * var(--u));top:calc(.5 * var(--u));width:1.5px;height:calc(82 * var(--u));background:var(--ap-rule-2);transform-origin:50% 0}
+  .ap-result__label{font-size:calc(14 * var(--u));margin-bottom:calc(8.5 * var(--u))}
+  .ap-result__text{line-height:calc(16.75 * var(--u))}
+  .ap-result::before{left:calc(-35 * var(--u));top:calc(-2 * var(--u));width:calc(12.5 * var(--u));height:calc(82 * var(--u));
+    border-top:1.5px solid var(--approach-accent);border-right:1.5px solid var(--approach-accent)}
+
+  .ap-note--define .ap-bullets{display:grid;grid-template-columns:auto auto;grid-template-rows:repeat(3,auto);grid-auto-flow:column;
+    column-gap:calc(14 * var(--u));margin-top:calc(3 * var(--u))}
+  .ap-bullets li{padding-left:calc(14 * var(--u))}
+  .ap-bullets li::before{top:calc(7 * var(--u));width:calc(4.5 * var(--u));height:calc(4.5 * var(--u))}
+  .ap-mini-result{margin-top:calc(3 * var(--u))}
+  .ap-mini-result__label{font-size:max(10px,calc(9.5 * var(--u)));margin-right:calc(6 * var(--u))}
+
+  .ap-list{width:calc(var(--w) * var(--u));padding:calc(1 * var(--u)) 0 calc(5 * var(--u)) calc(var(--in) * var(--u));
+    font-size:calc(14 * var(--u));line-height:calc(var(--lh) * var(--u))}
+  .ap-list::before,.ap-list::after{width:calc(10 * var(--u))}
+  .ap-boxes{display:flex;flex-direction:column;gap:calc(10 * var(--u))}
+  .ap-boxes li{width:calc(131 * var(--u));height:calc(30 * var(--u));font-size:calc(13 * var(--u))}
+
+  .ap-sign__title{font-size:calc(86 * var(--u));letter-spacing:-.066em}
+  .ap-sign__body{font-size:calc(14.5 * var(--u));line-height:calc(19.5 * var(--u))}
+  .ap-sign__body::before{left:calc(-30.5 * var(--u));top:calc(-4 * var(--u));height:calc(72 * var(--u))}
+  .ap-sign__index{font-size:calc(15 * var(--u))}
+}
+/* approach-local: below u = 1 (1200-1349 px incl. a classic scrollbar) the SVG labels, whose user
+   units scale with u, would drop under 10 px - raise them so the rendered size stays >= 10 px */
+@media (min-width:1200px) and (max-width:1279.98px){
+  .ap-wires :is(.w-dia-t,.w-yes text,.w-no text){font-size:11.3px}
+}
+@media (min-width:1280px) and (max-width:1349.98px){
+  .ap-wires :is(.w-dia-t,.w-no text){font-size:10.6px}
+}
+
+/* ==========================================================================
+   FLOW (< 1200px): single timeline with a left rail
+   ========================================================================== */
+@media (max-width:1199.98px){
+  .ap{--gutter:40px;--rail:48px;--col-gap:24px;--step-gap:72px;--steps-top:88px;padding:28px var(--gutter) 64px}
+  .br-d{display:none}
+  .ap-mast{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .ap-word{font-size:18px}
+  .ap-disc{gap:20px;font-size:12px;flex-wrap:wrap}
+  .ap-tag{display:none}
+  .ap-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);column-gap:40px;margin-top:56px;align-items:start}
+  .ap-index{grid-column:1;grid-row:1;font-size:16px}
+  .ap-kicker{grid-column:1;grid-row:2;margin-top:12px;font-size:18.5px;line-height:19px}
+  .ap-intro{grid-column:2;grid-row:1 / span 2;font-size:18px;line-height:1.3}
+  .ap-title{grid-column:1 / -1;grid-row:3;margin-top:56px;font-size:clamp(56px,calc(100cqi / 4.6),150px);line-height:.8;letter-spacing:-.11em}
+  .ap-title__dot{width:.2em;height:.2em;margin-left:.1em;vertical-align:-.02em}
+
+  .ap-steps{position:relative;margin-top:var(--steps-top)}
+  .ap-step{position:relative;display:grid;grid-template-columns:var(--rail) minmax(0,1fr) minmax(0,1fr);column-gap:var(--col-gap);
+    align-items:start;padding-bottom:var(--step-gap)}
+  .ap-step::before,.ap-step::after{content:"";position:absolute;left:calc(var(--rail) / 2 - .5px);top:16px;height:100%;width:1px}
+  .ap-step::before{background:var(--ap-ghost)}
+  .ap-step::after{background:var(--ap-line);transform-origin:50% 0;transform:scaleY(var(--p,1))}
+  .ap-step:last-child::before,.ap-step:last-child::after{display:none}
+  .ap-node{display:block;position:relative;z-index:1;grid-column:1;grid-row:1;justify-self:center;width:32px;height:32px;border-radius:50%;
+    border:1px solid var(--ap-line-2);background:var(--ap-bg)}
+  .ap-node::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--ap-ink)}
+  .ap-node--accent::after{background:var(--approach-accent)}
+  .ap-head{grid-column:2;grid-row:1 / span 2;min-width:0}
+  .ap-side{grid-column:3;grid-row:1;display:flex;flex-direction:column;gap:14px;padding-top:6px;min-width:0}
+  .ap-side:empty{display:none}
+  .ap-extra{grid-column:3;grid-row:2;display:flex;flex-direction:column;align-items:flex-start;gap:28px;margin-top:28px;min-width:0}
+  .ap-side:empty+.ap-extra{margin-top:6px}
+  .ap-num{font-size:32px}
+  .ap-name{font-size:44px;margin-top:6px}
+  .ap-sub{margin-top:12px;font-size:13px;line-height:1.45}
+  .ap-head--inline .ap-head__title{display:flex;align-items:center;gap:20px}
+  .ap-head--inline .ap-name{margin-top:0}
+  .ap-head--inline .ap-sub{margin-top:8px}
+
+  .ap-note,.ap-result__text{font-size:15px;line-height:1.45}
+  .ap-result{padding-left:16px}
+  .ap-result::before{left:0;top:2px;bottom:2px;width:1.5px;background:var(--approach-accent)}
+  .ap-result__label{font-size:12px;margin-bottom:8px}
+  .ap-note--rule{padding-left:16px;border-left:1.5px solid var(--ap-rule-2)}
+  .ap-bullets{display:grid;grid-template-columns:repeat(2,auto);justify-content:start;column-gap:24px;margin-top:6px}
+  .ap-bullets li{padding-left:14px}
+  .ap-bullets li::before{top:.62em;width:4px;height:4px}
+  .ap-mini-result{margin-top:8px}
+  .ap-mini-result__label{font-size:12px;margin-right:6px}
+
+  .ap-list{padding:10px 30px 12px;font-size:13px;line-height:22px}
+  .ap-list::before,.ap-list::after{width:10px}
+  .ap-boxes{display:flex;gap:10px;width:100%;max-width:413px}
+  .ap-boxes li{flex:1 1 0;min-width:0;height:30px;font-size:12px}
+  .ap-dec{display:grid;grid-template-columns:minmax(0,300px);width:100%}
+  .ap-dec__mini{display:block}
+  /* the NO caption sits under the NO circle, below the diamond's bottom vertex (y 87 of 300) */
+  .ap-dec__mini,.ap-dec__no{grid-area:1 / 1}
+  .ap-dec__no{align-self:start;margin-top:29%;font-size:14px;line-height:1.3;max-width:min(160px,52%)}
+  .ap-burst{display:block;width:240px;margin-top:-8px}
+
+  .ap-sign{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:40px;align-items:end;padding-top:40px;margin-top:8px}
+  .ap-sign__rule{display:block;position:absolute;left:0;right:0;top:0;height:1.5px;background:var(--ap-rule);transform-origin:0 50%}
+  .ap-sign__rule i{position:absolute;left:7%;top:50%;width:12px;height:12px;margin:-7px 0 0 -6px;border-radius:50%;background:var(--approach-accent)}
+  .ap-sign__title{grid-column:1 / -1;font-size:72px;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+  .ap-sign__body{grid-column:1;margin-top:24px;padding-left:20px;font-size:15px;line-height:1.4;max-width:50ch}
+  .ap-sign__body::before{left:0;top:2px;bottom:2px}
+  .ap-sign__index{grid-column:2;font-size:15px;padding-bottom:4px}
+}
+
+/* wide tablets: the side column (>= 400px) fits 6+ item lists in two content-sized columns */
+@media (min-width:960px) and (max-width:1199.98px){
+  .ap-list--cols{display:grid;grid-template-rows:repeat(var(--rows),auto);grid-auto-flow:column;grid-auto-columns:max-content;column-gap:28px}
+}
+
+/* ---------- phone */
+@media (max-width:799.98px){
+  .ap{--gutter:16px;--rail:28px;--col-gap:16px;--step-gap:56px;--steps-top:56px;border-radius:24px;padding:20px var(--gutter) 48px}
+  .ap-mast{flex-direction:column;align-items:flex-start;gap:14px}
+  .ap-word{font-size:16px;letter-spacing:.32em}
+  .ap-disc{gap:8px 12px;font-size:12px;letter-spacing:.16em}
+  .ap-hero{display:block;margin-top:40px}
+  .ap-kicker{margin-top:10px}
+  .ap-title{margin-top:40px;font-size:clamp(56px,calc(100cqi / 4.62),110px);line-height:.8;letter-spacing:-.09em}   /* "Experience" + dot = 4.54em: stays inside the gutter */
+  .ap-intro{margin-top:24px;font-size:16px;line-height:1.35;max-width:34ch}
+  .ap-step{grid-template-columns:var(--rail) minmax(0,1fr)}
+  .ap-node{width:28px;height:28px}
+  .ap-node::after{width:8px;height:8px;margin:-4px 0 0 -4px}
+  .ap-step::before,.ap-step::after{top:14px}
+  .ap-head{grid-column:2;grid-row:1}
+  .ap-side{grid-column:2;grid-row:2;padding-top:16px}
+  .ap-extra,.ap-side:empty+.ap-extra{grid-column:2;grid-row:3;margin-top:24px;gap:24px}
+  .ap-num{font-size:24px;letter-spacing:-.06em}
+  .ap-name{font-size:36px;letter-spacing:-.09em;margin-top:6px}
+  .ap-sub{margin-top:10px;font-size:12px;letter-spacing:.24em}
+  .ap-head--inline .ap-head__title{gap:14px}
+  .ap-head--inline .ap-sub{margin-top:8px}
+  .ap-step--inline .ap-head .ap-num{line-height:28px}
+  .ap-list{max-width:100%;padding:10px 24px 12px;font-size:12px;line-height:20px;letter-spacing:.14em}
+  /* 6+ items: two content-sized columns (a multicol box would size to 2 x the widest item and overflow) */
+  .ap-list--cols{display:grid;grid-template-rows:repeat(var(--rows),auto);grid-auto-flow:column;grid-auto-columns:max-content;column-gap:20px}
+  .ap-boxes li{flex:1 1 0;min-width:0;width:auto;font-size:12px}
+  .ap-burst{width:220px;margin:-4px 0 0}
+  .ap-dec__no{max-width:min(150px,50%)}
+  .ap-sign{display:block;padding-top:36px}
+  .ap-sign__title{font-size:clamp(48px,15vw,72px)}
+  .ap-sign__body{margin-top:20px}
+  .ap-sign__index{display:block;margin-top:20px}
+}
+
+/* ==========================================================================
+   MOTION - hidden states only under html.motion; .is-on (set by 32-approach.js) plays them.
+   Transitions live on the "on" state so arming never animates content away.
+   ========================================================================== */
+/* hero (load) */
+.motion .ap:not(.is-loaded) .ap-mast>*{opacity:0}
+.motion .ap:not(.is-loaded) .ap-tag::before{transform:scaleY(0)}
+.motion .ap:not(.is-loaded) :is(.ap-index,.ap-kicker,.ap-intro){opacity:0;transform:translate3d(0,40px,0)}
+.motion .ap:not(.is-loaded) .ap-title .l>span{transform:translate3d(0,140%,0)}   /* clears the .26em mask padding: no glyph tops peek before the reveal */
+.motion .ap:not(.is-loaded) .ap-title__dot{transform:scale(0)}
+.motion .ap:not(.is-loaded) .w-top{transform:scale(0)}
+.ap.is-loaded .ap-mast>*{transition:opacity .3s var(--ease-io)}
+.ap.is-loaded .ap-tag::before{transition:transform var(--spring-d) var(--spring) .1s}
+.ap.is-loaded :is(.ap-index,.ap-kicker){transition:opacity .55s ease .1s,transform var(--spring-d) var(--spring) .1s}
+.ap.is-loaded .ap-intro{transition:opacity .55s ease .5s,transform var(--spring-d) var(--spring) .5s}
+.ap.is-loaded .ap-title .l>span{transition:transform .9s var(--ap-out) calc(200ms + var(--i) * 70ms)}
+.ap.is-loaded .ap-title__dot{transition:transform var(--spring-d) var(--spring) .9s;animation:ap-dot-ripple .6s ease-out 1.25s 1 both}
+.ap.is-loaded .w-top{transition:transform var(--spring-d) var(--spring) .7s}
+@keyframes ap-dot-ripple{from{box-shadow:0 0 0 0 rgba(var(--approach-accent-glow),.45)}to{box-shadow:0 0 0 .45em rgba(var(--approach-accent-glow),0)}}
+
+/* spine + playhead */
+.motion .ap:not(.is-armed) .w-spine{visibility:hidden}
+.ap.is-armed .w-play.is-shown{opacity:1;transition:opacity .25s ease}
+
+/* step head + notes + lists (both layouts) */
+.motion .ap-step:not(.is-on) .ap-num{opacity:0;transform:translate3d(0,16px,0)}
+.motion .ap-step:not(.is-on) .ap-name>span{transform:translate3d(0,130%,0)}
+.motion .ap-step:not(.is-on) .ap-sub{opacity:0;letter-spacing:.42em}
+.motion .ap-step:not(.is-on) .ap-note--r,.motion .ap-step:not(.is-on) .ap-result{opacity:0;transform:translate3d(20px,0,0)}
+.motion .ap-step:not(.is-on) .ap-note--l{opacity:0;transform:translate3d(-20px,0,0)}
+.motion .ap-step:not(.is-on) .ap-result::before{transform:scaleY(0)}
+.motion .ap-step:not(.is-on) .ap-note--rule::before{transform:scaleY(0)}
+.motion .ap-step:not(.is-on) .ap-node{opacity:0;transform:scale(.6)}
+.motion .ap-step:not(.is-on) .ap-node::after{transform:scale(0)}
+.ap-step.is-on .ap-node{transition:opacity .25s var(--ease-io),transform var(--spring-d) var(--spring)}
+.ap-step.is-on .ap-node::after{transition:transform var(--spring-d) var(--spring) 80ms}
+.ap-step.is-on .ap-num{transition:opacity .35s var(--ease-io) 60ms,transform var(--spring-d) var(--spring) 60ms}
+.ap-step.is-on .ap-name>span{transition:transform .7s var(--ap-out) 120ms}
+.ap-step.is-on .ap-sub{transition:opacity .9s var(--ap-out) 220ms,letter-spacing .9s var(--ap-out) 220ms}
+.ap-step.is-on :is(.ap-note,.ap-result){transition:opacity .5s ease 420ms,transform var(--spring-d) var(--spring) 420ms}
+.ap-step.is-on .ap-note--ask{transition-delay:480ms}
+.ap-step.is-on .ap-result{transition-delay:520ms}
+.ap-step.is-on .ap-result::before,.ap-step.is-on .ap-note--rule::before{transition:transform .4s var(--ap-out) 420ms}
+
+/* step extras (.ap-x: bracket lists, boxes, burst) switch on with their step on the poster, and on
+   their own when they reach the viewport in the flow layout (32-approach.js) */
+.motion .ap-x.ap-list:not(.is-on)::before,.motion .ap-x.ap-list:not(.is-on)::after{transform:scaleY(0)}
+.motion .ap-x.ap-list:not(.is-on) li{opacity:0;transform:translate3d(0,8px,0)}
+.motion .ap-x.ap-boxes:not(.is-on) li{clip-path:inset(0 100% 0 0)}
+.motion .ap-x.ap-burst:not(.is-on){opacity:0;transform:scale(.85)}
+.ap-x.ap-list.is-on::before,.ap-x.ap-list.is-on::after{transition:transform .4s var(--ap-out) 480ms}
+.ap-x.ap-list.is-on li{transition:opacity .4s ease calc(540ms + var(--i) * 40ms),transform var(--spring-d) var(--spring) calc(540ms + var(--i) * 40ms)}
+.motion .ap-x.ap-boxes.is-on li{clip-path:inset(0 0 0 0);transition:clip-path .45s var(--ap-out) calc(480ms + var(--i) * 80ms)}   /* inset->none would not interpolate */
+.ap-x.ap-burst.is-on{transition:opacity .5s ease .3s,transform .6s var(--spring-soft) .3s}
+
+/* decisions (HTML parts) */
+.motion .ap-dec:not(.is-on) .ap-dec__no{opacity:0;transform:translate3d(0,8px,0)}
+.ap-dec.is-on .ap-dec__no{transition:opacity .4s var(--ap-out) .7s,transform .4s var(--ap-out) .7s}
+.motion .ap-dec:not(.is-on) .ap-dec__mini :is(.m-dia,.m-no,.m-yes){opacity:0;transform:scale(.5)}
+.motion .ap-dec:not(.is-on) .ap-dec__mini :is(.m-solid,.m-dot,.m-ah,.m-dia-t){opacity:0}
+.ap-dec.is-on .ap-dec__mini .m-dia{transition:opacity .3s ease .2s,transform var(--spring-d) var(--spring) .2s}
+.ap-dec.is-on .ap-dec__mini .m-dia-t{transition:opacity .3s ease .4s}
+.ap-dec.is-on .ap-dec__mini :is(.m-solid,.m-dot,.m-ah){transition:opacity .35s ease .5s}
+.ap-dec.is-on .ap-dec__mini .m-yes{transition:opacity .25s ease .6s,transform var(--spring-d) var(--spring) .6s}
+.ap-dec.is-on .ap-dec__mini .m-no{transition:opacity .25s ease .75s,transform var(--spring-d) var(--spring) .75s}
+
+/* sign-off */
+.motion .ap-sign:not(.is-on) .ap-sign__title>span{transform:translate3d(0,130%,0)}
+.motion .ap-sign:not(.is-on) .ap-sign__body{opacity:0;transform:translate3d(0,40px,0)}
+.motion .ap-sign:not(.is-on) .ap-sign__body::before{transform:scaleY(0)}
+.motion .ap-sign:not(.is-on) .ap-sign__index{opacity:0}
+.motion .ap-sign:not(.is-on) .ap-sign__rule{transform:scaleX(0)}
+.motion .ap-sign:not(.is-on) .ap-sign__rule i{transform:translateX(-200%) scale(.4);opacity:0}
+.ap-sign__title{overflow:hidden;padding:0 .08em .2em;margin:0 -.08em -.2em}
+.ap-sign.is-on .ap-sign__title>span{transition:transform .9s var(--ap-out) .15s}
+.ap-sign.is-on .ap-sign__body{transition:opacity .5s ease .5s,transform var(--spring-d) var(--spring) .5s}
+.ap-sign.is-on .ap-sign__body::before{transition:transform .4s var(--ap-out) .45s}
+.ap-sign.is-on .ap-sign__index{transition:opacity .3s var(--ease-io) .6s}
+.ap-sign.is-on .ap-sign__rule{transition:transform 1s var(--ap-loop)}
+.ap-sign.is-on .ap-sign__rule i{transition:transform var(--spring-d) var(--spring) .4s,opacity .3s ease .4s}
+
+/* overlay SVG pieces */
+.motion .ap .w-grp:not(.is-on) .w-mask path{stroke-dashoffset:1}
+.ap .w-grp.is-on .w-mask path{transition:stroke-dashoffset var(--dur,320ms) var(--ez,var(--ap-out)) var(--t,0ms)}
+.motion .ap .w-grp:not(.is-on) .w-ring{opacity:0;transform:scale(.6);stroke:var(--ap-ring-off)}
+.motion .ap .w-grp:not(.is-on) .w-pip{transform:scale(0)}
+.ap .w-grp.is-on .w-ring{transition:opacity .25s var(--ease-io) var(--nd,0ms),transform var(--spring-d) var(--spring) var(--nd,0ms),stroke .5s ease var(--nd,0ms)}
+.ap .w-grp.is-on .w-pip{transition:transform var(--spring-d) var(--spring) calc(var(--nd,0ms) + 80ms)}
+.motion .ap .w-grp.is-on .w-ripple{animation:ap-ripple .7s var(--ap-out) calc(var(--nd,0ms) + 80ms) 1 both}
+@keyframes ap-ripple{from{transform:scale(1);opacity:.35}to{transform:scale(3.2);opacity:0}}
+.motion .ap .w-dec:not(.is-on) .w-dia{stroke-dashoffset:1;fill-opacity:0}
+.motion .ap .w-dec:not(.is-on) :is(.w-dia-t,.w-trav){opacity:0}
+.motion .ap .w-dec:not(.is-on) :is(.w-yes,.w-no){opacity:0;transform:scale(.4)}
+.ap .w-dec.is-on .w-dia{transition:stroke-dashoffset .42s var(--ap-out),fill-opacity .3s ease .2s}
+.ap .w-dec.is-on .w-dia-t{transition:opacity .3s var(--ease-io) .2s}
+.ap .w-dec.is-on .w-yes{transition:opacity .2s ease .48s,transform var(--spring-d) var(--spring) .48s}
+.ap .w-dec.is-on .w-no{transition:opacity .2s ease .62s,transform var(--spring-d) var(--spring) .62s}
+.ap .w-dec.is-on .w-trav{transition:opacity .2s ease .6s}
+.ap .w-grp.is-on .w-loop{animation:ap-march 1.2s linear 1.7s infinite;animation-play-state:paused}
+.ap .w-grp.is-on.is-live .w-loop{animation-play-state:running}
+@keyframes ap-march{to{stroke-dashoffset:-12}}
+.motion .ap .w-burst:not(.is-on) .w-ray{stroke-dashoffset:1}
+.motion .ap .w-burst:not(.is-on) :is(.w-burst-half,.w-burst-disc){transform:scale(0)}
+.motion .ap .w-burst:not(.is-on) .w-burst-tick{transform:scaleY(0)}
+.ap .w-burst.is-on .w-ray{transition:stroke-dashoffset .5s var(--ap-out) calc(650ms + var(--i) * 14ms)}
+.ap .w-burst.is-on :is(.w-burst-half,.w-burst-disc){transition:transform var(--spring-d) var(--spring) .55s}
+.ap .w-burst.is-on .w-burst-tick{transition:transform .4s var(--spring) .75s}
+.motion .ap .w-burst.is-on.is-live .w-ray{animation:ap-shimmer 2.4s ease-in-out calc(1.4s + var(--i) * -180ms) infinite alternate}
+@keyframes ap-shimmer{from{opacity:1}to{opacity:.55}}
+.motion .ap .w-grp[data-k=end]:not(.is-on) .w-rule-dot{transform:translateX(-96.4px);opacity:0}
+.ap .w-grp[data-k=end].is-on .w-rule-dot{transition:transform var(--spring-d) var(--spring) .4s,opacity .2s ease .4s}
+
+/* narrow phones: the 300-unit decision row renders below 1:1, keep its labels >= 10 px */
+@media (max-width:374.98px){
+  .ap-list--cols{display:block}
+}
+@media (max-width:379.98px){
+  .ap .ap-dec__mini text{font-size:12.4px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ap .w-loop,.ap .w-ray{animation:none!important}
+  .ap .w-play{display:none}
+}

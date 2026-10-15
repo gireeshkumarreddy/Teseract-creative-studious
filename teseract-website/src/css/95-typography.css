@@ -1,0 +1,17 @@
+/* ONE typography for the entire website (client instruction, 13 Oct):
+   every heading and text block follows the style of the image-2 headline
+   "Your business is unique. Your website should be too." — the site typeface in its LIGHT weight (300).
+   Section files declared ~20 different weights (100–900); this layer unifies them, so it uses !important on purpose.
+   Small UI text (buttons, chips, pill labels, form controls) stays at 400 so it remains legible at 11–14px,
+   and inline emphasis (strong/b) at 500 so meaning is not lost. */
+
+html body, html body *{font-weight:300 !important;font-variation-settings:normal !important}
+
+/* small interface text: regular for legibility */
+html body .btn, html body .btn *, html body button, html body button *,
+html body .chip, html body .chip *, html body .pill-label, html body .pill-label *,
+html body input, html body select, html body textarea, html body option,
+html body .skip-link, html body .cursor-pill, html body .cursor-pill *{font-weight:400 !important}
+
+/* inline emphasis */
+html body strong, html body b, html body strong *, html body b *{font-weight:500 !important}

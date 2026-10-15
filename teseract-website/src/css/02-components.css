@@ -1,0 +1,120 @@
+/* ---------- Letter roll (ZIP pattern: duplicated line, per-letter stagger after JS split) */
+.roll{display:inline-block;position:relative;height:1.25em;line-height:1.25;overflow:hidden;vertical-align:top}
+.roll>span{display:block;white-space:nowrap;transition:transform .5s var(--ease)}
+.roll>span+span{position:absolute;top:100%;left:0}
+a:hover .roll>span,a:focus-visible .roll>span,button:hover .roll>span,button:focus-visible .roll>span{transform:translateY(-100%)}
+.roll .char{display:inline-block;transition:transform .52s var(--ease);transition-delay:calc(var(--i)*12ms)}
+.roll.has-chars>span{transition:none}
+a:hover .roll.has-chars>span,a:focus-visible .roll.has-chars>span,button:hover .roll.has-chars>span,button:focus-visible .roll.has-chars>span{transform:none}
+a:hover .roll.has-chars .char,a:focus-visible .roll.has-chars .char,button:hover .roll.has-chars .char,button:focus-visible .roll.has-chars .char{transform:translateY(-100%)}
+
+/* ---------- Icons */
+.icon{display:inline-flex;width:1em;height:1em;flex:none}
+.icon svg{width:100%;height:100%}
+
+/* ---------- Buttons (reference "Button Call" + nav "Button Switch") */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:12px 24px;border-radius:16px;
+  font-size:16px;font-weight:500;line-height:24px;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;isolation:isolate;
+  transition:box-shadow .7s var(--spring-soft),background-color .35s var(--ease),color .35s var(--ease),transform .5s var(--spring-soft)}
+.btn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.btn__label{position:relative;z-index:1;display:inline-flex}
+.btn__icon{position:relative;z-index:1;display:inline-flex;width:16px;height:16px;transition:transform .5s var(--ease)}
+.btn__icon svg{width:100%;height:100%}
+.btn:hover .btn__icon{transform:translate(2px,-2px)}
+.btn__lead{position:relative;z-index:1;display:inline-flex;align-items:center;width:28px;height:28px;flex:none}
+.btn__lead img,.btn__lead svg{width:28px;height:28px;border-radius:50%}
+.btn:has(.btn__lead){padding:12px 20px 12px 12px}
+.btn:active{transform:scale(.98)}
+
+/* Dark theme: .btn--dark keeps its name but is the high-emphasis (white) button; .btn--light is
+   the secondary (outlined) button. Names are kept so every template keeps working. */
+.btn--dark{background:#f4f4f2;color:#000;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 10px 30px -10px rgba(255,255,255,.18)}
+.btn--dark::before{content:"";position:absolute;z-index:0;left:-14%;right:-14%;top:-120%;height:90%;border-radius:50%;background:#fff;
+  transition:top .7s var(--spring-soft),bottom .7s var(--spring-soft),height .7s var(--spring-soft)}
+.btn--dark:hover::before{top:-60%;height:220%}
+.btn--dark:hover{box-shadow:0 0 0 1px rgba(255,255,255,.12),0 14px 40px -12px rgba(255,255,255,.28)}
+.btn--light{background:rgba(255,255,255,.04);color:var(--ink)}
+.btn--light::after{border:1px solid var(--line-3)}
+.btn--light:hover{background:rgba(255,255,255,.09)}
+.btn--outline{background:transparent;color:var(--ink);border-radius:999px;height:52px;padding:12px 28px;font-size:16px;letter-spacing:-.01em}
+.btn--outline::after{border:1.5px solid currentColor}
+.btn--outline:hover{background:var(--ink);color:#000}
+.btn--ghost{background:rgba(255,255,255,.06);color:var(--ink)}
+.btn--ghost:hover{background:rgba(255,255,255,.11)}
+.btn--inverse{background:#f4f4f2;color:#000}
+.btn--inverse::before{content:"";position:absolute;z-index:0;left:-14%;right:-14%;top:-120%;height:90%;border-radius:50%;background:rgba(0,0,0,.08);transition:top .7s var(--spring-soft),height .7s var(--spring-soft)}
+.btn--inverse:hover::before{top:-60%;height:220%}
+.btn--sm{height:32px;padding:0 12px;border-radius:12px;font-size:12px;line-height:16px;letter-spacing:-.02em;gap:6px}
+.btn--sm .btn__icon{width:12px;height:12px}
+.btn--block{width:100%}
+@media (max-width:799.98px){.btn:not(.btn--sm){height:56px}}
+
+/* ---------- Section label pill (reference component framer-3TZmM) */
+.pill-label{position:relative;display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:57px;
+  background:radial-gradient(50% 202.28% at 50% 50%,#2b2b2b 0%,#0b0b0b 100%);color:var(--ink);font-size:14px;font-weight:500;line-height:1.2;
+  letter-spacing:.01em;text-transform:uppercase;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.pill-label::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,189,143,.2);pointer-events:none}
+.pill-label i{position:relative;width:16px;height:16px;border-radius:31px;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);flex:none}
+.pill-label i::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:rgba(0,0,0,.7)}
+.pill-label--light{background:var(--ink);color:#000}
+.pill-label--light::after{border-color:transparent}
+
+/* ---------- Section head (reference: centred pill + tight display heading + sub) */
+.section-head{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;margin-inline:auto;max-width:760px}
+.section-head--left{align-items:flex-start;text-align:left;margin-inline:0}
+.section-head__title{font-size:56px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
+@media (max-width:1023.98px){.section-head__title{font-size:48px}}
+@media (max-width:719.98px){.section-head__title{font-size:32px}}
+.section-head__title em{font-style:italic;font-weight:500}
+.section-head__title s{text-decoration:none;position:relative;color:var(--muted)}
+.section-head__title s::after{content:"";position:absolute;left:-2%;right:-2%;top:52%;height:.07em;background:currentColor;transform:rotate(-4deg)}
+.section-head__sub{max-width:560px;font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:balance}
+
+/* ---------- Chips (reference service tags) */
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.chip{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:10px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);font-size:13px;font-weight:500;letter-spacing:-.02em;color:rgba(244,244,242,.8);white-space:nowrap}
+
+/* ---------- Frames & cards (reference plans frame + price-card) */
+.frame{position:relative;background:var(--frame);border-radius:48px;padding:16px;display:flex;flex-direction:column;gap:16px}
+.frame::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid var(--line-2);pointer-events:none}
+.card{position:relative;background:linear-gradient(180deg,#141414 0%,#0d0d0d 100%);border-radius:32px;padding:40px;color:var(--ink);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 1px rgba(255,255,255,.07),0 30px 60px -32px rgba(0,0,0,.9)}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.02);pointer-events:none}
+/* four 7px corner dots (reference price-card / FAQ contact card) */
+.dots{position:absolute;inset:0;pointer-events:none;z-index:1}
+.dots i{position:absolute;width:7px;height:7px;border-radius:32px;background:#202020;box-shadow:inset 0 1px 2px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.05)}
+.dots i:nth-child(1){top:20px;left:20px}.dots i:nth-child(2){top:20px;right:20px}.dots i:nth-child(3){bottom:20px;left:20px}.dots i:nth-child(4){bottom:20px;right:20px}
+@media (max-width:799.98px){.frame{background:transparent;padding:0;border-radius:0}.frame::after{display:none}.card{padding:32px}}
+
+/* ---------- Motion control (WCAG 2.2.2; behaviour 02-core.js TS.motionToggle, markup chrome.motion_toggle()).
+   A paused scope (.is-still) freezes every CSS animation inside it, entrances included, so a scope should wrap the
+   looping parts only. The toggle is the hero's frosted dark pill ("Pause motion" / "Play motion"); on touch screens
+   it is a 32px round icon-only button (the label stays for screen readers) with a 44px hit area. Placement is the
+   adopting section's (e.g. sticky in a corner). */
+[data-motion-scope].is-still,[data-motion-scope].is-still::before,[data-motion-scope].is-still::after,
+[data-motion-scope].is-still *,[data-motion-scope].is-still ::before,[data-motion-scope].is-still ::after{animation-play-state:paused!important}
+.motion-toggle{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px 0 11px;flex:none;
+  border-radius:10px;background:rgba(14,14,14,.74);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);color:var(--ink);
+  font-family:var(--mono);font-size:12px;font-weight:500;line-height:1;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -8px rgba(0,0,0,.8);
+  -webkit-tap-highlight-color:transparent;transition:background-color .3s ease,box-shadow .3s ease,transform .5s var(--ease)}
+.motion-toggle[hidden]{display:none}
+.motion-toggle::before{content:"";position:absolute;inset:-6px}
+.motion-toggle:active{transform:scale(.97)}
+.motion-toggle:focus-visible{border-radius:10px}
+@media (hover:hover){
+  .motion-toggle:hover{background:rgba(40,40,40,.84);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.08),0 8px 20px -8px rgba(0,0,0,.8)}
+}
+.motion-toggle__ic{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:3px;width:10px;height:10px;flex:none}
+.motion-toggle__ic i{width:3px;height:10px;border-radius:1px;background:currentColor}
+.motion-toggle.is-still .motion-toggle__ic i{display:none}
+.motion-toggle.is-still .motion-toggle__ic::before{content:"";width:0;height:0;margin-left:2px;border-style:solid;border-width:5px 0 5px 8.5px;border-color:transparent transparent transparent currentColor}
+@media (hover:none){
+  .motion-toggle{width:32px;padding:0;gap:0;border-radius:50%}
+  .motion-toggle:focus-visible{border-radius:50%}
+  .motion-toggle__label{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
+}
+@media (forced-colors:active){.motion-toggle__ic{forced-color-adjust:none;color:ButtonText}}   /* the drawn glyph keeps a system colour */
+
+/* ---------- Disabled (unconfigured) links */
+a[aria-disabled=true]{opacity:.45;cursor:not-allowed}

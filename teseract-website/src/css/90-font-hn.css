@@ -1,0 +1,32 @@
+/* Single typeface, two renderings: tracking for real Helvetica Neue.
+   Display letter-spacing across the site was fitted to Geist (the fallback seen on Windows/Android).
+   Helvetica Neue is narrower with tighter default spacing, so it needs roughly 0.5–0.8× of Geist's
+   negative tracking or letters collide. Inter Tight (the stand-in where Helvetica Neue is missing) has the same
+   narrow proportions, so html.font-hn is now always set in <head> (chrome.py) and these values apply to both;
+   html.font-hn-real additionally marks a visitor who really renders Helvetica Neue.
+   Sections whose builders already shipped .font-hn rules (23-believe.css, 24-agency.css) are not repeated. */
+
+/* Our Approach (image 4 poster) */
+.font-hn .ap-title{letter-spacing:-.055em}
+.font-hn .ap-title .l:nth-child(3)>span{letter-spacing:-.065em}   /* "Becomes" is set tighter in image 4 */
+.font-hn .ap-sign__title{letter-spacing:-.05em}
+.font-hn .ap-num{letter-spacing:-.045em}
+.font-hn .ap-name{letter-spacing:-.05em}
+
+/* The Idea (image 2) */
+.font-hn .idea__line{letter-spacing:-.045em}
+.font-hn .idea__line:nth-child(2){letter-spacing:-.05em}
+.font-hn .idea__title{letter-spacing:-.045em}
+.font-hn .idea__copy{letter-spacing:-.025em}
+.font-hn .idea__p+.idea__p{letter-spacing:-.025em}
+.font-hn .idea__brand{letter-spacing:-.005em}
+
+/* Large numerals */
+.font-hn .wk-story__n{letter-spacing:-.045em}
+.font-hn .nf__digits{letter-spacing:-.045em}
+
+/* Display headings at the reference's -0.05em stay as designed; only the heaviest sizes ease off a touch */
+.font-hn .hero__headline,.font-hn .pg-hero__title,.font-hn .create-hero__title,.font-hn .wk-hero__title,.font-hn .pj-head__title{letter-spacing:-.04em}
+/* All-caps project names (AARADHYA, SAANJH, VELORA; .is-caps from project.py/work.py): capitals need
+   less negative tracking or the R's leg runs into the A */
+.font-hn .is-caps{letter-spacing:-.02em}

@@ -1,0 +1,332 @@
+/* ==========================================================================
+   FOUNDER — "Portrait in light": shared blocks of Who We Are #founder / #why and the home teaser #founder-teaser.
+   Markup: scripts/sections/founder.py (+ pages/who.py, sections/home_founder.py) · motion: src/js/26-founder.js.
+   Page layouts (phone / tablet / desktop grids) live in 30-who.css; the teaser grid (.fdt) is at the end here.
+
+   No photo: the person is drawn in type and lit by the hero's warm light. One typeface at 300 (95-typography.css);
+   this file declares no font-weight (<strong> is 500 there). Phone first (390), sizes in cqi/cqw so 360-430 scale.
+   Colour carries meaning: ORANGE (--fdr-accent, glow 255,118,46) = the person: the light, the quote marks, the
+   hackathon frame, the "to" flap's dot, the active-row node, quote 2's final dot. RED (--red) = sameness only: the
+   box on "exactly the same." and the strikes the visitor removes. The flap pins are neutral hinge rivets.
+   Motion pre-states only under html.motion.is-ready or a JS-added class (.is-live, .is-ink, .is-armed): the defaults
+   are always the readable end states (no JS, reduced motion). Below 800px nothing sticks, pins or captures gestures.
+   ========================================================================== */
+:root{
+  --fdr-accent:#f75817;               /* the hero's full stop (6.36:1 on black) */
+  --fdr-glow:255,118,46;              /* the hero's streak peak #FF762E */
+  --fdr-amber:255,196,140;
+  --fdr-line:rgba(255,255,255,.22);   /* boxes, frames */
+  --fdr-lead:rgba(255,255,255,.34);   /* node outlines */
+}
+
+/* ---------- eyebrow bar: "THE PERSON BEHIND" black on ink + the brand in a hairline cell */
+.fdr-bar{display:flex;width:fit-content;align-items:stretch;max-width:100%;font-size:13px;line-height:1;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.fdr-bar__a{padding:8px 10px;background:var(--ink);color:#000}
+.fdr-bar__b{padding:7px 10px;border:1px solid var(--fdr-line);border-left:0;color:var(--ink-2)}
+
+/* ---------- nameplate: "Gireesh" per letter (vertical ink gradient, the hero display's rule) + the rest on line 2.
+   Both lines are scaled to the name's width by 26-founder.js (--k1 / --k2, transform only: no layout shift); the CSS
+   base sizes fill ~95 % of that width without JS. */
+.fdr-name{position:relative;color:var(--ink);font-kerning:normal}
+.fdr-name__l1,.fdr-name__l2{display:block;width:max-content;white-space:nowrap;transform-origin:0 100%}
+.fdr-name__l1{font-size:29cqi;line-height:.8;letter-spacing:-.05em;transform:scale(var(--k1,1));clip-path:inset(-30% -.12em -30% -.1em)}
+.fdr-name__l2{margin-top:1.8cqi;font-size:11.9cqi;line-height:.9;letter-spacing:-.03em;color:rgba(244,244,242,.86);transform:scale(var(--k2,1))}
+.font-hn-real .fdr-name__l1{letter-spacing:-.04em}
+.font-hn-real .fdr-name__l2{letter-spacing:-.02em}
+.fdr-l{display:inline-block;padding:.24em 0 .1em;margin:-.24em 0 -.1em}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .fdr-l{color:transparent;-webkit-background-clip:text;background-clip:text;
+    background-image:linear-gradient(180deg,#f4f4f2 0%,#f4f4f2 55%,rgba(244,244,242,.5) 100%)}
+}
+/* entrance: the letters arrive from the right like the intro wordmark (out of the word's right edge), the rest rises */
+.motion.is-ready .fdr-name:not(.is-in) .fdr-l{opacity:0;transform:translate3d(.55em,0,0)}
+.motion .fdr-l{transition:transform .7s var(--ease) calc(150ms + var(--i,0) * 30ms),opacity .7s var(--ease) calc(150ms + var(--i,0) * 30ms)}
+.motion.is-ready .fdr-name:not(.is-in) .fdr-name__l2{opacity:0;transform:translate3d(0,24px,0) scale(var(--k2,1))}
+.motion .fdr-name__l2{transition:transform .7s var(--ease) .42s,opacity .7s var(--ease) .42s}
+
+/* ---------- roles: rows (a node per role; the dots stay for screen readers) or one inline line */
+.fdr-roles{font-size:13px;line-height:1.3;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+.fdr-nw{white-space:nowrap}
+.fdr-roles__sep{color:var(--muted-strong)}
+.fdr-roles--rows{display:grid;gap:6px;justify-items:start}
+.fdr-roles--rows .fdr-role{display:inline-flex;align-items:center;gap:10px}
+.fdr-roles--rows .fdr-role::before{content:"";flex:none;width:11px;height:11px;border:1px solid var(--fdr-lead);
+  background:linear-gradient(var(--ink),var(--ink)) 50% 50%/5px 5px no-repeat}
+.fdr-roles--rows .fdr-roles__sep{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.fdr-roles--inline .fdr-role{white-space:nowrap}
+.fdr-roles--inline .fdr-roles__sep{margin:0 .3em}
+/* his profiles (owner, 15 Oct): hairline icon buttons, 44 px on phones; where the aside pins (>= 800 px) they sit
+   beside the eyebrow bar at 36 px (44 px hit area), so the pinned aside grows no taller */
+.fdr-links{display:flex;gap:8px;margin:16px 0 0;padding:0;list-style:none}
+.who-fdr__aside .fdr-links{margin-top:16px}   /* outranks the page's own list reset */
+.fdr-links__a{position:relative;display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-3);
+  color:var(--ink);transition:background-color .3s var(--ease),border-color .3s var(--ease),color .3s var(--ease)}
+.fdr-links__a svg{width:20px;height:20px}
+.fdr-links__a:active{background:rgba(255,255,255,.12)}
+@media (hover:hover){.fdr-links__a:hover{background:var(--ink);border-color:var(--ink);color:var(--black)}}
+@media (min-width:800px){
+  .who-fdr__aside{display:grid;grid-template-columns:max-content minmax(0,1fr);column-gap:12px;align-items:center}
+  .who-fdr__aside>*{grid-column:1/-1}
+  .who-fdr__aside>.fdr-bar{grid-column:1;grid-row:1}
+  .who-fdr__aside>.fdr-links{grid-column:2;grid-row:1;justify-self:start;margin:0;--y:8px}
+  .who-fdr__aside .fdr-links__a{width:36px;height:36px}
+  .who-fdr__aside .fdr-links__a::before{content:"";position:absolute;inset:-5px}
+}
+
+/* ---------- the 4:5 plate (the slot a portrait takes later): texture of his four disciplines, warm light, centre
+   crosshair, crop marks, nameplate. --lx/--ly = the light (rest 68 % / 30 %). 26-founder.js writes them on the two
+   layers that use them (__light, __tex); registered non-inherited so a write never restyles a subtree (browsers
+   without @property inherit the frame's rest values instead). */
+@property --lx{syntax:"<percentage>";inherits:false;initial-value:68%}
+@property --ly{syntax:"<percentage>";inherits:false;initial-value:30%}
+.fdr-frame{--lx:68%;--ly:30%;position:relative;container-type:inline-size;aspect-ratio:4/5;background:#050505;
+  border:1px solid var(--fdr-line);overflow:hidden;overflow:clip;isolation:isolate}
+.fdr-frame__tex{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;justify-content:space-between;padding:2.2cqi 0;
+  overflow:hidden;font-size:3.1cqi;line-height:2.1;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;
+  color:rgba(244,244,242,.62);pointer-events:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  -webkit-mask-image:radial-gradient(circle 46cqi at var(--lx) var(--ly),#000,rgba(0,0,0,.1));
+  mask-image:radial-gradient(circle 46cqi at var(--lx) var(--ly),#000,rgba(0,0,0,.1))}
+.fdr-frame__tex i{display:block;font-style:normal}
+.fdr-frame__tex i::before{content:attr(data-t) attr(data-t)}
+.fdr-frame__tex i:nth-child(even){margin-left:-28cqi}
+@supports not ((mask-image:none) or (-webkit-mask-image:none)){.fdr-frame__tex{color:rgba(244,244,242,.06)}}
+.fdr-frame__light{position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(48cqi 40cqi at var(--lx) var(--ly),rgba(var(--fdr-glow),.32),rgba(var(--fdr-glow),.08) 55%,transparent 78%)}
+.fdr-frame__cross{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(rgba(255,255,255,.07),rgba(255,255,255,.07)) 50% 0/1px 100% no-repeat,
+    linear-gradient(rgba(255,255,255,.07),rgba(255,255,255,.07)) 0 50%/100% 1px no-repeat}
+.fdr-frame__marks{position:absolute;inset:0;z-index:2;pointer-events:none}
+.fdr-frame__marks i{position:absolute;width:10px;height:10px;border:0 solid rgba(244,244,242,.5)}
+.fdr-frame__marks i:nth-child(1){top:8px;left:8px;border-width:1px 0 0 1px;transform-origin:0 0}
+.fdr-frame__marks i:nth-child(2){top:8px;right:8px;border-width:1px 1px 0 0;transform-origin:100% 0;transition-delay:60ms}
+.fdr-frame__marks i:nth-child(3){bottom:8px;right:8px;border-width:0 1px 1px 0;transform-origin:100% 100%;transition-delay:120ms}
+.fdr-frame__marks i:nth-child(4){bottom:8px;left:8px;border-width:0 0 1px 1px;transform-origin:0 100%;transition-delay:180ms}
+.fdr-name--frame{position:absolute;z-index:3;left:4.5cqi;right:4.5cqi;bottom:4.5cqi}
+/* FRAME = 'plate': no border or crop marks, the texture fades out at the edges */
+.fdr-frame--plate{border-color:transparent;background:transparent}
+.fdr-frame--plate .fdr-frame__marks,.fdr-frame--plate .fdr-frame__cross{display:none}
+/* FOUNDER_PORTRAIT set: the photo is the bottom layer, the light becomes a rim, the name sits on a scrim */
+.fdr-frame__photo{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover}
+.fdr-frame--photo .fdr-frame__tex,.fdr-frame--photo .fdr-frame__cross{display:none}   /* no hairlines across his face */
+.fdr-frame--photo .fdr-frame__light{opacity:.5}
+.fdr-frame--photo::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(transparent 45%,rgba(0,0,0,.78))}
+/* entrance (.is-in from 26-founder.js): marks scale in, border and texture fade in, the light sweeps once */
+.motion.is-ready .fdr-frame:not(.is-in){border-color:transparent}
+.motion .fdr-frame{transition:border-color .6s ease}
+.motion.is-ready .fdr-frame:not(.is-in) .fdr-frame__marks i{transform:scale(0)}
+.motion .fdr-frame__marks i{transition-property:transform;transition-duration:.5s;transition-timing-function:var(--ease)}
+.motion.is-ready .fdr-frame:not(.is-in) .fdr-frame__tex,.motion.is-ready .fdr-frame:not(.is-in) .fdr-frame__light{opacity:0}
+.motion .fdr-frame__tex{transition:opacity .9s ease .2s}
+.motion .fdr-frame__light{transition:opacity .9s ease .3s}
+
+/* ---------- split-flap departure board (decorative, aria-hidden; hidden without JS) */
+.fdr-journey{position:relative}
+.fdr-board{container-type:inline-size;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.no-js .fdr-board{display:none}
+.fdr-board__row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;font-size:15px;line-height:1.2;color:var(--muted-strong)}
+.fdr-board__row--to{margin-top:12px}
+.fdr-board__n{font-variant-numeric:tabular-nums}
+.fdr-roll{position:relative;display:inline-block;height:1.2em;line-height:1.2;overflow:hidden;vertical-align:bottom}
+.fdr-roll>span{display:block}
+.fdr-roll>span+span{position:absolute;left:0;top:0}
+.fdr-flap{--fh:64px;position:relative;display:block;height:var(--fh);background:#070707;border:1px solid var(--fdr-line);perspective:420px;
+  font-size:min(11.5cqi,46px);letter-spacing:-.04em;color:var(--ink);text-transform:lowercase}
+.fdr-flap__h,.fdr-flap__leaf{position:absolute;left:0;right:0;height:50%;overflow:hidden}
+.fdr-flap__h--t,.fdr-flap__leaf--t{top:0;background:#0a0a0a}
+.fdr-flap__h--b,.fdr-flap__leaf--b{bottom:0;background:#070707}
+.fdr-flap__w{position:absolute;left:0;right:0;top:0;height:200%;padding:0 14px;line-height:calc(var(--fh) - 2px);white-space:nowrap}
+.fdr-flap__h--b .fdr-flap__w,.fdr-flap__leaf--b .fdr-flap__w{top:-100%}
+.fdr-flap--to .fdr-flap__w::after{content:"";display:inline-block;width:.16em;height:.16em;margin-left:.07em;border-radius:50%;background:var(--fdr-accent)}
+.fdr-flap__leaf{z-index:2;-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform}
+.fdr-flap__leaf--t{transform-origin:50% 100%}
+.fdr-flap__leaf--b{transform-origin:50% 0}
+.fdr-flap::before{content:"";position:absolute;left:0;right:0;top:calc(50% - .5px);z-index:3;height:1px;background:#000;box-shadow:0 1px 0 rgba(255,255,255,.05)}
+/* hinge rivets: on the module's side borders (half outside the 1px frame), out of the word's lane, neutral so the
+   orange stays with the two marks that mean something (the "to" dot, the active row's node) */
+.fdr-flap__pin{position:absolute;top:calc(50% - 2px);z-index:4;width:4px;height:4px;background:rgba(244,244,242,.5)}
+.fdr-flap__pin:first-of-type{left:-2.5px}
+.fdr-flap__pin:last-of-type{right:-2.5px}
+
+/* ---------- route strip: four stops = the four shards of the mark; legs = flight arc, stepped chart, trace + pen */
+.fdr-strip{display:block;width:100%;height:auto;aspect-ratio:360/48;margin-top:16px;overflow:visible}
+.fdr-strip__plan{fill:none;stroke:rgba(255,255,255,.22);stroke-width:1;stroke-dasharray:2 4}
+.fdr-strip__fly{fill:none;stroke:var(--ink);stroke-width:1.25;stroke-linejoin:miter;stroke-dasharray:1;stroke-dashoffset:1;
+  transition:stroke-dashoffset .7s var(--ease)}
+.fdr-strip__sh{fill:transparent;stroke:var(--fdr-lead);stroke-width:1;stroke-linejoin:round;transition:fill .4s ease .45s,stroke .4s ease .45s,filter .5s ease}
+.fdr-strip__nd{fill:#000;stroke:var(--fdr-lead)}
+.fdr-strip__ni{fill:var(--ink)}
+.fdr-strip__x3{fill:none;stroke:rgba(244,244,242,.62);stroke-width:.75;opacity:0;transition:opacity .3s ease .5s}
+.fdr-strip__x3 circle{fill:var(--ink);stroke:none}
+.fdr-strip__ring{fill:none;stroke:var(--fdr-accent);stroke-width:1;opacity:0;transform-box:fill-box;transform-origin:50% 50%}
+/* board state ([data-leg] from 26-founder.js; leg 1 is the server state) */
+.fdr-board[data-leg="1"] .fdr-strip__fly--1,
+.fdr-board[data-leg="2"] :is(.fdr-strip__fly--1,.fdr-strip__fly--2),
+.fdr-board[data-leg="3"] .fdr-strip__fly{stroke-dashoffset:0}
+.fdr-board[data-leg="1"] :is(.fdr-strip__sh--1,.fdr-strip__sh--2),
+.fdr-board[data-leg="2"] :is(.fdr-strip__sh--1,.fdr-strip__sh--2,.fdr-strip__sh--3),
+.fdr-board[data-leg="3"] .fdr-strip__sh{fill:var(--ink);stroke:var(--ink)}
+.fdr-board[data-leg="3"] .fdr-strip__x3{opacity:1}
+.fdr-board.is-arrived .fdr-strip__sh--c{filter:drop-shadow(0 0 4px rgba(var(--fdr-glow),.9))}
+.fdr-board.is-arrived .fdr-strip__ring{animation:ts-pulse .9s var(--ease) 1}
+
+/* ---------- departure list = the real H3 (his three-line headline). Ordinals are CSS counters (not read aloud). */
+.fdr-dep{margin-top:20px;border-top:1px solid var(--fdr-line);counter-reset:dep}
+.fdr-dep__row{display:grid;grid-template-columns:32px minmax(0,1fr) 12px;align-items:center;min-height:64px;padding:12px 0;
+  border-bottom:1px solid var(--fdr-line);counter-increment:dep;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.fdr-dep__row::before{content:counter(dep,decimal-leading-zero);content:counter(dep,decimal-leading-zero) / "";align-self:start;padding-top:.35em;
+  font-size:13px;line-height:1.2;color:var(--muted-strong);font-variant-numeric:tabular-nums}
+.fdr-dep__row::after{content:"";justify-self:end;width:9px;height:9px;background:var(--fdr-accent);opacity:0;transform:scale(.4)}
+.fdr-dep__t{font-size:24px;line-height:1.15;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.is-live .fdr-dep__row:not(.is-on) .fdr-dep__t{opacity:.5}
+.is-live .fdr-dep__row.is-on::after{opacity:1;transform:none}
+.fdr-dep__t{transition:opacity .35s var(--ease)}
+.fdr-dep__row::after{transition:opacity .2s ease,transform .3s var(--spring)}
+@media (hover:hover) and (pointer:fine){
+  .is-live .fdr-board,.is-live .fdr-dep__row{cursor:pointer}
+  .is-live .fdr-dep__row:not(.is-on):hover .fdr-dep__t{opacity:.8}
+}
+
+/* ---------- pull quotes: the emphasis moves from sentence 1 to sentence 2 as it is read (believe-section ink).
+   Default (no JS / reduced motion) = the end state: sentence 1 in the two-tone grey, sentence 2 in ink. */
+.fdr-q{position:relative}
+.fdr-q__t{font-size:min(9.4cqw,40px);line-height:1.04;letter-spacing:-.045em;color:var(--ink);text-wrap:pretty}
+.font-hn .fdr-q__t{letter-spacing:-.035em}
+/* the opening mark: a drawn pair of comma quotes in the accent (founder.py QMARK; the real “ is .sr-only) */
+.fdr-q__o{display:block;width:44px;margin-bottom:14px;color:var(--fdr-accent)}
+.fdr-q__m{display:block;width:100%;height:auto;fill:currentColor;overflow:visible}
+/* each sentence starts its own line, so the first word of sentence 2 never hangs at the end of a sentence-1 line in
+   the other tone ("…look different. It") */
+.fdr-q__s--1{display:block;color:var(--pg-grey-lg,#7a7a78)}
+.is-ink .fdr-q__s--1{color:var(--ink)}
+.is-ink .fdr-q__s--1 .fdr-w{opacity:calc(1 - .5 * clamp(0,(var(--p,0) - var(--a,0)) * 5,1))}
+.is-ink .fdr-q__s--2 .fdr-w{opacity:calc(.5 + .5 * clamp(0,(var(--p,0) - var(--a,0)) * 5,1))}
+.motion.is-ready .fdr-q:not(.is-in) .fdr-q__o{transform:translate3d(0,16px,0) rotate(-8deg)}
+.motion .fdr-q__o{transform-origin:30% 70%;transition:transform .8s var(--ease) .1s}
+/* quote 2's final full stop: the hero's orange round dot (the "." stays in the text, visually hidden). While the
+   quote is being read (.is-ink, not yet .is-dot) it is a plain full stop in the text colour, so the sentence never
+   shows a gap without a stop; when the swap completes it lights up orange with a spring (one-way). */
+.fdr-dot{display:inline-block;padding-left:.035em}
+.fdr-dot::before{content:"";display:inline-block;width:.16em;height:.16em;border-radius:50%;background:var(--fdr-accent);box-shadow:0 0 .16em rgba(247,88,23,.5);transform-origin:50% 100%}
+.fdr-dot__p{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.fdr-q.is-ink:not(.is-dot) .fdr-dot::before{background:currentColor;box-shadow:none;transform:scale(.62)}
+.fdr-q.is-ink .fdr-dot::before{transition:transform .6s var(--spring),background-color .3s ease,box-shadow .6s ease}
+
+/* ---------- bio; the first-place hackathon phrase in an orange drawn frame (the who-bx technique) */
+.fdr-bio{max-width:36em}
+.fdr-bio__p{font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--ink-2);text-wrap:pretty}
+.fdr-bio__p+.fdr-bio__p{margin-top:20px}
+.fdr-bio__p--lead{font-size:19px;line-height:1.42;letter-spacing:-.015em;color:var(--ink)}
+.fdr-win{position:relative;display:inline-block;padding:0 .08em;white-space:nowrap;line-height:1.3;color:var(--ink);background:rgba(var(--fdr-glow),.06)}
+.fdr-win::before,.fdr-win::after{content:"";position:absolute;inset:0;pointer-events:none}
+.fdr-win::before{border-top:1px solid var(--fdr-accent);border-bottom:1px solid var(--fdr-accent);transform-origin:0 50%}
+.fdr-win::after{border-left:1px solid var(--fdr-accent);border-right:1px solid var(--fdr-accent);transform-origin:50% 0}
+.motion.is-ready .fdr-bio__p:not(.is-in) .fdr-win::before{transform:scaleX(0)}
+.motion.is-ready .fdr-bio__p:not(.is-in) .fdr-win::after{transform:scaleY(0)}
+.motion .fdr-win::before{transition:transform .55s var(--ease) .7s}
+.motion .fdr-win::after{transition:transform .45s var(--ease) 1s}
+
+/* ---------- restore (Why TESERACT exists): red strikes the visitor removes; once restored the line reads exactly as
+   he wrote it (the culprit word only dims, it is never struck). Without JS: plain lines. Under html.js the head row
+   is reserved (hidden) until 26-founder.js arms the box. */
+.fdr-rs{position:relative;border:1px solid var(--fdr-line);background:#050505;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%)}
+.fdr-rs::after{content:"";position:absolute;right:0;bottom:0;width:13px;height:13px;pointer-events:none;
+  background:linear-gradient(135deg,transparent calc(50% - .7px),var(--fdr-line) calc(50% - .5px),var(--fdr-line) calc(50% + .5px),transparent calc(50% + .7px))}
+.fdr-rs__head{align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--fdr-line);font-size:13px;line-height:1.3;color:var(--muted-strong)}
+.js .fdr-rs__head{display:flex;visibility:hidden}
+.fdr-rs.is-armed .fdr-rs__head{visibility:visible}
+.fdr-rs__hint{margin-right:auto;transition:opacity .3s ease}
+.fdr-rs.is-whole .fdr-rs__hint{opacity:0}          /* nothing left to restore: the 3/3 + seal say it */
+.fdr-rs__count{font-variant-numeric:tabular-nums}
+.fdr-rs__seal{display:block;width:14px;height:20px;opacity:0;transform:scale(.6) rotate(-12deg)}
+.fdr-rs__seal .seal{width:14px;height:20px}
+.fdr-rs.is-whole .fdr-rs__seal{opacity:1;transform:none;transition:transform .42s var(--spring),opacity .2s ease}
+.fdr-rs__row+.fdr-rs__row{border-top:1px solid var(--fdr-line)}
+.fdr-rs__line{display:block;min-height:96px;padding:14px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.fdr-rs__line:focus-visible{outline:2px solid var(--red);outline-offset:-4px}
+.fdr-rs__a,.fdr-rs__r{font-size:19px;line-height:1.2;letter-spacing:-.015em;color:var(--ink-2)}
+.fdr-rs__a{transition:color .38s var(--ease)}
+.fdr-rs__v{position:relative;display:block;width:max-content;max-width:100%;margin-top:4px;font-size:min(15cqi,58px);line-height:1;letter-spacing:-.045em;color:var(--ink)}
+/* strikes: a red 3px bar at a -3deg slant on the value word; drawn from the left, retracted to the right
+   (background-size on a fixed, rotated pseudo element: no jump when the anchor side changes) */
+.fdr-rs__v::after{content:"";position:absolute;left:-2%;right:-2%;top:calc(54% - 1.5px);height:3px;pointer-events:none;transform:rotate(-3deg);
+  background-image:linear-gradient(var(--red),var(--red));background-repeat:no-repeat;background-position:0 50%;background-size:0 100%}
+.js .fdr-rs__v{color:rgba(244,244,242,.5)}
+.is-struck .fdr-rs__line:not(.is-restored) .fdr-rs__v::after{background-size:100% 100%}
+.is-struck .fdr-rs__v::after{transition:background-size .45s var(--ease) calc(var(--n,0) * 300ms)}
+.fdr-rs__line.is-restored .fdr-rs__v{color:var(--ink);animation:fdr-warm .7s ease 1}
+.fdr-rs__line.is-restored .fdr-rs__v::after{background-position:100% 50%;background-size:0 100%;transition:background-size .38s var(--ease)}
+.fdr-rs__line.is-restored .fdr-rs__a{color:rgba(244,244,242,.62)}
+.is-struck .fdr-rs__line.is-touched:not(.is-restored) .fdr-rs__v::after{transition-duration:.3s;transition-delay:0ms}
+.fdr-rs__v.is-breathe{animation:fdr-breathe 1.2s ease-in-out 1}
+@keyframes fdr-warm{0%{text-shadow:0 0 0 rgba(var(--fdr-glow),0)}35%{text-shadow:0 0 .35em rgba(var(--fdr-glow),.55)}100%{text-shadow:0 0 0 rgba(var(--fdr-glow),0)}}
+@keyframes fdr-breathe{0%,100%{color:rgba(244,244,242,.5)}50%{color:rgba(244,244,242,.72)}}
+@media (hover:hover) and (pointer:fine){
+  .is-armed .fdr-rs__line{cursor:pointer}
+  .is-armed .fdr-rs__line:not(.is-restored):hover .fdr-rs__v{color:rgba(244,244,242,.8)}
+  .is-armed .fdr-rs__line:not(.is-restored):hover .fdr-rs__v::after{height:1px;top:calc(54% - .5px)}
+}
+
+/* ---------- home teaser (#founder-teaser): bar, fitted nameplate (no frame), roles, strip; quote 1 + link */
+.fdt.section{border-top:1px solid var(--line);container-type:inline-size;overflow-x:clip}
+.fdt__id{container-type:inline-size;overflow-x:clip}
+.fdt__id .fdr-name--plate{margin-top:20px}
+.fdr-name--plate .fdr-name__l1{font-size:30cqi}
+.fdr-name--plate .fdr-name__l2{font-size:12.6cqi}
+.fdt__id .fdr-roles{margin-top:16px}
+.fdt__id .fdr-strip{margin-top:24px;max-width:420px}
+.fdt__say{margin-top:32px}
+.fdt .fdr-q__t{font-size:min(8cqw,34px)}
+.fdt .fdr-q__o{width:36px;margin-bottom:12px}
+.fdt__more{margin-top:12px}
+/* the strip starts complete (no JS / reduced motion); with motion it plays once at 40 % visible, replays on tap */
+.fdr-strip--teaser .fdr-strip__fly{stroke-dashoffset:0}
+.fdr-strip--teaser .fdr-strip__sh{fill:var(--ink);stroke:var(--ink)}
+.fdr-strip--teaser .fdr-strip__sh--c{filter:drop-shadow(0 0 4px rgba(var(--fdr-glow),.9))}
+.fdr-strip--teaser .fdr-strip__x3{opacity:1}
+.motion.is-ready .fdr-strip[data-play]:not(.is-played) :is(.fdr-strip__fly,.fdr-strip__sh,.fdr-strip__x3){transition:none}
+.motion.is-ready .fdr-strip[data-play]:not(.is-played) .fdr-strip__fly{stroke-dashoffset:1}
+.motion.is-ready .fdr-strip[data-play]:not(.is-played) .fdr-strip__sh{fill:transparent;stroke:var(--fdr-lead);filter:none}
+.motion.is-ready .fdr-strip[data-play]:not(.is-played) .fdr-strip__x3{opacity:0}
+.fdr-strip.is-played .fdr-strip__fly{transition:stroke-dashoffset .6s var(--ease)}
+.fdr-strip.is-played .fdr-strip__fly--2{transition-delay:.65s}
+.fdr-strip.is-played .fdr-strip__fly--3{transition-delay:1.3s}
+.fdr-strip.is-played .fdr-strip__sh{transition:fill .3s ease,stroke .3s ease,filter .5s ease}
+.fdr-strip.is-played .fdr-strip__sh--2{transition-delay:.6s}
+.fdr-strip.is-played .fdr-strip__sh--3{transition-delay:1.25s}
+.fdr-strip.is-played .fdr-strip__sh--4{transition-delay:1.9s,1.9s,2s}
+.fdr-strip.is-played .fdr-strip__x3{transition:opacity .3s ease 1.5s}
+.fdr-strip.is-played .fdr-strip__ring{animation:ts-pulse .9s var(--ease) 2s 1}
+@media (hover:hover) and (pointer:fine){.motion .fdr-strip[data-play]{cursor:pointer}}
+@media (min-width:800px) and (max-width:1023.98px){
+  .fdt .fdr-name--plate{max-width:70%}          /* 22cqi lines fill ~67 % of the column: the fit target */
+  .fdr-name--plate .fdr-name__l1{font-size:22cqi}
+  .fdr-name--plate .fdr-name__l2{font-size:9cqi}
+  .fdt .fdr-q__t{font-size:4.4cqw}
+}
+@media (min-width:1024px){
+  .fdt__grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:48px;align-items:center}
+  .fdt__id{grid-column:1/6}
+  .fdt__say{grid-column:7/13;margin-top:0;padding-left:48px;border-left:1px solid var(--line)}
+  .fdt__id .fdr-strip{max-width:none}
+  .fdt .fdr-q__t{font-size:clamp(34px,3.4vw,52px)}
+  .fdt .fdr-q__o{width:48px}
+}
+
+/* ---------- reduced motion: only the fit scale survives; forced colours: plain system ink */
+@media (prefers-reduced-motion:reduce){
+  .fdr-l{transform:none!important;opacity:1!important}
+  .fdr-name__l1{transform:scale(var(--k1,1))!important}
+  .fdr-name__l2{transform:scale(var(--k2,1))!important;opacity:1!important}
+}
+@media (forced-colors:active){
+  .fdr-frame__light,.fdr-frame__tex{display:none}
+  .fdr-l{color:CanvasText;background:none}
+  .fdr-strip__fly,.fdr-strip__sh{stroke:CanvasText}
+  /* forced colours drop background images and force background colours: these marks opt out to stay visible
+     (the strike is the only cue of the restore state) */
+  .fdr-rs__v::after{forced-color-adjust:none;background-image:linear-gradient(CanvasText,CanvasText)}
+  .fdr-dot::before,.fdr-flap__pin,.fdr-dep__row::after{forced-color-adjust:none;background:CanvasText;box-shadow:none}
+  .fdr-q__m{fill:CanvasText}
+  .fdr-win::before,.fdr-win::after{border-color:CanvasText}
+}

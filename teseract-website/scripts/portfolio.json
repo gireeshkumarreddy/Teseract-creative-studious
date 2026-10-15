@@ -1,0 +1,653 @@
+{
+  "_note": [
+    "The studio's own portfolio (owner decisions: _ref/specs/DARK-THEME.md 'Client update 7', plan: _ref/specs/PORTFOLIO-PLAN.md).",
+    "A project is shown on the site only when scripts/media-manifest.json has its stills (run prepare_media.py, then build.py).",
+    "title: the name exactly as the site's info.txt / capture-report.json gives it; the manifest's info.txt name wins when present, unless keep_title is true: then the curated title (the site's own README / page title) wins - the owner's personal sites (gireesh-portfolio, gireesh-desk, gireesh-cinematic) are all named 'Gireesh' by their info.txt.",
+    "industry: short and factual, from the capture report's site_is ('verified': true) - unverified labels are the owner's draft and must be checked against the capture report once the site is captured.",
+    "services: default Website Design + Website Development; 'E-commerce' for the owner's shops (derlin-haus, mahira-select, siaara, vyrn: owner confirmed 14 Oct, DARK-THEME.md 'Client update 8' and its 23:20 decisions) and nowhere else (check.py) - not Sedile's demo cart either (owner default, 15 Oct).",
+    "Heeding and StepAI are excluded by the owner and must never be added. vyrn (VYRN) is a Concept Project since the owner's 14 Oct decision; its launch film also plays on the home laptop (home_laptop, home_laptop_clip).",
+    "label (owner, 14 Oct, DARK-THEME.md 'Client update 8'): shown on every Work card, project page head, home tile and service-card caption. 'Client Project' for all client work; 'Interactive Concept' (one-piece), 'Concept Project' (aaradhya, tavra, velora, saanjh, vesper, vyrn, thenga, sedile) or 'Personal project' (gireesh-portfolio, gireesh-desk, gireesh-cinematic) for the concepts group. label_note: the small secondary line under an Interactive Concept built on someone else's brand or IP ('Unofficial, not affiliated with the rights holders' / '... with the brand'). fan: true = a fan piece on film/TV/anime IP (keeps the Work page's fan-project sentence). scripts/check.py enforces the labels.",
+    "scene: device-scene backdrop (lib.SCENE_STYLES: red-horizon, blue-studio, stone-red, white-glass, grey-wall, violet-rock, violet-white, green-white, sky-white, amber-rock) or null = shown as plain images (Geetha Jewellers, owner). device: monitor | laptop. scene_still: the gallery still on the Work card's screen (default gallery-01). spill: tint of the light the screen throws on the surface. scene_confirmed: false = provisional pairing, to be chosen from the capture's colours when it arrives.",
+    "skip: roles not shown on the site - gallery stills ('gallery-NN') and the recordings ('laptop' = the device-scene clip on the project page, 'hero' = the phone clip on a home tile; without them the scene shows the Work still and the tile a still); remove an entry to show it again. skip_note says why.",
+    "home_laptop_clip: the recording the home laptop ('The Idea') plays when home_laptop lists the project, even when skip keeps it off the project page. Owner, 15 Oct: VYRN's launch film (vyrn/laptop.mp4) opens on the A-COLD-WALL hero; it stays on the home laptop (his choice) while the VYRN project page shows clean stills only (skip 'laptop').",
+    "alt: per-still alt text overrides ({\"gallery-04\": \"...\"}) for capture-report 'shows' lines that carry capture notes or private names (the capture reports themselves are read-only).",
+    "Every project the owner removed (DARK-THEME.md) is listed in projects.EXCLUDED and check.py FORBIDDEN: never add one back here, in home_gallery / home_laptop or in C:/Teseract-media/order.txt.",
+    "card_clip / tile_clip: a named loop clip of the project's media folder (prepare_media.py: <name>.mp4 + its <name>.png poster) played muted, looped and inline, only while in view (poster under reduced motion / Save-Data): card_clip = on the Work card's screen (the one card that autoplays), tile_clip = its home hero tile (instead of the hero.mp4 phone scroll). Owner, 14 Oct: Aivinci's profile = the tiger from aivinci.ai's 'AI Video Story' section (aivinci/tiger.mp4 + tiger.png); its project page keeps the laptop scene video. Owner, 14 Oct (later): the tiger must read as the website, not a zoomed video - tiger.mp4 is a 16:9 desktop view of the whole section (header, heading, panel with the tiger at its size in the page, intro line), never a crop of the video alone. The card_clip's poster (<name>.png) is the project's profile image wherever a still stands for it (owner, 15 Oct: Aivinci's Client Stories card shows the tiger poster, the same still as its Work card; alt text: alt '<name>-poster').",
+    "home_gallery: the projects of the home hero gallery's 20 tiles (sections/home_hero.COLUMNS: 4 columns x 5 slots, up to 6 clips), one tile each. With 23 shown projects (15 Oct) Careers at Aeroskys, the earlier Gireesh portfolio and Sedile (owner default, 15 Oct: keep his 20 tiles) are left out of it (all three stay on the Work page with their pages); swap names here to change the selection."
+  ],
+  "year": "2026",
+  "default_services": [
+    "Website Design",
+    "Website Development"
+  ],
+  "groups": {
+    "client": "Client Work",
+    "concept": "Concepts & Interactive"
+  },
+  "projects": [
+    {
+      "order": 1,
+      "slug": "aivinci",
+      "title": "Aivinci Creative Studio",
+      "group": "client",
+      "industry": "AI creative & technology studio",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://aivinci.ai/",
+      "label": "Client Project",
+      "scene": "red-horizon",
+      "device": "monitor",
+      "scene_confirmed": true,
+      "tagline_verbatim": "WE CREATE WHAT’S NEXT.",
+      "scene_still": "gallery-05",
+      "card_clip": "tiger",
+      "tile_clip": "tiger",
+      "spill": "rgba(255,84,72,.1)",
+      "note": "Captured 14 Oct: single-page site of an 'AI creative & technology studio' (AI filmmaking, brand films, creative technology, digital products; its own product Zynnect). Black/white with a deep-red work section: red-horizon (cinematic) instead of the provisional blue-studio; Work card screen = gallery-05 ('Ideas, Brought to Life.').",
+      "alt": {
+        "gallery-07": "Founder feature: the founder, described as \"Entrepreneur. Creator. Product Builder.\", seated at a desk in a dark studio with red accent lighting, with a signature, a quote and \"10+ years experience\".",
+        "tiger": "The website on a desktop screen at its AI Video Story section: the top bar with the Aivinci logo, the pill navigation and a \"Start a Project\" button above the section's rounded video panel, which plays its first film (01 / 04), a dark, striped tiger with glowing red eyes snarling in mist, prowling through spray, then staring into the camera, under the heading \"WE TURN AI IDEAS INTO REAL VIDEOS.\", with the section's intro line below the panel.",
+        "tiger-poster": "The website at its AI Video Story section: the top bar with the Aivinci logo, the pill navigation and a \"Start a Project\" button above the section's rounded video panel, which shows its first film (01 / 04), a dark, striped tiger with glowing red eyes in mist, under the heading \"WE TURN AI IDEAS INTO REAL VIDEOS.\", with the section's intro line below the panel."
+      }
+    },
+    {
+      "order": 2,
+      "slug": "geetha-jewellers",
+      "title": "Geetha Jewellers",
+      "group": "client",
+      "industry": "Jewellery",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://geetha-seven.vercel.app/",
+      "label": "Client Project",
+      "scene": null,
+      "device": null,
+      "scene_confirmed": true,
+      "tagline_verbatim": "More than Jewellery, It’s a part of your story",
+      "note": "One-page showcase site (collections, store visit, gold savings schemes); no online shop or cart, so no E-commerce. Owner: gold palette suits no backdrop - plain images."
+    },
+    {
+      "order": 3,
+      "slug": "derlin-haus",
+      "title": "Derlin Haus",
+      "group": "client",
+      "industry": "Menswear e-commerce",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development",
+        "E-commerce"
+      ],
+      "url": "https://derlin-haus.vercel.app/",
+      "label": "Client Project",
+      "scene": "stone-red",
+      "device": "monitor",
+      "scene_still": "gallery-04",
+      "spill": "rgba(255,255,255,.05)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "WHAT’S INSIDE MATTERS.",
+      "note": "Real shop: catalogue, product pages with size/stock, Add to cart / Buy now, bag with coupons and pincode check.",
+      "alt": {
+        "gallery-02": "Home page “THE SHIRT COLLECTION” carousel: a model in a grey-and-white striped formal shirt (piece 02 of 04) with faded garment images of the neighbouring pieces at the sides, a “VIEW PIECE” link and carousel controls."
+      }
+    },
+    {
+      "order": 21,
+      "slug": "vesper",
+      "title": "Vesper",
+      "group": "concept",
+      "industry": "Architectural lighting concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://wall-lights.vercel.app/",
+      "label": "Concept Project",
+      "scene": "grey-wall",
+      "device": "laptop",
+      "scene_still": "gallery-02",
+      "spill": "rgba(255,190,120,.12)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Objects of light for quiet architecture — calm by day, generous after dark.",
+      "note": "Owner wants the light switch ON/OFF interaction shown: gallery-01 (day) and gallery-02 (night, also the Work card's screen) + the day/night section. Footer: 'Prototype storefront - no real orders are processed', so no E-commerce. Owner, 14 Oct: no client behind it -> moved to Concepts & Interactive as a Concept Project (and out of the client reviews). 14 Oct: laptop.mp4 is now the day->night light-switch clip (lamps light up); the old day scroll is gallery-12.mp4."
+    },
+    {
+      "order": 5,
+      "slug": "aeroskys",
+      "title": "AeroSkys",
+      "group": "client",
+      "industry": "Travel booking",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://aeroskys.vercel.app/",
+      "label": "Client Project",
+      "scene": "blue-studio",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(220,238,250,.08)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Book your trip in a few clicks.",
+      "note": "Bookings are simulated (footer: 'Working prototype'), so no E-commerce.",
+      "skip": [
+        "gallery-07"
+      ],
+      "skip_note": "Same rule as Mahira Select: 07 hotel page shows '4.5 Exceptional · 2,353 verified reviews' on a working prototype with simulated bookings."
+    },
+    {
+      "order": 6,
+      "slug": "mahira-select",
+      "title": "Mahira Select",
+      "group": "client",
+      "industry": "Indian ethnic womenswear",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development",
+        "E-commerce"
+      ],
+      "url": "https://mahira2.netlify.app/",
+      "label": "Client Project",
+      "scene": "white-glass",
+      "device": "monitor",
+      "scene_confirmed": true,
+      "tagline_verbatim": "More Than Fashion",
+      "scene_still": "gallery-01",
+      "spill": "rgba(255,244,222,.1)",
+      "note": "Captured 14 Oct: online store for Indian ethnic womenswear with a localStorage cart and a 4-step checkout; E-commerce confirmed by the owner (14 Oct); its footer links a prototype walkthrough ('Load a demo cart & order'). Deep green / ivory palette: white-glass (owner plan: light fashion/heritage).",
+      "skip": [
+        "gallery-02",
+        "gallery-05",
+        "gallery-06",
+        "gallery-07",
+        "gallery-08",
+        "laptop",
+        "hero"
+      ],
+      "skip_note": "Hidden by the studio owner's rule: no stills showing the site's AI-artefact catalogue photos (02 New Collections arches, 05 Best Sellers card 04, 06 Sarees listing) or its hard-coded review counts (07 product page, 08 Added-to-Cart sheet over the product page with '(98 reviews)'). The laptop and hero recordings scroll through the same New Collections arches / Best Sellers mosaic, so the scene shows gallery-01 and the home tile a still."
+    },
+    {
+      "order": 7,
+      "slug": "siaara",
+      "title": "SIAARA By S&A",
+      "group": "client",
+      "industry": "Handcrafted sarees",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development",
+        "E-commerce"
+      ],
+      "url": "https://gleeful-belekoy-e52bbe.netlify.app/",
+      "label": "Client Project",
+      "scene": "white-glass",
+      "device": "laptop",
+      "scene_confirmed": true,
+      "tagline_verbatim": "SAREES WOVEN WITH CULTURE",
+      "scene_still": "gallery-02",
+      "spill": "rgba(255,236,226,.1)",
+      "note": "Captured 14 Oct: online saree boutique in Jubilee Hills, Hyderabad (25 sarees at indicative prices, wishlist, local bag, login-gated checkout, delivery within Hyderabad). E-commerce confirmed by the owner (14 Oct). Maroon / cream palette: white-glass (warm cream studio), Work card screen = gallery-02.",
+      "alt": {
+        "gallery-04": "Home page 'Shop by Color' section: rounded capsule cards for Red, Green, Yellow, Blue, Pink, Purple and Neutrals, each showing a model in a silk saree in that colour."
+      }
+    },
+    {
+      "order": 8,
+      "slug": "san-media",
+      "title": "SAN Media Solution",
+      "group": "client",
+      "industry": "Digital marketing agency",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://www.sanmediasolutions.com/",
+      "label": "Client Project",
+      "scene": "green-white",
+      "device": "laptop",
+      "scene_confirmed": true,
+      "tagline_verbatim": "BRANDS TODAY. BIGGER TOMORROWS.",
+      "scene_still": "gallery-01",
+      "spill": "rgba(150,255,120,.08)",
+      "note": "Captured 14 Oct: digital marketing agency in Coimbatore (\"AI Snake Marketing Agency\"). Team photo on its own site.",
+      "alt": {
+        "gallery-02": "Founder section: portrait of the founder in a leather armchair with a quote and signature, above 'The Group' strip with four company cards (SAN Media Solution, SAN Music Academy, SAN Construction & Interiors, GWS Snake Marketing).",
+        "gallery-08": "Our Work page, work type 01 'MODEL SHOOT': four vertical fashion reels made for the brand Shukala, with durations and Instagram links."
+      }
+    },
+    {
+      "order": 9,
+      "slug": "vynk",
+      "title": "Vynk Network",
+      "group": "client",
+      "industry": "Travel eSIM",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://vynk-zeta.vercel.app/",
+      "label": "Client Project",
+      "scene": "blue-studio",
+      "device": "monitor",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Global data. No roaming. Total freedom.",
+      "scene_still": "gallery-02",
+      "spill": "rgba(214,236,252,.08)",
+      "note": "Captured 14 Oct: travel eSIM store (190+ destinations, plans in USD, QR-code eSIM after sign-in). The login page says it is a preview build in which accounts, codes and payments are simulated, so no E-commerce. Work card screen: gallery-02 (blue sky, eSIM phone) for the blue studio."
+    },
+    {
+      "order": 10,
+      "slug": "livecv",
+      "title": "LiveCV",
+      "group": "client",
+      "industry": "Resume & career platform",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/Livecv/",
+      "label": "Client Project",
+      "scene": "violet-white",
+      "device": "monitor",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Your career is bigger than a resume.",
+      "scene_still": "gallery-01",
+      "spill": "rgba(120,150,255,.1)",
+      "note": "Captured 14 Oct: product site for LiveCV, a resume builder that turns a resume into one permanent live link (GID, with tailored CVID links). Owner, 14 Oct: LiveCV is a CLIENT project (moved from the concepts group); example profiles are labelled illustrative by the site.",
+      "alt": {
+        "gallery-03": "Home page launch-video section: the page background has turned blue and the video frame has expanded almost to full width. The site's own video shows 'A resume is a snapshot.' with stacked PDF resumes stamped 'OUTDATED'."
+      }
+    },
+    {
+      "order": 11,
+      "slug": "hidden-stories",
+      "title": "Hidden Stories",
+      "group": "client",
+      "industry": "Short-stay homes, Hyderabad",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/hidden/",
+      "label": "Client Project",
+      "scene": "grey-wall",
+      "device": "monitor",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Your stay. Your story.",
+      "scene_still": "gallery-02",
+      "spill": "rgba(255,230,210,.1)",
+      "note": "Captured 14 Oct: eight short-stay homes in Hyderabad with a booking platform (demo sign-in). Guest names/reviews kept out of all stills. Tagline as the site's footer gives it ('Your stay. Your story.'; the capture report's tagline_verbatim is the hero dome heading, so the curated value wins).",
+      "skip": [
+        "gallery-06",
+        "gallery-07",
+        "gallery-10"
+      ],
+      "skip_note": "Same rule as Mahira Select (hard-coded review counts): the capture report says ratings and review counts are hard-coded in the site's data files (demo platform) - 06 results grid ('4.9 · 86 reviews' on every card), 07 and 10 The Amara Villa page ('4.9 · 86 reviews'). Owner can show them again once the counts are real."
+    },
+    {
+      "order": 12,
+      "slug": "aeroskys-careers",
+      "title": "Careers at Aeroskys",
+      "group": "client",
+      "industry": "Careers portal",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://aeroskys-careers.vercel.app/",
+      "label": "Client Project",
+      "scene": "sky-white",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Go further. Grow further."
+    },
+    {
+      "order": 15,
+      "slug": "one-piece",
+      "title": "ONE PIECE | Luffy",
+      "group": "concept",
+      "industry": "Cinematic fan tribute",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/one-piece-/",
+      "label": "Interactive Concept",
+      "label_note": "Unofficial, not affiliated with the rights holders",
+      "fan": true,
+      "scene": "stone-red",
+      "device": "monitor",
+      "scene_confirmed": true,
+      "tagline_verbatim": "More than a hat. A promise.",
+      "scene_still": "gallery-01",
+      "spill": "rgba(255,60,50,.12)",
+      "note": "Captured 14 Oct: unofficial single-page fan tribute to Monkey D. Luffy (footer credits Eiichiro Oda / Shueisha, Toei Animation)."
+    },
+    {
+      "order": 16,
+      "slug": "aaradhya",
+      "title": "AARADHYA",
+      "group": "concept",
+      "industry": "Saree house concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": null,
+      "label": "Concept Project",
+      "scene": "red-horizon",
+      "device": "laptop",
+      "scene_still": "gallery-08",
+      "spill": "rgba(255,84,72,.12)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Maa Durga.",
+      "note": "Owner screen recording ('durga saree.mp4'); the site calls itself 'A fashion editorial concept'."
+    },
+    {
+      "order": 17,
+      "slug": "tavra",
+      "title": "TĀVRA",
+      "group": "concept",
+      "industry": "Sportswear concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": null,
+      "label": "Concept Project",
+      "scene": "white-glass",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(255,248,236,.1)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Women's sportswear drawn from India's textile art.",
+      "note": "Owner screen recording ('Tavra.mp4'). Concept store: checkout, payment and stock not connected, so no E-commerce. Owner, 15 Oct: the Digital Strategy card shows gallery-06 ('The Store', cursor-free) instead of gallery-05 (the site's ring cursor); focal 4% keeps its 'THE STORE' heading whole in the card crops.",
+      "focal": {
+        "gallery-06": "4% 50%"
+      }
+    },
+    {
+      "order": 18,
+      "slug": "velora",
+      "title": "VELORA",
+      "group": "concept",
+      "industry": "Fragrance concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": null,
+      "label": "Concept Project",
+      "scene": "grey-wall",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "spill": "rgba(255,190,120,.14)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "The essence of subtle romance",
+      "note": "Owner screen recording ('Perfume.mp4'). info.txt name VELORA; the capture report names it VELORA PARIS. Online ordering not open, so no E-commerce."
+    },
+    {
+      "order": 19,
+      "slug": "saanjh",
+      "title": "SAANJH",
+      "group": "concept",
+      "industry": "Beverage concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": null,
+      "label": "Concept Project",
+      "scene": "violet-white",
+      "device": "laptop",
+      "scene_still": "gallery-04",
+      "spill": "rgba(255,196,214,.12)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Good things. Slowly savoured.",
+      "note": "Owner screen recording ('saanjh.mp4')."
+    },
+    {
+      "order": 24,
+      "slug": "gireesh-portfolio",
+      "title": "Gireesh",
+      "group": "concept",
+      "industry": "Designer portfolio",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshuiux.vercel.app/",
+      "label": "Personal project",
+      "scene": "amber-rock",
+      "device": "monitor",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Thoughtful design. Lasting impact.",
+      "note": "Captured 14 Oct: the studio owner's own one-page personal site (UX/UI Product Designer, France). Dark black/orange site: violet-rock (dark rock, violet family) chosen from the capture's colours instead of the provisional bright violet-white studio."
+    },
+    {
+      "order": 20,
+      "slug": "vyrn",
+      "title": "VYRN",
+      "group": "concept",
+      "industry": "Fashion e-commerce concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development",
+        "E-commerce"
+      ],
+      "url": null,
+      "label": "Concept Project",
+      "scene": "white-glass",
+      "device": "monitor",
+      "scene_still": "gallery-03",
+      "spill": "rgba(255,255,255,.07)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Modern essentials. Independent expression.",
+      "home_laptop_clip": "laptop",
+      "note": "Captured 15 Oct from a local run of the owner's repo VYRN (not hosted, so no url): an editorial fashion storefront ('Editorial fashion storefront', README) with a collection, product pages with sizes, a bag and a checkout (payments switched off: 'a private preview of the VYRN storefront'). Owner, 14 Oct: a full portfolio project, Concept Project, E-commerce. Monochrome editorial palette (off-white, grey, black): white-glass, the light studio. Work card / scene screen = gallery-03 ('VYRN STUDIO').",
+      "skip": [
+        "gallery-01",
+        "gallery-02",
+        "gallery-05",
+        "gallery-06",
+        "gallery-09",
+        "hero",
+        "laptop"
+      ],
+      "skip_note": "Owner, 15 Oct: no screen showing the A-COLD-WALL hero (a real fashion label's name and layout: gallery-01, gallery-09, the phone scroll 'hero', which starts on it, and the laptop film, which opens on it) or the Nike swoosh (gallery-02, the Casual look's socks). Owner answers, 15 Oct ~13:30: the model images may be shown, but the two sneaker screens with the faint same-colour swoosh on the Air Force 1-style sneakers are dropped too (gallery-05: Knitwear, Bomber; gallery-06: product cards 02, 06). The kept stills (03, 04, 07, 08, 10) were checked against the capture report and at full size: no A-COLD-WALL or ACW label and no Nike logo. The home laptop still plays the film (home_laptop_clip, the owner's choice); check.py OWNER_SKIPS enforces this list.",
+      "alt": {
+        "gallery-03": "'VYRN STUDIO' in giant letters under the header pill, over 'A SPACE FOR MODERN ESSENTIALS'. Below are the 'Index 1/2' text ('Our collections are studies in form and contrast. Functional design, considered volumes. Designed for real life, shaped by the streets.') with 'Explore collection', an overhead portrait of a model in black outerwear and sunglasses, and 'ABOUT VYRN — A space for discovery, reference and visual direction. Modern essentials, seen through an independent lens.' with 'Meet the studio'. At the bottom the black 'Our approach' section begins.",
+        "gallery-08": "Bag drawer after adding one 'Hoodie in the night' (Black / M, €240) on its product page. The drawer reads 'Your bag (1) — Considered pieces. Collected by you.' and shows a quantity stepper, a delete button, subtotal €240, 'Shipping calculated at checkout.', 'CONTINUE TO CHECKOUT' and 'Private collection preview · illustrative prices'. An 'Added to your bag' toast sits over the dimmed product page, where size M is selected."
+      }
+    },
+    {
+      "order": 22,
+      "slug": "thenga",
+      "title": "THENGA",
+      "group": "concept",
+      "industry": "Beverage brand concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": null,
+      "label": "Concept Project",
+      "scene": "white-glass",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(214,240,200,.1)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "A taste of Kerala in every sip.",
+      "note": "Captured 15 Oct from a local build of the owner's repo thenga (not hosted, so no url): a one-page brand concept for a coconut-water drink ('a premium coconut-water concept rooted in the tropical beauty of Kerala'; its notes: 'The site explores flavours and does not pretend to take orders', so no E-commerce). The credited Kerala photographs (Unsplash / CC BY-SA, incl. a real Kathakali performer) sit in sections no still or recording shows (checked at full size); the can's Kathakali-and-palms face is the site's own generated artwork (IMAGE-CREDITS.md). White page, deep-green type and coconut: white-glass, Work card screen = gallery-01 (hero).",
+      "alt": {
+        "laptop": "Desktop scroll through the whole 3D story: the 'PARADISE IN EVERY SIP.' hero, then the photo coconut hands over to the 3D coconut, which cracks open ('THE REAL SOURCE OF EVERY SIP.'), shows its flesh with the NATURAL GOODNESS / REFRESHING BY NATURE badges ('JUST COCONUT. JUST BEAUTIFUL.'), closes and turns ('ROOTED IN KERALA.' with the Kathakali-and-palms artwork), splits as the can grows between the halves ('COCONUT. REIMAGINED.'), turns the can through its side and back panels, and ends on the front-facing can in front of 'KEEP SIPPING.'",
+        "gallery-07": "The green collection section: 'THE THENGA COLLECTION', 'FIND YOUR KIND OF TROPICAL.', 'Five ways to take a little Kerala with you. Which one feels like your kind of day?' with previous / next arrows and the cards Coconut Lime ('A bright little tropical twist.', 03 / 05), Coconut Mango ('Golden days, bottled.', 04 / 05) and Coconut Pineapple ('Your out-of-office feeling.', 05 / 05), each can on a coloured disc; 'GOOD THINGS COME IN COCONUTS.' and 'DRAG OR EXPLORE THE COLLECTION' along the bottom."
+      }
+    },
+    {
+      "order": 23,
+      "slug": "sedile",
+      "title": "Sedile",
+      "group": "concept",
+      "industry": "3D chair showroom concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/Sedile/",
+      "label": "Concept Project",
+      "scene": "white-glass",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "spill": "rgba(255,240,230,.08)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "Explore our collection and find the chair that fits your work style.",
+      "note": "Captured 14-15 Oct from the live GitHub Pages site (repo gireeshkumarreddy/Sedile, React + three.js): a concept online showroom and demo store for office chairs under the invented brand 'sedile.' (page description: 'a calm digital showroom for office chairs. Explore in 3D and find the chair that fits your work style.'; README: 'A white, editorial furniture showroom where every chair is a real, slowly rotating 3D object'), all 16 chairs modelled in code, with a four-question Chair Finder, a filterable catalogue, product pages with a 3D viewer, a cart drawer, a wishlist and a demo checkout; the footer says 'Demo storefront — no real orders are processed.' Its designers and brand facts are the site's own fiction (README). Owner, 15 Oct: added as a Concept Project; owner defaults until he answers: industry = what the site is, not E-commerce (E-commerce stays derlin-haus, mahira-select, siaara, vyrn), not in home_gallery (his 20 tiles). White page, black type, colourful chairs: white-glass + monitor proposed (scene_confirmed false until the owner has seen it); Work card screen = gallery-01 (the hero ring of chairs).",
+      "skip": [
+        "gallery-03",
+        "gallery-04"
+      ],
+      "skip_note": "Owner default, 15 Oct (clean screens only, as with VYRN): gallery-03 (Chair Finder results) and gallery-04 (products grid) show the site's own kinked, torn-looking backrest frames on the mesh-back chairs (Linea Mesh, Kinto Mesh; capture report). Remove an entry to show it again.",
+      "alt": {
+        "gallery-01": "Home page first screen: twelve real-time 3D office chairs (task and executive chairs, a stool, side and lounge chairs in orange, coral, red, sage, yellow, black, mint, light blue and beige) float tilted in a ring around the centred headline 'Welcome to the Office Chair Finder', with the eyebrow 'DESIGN YOUR SPACE', the line 'Explore our collection and find the chair that fits your work style.', a black 'Start →' button and the hint 'Drag any chair to turn it'. Header: the 'sedile.' wordmark, Products, Collections, Designers, About, and search, wishlist, cart and menu icons.",
+        "gallery-06": "Collections page: the header with the 'sedile.' wordmark, Products, Collections (underlined as the current page), Designers and About, plus search, wishlist, cart and menu icons, then the breadcrumb Home / Collections, the large heading 'Collections' and the line 'Six ways into the showroom — by how you sit, and by the spaces you design.' Under a hairline is the first collection row: on the left the Tessera task chair in real-time 3D, in lake blue with a quilted back, black armrests and a polished five-star base on casters, over its soft floor shadow; on the right 'COLLECTION 01 · 6 CHAIRS', 'Task Chairs', 'Precise, adjustable and quietly beautiful. Task chairs designed for long, focused days at the desk.' and 'Explore the collection →'.",
+        "gallery-08": "Home page first screen on a phone: six floating 3D chairs, three at the top and three at the bottom edge, frame 'DESIGN YOUR SPACE', 'Welcome to the Office Chair Finder', 'Explore our collection and find the chair that fits your work style.' and the 'Start →' button, under a compact header (sedile. wordmark, search, cart, menu).",
+        "laptop": "Desktop scroll down the home page: it holds on the hero, where twelve 3D chairs turn slowly around 'Welcome to the Office Chair Finder', then 'CHAIR FINDER — Find the chair that’s right for you' follows with its showroom floor of 16 chairs and the first question card ('What will you use your chair for?', Task / Executive / Meeting / Lounge, SEE RESULTS (16)), then the 'SHOP BY CATEGORY — Every kind of sitting' row (Task Chairs 6, Executive Chairs 2, Conference Chairs 4, Lounge Chairs 2, Stools 2). It ends on 'FEATURED · TASK CHAIR — Tessera': the large blue quilted task chair, 'Mara Lindqvist, 2019 / 2024', its description, four feature bullets, 'Discover Tessera →' and € 1,150."
+      }
+    },
+    {
+      "order": 25,
+      "slug": "gireesh-desk",
+      "title": "Gireesh — a designer's working desk",
+      "keep_title": true,
+      "group": "concept",
+      "industry": "UI/UX portfolio",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": null,
+      "label": "Personal project",
+      "scene": "grey-wall",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(206,236,214,.08)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "I turn “what if” into things people love to use.",
+      "note": "Captured 15 Oct from a local copy of the owner's repo greenportfolio (README title 'Gireesh — a designer's working desk'; not hosted, so no url): a six-page personal UI/UX portfolio 'inspired by a green cutting mat and tactile studio stationery'. Deep-green / cream palette on a desk: grey-wall (the desk scene). Its case studies and about copy are illustrative portfolio copy (README) and its contact email a placeholder - kept out of all media.",
+      "alt": {
+        "laptop": "Desktop scroll from the hero into '01 / THE GOOD STUFF', where the heading rises in and the FORME, SONAR and Daylight cards fly in tilted from the sides and the 'Made with intent.' sticker fades in, past 'STRATEGY MEETS INSTINCT. PIXELS MEET PURPOSE.' into the pinned process scene: sheet 01 'Ask better questions.' sweeps in from the left with the scissors, sheet 02 'Think with your hands.' from the right with the pencil, and sheet 03 'The magic is in the details.' rises from below. It ends on sheet 03 ('03 / 03', 'Make every detail count.').",
+        "gallery-04": "About section: a taped cream note 'HELLO AGAIN, I’M GIREESH. – Curiosity is my favourite design tool.' with two short bio paragraphs, 'A little more about me' and a 'Gireesh' signature, next to the pink tabbed dossier (Experience / My approach / Toolkit) open at the Toolkit tab: 'A FEW THINGS IN MY TOOLBOX – Whatever the idea needs.', with chips such as Prototyping, Design systems, User research, Interaction design, Art direction and Motion, 'Tools change. Curiosity stays.' and 'G / PERSONAL FILE – HANDLE WITH CURIOSITY'; below, the 'GOOD QUESTIONS ✳ CLEAR THINKING ✳ PLAYFUL DETAILS ✳ HUMAN EXPERIENCES ✳' marquee.",
+        "gallery-05": "'05 / SERIOUS ABOUT PLAY – No brief. Just a little curiosity.' ('A few small experiments. Go on, give them a try.') with both experiments: EXPERIMENT 001 TYPE + MOTION, whose 'MAKE IT!' letters are tilted, shifted and recoloured by 'Remix the type' ('Same letters. A different feeling.'), and EXPERIMENT 002 COLOR + FEELING, whose 'Good energy. A LITTLE CONTRAST GOES A LONG WAY.' poster is in the cobalt-and-lime palette with the blue swatch selected ('Pick a color. Change the mood.').",
+        "gallery-06": "Work archive page: header, 'THE SELECTED WORK / 2025—2026', 'A few good what ifs.', 'A collection of independent concepts exploring commerce, digital products, and the little interactions that make an experience memorable.', a pink folder cutout, the filter chips All projects / Web experiences (selected) / Digital products / Motion, and the tops of the FORME and SONAR cards."
+      }
+    },
+    {
+      "order": 26,
+      "slug": "gireesh-cinematic",
+      "title": "GIREESH — Artist · Creative · Storyteller",
+      "keep_title": true,
+      "group": "concept",
+      "industry": "Cinematic portfolio",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": null,
+      "label": "Personal project",
+      "scene": "red-horizon",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "spill": "rgba(255,60,50,.12)",
+      "scene_confirmed": true,
+      "tagline_verbatim": "Welcome to my world",
+      "note": "Captured 15 Oct from a local copy of the owner's repo cinematic-portofilo (page title 'GIREESH — Artist · Creative · Storyteller'; not hosted, so no url): a one-page cinematic WebGL / video portfolio - the owner walking out of the dark in front of a red GIREESH wordmark, a film scene, a time machine, floating project screens and a closing shot. Black / deep red palette: red-horizon, Work card screen = gallery-01 (the settled hero).",
+      "skip": [
+        "gallery-03",
+        "gallery-10",
+        "laptop"
+      ],
+      "skip_note": "No third-party logos: gallery-03 and the laptop recording (about 6.5-10.3 s) show the Scene 02 film's floating tool logos (Figma, Adobe apps, Notion, Claude, ChatGPT, Midjourney, Framer, Spline, Webflow), so the scene shows gallery-01 and the gallery leaves 03 out. Owner answers, 15 Oct ~13:30: gallery-10, the phone copy of the closing shot (gallery-07 on desktop), is dropped too, so the page keeps one band of two phones (08, 09). check.py OWNER_SKIPS enforces this list.",
+      "alt": {
+        "gallery-02": "The opening sequence: on a black stage the owner walks forward with a cigarette at his lips while the GIREESH wordmark materialises behind him from the centre outwards (the middle letters already red, the outer G, I and H still dark), with '••• WELCOME TO MY WORLD •••' above; the header, chips and arrows have not arrived yet.",
+        "gallery-05": "The time machine with 2024 chosen: the clock hand has swung to the glowing 2024 node, and the 2024 'Growth' card ('Real projects / Real people / Real learning') is lifted and outlined while the other cards stay dim.",
+        "gallery-06": "The 'Projects' scene: twelve glowing project screens float in an arc around a figure standing in a lit floor circle: Build Without Limits (top centre), Timeless Experiences, Driven by Better Design, More Than A Game, Play Create Repeat, Your Ideas In Motion, Sound & Second Motion, Good Food Brighter Moods, Travel Explore Belong, Find Your Space, Designing A Cleaner Tomorrow and Small Steps Big Change, with the corner captions 'PROJECTS', 'Ideas / Interfaces / Experiences / Real Impact', 'Scroll / Explore / Interact', 'Real Projects Real Stories' and 'Designing A Brighter Tomorrow'.",
+        "gallery-09": "The 'Projects' scene on a phone, recomposed as a vertical stack of seven project screens around the figure in the floor circle: Build Without Limits at the top, then Timeless Experiences, Driven by Better Design, Good Food Brighter Moods, Travel Explore Belong, Designing A Cleaner Tomorrow and Small Steps Big Change, with the corner captions."
+      }
+    }
+  ],
+  "home_gallery": [
+    "aivinci",
+    "geetha-jewellers",
+    "derlin-haus",
+    "aeroskys",
+    "mahira-select",
+    "siaara",
+    "san-media",
+    "vynk",
+    "livecv",
+    "hidden-stories",
+    "one-piece",
+    "vyrn",
+    "aaradhya",
+    "tavra",
+    "thenga",
+    "velora",
+    "saanjh",
+    "gireesh-cinematic",
+    "vesper",
+    "gireesh-desk"
+  ],
+  "home_laptop": [
+    "vyrn"
+  ]
+}

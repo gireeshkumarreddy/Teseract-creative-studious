@@ -1,0 +1,11 @@
+{
+  "name": "teseract-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TESERACT Creative Studios website — static build (Python standard library) with vanilla CSS/JS.",
+  "scripts": {
+    "build": "python scripts/build.py",
+    "check": "node --check dist/app.js && python scripts/check.py",
+    "serve": "python -m http.server 4173 --directory dist"
+  }
+}

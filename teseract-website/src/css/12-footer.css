@@ -1,0 +1,239 @@
+/* ==========================================================================
+   Global footer — reference `#footer` (ref-plans-faq-footer §3) + final link bar (§3.6).
+   .ft        black 100vh panel: sheet + streaks, rotating ring, progressive blur, CTA text
+   .ft--compact  short dark band used when the big CTA is switched off (contact / 404)
+   .ft-bar    dark link bar on the page background (hairline divider, muted small type)
+   Black theme: the panel stays true black with its light streaks; because the page is black too,
+   its 120 / 80 / 62px top radius is drawn by a hairline top arc (fading down the sides) plus a
+   faint rim light at the top centre, so the FAQ -> footer "stacked sheets" seam still reads.
+   Phones (and phones held sideways) keep the ring at phone scale: only its upper arc shows, above the
+   CTA text, and the panel is as tall as its content.
+   ========================================================================== */
+.site-footer{position:relative;z-index:1}
+
+/* ---------- Panel box */
+.ft{--ft-r:120px;--ft-arc:rgba(255,255,255,.12);position:relative;height:100vh;min-height:640px;overflow:hidden;color:var(--ink);isolation:isolate}
+.ft__bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+/* hairline top arc: follows the rounded top edge, fades out down the straight sides */
+.ft__bg::after{content:"";position:absolute;inset:0;z-index:3;border:1px solid var(--ft-arc);border-bottom:0;border-radius:var(--ft-r) var(--ft-r) 0 0;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 calc(var(--ft-r) * .75),transparent calc(var(--ft-r) * 2));
+          mask-image:linear-gradient(180deg,#000 0,#000 calc(var(--ft-r) * .75),transparent calc(var(--ft-r) * 2))}
+/* rim light: a brighter 1px catch-light on the top centre + a soft glow falling from it */
+.ft__bg::before{content:"";position:absolute;z-index:3;top:0;left:50%;width:min(880px,72%);height:220px;transform:translateX(-50%);pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.34) 50%,rgba(255,255,255,0) 100%) top center/100% 1px no-repeat,
+             radial-gradient(50% 100% at 50% 0%,rgba(255,255,255,.055) 0%,rgba(255,255,255,0) 100%)}
+.ft__black{position:absolute;inset:0;background:#000;border-radius:var(--ft-r) var(--ft-r) 0 0}
+.ft__sheet{position:absolute;top:0;left:0;right:0;height:100%;overflow:hidden;border-radius:var(--ft-r) var(--ft-r) 0 0;
+  background:radial-gradient(100% 100% at 0% 0%,#2e2e2e 0%,#161616 100%);
+  -webkit-mask-image:radial-gradient(125% 100% at 0 0,#000 0%,rgba(0,0,0,.22) 88.29%,transparent 100%);
+          mask-image:radial-gradient(125% 100% at 0 0,#000 0%,rgba(0,0,0,.22) 88.29%,transparent 100%)}
+/* five diagonal light streaks (skewX 45deg, 5% white, broken into bands by a horizontal mask) */
+.ft__streak{position:absolute;top:-209px;height:1269px;max-width:960px;opacity:.05;transform:skewX(45deg);
+  background:linear-gradient(#fff 0%,#fff var(--fill,83.93%),transparent 100%);
+  -webkit-mask-image:var(--mask);mask-image:var(--mask)}
+
+/* ---------- Rotating ring ("Circle Wrap" 1276px; 12 arms x 2 cards, 15deg apart, radius 583) */
+.ft__ring-wrap{position:absolute;z-index:1;top:calc(20vh + 10px);left:50%;width:1276px;height:1276px;margin-left:-638px}
+.ft__ring{position:absolute;inset:0;transform-origin:50% 50%}
+.motion .ft__ring{animation:ft-spin 50s linear infinite;animation-play-state:paused;will-change:transform}
+.motion .ft.is-live .ft__ring{animation-play-state:running}
+@keyframes ft-spin{to{transform:rotate(360deg)}}
+.ft__arm{position:absolute;top:0;left:50%;width:110px;height:100%;margin-left:-55px;display:flex;flex-direction:column;
+  justify-content:space-between;align-items:center;transform:rotate(var(--a))}
+.ft__card{position:relative;display:block;width:110px;height:110px;flex:none;border-radius:22px;overflow:hidden;background:#151515}
+.ft__card:last-child{transform:rotate(180deg)}
+.ft__card img{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease}
+/* cards 13-24: on upright phones a <source> shows the image of the card opposite (chrome_footer.py TWIN_MEDIA), with
+   that image's focal point */
+.ft__card picture{display:contents}
+.ft__card picture img{object-position:var(--fp)}
+@media (max-width:599.98px){.ft__card picture img{object-position:var(--fp-ph)}}
+/* JS marks the ring (data-fade) and each card once its image has loaded, so a late image fades in
+   instead of popping into an empty tile mid-rotation */
+.ft__ring[data-fade] .ft__card:not(.is-loaded) img{opacity:0}
+.ft__card::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(0deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.04) 100%)}
+
+/* Progressive blur (8 stacked backdrop blurs, 12.5% bands) + bottom fade */
+.ft__blur{position:absolute;z-index:1;left:0;right:0;bottom:0;height:58%}
+.ft__blur i{position:absolute;inset:0}
+.ft__blur i:nth-child(1){-webkit-backdrop-filter:blur(.125px);backdrop-filter:blur(.125px);--m:linear-gradient(to bottom,transparent 0%,#000 12.5%,#000 25%,transparent 37.5%)}
+.ft__blur i:nth-child(2){-webkit-backdrop-filter:blur(.25px);backdrop-filter:blur(.25px);--m:linear-gradient(to bottom,transparent 12.5%,#000 25%,#000 37.5%,transparent 50%)}
+.ft__blur i:nth-child(3){-webkit-backdrop-filter:blur(.5px);backdrop-filter:blur(.5px);--m:linear-gradient(to bottom,transparent 25%,#000 37.5%,#000 50%,transparent 62.5%)}
+.ft__blur i:nth-child(4){-webkit-backdrop-filter:blur(1px);backdrop-filter:blur(1px);--m:linear-gradient(to bottom,transparent 37.5%,#000 50%,#000 62.5%,transparent 75%)}
+.ft__blur i:nth-child(5){-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);--m:linear-gradient(to bottom,transparent 50%,#000 62.5%,#000 75%,transparent 87.5%)}
+.ft__blur i:nth-child(6){-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);--m:linear-gradient(to bottom,transparent 62.5%,#000 75%,#000 87.5%,transparent 100%)}
+.ft__blur i:nth-child(7){-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);--m:linear-gradient(to bottom,transparent 75%,#000 87.5%,#000 100%)}
+.ft__blur i:nth-child(8){-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);--m:linear-gradient(to bottom,transparent 87.5%,#000 100%)}
+.ft__blur i{-webkit-mask-image:var(--m);mask-image:var(--m)}
+.ft__fade{position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 77%,var(--bg) 100%)}  /* ends in the link bar's black */
+
+/* ---------- CTA text + button ("Text + Button" 70.25vh, bottom-anchored) */
+.ft__content{position:absolute;z-index:3;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.ft__group{width:100%;height:70.25vh;min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding:0 20px}
+.ft__text{width:500px;max-width:100%;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center}
+.ft__clock{font-size:18px;font-weight:500;line-height:1;letter-spacing:-.01em;color:var(--muted-strong);
+  font-feature-settings:'tnum';font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+.ft__time{font:inherit}
+.no-js .ft__clock{visibility:hidden}
+.ft__title{font-size:40px;font-weight:600;line-height:1.3;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.ft__sub{max-width:421px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--muted-strong);text-wrap:balance}
+.ft__sub-2{color:var(--ink)}
+
+/* White "Start a Project" button (reference White variant; the high-emphasis button of the black
+   theme) + avatar group that opens to [mark] + You. Grey drop shadows vanish on black, so the button
+   lifts with a hairline ring and a soft white glow that grows on hover. */
+.ft .ft__btn{height:56px;padding:12px 20px 12px 12px;gap:8px;border-radius:16px;color:#0b0b0b;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 12px 32px -12px rgba(255,255,255,.22)}
+.ft .ft__btn:hover,.ft .ft__btn:focus-visible{background:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.16),0 16px 44px -12px rgba(255,255,255,.34)}
+.ft .ft__btn::after{border:1px solid rgba(0,0,0,.08)}
+.ft .ft__btn::before{display:none}  /* reference White variant: hover only opens the avatar group */
+.ft .ft__btn:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:16px}
+.ft .ft__btn .btn__lead{position:relative;width:28px;height:28px;transition:width .5s var(--spring-soft)}
+.ft .ft__btn:hover .btn__lead,.ft .ft__btn:focus-visible .btn__lead{width:75px}
+.ft-av__mark{position:absolute;z-index:2;left:0;top:0;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(100% 100% at 0% 0%,#3a3a3a 0%,#050505 100%);box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.ft .ft__btn .ft-av__mark img{width:20px;height:20px;border-radius:0;object-fit:contain}
+.ft-av__you{position:absolute;right:0;top:0;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;
+  background:rgba(0,0,0,.07);font-size:10px;font-weight:500;letter-spacing:0;line-height:1;color:rgba(0,0,0,.66)}  /* 4.5:1+ on the white button */
+.ft-av__plus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:400;line-height:1;color:rgba(0,0,0,.6);
+  transition:left .5s var(--spring-soft)}
+.ft .ft__btn:hover .ft-av__plus,.ft .ft__btn:focus-visible .ft-av__plus{left:51%}
+
+/* ---------- Compact band (cta=False) */
+.ft--compact{height:auto;min-height:0}
+.ft__compact{position:relative;z-index:3;display:flex;flex-direction:column;gap:clamp(28px,4vw,56px);padding-top:clamp(72px,8vw,120px);padding-bottom:clamp(40px,5vw,72px)}
+.ft__compact-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px 32px;flex-wrap:wrap}
+.ft__tagline{font-size:18px;font-weight:500;line-height:1.3;letter-spacing:-.02em;color:var(--ink-2)}
+.ft__bigmark{display:block;color:var(--ink);border-radius:8px}
+/* the hover dim sits on the svg: the link itself is a reveal element whose opacity the reveal owns */
+.ft__bigmark svg{width:100%;height:auto;transition:opacity .4s var(--ease)}
+.ft__bigmark:hover svg{opacity:.86}
+.ft__bigmark:focus-visible{outline-color:var(--ink);outline-offset:8px}
+
+/* ---------- Link bar (reference: centred Inter 14/500 links, 28px, radius 10, hover tint).
+   Black theme: same layout on the black page; a hairline divider (inset to the content width)
+   separates it from the panel above, links are --ink-2 and brighten to --ink on hover/current,
+   small informational type is --muted-strong. */
+.ft-bar{position:relative;background:var(--bg);color:var(--ink)}
+.ft-bar__inner{position:relative;padding-top:28px;padding-bottom:20px}
+.ft-bar__inner::before{content:"";position:absolute;top:0;left:var(--page-pad);right:var(--page-pad);height:1px;
+  background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.04) 100%)}
+.ft-bar__main{display:grid;grid-template-columns:1fr auto 1fr;grid-template-areas:"brand nav social" "line services social";
+  align-items:center;column-gap:32px;row-gap:6px;padding-bottom:22px}
+.ft-bar__brand{grid-area:brand;justify-self:start;align-self:end;display:inline-flex;padding:4px 0;color:var(--ink);border-radius:6px;transition:opacity .35s var(--spring-soft)}
+.ft-bar__brand:hover{opacity:.8}
+.ft-bar__word{width:auto;height:26px}
+.ft-bar__line{grid-area:line;justify-self:start;align-self:start;font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong)}
+.ft-bar--compact .ft-bar__line{grid-area:brand;align-self:start;line-height:28px}  /* compact pages: the band above already shows the wordmark */
+.ft-bar__nav{grid-area:nav;justify-self:center}
+.ft-bar__links{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;list-style:none;margin:0;padding:0}
+.ft-bar__link{display:inline-flex;align-items:center;height:28px;padding:0 8px;border-radius:10px;background:rgba(255,255,255,0);
+  font-size:14px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--ink-2);white-space:nowrap;
+  transition:background-color .35s var(--spring-soft),color .35s var(--spring-soft)}
+.ft-bar__link:hover,.ft-bar__link:focus-visible{background:rgba(255,255,255,.08);color:var(--ink)}
+.ft-bar__link:focus-visible{outline-offset:2px;border-radius:10px}
+.ft-bar__link:active{background:rgba(255,255,255,.12)}
+.ft-bar__link[aria-current]{background:rgba(255,255,255,.06);color:var(--ink)}
+.ft-bar__link[aria-current]::before{content:"";width:5px;height:5px;margin-right:6px;border-radius:50%;background:var(--red-dot)}
+.ft-bar__link[aria-disabled=true]:hover{background:rgba(255,255,255,0);color:var(--ink-2)}
+.ft-bar__services{grid-area:services;justify-self:center;font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong);text-align:center}
+.ft-bar__social{grid-area:social;justify-self:end;align-self:start;justify-content:flex-end}  /* on the first row, level with the links */
+.ft-bar__meta{display:grid;grid-template-columns:auto auto 1fr;align-items:center;column-gap:16px;row-gap:8px;padding-top:16px;border-top:1px solid var(--line-2)}
+.ft-bar__copy{font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong)}
+.ft-bar__legal{justify-content:flex-start;gap:4px}
+.ft-bar__legal .ft-bar__link{font-size:13px;color:var(--muted-strong)}
+.ft-bar__legal .ft-bar__link:hover,.ft-bar__legal .ft-bar__link:focus-visible,.ft-bar__legal .ft-bar__link[aria-current]{color:var(--ink)}
+.ft-bar__motto{justify-self:end;font-family:var(--mono);font-size:12px;font-weight:500;line-height:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted-strong)}
+
+/* ---------- Tablet (800–1439.98) */
+@media (max-width:1439.98px){
+  .ft{--ft-r:80px}
+  .ft__ring-wrap{top:calc(15vh + 10px)}
+  .ft__group{height:85vh}
+  .ft__title{letter-spacing:-.04em}
+  .ft-bar__main{grid-template-columns:1fr auto;grid-template-areas:"brand social" "line social" "nav nav" "services services";row-gap:6px}
+  .ft-bar__nav{margin-top:18px}
+}
+/* touch tablets: 44px link-bar targets, as on phones */
+@media (max-width:1439.98px) and (pointer:coarse){
+  .ft-bar__link{height:44px}
+  .ft-bar__brand{min-height:44px;align-items:center}
+}
+@media (min-width:800px) and (max-height:760px){
+  .ft__ring-wrap{top:calc(14vh + 10px)}
+}
+
+/* ---------- Phone ring (<=799.98, and phones held sideways): the same 12 x 2 ring at phone scale (cards 64-80px,
+   diameter 11.6 cards, card-centre radius 5.3 cards). Only its upper arc shows above the CTA text, so the panel
+   is as tall as its content (no empty 100vh box). --ft-top = top of the arc, --ft-room = the room it takes above
+   the clock line. Held sideways (and on small tablets, 600-799 upright) the arc's sides run down beside the text
+   into the progressive blur, as on desktop. Upright phones (< 600) crop the ring at the screen edges above the text:
+   no card ever passes behind the blur there, so it is left out (eight backdrop blurs re-run every frame of the
+   rotation for nothing, and its edge would show). */
+@media (max-width:799.98px),(max-height:500px) and (orientation:landscape){
+  .ft{--ft-card:clamp(64px,18.5vw,80px);--ft-top:28px;--ft-room:calc(var(--ft-top) + var(--ft-card) * 2.15);height:auto;min-height:0}
+  .ft__ring-wrap{top:var(--ft-top);width:calc(var(--ft-card) * 11.6);height:calc(var(--ft-card) * 11.6);margin-left:calc(var(--ft-card) * -5.8)}
+  .ft__arm{width:var(--ft-card);margin-left:calc(var(--ft-card) / -2)}
+  .ft__card{width:var(--ft-card);height:var(--ft-card);border-radius:calc(var(--ft-card) * .2)}
+  .ft__content{position:relative;inset:auto}
+  .ft__group{height:auto;min-height:0;padding:var(--ft-room) 20px 64px}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .ft__group{padding-bottom:48px}
+}
+@media (max-width:599.98px) and (orientation:portrait){
+  .ft__blur{display:none}
+}
+
+/* ---------- Phone (<=799.98) */
+@media (max-width:799.98px){
+  .ft{--ft-r:62px}
+  .ft__black{border-radius:62px 64px 0 0}
+  .ft__sheet,.ft__bg::after{border-radius:62px 64px 0 0}
+  .ft__text{width:100%}
+  .ft__title{font-size:32px;letter-spacing:-.04em}
+  .ft__sub{font-size:16px}
+  .ft .ft__btn{height:56px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 10px 28px -10px rgba(255,255,255,.24)}
+  .ft .ft__btn::after{border-color:transparent}
+  .ft .ft__btn .btn__lead{width:76px}
+  .ft .ft__btn .ft-av__plus{left:51%}
+  .ft--compact{min-height:0;display:block}
+  .ft__compact{padding-top:64px;padding-bottom:40px}
+  .ft__compact-top{flex-direction:column;align-items:flex-start;gap:12px}
+  .ft__tagline{font-size:16px}
+
+  .ft-bar__inner{padding-top:32px;padding-bottom:24px}
+  .ft-bar__main{grid-template-columns:1fr;grid-template-areas:"brand" "line" "nav" "services" "social";justify-items:center;text-align:center;row-gap:8px;padding-bottom:20px}
+  .ft-bar__brand,.ft-bar__line{justify-self:center}
+  .ft-bar__brand{min-height:44px;align-items:center;padding:4px 0 0}  /* 44px touch target */
+  .ft-bar__word{height:28px}
+  .ft-bar__nav{margin-top:12px}
+  .ft-bar__links{gap:0 4px}
+  .ft-bar__link{height:44px;padding:0 12px;border-radius:12px}
+  .ft-bar__line,.ft-bar__services,.ft-bar__copy,.ft-bar__legal .ft-bar__link,.ft-bar__motto{font-size:14px}   /* no footer copy under 14px on a phone */
+  .ft-bar__services{max-width:340px;margin-top:4px}
+  .ft-bar__social{justify-self:center;justify-content:center;margin-top:4px}
+  .ft-bar__meta{grid-template-columns:1fr;justify-items:center;text-align:center;row-gap:4px;padding-top:16px}
+  .ft-bar__legal{justify-content:center}
+  .ft-bar__motto{justify-self:center;margin-top:4px}
+}
+/* the 7 page links in centred rows of 3 + 2 + 2, so no link is left alone on a row: two zero-height line breaks are
+   ordered in after links 3 and 5 (visual order = DOM order = tab order). The first row needs ~290px at the 12px link
+   padding, so under 340px wide the links close up to 8px (still 44px tall, 54px+ wide) and it fits down to 320; the
+   four socials go 2 + 2 there instead of leaving Email alone. */
+@media (max-width:799.98px){
+  .ft-bar__nav .ft-bar__links::before,.ft-bar__nav .ft-bar__links::after{content:"";flex:0 0 100%;height:0;order:1}
+  .ft-bar__nav .ft-bar__links::after{order:3}
+  .ft-bar__nav .ft-bar__links>li:nth-child(n+4){order:2}
+  .ft-bar__nav .ft-bar__links>li:nth-child(n+6){order:4}
+}
+@media (max-width:339.98px){
+  .ft-bar__link{padding:0 8px}
+  .ft-bar__social{max-width:200px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ft__ring{animation:none}
+  .ft .ft__btn .btn__lead,.ft-av__plus{transition:none}
+}

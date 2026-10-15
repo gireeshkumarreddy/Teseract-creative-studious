@@ -1,0 +1,70 @@
+{
+  "_note": [
+    "Owner-supplied images (DARK-THEME.md 'Client update 8': the studio owner's OWN designs and sites, supplied 14 Oct) for the What We Create service cards. They are not portfolio projects: no project caption; their cards link to The Work page.",
+    "scripts/prepare_supplied.py converts each 'file' from 'src' into public/assets/supplied/<name>-<width>.webp (640/1280/1920, never upscaled; 'crop' = [left, top, right, bottom] in source pixels, applied first) and writes scripts/supplied-manifest.json. The build references them through lib.supplied(), so only images a page uses reach dist/.",
+    "fit: 'cover' (default) or 'contain' (the whole design, centred on its own 'ground' colour - for a design whose headline any 4:3 crop would cut; 'fade': 'bottom' dissolves its bottom edge into the ground, e.g. OBSCURA's model). focal: object-position of a 'cover' image in the service cards (keep the device / the website's headline in view). alt: what the image shows (shared by every card that shows it).",
+    "check.py fails when an image mapped in sections/service_cards.MEDIA is missing from the manifest, a variant file is missing or not a valid WebP of the recorded size, or a recorded crop differs from this table."
+  ],
+  "src": "C:/Teseract-media/_supplied",
+  "images": [
+    {
+      "name": "website-design",
+      "file": "website-design.jpg",
+      "title": "MODU",
+      "focal": "50% 45%",
+      "alt": "MODU, a website design concept by the studio: a desktop monitor showing the MODU landing page, the headline “Conquer Your Days with Steady Mindfulness”, a Try It Free button and a phone task screen over a motion-blurred amber portrait."
+    },
+    {
+      "name": "website-development",
+      "file": "website-development.jpg",
+      "title": "ed10",
+      "focal": "50% 50%",
+      "alt": "ed10, a website development concept by the studio: a studio monitor with the site's React code and the local dev server in a code editor on the left and the running ed10 site, a bold orange studio page, in the browser on the right."
+    },
+    {
+      "name": "interactive-3d-1-obscura",
+      "file": "interactive-3d-1-obscura.jpg",
+      "title": "OBSCURA",
+      "fit": "contain",
+      "ground": "#000",
+      "fade": "bottom",
+      "alt": "OBSCURA “Beyond the Veil”, an interactive website concept by the studio: the tall headline BEYOND THE VEIL on a black page on either side of a model whose eyes are covered by a band of wildflowers and blue sky."
+    },
+    {
+      "name": "interactive-3d-2-faipy",
+      "file": "interactive-3d-2-faipy.jpg",
+      "title": "FaiPy",
+      "crop": [
+        0,
+        0,
+        1573,
+        862
+      ],
+      "crop_note": "The bottom 'Used by experts at Google / Microsoft / stripe / amazon' logo row (y 880-1000) is cut off: the site shows no third-party logos.",
+      "focal": "0% 50%",
+      "alt": "FaiPy, a website concept by the studio: a glowing doorway of stars standing in a still mountain lake at sunset, with the headline “Your Decisions Deserve a Better Universe.”"
+    },
+    {
+      "name": "ecommerce-vyrn-categories",
+      "file": "ecommerce-vyrn-categories.png",
+      "title": "VYRN",
+      "crop": [
+        0,
+        10,
+        1920,
+        1000
+      ],
+      "crop_note": "Trims the screen recorder's black top edge (rows 0-9) and the cut-off top of the next section (rows 1000-1080).",
+      "fit": "contain",
+      "ground": "#fff",
+      "alt": "VYRN fashion store website: the Explore by Categories section, a model in a brown suit standing over the giant word FORMAL, category 02 of 05."
+    },
+    {
+      "name": "founder-portrait",
+      "file": "founder-gireesh.png",
+      "title": "Gireesh",
+      "source_note": "The founder's photo, supplied by the owner on 15 Oct 2026 as his 'Founders Series' poster (founder-gireesh-poster.webp, 1122x1402, kept beside it). founder-gireesh.png is the 4:5 portrait cut from it with none of the poster's text, zoomed out at the owner's request ('it's zoomed, I wanted to minimize it'): source pixels [472, 95, 1122, 907] (the widest 4:5 cut clear of the BUILT ON / DESIGNED TO headline), the poster's grid hairlines (x 560 / 897 / 1060, y 212 / 457 / 588 / 750) blended out from their neighbouring pixels and the IDEAS / BRANDS / WEBSITES / EXPERIENCES words on the right inpainted (OpenCV Telea). Shown by sections/founder.py FOUNDER_PORTRAIT in the Who We Are founder plate. A larger original photo would make it sharper on phones.",
+      "alt": "Gireesh, the founder, in a dark jacket and an open white shirt, resting his chin on his hand."
+    }
+  ]
+}

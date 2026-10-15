@@ -1,0 +1,357 @@
+/* ==========================================================================
+   Home 4 — WHAT WE BELIEVE + OUR NUMBERS (reference image 10, spec _ref/specs/image10-believe.md)
+   Black theme. Markup: scripts/sections/home_believe.py · motion: src/js/23-believe.js.
+
+   Sizes are in --cq (= 1 % of the section's content width: 1cqi on the .container, 13.44 px at
+   ≥ 1440) so the whole poster scales as one composition; a vw-based fallback covers browsers
+   without container queries.
+   Layout tiers (section-local):
+     strip   ≥ 900 poster artboard (absolute % placement, faithful to the reference)
+             520–899.98 two-band 12-column grid (max 760 px so the crops stay ≤ ~1.25× native)
+             < 520 two-column flow (max 384 px, same reason)
+     text    ≥ 1024 three-column grid (0 | 24.39 % | 63.48 % as in the reference)
+             800–1023.98 16 % | 1fr | 1fr · ≤ 799.98 single column
+   Colours: --ink (19.1:1) for the headline, statement lead, emphasis and values; the statement
+   continuation rgba(244,244,242,.5) (#7a7a79, 4.89:1 — the reference's grey); --ink-2 (10.2:1)
+   for body and captions; --muted-strong (7.2:1) for the corner/side/stat labels. Red only on the
+   two status dots and the one rule (DARK-THEME accent rule).
+   ========================================================================== */
+
+.bel.section{padding-bottom:74px;overflow-x:clip}
+.bel__in{--cq:calc((min(100vw,var(--maxw) + 2 * var(--page-pad)) - 2 * var(--page-pad)) / 100);--grey:rgba(244,244,242,.5)}
+@supports (container-type:inline-size){.bel__in{container-type:inline-size;--cq:1cqi}}
+
+/* ---------- Eyebrow: red status dot + label (ref: dot Ø 18.5 centred on the cap height, gap 13) */
+.bel__eyebrow,.bel__index{display:flex;align-items:center;gap:.54em;width:max-content;
+  font-size:clamp(13px,calc(1.76 * var(--cq)),24px);font-weight:400;line-height:1;letter-spacing:-.03em;text-transform:uppercase;color:var(--ink)}
+.bel__dot{position:relative;flex:none;width:.74em;height:.74em;border-radius:50%;background:var(--red-dot);box-shadow:0 0 .7em rgba(255,59,59,.25)}
+.bel__dot::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--red-dot);opacity:0;pointer-events:none}
+.motion .bel__eyebrow.is-in .bel__dot::after,.motion .bel__index.is-in .bel__dot::after{animation:ts-pulse 1.9s var(--ease) .45s 2}
+
+/* ---------- H2: two uppercase lines, light, tight (ref cap 90.5, ink width 1323 of 1361).
+   Geist wght 320 at -.055em: -.08em / -.075em fuse "LE" in SIMPLE / PEOPLE and touch "E." (measured with
+   _tools/believe-rv-track.*); -.055em keeps the reference's ≈ 3 px L→E gap, and 8.55cq keeps line 2's ink
+   inside the container (58 → 1383 px at 1440, container 48 → 1392) */
+.bel__title{margin-top:28px;font-size:calc(8.55 * var(--cq));font-weight:320;line-height:.95;letter-spacing:-.055em;text-transform:uppercase;color:var(--ink)}
+.bel__line{display:block;white-space:nowrap}
+.bel__line+.bel__line{--d:90ms}
+/* word masks: widen the clip box so the negative tracking never trims a glyph edge */
+.bel__title .w,.bel__statement .w{padding-inline:.09em;margin-inline:-.09em}
+.motion .bel__title .w__i{transition-duration:1.2s}
+/* Helvetica Neue (Mac/iOS, html.font-hn) sets ~6 % wider than Geist at the same tracking (measured with
+   the Helvetica-metric Arial as proxy): half the tracking and a smaller size keep both lines inside the
+   container (proxy: longer line 97.7 % of the width) */
+.font-hn-real .bel__title{font-size:calc(7.8 * var(--cq));letter-spacing:-.05em}
+
+/* ==========================================================================
+   Editorial strip — artboard = reference box 1361 × 401.2 (the hood's height); captions hang below
+   ========================================================================== */
+.bel__strip{position:relative;margin-top:56px;aspect-ratio:1361/401.2}
+.bel__fig{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h)}
+.bel__fig figure{position:relative;height:100%}
+.bel__media{position:relative;height:100%;overflow:hidden;background:var(--surface-1)}
+.bel__media::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
+.bel__img{width:100%;height:100%;object-fit:cover}
+.bel__fig--1{--x:0%;--y:0%;--w:11.08%;--h:39.7%;--r:148/155}
+.bel__fig--2{--x:11.52%;--y:0%;--w:11.08%;--h:39.7%;--r:148/155}
+.bel__fig--3{--x:23.15%;--y:0%;--w:23.44%;--h:100%;--r:315/397}
+.bel__fig--4{--x:47.41%;--y:54.29%;--w:12.6%;--h:45.71%;--r:167/180}
+.bel__fig--5{--x:60.51%;--y:54.29%;--w:12.6%;--h:45.71%;--r:167/180}
+.bel__fig--6{--x:84.13%;--y:0%;--w:15.87%;--h:53.86%;--r:1/1}
+/* micro-captions: photo captions --ink-2, corner captions one tier lighter (--muted-strong) */
+.bel__cap,.bel__corner{font-size:clamp(11px,calc(.93 * var(--cq)),12.5px);font-weight:470;line-height:1.2;letter-spacing:-.005em;text-transform:uppercase}
+.bel__cap{position:absolute;left:0;top:100%;max-width:100%;margin-top:6px;color:var(--ink-2)}
+.bel__corner{position:absolute;top:calc(100% + 6px);font-size:clamp(11px,calc(1.04 * var(--cq)),14px);font-weight:400;line-height:1.25;color:var(--muted-strong)}
+.bel__corner--l{left:0}
+.bel__corner--r{right:0;text-align:right}
+.bel__corner span{display:block}
+
+/* strip motion: each photo opens upward (clip) while the image settles from 1.16 → 1, staggered in
+   reading order (--d from the markup); its caption follows. The <li> carries the 02-core reveal
+   trigger (IntersectionObserver ignores a fully clipped target, so the clip sits on the child). */
+.motion .bel__fig[data-reveal]{opacity:1;transform:none;filter:none;will-change:auto}
+.motion .bel__media{clip-path:inset(100% 0 0 0);transition:clip-path 1.25s cubic-bezier(.77,0,.18,1) var(--d,0ms)}
+.motion .bel__fig.is-in .bel__media{clip-path:inset(0 0 0 0)}
+.bel__img{transition:transform 1.7s var(--ease) var(--d,0ms),scale 1s var(--ease)}
+.motion .bel__fig:not(.is-in) .bel__img{transform:scale(1.16)}
+.motion .bel__cap{opacity:0;transform:translate3d(0,8px,0);transition:opacity .8s var(--ease) calc(var(--d,0ms) + 420ms),transform 1s var(--ease) calc(var(--d,0ms) + 420ms)}
+.motion .bel__fig.is-in .bel__cap{opacity:1;transform:none}
+@media (hover:hover) and (pointer:fine){.motion .bel__fig:hover .bel__img{scale:1.035}}
+
+/* ---------- Hairline divider (draws in from the left) */
+.bel__divider{height:1px;margin-top:128px;background:var(--line-3);transform-origin:0 50%}
+.motion .bel__divider[data-reveal]{opacity:1;transform:scaleX(0);transition:transform 1.5s cubic-bezier(.77,0,.18,1) var(--d,0ms)}
+.motion .bel__divider[data-reveal].is-in{transform:none}
+
+/* ==========================================================================
+   01 + statement + columns + numbers (reference columns at 0 | 24.39 % | 63.48 %)
+   ========================================================================== */
+.bel__grid{display:grid;grid-template-columns:24.39% 39.09% minmax(0,1fr);margin-top:75px}
+.bel__index{grid-column:1;grid-row:1;align-self:start;margin-top:-4px;letter-spacing:-.02em}
+
+/* Statement (HOME.believe.body[0]): sentence 1 = H3 in --ink, sentence 2 in the reference grey */
+.bel__statement{grid-column:2/4;grid-row:1;font-size:calc(4.6 * var(--cq));font-weight:330;line-height:1.13;letter-spacing:-.04em;text-transform:uppercase;color:var(--ink);text-wrap:pretty}
+.bel__statement h3,.bel__statement p{display:inline;font:inherit;letter-spacing:inherit}
+.bel__cont{color:var(--grey)}
+.bel__nw{white-space:nowrap}
+/* the site font has no italic: skew 8° like the reference (synthetic italic would slant 14°) */
+.bel__statement i{display:inline-block;font-style:normal;transform:skewX(-8deg);white-space:nowrap}
+.font-hn-real .bel__statement{letter-spacing:-.03em}
+@media (min-width:1024px){.font-hn-real .bel__statement{font-size:calc(4.2 * var(--cq))}}   /* keeps the reference's four lines */
+.motion .bel__statement .w__i{transition:transform 1s var(--ease) calc(var(--d,0ms) + var(--i,0) * 22ms)}
+/* scroll-linked ink (23-believe.js sets --p on the block and --a on each lead word): the lead sentence
+   starts in the reference grey (opacity .5 of --ink = the continuation's colour, 4.89:1) and brightens
+   word by word to white as the block rises through the viewport; the continuation keeps the reference
+   grey, so the resting state is the reference's two-tone composition (same as reduced motion / no JS).
+   The multiplier (5) is 1 / the per-word ramp width in 23-believe.js (RAMP). */
+.bel__statement.is-ink .bel__lead .w__i{opacity:calc(.5 + .5 * clamp(0, (var(--p, 0) - var(--a, 0)) * 5, 1))}
+
+.bel__side{grid-column:1;grid-row:2;align-self:start;margin-top:64px;font-size:clamp(12px,calc(1.47 * var(--cq)),20px);font-weight:420;line-height:1.08;letter-spacing:-.02em;text-transform:uppercase;color:var(--muted-strong)}
+.bel__side span{display:block}
+.bel__col{grid-row:2;margin-top:60px;font-size:clamp(17px,calc(1.9 * var(--cq)),26px);font-weight:350;line-height:1.32;letter-spacing:-.025em;color:var(--ink-2)}
+.bel__col--l{grid-column:2;padding-right:8%}
+.bel__col--r{grid-column:3}
+.bel__col p{text-wrap:pretty}
+.bel__col strong{font-weight:inherit;color:var(--ink)}
+/* "Our numbers" hangs above the right column so both paragraphs start on the same line */
+.bel__sub{margin:calc(-1.2em - 16px) 0 16px;font-size:clamp(11px,calc(.93 * var(--cq)),12.5px);font-weight:470;line-height:1.2;letter-spacing:0;text-transform:uppercase;color:var(--muted-strong)}
+
+/* Descriptive internal link: hairline at rest, a red line draws across on hover/focus */
+.bel__link{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:8px 0 7px;
+  font-size:clamp(12px,calc(1.03 * var(--cq)),14px);font-weight:500;line-height:1.2;letter-spacing:0;text-transform:uppercase;color:var(--ink);
+  background:linear-gradient(var(--red),var(--red)) 0 100%/0 1px no-repeat,linear-gradient(var(--line-3),var(--line-3)) 0 100%/100% 1px no-repeat;
+  transition:background-size .6s var(--ease)}
+.bel__arrow{width:14px;height:14px;flex:none;transition:transform .5s var(--ease)}
+.bel__link:hover,.bel__link:focus-visible{background-size:100% 1px,100% 1px}
+.bel__link:hover .bel__arrow,.bel__link:focus-visible .bel__arrow{transform:translateX(4px)}
+/* touch: a 44 px hit area centred on the link; the box (and so the underline gap) keeps its size */
+@media (pointer:coarse){
+  .bel__link{position:relative}
+  .bel__link::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+}
+
+/* Numbers: value above label (column-reverse, DOM order dt → dd), hairline that draws in on top */
+.bel__stats{grid-column:2/4;grid-row:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 24px;margin-top:72px}
+.bel__stat{position:relative;display:flex;flex-direction:column-reverse;justify-content:flex-end;gap:14px;padding-top:20px}
+.bel__stat::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line-3);transform-origin:0 50%}
+.motion .bel__stat::before{transform:scaleX(0);transition:transform 1.3s cubic-bezier(.77,0,.18,1) calc(var(--d,0ms) + 60ms)}
+.motion .bel__stat.is-in::before{transform:none}
+.bel__stat dd{position:relative;font-size:calc(4 * var(--cq));font-weight:320;line-height:1;letter-spacing:-.06em;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bel__stat dt{font-size:clamp(11px,calc(1.03 * var(--cq)),14px);font-weight:470;line-height:1.2;letter-spacing:0;text-transform:uppercase;color:var(--muted-strong)}
+.font-hn-real .bel__stat dd{letter-spacing:-.04em}
+/* count-up overlay (23-believe.js): the real value stays in the DOM, invisible but in place */
+.bel__num.is-counting{opacity:0}
+.bel__count{position:absolute;left:0;top:0;pointer-events:none}
+
+/* ---------- Red rule: bleeds off the viewport's left edge, ends 8 px past the right column's start */
+.bel__red{display:block;height:4px;margin-top:60px;margin-left:calc(-1 * max(var(--page-pad),(100vw - var(--maxw)) / 2));
+  width:calc(max(var(--page-pad),(100vw - var(--maxw)) / 2) + 63.48 * var(--cq) + 8px);background:var(--red);transform-origin:0 50%}
+.motion .bel__red[data-reveal]{opacity:1;transform:scaleX(0);transition:transform 1.8s cubic-bezier(.77,0,.18,1) .15s}
+.motion .bel__red[data-reveal].is-in{transform:none}
+
+/* ==========================================================================
+   Tablet: strip two-band grid 520–899.98 · text grid 800–1023.98
+   ========================================================================== */
+@media (max-width:1023.98px){.bel__divider{margin-top:104px}}
+@media (max-width:899.98px){
+  /* band 1 (top-aligned): glass | stone | air | headset · band 2: hood, corner captions in the void,
+     knot + prism bottom-aligned with the hood (as on desktop) */
+  .bel__strip{aspect-ratio:auto;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:40px 8px;max-width:760px;margin-top:48px}
+  .bel__fig{position:relative;left:auto;top:auto;width:auto;height:auto}
+  .bel__fig figure{height:auto}
+  .bel__media{height:auto;aspect-ratio:var(--r)}
+  .bel__cap,.bel__corner{position:static;display:block;margin-top:8px;font-size:12px}
+  .bel__fig--1{grid-column:1/4;grid-row:1;align-self:start}
+  .bel__fig--2{grid-column:4/7;grid-row:1;align-self:start}
+  .bel__fig--6{grid-column:9/13;grid-row:1;align-self:start}
+  .bel__fig--3{grid-column:1/7;grid-row:2/4}
+  .bel__fig--4{grid-column:7/10;grid-row:3;align-self:end}
+  .bel__fig--5{grid-column:10/13;grid-row:3;align-self:end}
+  .bel__corner--l{grid-column:7/13;grid-row:2;align-self:start;margin:0}
+  .bel__corner--r{grid-column:7/13;grid-row:2;align-self:start;margin:3.4em 0 0;text-align:right}
+  .bel__divider{margin-top:88px}
+  /* 5–6 line statement: balance evens the rag ("… / easy to understand, / easy to explore / and easy to
+     remember.") where pretty left a short "explore and" line; ≥ 900 keeps pretty (the reference's breaks) */
+  .bel__statement{text-wrap:balance}
+}
+@media (min-width:800px) and (max-width:1023.98px){
+  .bel__grid{grid-template-columns:16% minmax(0,1fr) minmax(0,1fr);column-gap:32px;margin-top:64px}
+  .bel__statement{font-size:calc(5.6 * var(--cq))}
+  .font-hn-real .bel__statement{font-size:calc(5.25 * var(--cq))}
+  .bel__side{margin-top:58px;font-size:13px}
+  .bel__col{margin-top:56px;font-size:18px;line-height:1.36}
+  .bel__col--l{padding-right:0}
+  .bel__link{font-size:12px}
+  .bel__sub{font-size:clamp(12px,calc(.93 * var(--cq)),12.5px)}
+  .bel__stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 32px;margin-top:56px}
+  .bel__stat dd{font-size:44px}
+  .bel__stat dt{font-size:clamp(12px,calc(1.03 * var(--cq)),14px)}
+  /* column 3 starts at 16 % + 2 gaps + half of the rest = 58 % + 32 px */
+  .bel__red{width:calc(max(var(--page-pad),(100vw - var(--maxw)) / 2) + 58 * var(--cq) + 40px)}
+}
+
+/* ==========================================================================
+   Phone ≤ 799.98 (text single column) · strip two-column flow below 520 px
+   ========================================================================== */
+@media (max-width:799.98px){
+  .bel.section{padding-bottom:56px}
+  .bel__eyebrow,.bel__index{font-size:13px;letter-spacing:-.01em}
+  .bel__title{margin-top:20px}
+  .bel__divider{margin-top:64px}
+  .bel__grid{display:block;margin-top:40px}
+  .bel__index{margin:0 0 20px}
+  .bel__statement{font-size:clamp(26px,calc(8.2 * var(--cq)),40px);line-height:1.1;letter-spacing:-.035em}
+  .font-hn-real .bel__statement{letter-spacing:-.02em}
+  .bel__side{margin-top:44px;font-size:12px;letter-spacing:0}
+  .bel__col{margin-top:20px;font-size:17px;line-height:1.45}
+  .bel__col p{max-width:34em}
+  .bel__col--l{padding-right:0}
+  .bel__col--r{margin-top:56px}
+  .bel__sub{margin:0 0 12px;font-size:12px}
+  .bel__link{font-size:12px;margin-top:18px;padding-block:12px 9px}
+  .bel__stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 16px;margin-top:40px}
+  .bel__stat{gap:12px;padding-top:18px}
+  .bel__stat dd{font-size:clamp(34px,calc(8.4 * var(--cq)),48px)}
+  .bel__stat dt{font-size:12px}
+  .bel__red{margin-top:56px;width:calc(var(--page-pad) + 62 * var(--cq))}
+}
+@media (max-width:519.98px){
+  /* headline wraps naturally to four lines: SIMPLE FOR / PEOPLE. / POWERFUL / FOR BUSINESS. */
+  .bel__title{font-size:min(calc(15.2 * var(--cq)),64px);line-height:.94;letter-spacing:-.055em}
+  .font-hn-real .bel__title{font-size:min(calc(15.2 * var(--cq)),64px);letter-spacing:-.045em}
+  .bel__line{white-space:normal}
+  .bel__strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 8px;max-width:384px;margin-top:40px}
+  .bel__fig--1{grid-column:1;grid-row:1}
+  .bel__fig--2{grid-column:2;grid-row:1}
+  .bel__fig--3{grid-column:1/3;grid-row:2}
+  .bel__fig--4{grid-column:1;grid-row:3;align-self:start}
+  .bel__fig--5{grid-column:2;grid-row:3;align-self:start}
+  .bel__fig--6{grid-column:2;grid-row:4;align-self:start}
+  .bel__corner--l{grid-column:1;grid-row:4;align-self:start;margin:0}
+  .bel__corner--r{grid-column:1;grid-row:4;align-self:end;margin:0;text-align:left}   /* bottom-aligned with the headset caption */
+  .bel__cap,.bel__corner{font-size:12px}
+}
+
+@media print{.bel__count{display:none}.bel__num.is-counting{opacity:1}.bel__statement .bel__lead .w__i{opacity:1!important}}
+
+/* ==========================================================================
+   Generic testimonial carousel + card (.bel-car / .bel-card) — used by /client-stories/ when real
+   testimonials exist (pages/stories.py imports card/tile/carousel from home_believe.py, behaviour in
+   23-carousel.js). Black theme: near-black card surface with a top-lit hairline (the .card language
+   of 02-components), --ink text, white-6 % stat tiles and controls.
+   ========================================================================== */
+.bel-car{position:relative;width:584px;max-width:100%;margin-inline:auto;padding:12px 12px 0;--car-gap:24px}
+@media (max-width:799.98px){.bel-car{width:100%}}
+.bel-car__viewport{position:relative;perspective:700px;perspective-origin:50% 50%}
+@media (max-width:799.98px){.bel-car__viewport{perspective:1200px}}
+.bel-car__track{display:flex;gap:var(--car-gap);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;outline:none}
+.bel-car__track::-webkit-scrollbar{display:none}
+.bel-car__slide{flex:0 0 100%;min-width:0;display:flex;scroll-snap-align:center}
+.js .bel-car:not(.is-ready){opacity:.001}
+.bel-car.is-ready{opacity:1;transition:opacity .3s var(--ease-io)}
+.bel-car.is-ready .bel-car__track{display:grid;overflow:visible;transform-style:preserve-3d;cursor:grab;touch-action:pan-y;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.bel-car.is-dragging .bel-car__track{cursor:grabbing}
+.bel-car.is-ready .bel-car__slide{grid-area:1/1;width:100%;backface-visibility:hidden;will-change:transform,opacity}
+.bel-car.is-ready .bel-car__slide img{-webkit-user-drag:none}
+.bel-car.is-single .bel-car__track{cursor:auto}
+
+/* Pagination pill (dots 10 px on a 24 px pitch so every target meets WCAG 2.2 2.5.8) + rotation control */
+.bel-car__controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:22px}
+.bel-car__dots{grid-column:2;display:flex;border-radius:130px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.bel-car__dot{position:relative;display:grid;place-items:center;padding:10px 7px;border-radius:130px}
+.bel-car__dot:first-child{padding-left:10px}
+.bel-car__dot:last-child{padding-right:10px}
+.bel-car__dot i{display:block;width:10px;height:10px;border-radius:50%;background:var(--ink);opacity:.3;transition:opacity .3s var(--ease-io),transform .3s var(--ease-io)}
+.bel-car__dot[aria-selected=true] i{opacity:1}
+.bel-car__dot:hover i{opacity:.6}
+.bel-car__dot[aria-selected=true]:hover i{opacity:1}
+.bel-car__dot:focus-visible{outline:2px solid var(--red);outline-offset:0;border-radius:130px}
+.bel-car__play{grid-column:3;justify-self:start;display:grid;place-items:center;width:30px;height:30px;margin-left:8px;border-radius:50%;
+  background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);color:var(--ink-2);transition:background-color .3s var(--ease-io),color .3s var(--ease-io)}
+.bel-car__play:hover{background:rgba(255,255,255,.12);color:var(--ink)}
+.bel-car__play svg{width:12px;height:12px}
+.bel-car__ic-play,.bel-car.is-paused .bel-car__ic-pause{display:none}
+.bel-car.is-paused .bel-car__ic-play{display:block}
+.bel-car.is-reduced .bel-car__play,.no-js .bel-car__play{display:none}
+.no-js .bel-car__dots{display:none}
+@media (max-width:799.98px){
+  /* 44 px touch targets: the visible pill stays 30 px tall, the hit areas extend past it */
+  .bel-car__controls{margin-top:15px}
+  .bel-car__dot,.bel-car__dot:first-child,.bel-car__dot:last-child{width:44px;height:44px;padding:0;margin-block:-7px}
+  .bel-car__dot:first-child i{transform:translateX(5px)}
+  .bel-car__dot:last-child i{transform:translateX(-5px)}
+  .bel-car__dots{height:30px;align-items:center}
+  .bel-car__play{width:44px;height:44px;margin-left:4px;background:transparent;box-shadow:none;position:relative}
+  .bel-car__play::before{content:"";position:absolute;inset:7px;border-radius:50%;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+  .bel-car__play svg{position:relative}
+}
+
+/* Card: near-black surface, radius 24, padding 40/28, gap 20, centred column */
+.bel-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;padding:40px;border-radius:24px;color:var(--ink);
+  background:radial-gradient(120% 70% at 50% 0%,rgba(255,255,255,.035) 0%,rgba(255,255,255,0) 60%),linear-gradient(180deg,#161616 0%,#0d0d0d 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 1px rgba(255,255,255,.08),0 30px 60px -32px rgba(0,0,0,.9)}
+@media (max-width:799.98px){.bel-card{padding:28px}}
+.bel-card__dots i{position:absolute;z-index:1;width:7px;height:7px;border-radius:32px;background:#202020;box-shadow:inset 0 1px 2px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.05);pointer-events:none}
+.bel-card__dots i:nth-child(1){top:21px;left:21px}
+.bel-card__dots i:nth-child(2){top:21px;right:19px}
+.bel-card__dots i:nth-child(3){bottom:20px;left:21px}
+.bel-card__dots i:nth-child(4){bottom:19px;right:19px}
+
+.bel-card__kicker{display:flex;align-items:center;height:16px;font-size:12px;line-height:16px;letter-spacing:.08em;color:var(--ink)}
+.bel-card__kicker span{color:var(--muted-strong);white-space:pre}
+.bel-card__stars{display:flex;gap:4px;height:16px;color:var(--ink)}
+.bel-card__stars i{display:block;width:16px;height:16px}
+.bel-card__stars svg{width:100%;height:100%}
+
+.bel-card__quote{flex:1 0 auto;display:flex;align-items:center;justify-content:center;width:100%;
+  font-size:18px;line-height:1.75;letter-spacing:-.01em;color:var(--ink-2);text-align:center;text-wrap:pretty}
+.bel-card__quote strong{font-weight:600;color:var(--ink)}
+.bel-card__quote em strong{font-style:italic}
+.bel-card__quote--statement{font-size:28px;line-height:1.3;font-weight:500;letter-spacing:-.035em;text-wrap:balance;padding-inline:8px;color:var(--ink)}
+.bel-card__bq{margin:0}
+@media (max-width:799.98px){.bel-card__quote--statement{font-size:24px}}
+
+.bel-card__author{display:flex;align-items:center;justify-content:center;gap:8px}
+.bel-card__avatar,.bel-card__photo,.bel-card__initials{position:relative;display:grid;place-items:center;width:44px;height:44px;flex:none;border-radius:50%;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 6px 12px -6px rgba(0,0,0,.8)}
+.bel-card__avatar{color:var(--ink);background:radial-gradient(95.31% 95.31% at 19.53% 0%,#3a3a3a 0%,#111 100%)}
+.bel-card__avatar svg{width:20px;height:20px;margin-top:-1px}
+.bel-card__photo{overflow:hidden;background:var(--surface-2)}
+.bel-card__photo img{width:100%;height:100%;object-fit:cover}
+.bel-card__initials{background:var(--surface-3);color:var(--ink-2);font-size:14px;font-weight:600;letter-spacing:.02em}
+.bel-card__who{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.bel-card__name{font-size:18px;font-weight:700;line-height:1;letter-spacing:-.01em;color:var(--ink)}
+.bel-card__role{font-size:14px;line-height:24px;letter-spacing:-.01em;color:var(--muted-strong)}
+@media (max-width:799.98px){
+  .bel-card__author{flex-direction:column}
+  .bel-card__who{align-items:center}
+}
+
+/* Stat tiles: white 4 % on the card, radius 16 */
+.bel-card__tiles{display:flex;gap:7.04px;width:100%;margin:0;padding:0;list-style:none}
+.bel-card__tile{flex:1 0 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:12px;
+  padding:20px 16px;border-radius:16px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+.bel-card__num{display:flex;align-items:center;gap:5px;min-width:0}
+.bel-card__val{font-size:40px;font-weight:400;line-height:40px;letter-spacing:-.8px;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bel-card__trend{display:block;width:22px;height:20px;flex:none;color:var(--red)}
+.bel-card__label{font-size:12px;line-height:1;letter-spacing:0;color:var(--muted-strong)}
+.bel-card__tiles--strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-radius:16px;background:rgba(255,255,255,.04)}
+.bel-card__tiles--strip .bel-card__tile{position:relative;padding:18px 14px 16px;gap:10px;background:none;box-shadow:none;border-radius:0}
+.bel-card__tiles--strip .bel-card__tile+.bel-card__tile::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:1px;background:var(--line)}
+.bel-card__tiles--strip .bel-card__num{gap:3px}
+.bel-card__tiles--strip .bel-card__val{font-size:24px;line-height:26px;letter-spacing:-.6px}
+.bel-card__tiles--strip .bel-card__trend{width:15px;height:14px}
+.bel-card__tiles--strip .bel-card__label{font-size:11px;line-height:1.2}
+.bel-card__tiles--single .bel-card__tile{align-items:center}
+.bel-card__word{display:flex;align-items:center;height:40px;color:var(--ink)}
+.bel-card__wordmark{display:block;width:auto;height:21px}
+@media (max-width:799.98px){
+  .bel-card__tiles:not(.bel-card__tiles--strip){flex-direction:column}
+  .bel-card__tile{flex:none;align-items:center}
+  .bel-card__tiles--strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bel-card__tiles--strip .bel-card__tile{align-items:flex-start;padding:16px 14px}
+  .bel-card__tiles--strip .bel-card__tile:nth-child(3)::before{display:none}
+  .bel-card__tiles--strip .bel-card__tile:nth-child(n+3)::after{content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:var(--line)}
+  .bel-card__wordmark{height:17px}
+}

@@ -1,0 +1,10 @@
+{
+  "_note": [
+    "Per-clip edits applied by scripts/prepare_media.py (the media folder C:/Teseract-media stays read-only).",
+    "start: seconds cut from the start of the source; seconds: length kept; poster: poster frame, seconds after start; crf: x264 quality (default 23, higher = smaller).",
+    "aaradhya / tavra / velora: the owner's 30 s screen recordings open on the sites' own preloaders (black lamp intro, near-blank cream screens), which read as a switched-off device in the scenes; the cut starts on each site's hero and keeps 15 s, like the client clips."
+  ],
+  "aaradhya": {"laptop": {"start": 6.0, "seconds": 15, "poster": 0.5, "crf": 28}},
+  "tavra": {"laptop": {"start": 1.5, "seconds": 15, "poster": 0.5, "crf": 26}},
+  "velora": {"laptop": {"start": 4.0, "seconds": 15, "poster": 0.5, "crf": 26}}
+}

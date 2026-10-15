@@ -1,0 +1,322 @@
+/* ==========================================================================
+   CLIENT STORIES (/client-stories/) — .sto-*
+   Hero (.pg-hero from 30-who.css) · client reviews (frame + the "Client Deck": draggable coverflow of client cards,
+   34-stories.js) · client experience (frame + numbered cards + closing card) · review CTA (frame + wide card).
+   Black theme: near-black cards with --ink type; the closing fifth step (black card on the old
+   light page) becomes the one lifted card: lighter near-black, brighter hairline, soft red glow
+   behind its red pip. The review button flips to the white high-emphasis button.
+   ========================================================================== */
+
+/* ---------- Hero: the two sentences each on their own balanced line */
+.sto-hero .pg-hero__title{max-width:1344px}
+.sto-hero__line{display:block;text-wrap:balance}
+.sto-hero__line+.sto-hero__line{color:var(--pg-grey-lg)}   /* muted second sentence: 4.9:1 on the black page */
+.sto-hero .pg-hero__sub{max-width:560px}
+
+/* ---------- Client reviews: the "Client Deck" (pages/stories.py _reviews, src/js/34-stories.js)
+   Frame (same width and insets as the experience frame below) holding one deck: six cards in one grid cell (the deck
+   is as tall as the tallest card at every width, so nothing shifts when the client changes), the front card centred,
+   its neighbours peeking out dimmed and turned away (desktop / tablet: scaled and rotateY in the track's perspective;
+   phone: flat, a 24 px sliver at each screen edge), then ONE control row: previous · dots · next.
+   Geometry tokens (--deck-*) live on .sto-deck and are the single source of truth: 34-stories.js reads them and the
+   [data-pos] rules below paint the same rest state before JS. JS writes per frame only transform, z-index,
+   visibility, --ad (= the card's distance from the front, 0..3) and --rd (its distance to the right, 0..1) plus the
+   .is-right class; the CSS derives the dim, the quote fade / rise and the caption-row mirroring from them. No preserve-3d: slots are flattened and painted by z-index, so a neighbour's near edge never
+   pokes through the front card. Without JS (and in print) all six cards show in a grid. */
+.sto-rev.section{padding:48px 0 32px}
+.sto-rev__inner{display:flex;flex-direction:column;align-items:center;gap:64px}
+@media (max-width:1439.98px){.sto-rev__inner{padding-inline:80px}}
+@media (max-width:799.98px){.sto-rev.section{padding:40px 0 16px}.sto-rev__inner{gap:40px;padding-inline:16px}}
+/* "Sample reviews": a quiet micro-label under the H2 (house pill shape, hairline, ring dot) */
+.sto-sample{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px 0 10px;border-radius:999px;font-size:12px;line-height:1;
+  letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;color:var(--muted-strong);background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
+.sto-sample i{width:8px;height:8px;flex:none;border-radius:50%;box-shadow:inset 0 0 0 1.5px currentColor}
+
+.sto-rev__frame.frame{width:100%;max-width:1184px}
+@media (max-width:1439.98px){.sto-rev__frame.frame{max-width:none}}
+
+/* deck tokens: card width / padding, X nodes (k1, k2 x card width + gap), scale and rotateY (deg, unitless) of the
+   first and second neighbour, dim per unit of distance and its cap, the viewport's edge fade */
+.sto-deck{--deck-w:560px;--deck-pad:28px;--deck-k1:.66;--deck-k2:1.07;--deck-gap:0px;--deck-s1:.84;--deck-s2:.7;--deck-r1:20;--deck-r2:24;
+  --deck-dim:.5;--deck-dim-max:.72;--deck-fade:64px;--deck-persp:1400px;display:flex;flex-direction:column;gap:16px;min-width:0}
+@media (max-width:1279.98px){.sto-deck{--deck-w:520px;--deck-fade:48px}}
+@media (max-width:1023.98px){.sto-deck{--deck-w:500px;--deck-pad:24px;--deck-k1:.64;--deck-k2:1.05;--deck-fade:32px}}
+@media (max-width:799.98px){.sto-deck{--deck-w:calc(100% - 72px);--deck-pad:16px;--deck-k1:1;--deck-k2:2;--deck-gap:12px;--deck-s1:1;--deck-s2:1;
+  --deck-r1:0;--deck-r2:0;--deck-dim:.55;--deck-dim-max:.55;--deck-fade:0px}}
+@media (prefers-reduced-motion:reduce){.sto-deck{--deck-r1:0;--deck-r2:0}}
+
+/* touch-action: the page keeps vertical panning and pinch-zoom (A11Y), the JS takes the horizontal swipe; plain pan-y
+   first for browsers without pinch-zoom in touch-action */
+.sto-deck__vp{position:relative;overflow:hidden;overflow:clip;border-radius:32px;padding-block:16px;touch-action:pan-y;touch-action:pan-y pinch-zoom;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--deck-fade),#000 calc(100% - var(--deck-fade)),transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 var(--deck-fade),#000 calc(100% - var(--deck-fade)),transparent 100%)}
+.js .sto-deck.is-ready .sto-deck__vp{cursor:grab}
+/* the still never selects or opens the long-press image menu mid-swipe; on touch the quote and attribution stay
+   selectable (copy, iOS Speak Selection). A mouse drag would select text, so fine pointers keep the whole deck unselectable */
+.js .sto-deck.is-ready .sto-voice__media{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+@media (hover:hover) and (pointer:fine){.js .sto-deck.is-ready .sto-deck__vp{user-select:none;-webkit-user-select:none}}
+.sto-deck.is-dragging .sto-deck__vp,.sto-deck.is-dragging .sto-deck__slot{cursor:grabbing}
+.sto-deck__track{display:grid;grid-template-columns:minmax(0,1fr);perspective:var(--deck-persp);perspective-origin:50% 50%}
+.sto-deck__slot{--ad:0;display:flex;min-width:0}
+.js .sto-deck__slot{grid-area:1/1;justify-self:center;width:var(--deck-w);max-width:100%;transform-origin:50% 50%}
+/* rest state from the server's data-pos (= the JS rest state, so the first paint does not jump) */
+.js .sto-deck__slot[data-pos="0"]{transform:none;z-index:10}
+.js .sto-deck__slot[data-pos="1"]{--ad:1;z-index:8;transform:translate3d(calc(100% * var(--deck-k1) + var(--deck-gap)),0,0) scale(var(--deck-s1)) rotateY(calc(var(--deck-r1) * 1deg))}
+.js .sto-deck__slot[data-pos="-1"]{--ad:1;z-index:8;transform:translate3d(calc(-100% * var(--deck-k1) - var(--deck-gap)),0,0) scale(var(--deck-s1)) rotateY(calc(var(--deck-r1) * -1deg))}
+.js .sto-deck__slot[data-pos="2"]{--ad:2;z-index:6;pointer-events:none;transform:translate3d(calc(100% * var(--deck-k2) + 2 * var(--deck-gap)),0,0) scale(var(--deck-s2)) rotateY(calc(var(--deck-r2) * 1deg))}
+.js .sto-deck__slot[data-pos="-2"]{--ad:2;z-index:6;pointer-events:none;transform:translate3d(calc(-100% * var(--deck-k2) - 2 * var(--deck-gap)),0,0) scale(var(--deck-s2)) rotateY(calc(var(--deck-r2) * -1deg))}
+.js .sto-deck__slot[data-pos="3"],.js .sto-deck__slot[data-pos="-3"]{--ad:3;z-index:4;visibility:hidden;pointer-events:none}
+.sto-deck.is-moving .sto-deck__slot{will-change:transform}
+.sto-deck.is-moving .sto-voice__body,.sto-deck.is-moving .sto-voice__dim{will-change:opacity}
+
+/* the card: website still (with its label pill), company + industry with the rating, the quote, "View project";
+   the project's own "spill" colour glows softly from the top */
+.sto-voice.card{flex:1;height:auto;display:flex;flex-direction:column;min-width:0;padding:var(--deck-pad);border-radius:32px;overflow:hidden;isolation:isolate}
+/* >= 800 px each card also casts a soft static side shadow onto the cards behind it (z-index order), so the edge of
+   the front card reads as depth and a peek's caption is not cut off sharply where the front card covers it */
+@media (min-width:800px){.js .sto-voice.card{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 1px rgba(255,255,255,.07),0 30px 60px -32px rgba(0,0,0,.9),0 0 44px 12px rgba(0,0,0,.82)}}
+.sto-voice::before{content:"";position:absolute;inset:0 0 auto;height:70%;border-radius:inherit;background:radial-gradient(80% 70% at 50% 0%,var(--spill),transparent 70%);pointer-events:none;z-index:0}
+.sto-voice__head,.sto-voice__body,.sto-voice__media{position:relative;z-index:1}
+.sto-voice__media{order:-1;flex:none;aspect-ratio:16/10;border-radius:20px;overflow:hidden;background:var(--surface-2);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 24px 40px -28px rgba(0,0,0,.95)}
+.sto-voice__media::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
+.sto-voice__img{width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
+.sto-voice__media .hero-tile__tag{left:12px;top:12px}
+.sto-voice__glare{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(360px circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.07),transparent 60%);
+  opacity:0;transition:opacity .3s var(--ease)}
+.sto-voice__media.is-hover .sto-voice__glare{opacity:1}
+.sto-voice__head{flex:none;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-top:18px}
+.sto-voice__by{display:flex;flex-direction:column;min-width:0}
+.sto-voice__person{margin-bottom:4px;font-size:14px;line-height:1.3;color:var(--ink-2)}
+.sto-voice__h{margin:0;font-size:20px;line-height:1.2;letter-spacing:-.02em;color:var(--ink)}
+.sto-voice__ind{margin-top:4px;font-size:14px;line-height:1.35;color:var(--muted-strong)}
+.sto-rate{display:flex;align-items:center;gap:10px;flex:none;margin-top:3px}
+.sto-rate__n{font-size:15px;line-height:1;letter-spacing:.02em;color:var(--ink);font-variant-numeric:tabular-nums}
+.sto-stars{display:flex;gap:3px}
+.sto-stars i{position:relative;display:block;width:16px;height:16px}
+.sto-stars svg{position:absolute;inset:0;width:100%;height:100%}
+.sto-stars svg:first-child{color:rgba(244,244,242,.26)}
+.sto-stars svg+svg{color:var(--ink);clip-path:inset(0 calc(100% - var(--f,100%)) 0 0)}
+/* the quote and its link fade out as a card leaves the centre and rise in as it arrives */
+.sto-voice__body{display:flex;flex-direction:column;align-items:flex-start;gap:20px;flex:1;margin-top:16px;
+  opacity:clamp(0,calc(1 - var(--ad) * 1.6),1);translate:0 calc(min(var(--ad),.4) * 20px)}
+.sto-voice__quote{margin:0}
+.sto-voice__quote p{font-size:20px;line-height:1.42;letter-spacing:-.02em;color:var(--ink);text-wrap:pretty}
+.sto-voice__link{margin-top:auto}
+.sto-voice__dim{position:absolute;inset:0;z-index:3;border-radius:inherit;background:#000;pointer-events:none;
+  opacity:clamp(0,calc(var(--ad) * var(--deck-dim)),var(--deck-dim-max))}
+/* >= 800 px a card to the right of the front one mirrors its caption row: the rating on its inner side (behind the
+   front card), company + industry on its visible outer edge, as on the left neighbour, so no letters are ever cut off
+   at the front card's edge. JS: .is-right while d > .5, --rd = clamp(d, 0, 1); the row fades out around d = .5,
+   where it flips, so the flip itself is never seen (moves to the left never fade it). The rating (on that inner side,
+   behind the front card) fades with the quote, so no sliver of it shows where the front card ends (narrow decks) */
+@media screen and (min-width:800px){
+  .js .sto-deck__slot.is-right .sto-voice__head{flex-direction:row-reverse}
+  .js .sto-deck__slot.is-right .sto-voice__by{align-items:flex-end;text-align:right}
+  .js .sto-voice__head{opacity:clamp(0,calc((max(var(--rd,0) - .5, .5 - var(--rd,0)) - .1) * 4),1)}
+  .js .sto-voice__head .sto-rate{opacity:clamp(0,calc(1 - var(--ad) * 1.6),1)}
+  /* a deck too narrow for the peeks' captions (their outer edge beyond the viewport's clipped edge, JS .is-tight):
+     the whole caption row fades with the quote, as on phones, so no word fragment shows at the edge */
+  .js .sto-deck.is-tight .sto-voice__head{opacity:clamp(0,min(1 - var(--ad) * 1.6,(max(var(--rd,0) - .5, .5 - var(--rd,0)) - .1) * 4),1)}
+  .sto-deck.is-moving .sto-voice__head{will-change:opacity}
+}
+/* a peeking card brings itself forward on click (>= 800 px; phones: the slivers sit in the edge-gesture zone); its
+   hidden quote and link are not hit-tested, so the "Drag" pill (data-cursor-off on the link) stays over the whole peek */
+@media (min-width:800px){.js .sto-deck.is-ready .sto-deck__slot:not(.is-front){cursor:pointer}}
+.js .sto-deck.is-ready .sto-deck__slot:not(.is-front) .sto-voice__body{pointer-events:none}
+@media (min-width:800px) and (hover:hover) and (pointer:fine){
+  .sto-deck:not(.is-moving) .sto-voice__dim{transition:opacity .45s var(--ease)}
+  .sto-deck:not(.is-dragging) .sto-deck__slot:not(.is-front):hover .sto-voice__dim{opacity:clamp(0,calc(var(--ad) * var(--deck-dim) - .2),1)}
+}
+
+/* one control row: previous · dots (house pagination pill) · next; space reserved until JS is ready */
+.sto-deck__ctrls{display:flex;justify-content:center;align-items:center;gap:12px;min-height:44px}
+.js .sto-deck__ctrls{visibility:hidden}
+.js .sto-deck.is-ready .sto-deck__ctrls{visibility:visible}
+.sto-deck.is-single .sto-deck__ctrls{display:none}
+.sto-rev__btn{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;color:var(--ink-2);background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);transition:background-color .3s var(--ease-io),color .3s var(--ease-io),transform .4s var(--spring)}
+@media (hover:hover){.sto-rev__btn:hover{background:rgba(255,255,255,.12);color:var(--ink)}}
+.sto-rev__btn:active{transform:scale(.94)}
+.sto-rev__btn svg{width:16px;height:16px}
+.sto-rev__btn--prev svg{transform:scaleX(-1)}
+.sto-deck__dots{display:flex;align-items:center;height:30px;border-radius:130px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.sto-deck__dot{display:grid;place-items:center;height:30px;padding:0 7px;border-radius:130px}
+.sto-deck__dot:first-child{padding-left:10px}
+.sto-deck__dot:last-child{padding-right:10px}
+.sto-deck__dot i{display:block;width:10px;height:10px;border-radius:5px;background:var(--ink);opacity:.3;transition:width .3s var(--ease-io),opacity .3s var(--ease-io)}
+@media (hover:hover){.sto-deck__dot:hover i{opacity:.6}}
+.sto-deck__dot.is-current i{width:22px;opacity:1}
+.sto-deck__dot:focus-visible{outline:2px solid var(--red);outline-offset:0}
+
+/* one-time star-fill wipe on the first front card when the deck first comes into view (JS: .is-seen + .is-wipe, once
+   its rating is fully on screen; a move before that just shows the stars filled); gated on .is-ready so the stars can
+   never stay empty, and on .is-wipe so it never replays on another card */
+.motion .sto-deck.is-ready:not(.is-seen) .sto-deck__slot.is-front .sto-stars svg+svg{clip-path:inset(0 100% 0 0)}
+.motion .sto-deck.is-seen .sto-deck__slot.is-wipe .sto-stars svg+svg{animation:sto-star-in .45s var(--ease) calc(120ms + var(--k,0) * 70ms) backwards}
+@keyframes sto-star-in{from{clip-path:inset(0 100% 0 0)}}
+
+@media (max-width:1023.98px){
+  .sto-voice__h{font-size:19px}
+  .sto-voice__quote p{font-size:19px}
+}
+/* touch: 44 px arrows; dot targets 44 px tall (the visible pill stays 30 px) and up to 44 px wide with a 4 px gap
+   between them: the row (two 44 px arrows, two 8 px gaps, 16 px gutters = 136 px) never overflows the screen.
+   --n = the number of dots (pages/stories.py) */
+@media (pointer:coarse),(max-width:799.98px){
+  .sto-rev__btn{width:44px;height:44px}
+  .sto-deck__dots{gap:4px}
+  .sto-deck__dot,.sto-deck__dot:first-child,.sto-deck__dot:last-child{width:min(44px,calc((100vw - 136px - (var(--n,6) - 1) * 4px) / var(--n,6)));
+    height:44px;padding:0;margin-block:-7px}
+}
+/* phone: the frame dissolves (house rule), the viewport bleeds to the screen edges, flat neighbours */
+@media (max-width:799.98px){
+  .js .sto-deck__vp{margin-inline:-16px;border-radius:0;padding-block:12px;-webkit-mask-image:none;mask-image:none}
+  .js .sto-deck__slot:not([data-pos="0"]){pointer-events:none}
+  .sto-voice.card{padding:16px 16px 20px;border-radius:28px}
+  .sto-voice .dots{display:none}
+  .sto-voice__media{border-radius:18px}
+  .sto-voice__media .hero-tile__tag{left:10px;top:10px}
+  /* the 24 px slivers show the still's edge only, not letter fragments: the caption fades with the quote */
+  .sto-voice__head{flex-direction:column;align-items:flex-start;gap:6px;margin-top:16px;opacity:clamp(0,calc(1 - var(--ad) * 1.6),1)}
+  .sto-deck.is-moving .sto-voice__head{will-change:opacity}
+  .sto-rate{order:-1;gap:8px;margin-top:0}
+  .sto-rate__n{font-size:13px}
+  .sto-stars i{width:13px;height:13px}
+  .sto-voice__h{font-size:18px}
+  .sto-voice__body{margin-top:14px}
+  .sto-voice__quote p{font-size:18px;line-height:1.45}
+  .sto-voice .sto-voice__link{width:100%;height:48px}
+  .sto-deck__ctrls{gap:8px}
+}
+@media (prefers-reduced-motion:reduce){.sto-voice__body{translate:none}}
+/* no JS: every review complete and readable, two columns from 1024 px, stacked below; no controls. The stills
+   34-stories.js loads later (data-src) show from their <noscript> copy */
+.no-js .sto-voice__img[data-src]{display:none}
+.no-js .sto-deck__vp{-webkit-mask-image:none;mask-image:none;overflow:visible;padding:0}
+.no-js .sto-deck__track{gap:16px}
+.no-js .sto-deck__ctrls,.no-js .sto-voice__dim{display:none}
+@media (min-width:1024px){.no-js .sto-deck__track{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{
+  .sto-deck__vp{-webkit-mask-image:none;mask-image:none;overflow:visible;padding:0;margin:0}
+  .sto-deck__track{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;perspective:none}
+  .sto-deck__slot{grid-area:auto!important;width:auto!important;transform:none!important;visibility:visible!important;--ad:0!important}
+  .sto-deck__ctrls,.sto-voice__dim,.sto-voice__glare{display:none}
+}
+@media (forced-colors:active){
+  .sto-voice__dim,.sto-voice__glare{display:none}
+  .sto-voice.card{border:1px solid CanvasText}
+  .sto-deck__dot i{forced-color-adjust:none;background:CanvasText}
+}
+
+/* ---------- Client experience */
+.sto-exp.section{padding:96px 0 40px}
+.sto-exp__inner{display:flex;flex-direction:column;align-items:center;gap:80px}
+.sto-head.section-head{max-width:720px;gap:20px}
+.sto-frame.frame{width:100%;max-width:1184px}
+@media (max-width:1439.98px){.sto-exp__inner{padding-inline:80px}}
+@media (max-width:799.98px){.sto-exp.section{padding:64px 0 24px}.sto-exp__inner{gap:56px;padding-inline:16px}}
+
+.sto-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:0;padding:0;list-style:none}
+.sto-step.card{display:flex;flex-direction:column;justify-content:space-between;gap:48px;min-height:236px;padding:32px 28px 28px}
+.sto-step__top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+.sto-step__n{font-size:13px;line-height:1;color:var(--ink)}
+.sto-step__n span{color:var(--muted-strong)}
+.sto-step__pip{position:relative;width:20px;height:20px;flex:none;border-radius:50%;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 2px rgba(0,0,0,.6)}
+.sto-step__pip::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:rgba(244,244,242,.42);
+  transition:background-color .5s var(--ease) calc(var(--d,0ms) + 450ms),transform .5s var(--spring) calc(var(--d,0ms) + 450ms)}
+.motion .sto-step:not(.is-in) .sto-step__pip::after{transform:scale(0)}
+.sto-step__t{font-size:24px;font-weight:600;line-height:1.15;letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
+/* the fifth line closes the sequence: the one lifted card (lighter near-black + soft red light), red pip */
+.sto-step--last.card{--glow-at:calc(100% - 38px) 54px;
+  background:radial-gradient(200px 150px at var(--glow-at),rgba(251,38,41,.15) 0%,rgba(251,38,41,0) 100%),radial-gradient(120% 120% at 15% 0%,#2a2a2a 0%,#101010 62%,#0b0b0b 100%);color:var(--ink);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 1px rgba(255,255,255,.12),0 30px 60px -30px rgba(0,0,0,.95)}
+.sto-step--last.card::after{border-color:rgba(255,255,255,.04)}
+.sto-step--last .dots i{background:#262626}
+.sto-step--last .sto-step__n{color:var(--ink)}
+.sto-step--last .sto-step__n span{color:var(--muted-strong)}
+.sto-step--last .sto-step__pip{background:rgba(251,38,41,.1);box-shadow:inset 0 0 0 1px rgba(251,38,41,.28)}
+.sto-step--last .sto-step__pip::after{background:var(--red-dot);box-shadow:0 0 0 3px rgba(255,59,59,.18),0 0 12px rgba(255,59,59,.55)}
+.sto-step--last .sto-step__t{color:var(--ink)}
+
+/* closing statement: wide card, mark + two emphasised lines */
+.sto-close.card{display:flex;align-items:center;gap:32px;margin-top:0;padding:40px 48px}
+.sto-close__mark{display:block;width:64px;flex:none;filter:drop-shadow(0 12px 16px rgba(0,0,0,.8)) drop-shadow(0 0 18px rgba(255,255,255,.06))}
+.sto-close__img{width:64px;height:auto}
+.sto-close__text{font-size:32px;font-weight:600;line-height:1.15;letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
+.sto-close__a{color:var(--ink)}
+.sto-close__b{display:inline;font-style:italic;font-weight:500;color:var(--ink);background:linear-gradient(var(--red),var(--red)) 0 92%/100% 2px no-repeat;padding-bottom:2px}
+
+@media (max-width:1439.98px){
+  .sto-frame.frame{max-width:none}
+}
+@media (max-width:1099.98px){
+  .sto-steps{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .sto-step{grid-column:span 2}
+  .sto-step:nth-child(4),.sto-step:nth-child(5){grid-column:span 3}
+  .sto-step.card{min-height:200px}
+  .sto-close__text{font-size:28px}
+}
+@media (max-width:799.98px){
+  .sto-steps{grid-template-columns:1fr;gap:8px}
+  .sto-step,.sto-step:nth-child(4),.sto-step:nth-child(5){grid-column:auto}
+  .sto-step.card{min-height:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:20px 20px 20px 22px;border-radius:24px}
+  .sto-step__top{display:contents}
+  .sto-step__n{order:0;flex:none;width:44px}
+  .sto-step__t{order:1;font-size:21px;flex:1;min-width:0}
+  .sto-step__pip{order:2}
+  .sto-step .dots{display:none}
+  .sto-step--last.card{--glow-at:calc(100% - 30px) 50%}
+  .sto-close.card{flex-direction:column;align-items:flex-start;gap:24px;padding:32px}
+  .sto-close__mark,.sto-close__img{width:56px}
+  .sto-close__text{font-size:26px}
+}
+
+/* ---------- Review CTA: frame + wide card (title/body left, white high-emphasis button right) */
+.sto-review.section{padding:80px 0 120px}
+.sto-review__inner{display:flex;justify-content:center}
+.sto-review__frame.frame{width:928px;max-width:100%}
+.sto-review__card.card{display:flex;align-items:center;gap:40px}
+.sto-review__main{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:20px}
+.sto-review__icon{position:relative;display:grid;place-items:center;width:56px;height:56px;flex:none;border-radius:16px;color:var(--ink);
+  background:radial-gradient(95.31% 95.31% at 19.53% 0%,#3a3a3a 0%,#050505 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),inset 0 1px 0 rgba(255,255,255,.08),0 14px 28px -8px rgba(0,0,0,.85);transition:transform .6s var(--spring)}
+.sto-review__icon svg{width:26px;height:26px;margin-top:-1px}
+.sto-review__card:hover .sto-review__icon{transform:rotate(-4deg) scale(1.06)}
+.sto-review__copy{display:flex;flex-direction:column;gap:8px}
+.sto-review__title{font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-.02em;color:var(--ink)}
+.sto-review__body{font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2)}
+.sto-review__cta{flex:0 0 auto;width:320px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.sto-review__btn{width:100%}
+.sto-review__mail{font-size:12px;line-height:16px;color:var(--muted-strong);letter-spacing:.04em}
+@media (max-width:1439.98px){.sto-review__inner{padding-inline:80px}.sto-review__frame.frame{width:100%}}
+@media (max-width:1023.98px){
+  .sto-review__card.card{flex-direction:column;align-items:stretch;gap:32px}
+  .sto-review__cta{width:100%}
+}
+@media (max-width:799.98px){
+  .sto-review.section{padding:56px 0 80px}
+  .sto-review__inner{padding-inline:16px}
+  .sto-review__main{flex-direction:column;align-items:flex-start;gap:20px}
+  .sto-review__title{font-size:28px}
+  .sto-review__body{font-size:16px}
+}
+
+/* ---------- Label-swap button (reference lg button: 56 px, radius 16, labels swap in a 24 px window,
+   spring 500/60). High-emphasis white on black, soft white bloom on hover (same language as .btn--dark). */
+.sto-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;height:56px;padding:0 28px;border-radius:16px;
+  background:var(--ink);color:#000;overflow:hidden;isolation:isolate;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 10px 30px -10px rgba(255,255,255,.18);
+  transition:transform .5s var(--spring-soft),box-shadow .7s var(--spring-soft)}
+.sto-btn:hover{box-shadow:0 0 0 1px rgba(255,255,255,.12),0 14px 40px -12px rgba(255,255,255,.3)}
+.sto-btn:active{transform:scale(.985)}
+.sto-btn__win{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;height:24px;overflow:hidden}
+.sto-btn__t{display:flex;align-items:center;justify-content:center;gap:6px;height:24px;flex:none;font-size:16px;font-weight:500;line-height:24px;
+  letter-spacing:-.3px;white-space:nowrap;transition:transform .38s cubic-bezier(.2,.8,.2,1)}
+/* button label at 400 like every .btn (95-typography.css lists .btn, not this component) */
+.sto-btn .sto-btn__t{font-weight:400 !important}
+.sto-btn__icon{display:inline-flex;width:16px;height:16px}
+.sto-btn__icon svg{width:100%;height:100%}
+.sto-btn:hover .sto-btn__t:first-child,.sto-btn:focus-visible .sto-btn__t:first-child{transform:translateY(34px)}
+.sto-btn:hover .sto-btn__t:last-child,.sto-btn:focus-visible .sto-btn__t:last-child{transform:translateY(-34px)}
+.sto-btn:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:16px}

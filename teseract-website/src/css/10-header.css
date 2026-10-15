@@ -1,0 +1,50 @@
+/* Header — minimal on every breakpoint: logo (mark + wordmark) left, three-line menu button right.
+   All navigation lives in the full-screen menu. Transparent over the top of the page; once the page
+   scrolls (.is-scrolled, 02-core.js) a dark frosted bar with a hairline fades in behind it.
+   Markup: scripts/chrome.py header(). */
+.site-header{position:sticky;top:0;z-index:90;height:var(--nav-h);padding:0 var(--page-pad);pointer-events:none;color:var(--ink)}
+.site-header::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.58) 100%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.07);transition:opacity .45s var(--ease)}
+.site-header.is-scrolled::before{opacity:1}
+.motion .site-header{animation:hdr-appear .7s cubic-bezier(.25,.1,.25,1) backwards}
+@keyframes hdr-appear{from{opacity:.001}}
+
+.hdr{position:relative;height:100%;max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
+
+/* ---------- Brand (sizes: --brand-* in 00-tokens.css, shared with the intro lockup in 04-intro.css) */
+.hdr-brand{position:relative;display:flex;align-items:center;gap:var(--brand-gap);height:44px;pointer-events:auto;color:inherit;border-radius:8px}
+.hdr-brand__mark{display:grid;place-items:center;width:var(--brand-mark);height:var(--brand-mark);flex:none}
+.hdr-brand__mark svg{width:100%;height:100%;transition:transform .7s var(--ease)}
+.hdr-brand:hover .hdr-brand__mark svg{transform:rotate(-120deg)}
+.hdr-brand__word{display:block;width:var(--brand-word);height:auto;aspect-ratio:1474.29/201.84;flex:none;transition:opacity .3s ease}
+.hdr-brand:hover .hdr-brand__word{opacity:.78}
+
+/* ---------- Three-line menu button (morphs to an X when the menu sets aria-expanded) */
+.nav-toggle{position:relative;display:grid;place-items:center;width:48px;height:48px;margin-right:-10px;flex:none;border-radius:50%;
+  color:inherit;pointer-events:auto;transition:background-color .5s var(--spring-soft)}
+.nav-toggle:hover{background:rgba(255,255,255,.07)}
+.nav-toggle__icon{position:relative;display:block;width:26px;height:14px}
+.nav-toggle__icon i{position:absolute;right:0;height:1.5px;border-radius:2px;background:currentColor;
+  transition:transform .45s var(--ease),width .45s var(--ease),opacity .25s ease,top .45s var(--ease)}
+.nav-toggle__icon i:nth-child(1){top:0;width:26px}
+.nav-toggle__icon i:nth-child(2){top:6.25px;width:26px}
+.nav-toggle__icon i:nth-child(3){top:12.5px;width:16px}
+.nav-toggle:hover .nav-toggle__icon i:nth-child(2){width:18px}
+.nav-toggle:hover .nav-toggle__icon i:nth-child(3){width:26px}
+.nav-toggle[aria-expanded=true] .nav-toggle__icon i{width:24px}
+.nav-toggle[aria-expanded=true] .nav-toggle__icon i:nth-child(1){top:6.25px;transform:rotate(45deg)}
+.nav-toggle[aria-expanded=true] .nav-toggle__icon i:nth-child(2){opacity:0;transform:scaleX(.2)}
+.nav-toggle[aria-expanded=true] .nav-toggle__icon i:nth-child(3){top:6.25px;transform:rotate(-45deg)}
+
+/* ---------- Tablet / phone */
+@media (max-width:799.98px){
+  .site-header{top:0}
+  .nav-toggle{margin-right:-12px}
+  .nav-toggle__icon{width:24px;height:13px}
+  .nav-toggle__icon i:nth-child(1),.nav-toggle__icon i:nth-child(2){width:24px}
+  .nav-toggle__icon i:nth-child(2){top:5.75px}
+  .nav-toggle__icon i:nth-child(3){top:11.5px;width:15px}
+  .nav-toggle[aria-expanded=true] .nav-toggle__icon i:nth-child(1),.nav-toggle[aria-expanded=true] .nav-toggle__icon i:nth-child(3){top:5.75px}
+}

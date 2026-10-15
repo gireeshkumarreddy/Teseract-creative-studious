@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Home 6 — FAQ (reference `#faq`, ref-plans-faq-footer §2), black theme.
+   Full-bleed near-black panel (#0b0b0b), radius 120 / 80 / 32, sitting directly on the footer's
+   true-black panel so the page background (#000) shows in the corner wedges ("stacked rounded
+   sheets"). On black the seams are drawn, not implied: a hairline that follows the rounded top and
+   bottom edges (fading out down the long straight sides) plus a soft top highlight.
+   ========================================================================== */
+.home-faq{
+  --faq-surface:#0b0b0b;                       /* panel */
+  --faq-rim:rgba(255,255,255,.08);             /* panel hairline (top + bottom arcs) */
+  --faq-line:rgba(255,255,255,.09);            /* accordion item hairline */
+  --faq-line-hi:rgba(255,255,255,.16);         /* hover / open hairline */
+}
+.home-faq.section{padding-block:0}
+.faq__panel{position:relative;display:flex;flex-direction:row;justify-content:center;align-items:flex-start;gap:100px;
+  width:100%;padding:120px;border-radius:120px;color:var(--ink);
+  background:radial-gradient(70% 420px at 50% 0%,rgba(255,255,255,.028) 0%,rgba(255,255,255,0) 100%),var(--faq-surface);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+/* hairline on the rounded edges; the mask fades it out along the straight left/right sides so the
+   full-bleed panel does not look boxed in by lines at the viewport edges */
+.faq__panel::before{content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;border:1px solid var(--faq-rim);pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 120px,transparent 260px,transparent calc(100% - 260px),#000 calc(100% - 120px),#000 100%);
+          mask-image:linear-gradient(180deg,#000 0,#000 120px,transparent 260px,transparent calc(100% - 260px),#000 calc(100% - 120px),#000 100%)}
+.faq__aside,.faq__list{position:relative;z-index:1}
+
+/* ---------- Left column: heading + contact card */
+.faq__aside{flex:none;width:40%;max-width:720px;display:flex;flex-direction:column;gap:40px}
+.faq__head{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.faq__title{font-size:56px;font-weight:600;line-height:1.1;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
+
+/* Contact card: raised near-black surface (one step lighter than the panel), top inner highlight,
+   hairline ring and a deep soft shadow instead of the light theme's grey drop shadow */
+.faq-card{position:relative;display:flex;flex-direction:column;gap:20px;padding:40px;border-radius:24px;
+  background:linear-gradient(180deg,#161616 0%,#111 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 1px rgba(255,255,255,.07),0 24px 48px -24px rgba(0,0,0,.9),0 2px 4px rgba(0,0,0,.5)}
+.faq-card::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.02);pointer-events:none}
+.faq-card__dots i{position:absolute;width:7px;height:7px;border-radius:32px;background:#232323;box-shadow:inset 0 1px 2px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.05);pointer-events:none}
+.faq-card__dots i:nth-child(1){top:21px;left:21px}
+.faq-card__dots i:nth-child(2){top:21px;right:19px}
+.faq-card__dots i:nth-child(3){bottom:20px;left:21px}
+.faq-card__dots i:nth-child(4){bottom:19px;right:19px}
+.faq-card__avatar{position:relative;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:12px;
+  background:radial-gradient(100% 100% at 0% 0%,#3a3a3a 0%,#0b0b0b 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 8px 18px -6px rgba(0,0,0,.8);
+  transition:transform var(--spring-d) var(--spring)}
+.faq-card__avatar::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.14);pointer-events:none}
+.faq-card__avatar:hover{transform:rotate(-4deg) scale(1.1)}
+.faq-card__mark{width:40px;height:40px;object-fit:contain}
+.faq-card__copy{display:flex;flex-direction:column;gap:8px}
+.faq-card__title{font-size:20px;font-weight:600;line-height:1.4;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.faq-card__text{font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:pretty}
+.faq-card__actions{display:flex;flex-direction:column;gap:8px}
+
+/* Outline buttons (component framer-wp8tk): tint blob drops in, label rows swap (spring 500/60).
+   Dark theme: light label, interactive hairline, the blob brightens (white wash) instead of darkening. */
+.faq-btn{position:relative;display:block;width:100%;height:48px;border-radius:16px;border:1px solid var(--line-3);
+  overflow:hidden;isolation:isolate;color:var(--ink);background:rgba(255,255,255,.02);
+  transition:border-color .45s var(--spring-soft)}
+.faq-btn:hover,.faq-btn:focus-visible{border-color:rgba(255,255,255,.24)}
+.faq-btn__blob{position:absolute;z-index:0;top:-154px;left:calc(50% - 74px);width:148px;height:148px;border-radius:50px;background:rgba(255,255,255,.07);
+  transition:top .45s var(--spring-soft),left .45s var(--spring-soft),width .45s var(--spring-soft),height .45s var(--spring-soft)}
+.faq-btn:hover .faq-btn__blob,.faq-btn:focus-visible .faq-btn__blob{top:-243px;left:-19px;width:calc(100% + 34px);height:calc(100% + 246px)}
+.faq-btn__win{position:absolute;z-index:1;left:12px;right:12px;top:calc(50% - 11px);height:22px;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:10px}
+.faq-btn__row{display:flex;align-items:center;justify-content:center;gap:6px;height:22px;flex:none;max-width:100%;
+  font-size:16px;font-weight:600;line-height:22px;letter-spacing:-.3px;white-space:nowrap;transition:transform .45s var(--spring-soft)}
+.faq-btn__row--alt{gap:4px}
+.faq-btn__detail{overflow:hidden;text-overflow:ellipsis}
+.faq-btn:hover .faq-btn__row--main,.faq-btn:focus-visible .faq-btn__row--main{transform:translateY(32px)}
+.faq-btn:hover .faq-btn__row--alt,.faq-btn:focus-visible .faq-btn__row--alt{transform:translateY(-32px)}
+.faq-btn__ic{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;flex:none}
+.faq-btn__ic svg{width:18px;height:18px}
+.faq-btn__row--main .faq-btn__ic svg[viewBox="0 0 100 100"]{width:16px;height:16px}
+.faq-btn__row--alt .faq-btn__ic svg{width:16px;height:16px}
+.faq-btn:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:16px}
+.faq-btn:active{background:rgba(255,255,255,.06)}
+
+/* ---------- Right column: accordion (component framer-TAjGh) */
+/* No overflow clipping here: items start 150px low, and a clipped (invisible) box would never
+   intersect the viewport, so the last cards would never reveal. */
+.faq__list{flex:1 1 0;min-width:0;max-width:800px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.faq__cell{width:100%}
+.faq-item{position:relative;width:100%;border-radius:20px;background:rgba(255,255,255,0);cursor:pointer;
+  transition:background-color .3s var(--ease-io)}
+.faq-item::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid var(--faq-line);pointer-events:none;
+  transition:border-color .3s var(--ease-io)}
+/* hover brightens (white wash) — the light theme's rgba(0,0,0,.02) darkening, flipped */
+.faq-item:hover{background:rgba(255,255,255,.03)}
+.faq-item:hover::after{border-color:var(--faq-line-hi)}
+/* open: the item lifts one surface step with a top inner highlight so the expanded answer reads as a card */
+.faq-item.is-open{background:rgba(255,255,255,.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.faq-item.is-open::after{border-color:var(--faq-line-hi)}
+.faq-item__h{font:inherit;margin:0}
+.faq-item__btn{display:flex;align-items:center;gap:24px;width:100%;padding:28px;text-align:left;color:var(--ink);border-radius:20px;
+  transition:padding-bottom .3s var(--ease-io)}
+.faq-item__btn:focus-visible{outline:2px solid var(--red);outline-offset:-2px;border-radius:20px}
+@supports selector(:has(a)){
+  .faq-item__btn:focus-visible{outline:none}
+  .faq-item:has(.faq-item__btn:focus-visible){outline:2px solid var(--red);outline-offset:3px}
+}
+.faq-item__q{flex:1 1 0;min-width:0;font-size:20px;font-weight:600;line-height:1;letter-spacing:-.02em;color:var(--ink);text-wrap:pretty}
+.faq-item__icon{display:inline-flex;width:24px;height:24px;flex:none;color:var(--ink);transition:transform var(--spring-d) var(--spring),color .3s var(--ease-io)}
+.faq-item__icon:hover{transform:rotate(10deg)}
+.faq-item__plus{display:inline-flex;width:100%;height:100%;transition:transform .3s var(--ease-io)}
+.faq-item__plus svg{width:100%;height:100%}
+.faq-item.is-open .faq-item__plus{transform:rotate(135deg)}
+/* active state = the section's single accent: the open item's × turns brand red */
+.faq-item.is-open .faq-item__icon{color:var(--red)}
+.faq-item.is-open .faq-item__btn{padding-bottom:20px}
+
+/* Height animation: tween 300ms cubic-bezier(.44,0,.56,1). Without JS every answer stays open. */
+.faq-item__panel{display:grid;grid-template-rows:1fr}
+.faq-item__panel[hidden]:not([hidden=until-found]){display:none}
+.faq-item__panel[hidden=until-found]{grid-template-rows:0fr}  /* closed but searchable (find-in-page) */
+.js .faq-item__panel{grid-template-rows:0fr;transition:grid-template-rows .3s var(--ease-io)}
+.js .faq-item.is-open .faq-item__panel{grid-template-rows:1fr}
+.faq-item__clip{min-height:0;overflow:hidden}
+.faq-item__a{padding:0 28px 28px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);white-space:pre-wrap;text-wrap:pretty}
+.no-js .faq-item__btn{padding-bottom:20px}
+
+/* ---------- Tablet (800–1439.98): stacked, radius 80, padding 80, gap 56 */
+@media (max-width:1439.98px){
+  .faq__panel{flex-direction:column;align-items:center;gap:56px;padding:80px;border-radius:80px}
+  .faq__panel::before{
+    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 80px,transparent 200px,transparent calc(100% - 200px),#000 calc(100% - 80px),#000 100%);
+            mask-image:linear-gradient(180deg,#000 0,#000 80px,transparent 200px,transparent calc(100% - 200px),#000 calc(100% - 80px),#000 100%)}
+  .faq__aside{width:100%;max-width:800px}
+  .faq__list{flex:none;width:100%;max-width:800px}
+}
+@media (max-width:1023.98px){.faq__title{font-size:48px}}
+@media (max-width:809.98px){.faq-item__a{font-size:16px}}
+/* ---------- Phone (<=799.98): radius 32, padding 56/24/24, gap 32, card padding 24, no dots */
+@media (max-width:799.98px){
+  .faq__panel{gap:32px;padding:56px 24px 24px;border-radius:32px;
+    background:radial-gradient(90% 260px at 50% 0%,rgba(255,255,255,.028) 0%,rgba(255,255,255,0) 100%),var(--faq-surface)}
+  .faq__panel::before{
+    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 32px,transparent 120px,transparent calc(100% - 120px),#000 calc(100% - 32px),#000 100%);
+            mask-image:linear-gradient(180deg,#000 0,#000 32px,transparent 120px,transparent calc(100% - 120px),#000 calc(100% - 32px),#000 100%)}
+  .faq__aside{gap:24px}
+  .faq-card{padding:24px}
+  .faq-card__dots{display:none}
+  .faq-btn{height:48px}
+}
+@media (max-width:719.98px){
+  .faq__title{font-size:32px}
+  .faq-card__title{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  .faq-item__icon:hover,.faq-card__avatar:hover{transform:none}
+  .js .faq-item__panel{transition:none}  /* answers snap open/closed on the same frame */
+}

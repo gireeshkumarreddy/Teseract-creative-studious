@@ -1,0 +1,248 @@
+/* Home hero (ref-hero-nav §4–10; gallery tile hover/caption/reveal after ZIP §4–5).
+   Markup: scripts/sections/home_hero.py · behaviour: src/js/20-hero.js
+   Black theme: soft-white type on the true-black page, a faint light pool behind the lockup, the
+   gallery as a near-black framed group with hairlines, and the reference's dark CTA flipped to the
+   white high-emphasis button (its brand-mark lead becomes a dark coin). Red stays on the badge dot,
+   caption dot and focus rings only. */
+.hero{
+  --hero-ink:var(--ink);
+  --hero-roll:cubic-bezier(.44,0,.56,1);          /* pill slide tween, 500ms */
+  --hero-tip:linear(0,.054,.169,.303,.434,.551,.65,.732,.796,.847,.886,.916,.938,.955,.967,.976,.983,.988,.991,.994,.996,.997,.998,.999,1); /* spring 500/62/2 */
+}
+.hero.section{display:flex;flex-direction:column;align-items:center;gap:56px;padding:64px 48px 56px;color:var(--hero-ink);isolation:isolate}
+/* light pool behind the lockup: lifts the copy off the true black without a visible box */
+.hero.section::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:-40px;height:760px;pointer-events:none;
+  background:radial-gradient(600px 360px at 50% 50%,rgba(255,255,255,.055) 0%,rgba(255,255,255,.018) 55%,transparent 100%)}
+/* reference appear = spring 400/30/1 over ~400ms (the shared curve, at its native duration) */
+.hero [data-appear]{--spring-d:400ms}
+/* Fail-safe for the above-the-fold copy: html.motion hides [data-reveal] from the first paint, and
+   only app.js reveals it. If the script is slow, blocked or fails before it marks the page ready,
+   fade the hero in anyway after 2.5s instead of leaving the copy invisible. Keyed to html.is-ready
+   (02-core.js, at DOMContentLoaded), NOT to .is-in: Chrome does not start the appear transition when
+   the same style change also removes an animation on opacity/transform, so the animation must be
+   gone a frame before .is-in lands (20-hero.js appear() waits two frames; past 2.4s it reveals at
+   once so a fail-safe fade already on screen is never replayed). */
+.motion:not(.is-ready) .hero [data-appear]{animation:hero-failsafe .6s ease 2.5s both}
+@keyframes hero-failsafe{to{opacity:1;transform:none}}
+
+.hero__inner{width:100%;display:flex;flex-direction:column;align-items:center;gap:24px}
+.hero__lockup{width:100%;display:flex;flex-direction:column;align-items:center;gap:24px;padding:16px}
+
+/* ---------- Rotating statement pill ("review 2": 226×32 slot, 2000ms period, 500ms rotateX roll) */
+.hero-pill{position:relative;width:226px;height:32px;flex:none}
+.hero-pill__row{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:4px;white-space:nowrap;
+  opacity:0;transform:translate(-50%,-50%) translateY(40px) rotateX(-50deg);
+  transition:transform .5s var(--hero-roll),opacity .5s var(--hero-roll)}
+.hero-pill__row.is-active{opacity:1;transform:translate(-50%,-50%)}
+.hero-pill__row.is-prev{opacity:0;transform:translate(-50%,-50%) translateY(-56px) rotateX(50deg)}
+.hero-pill__row.is-snap{transition:none}
+.hero-pill__av{position:relative;display:grid;place-items:center;width:32px;height:32px;flex:none;border-radius:50%;
+  background:radial-gradient(95.31% 95.31% at 19.53% 0%,#3a3a3a 0%,#060606 100%);
+  box-shadow:0 12px 24px -4px rgba(0,0,0,.7),0 3px 6px -2px rgba(0,0,0,.6)}
+.hero-pill__av::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.3);pointer-events:none}
+.hero-pill__av img{width:22px;height:22px;object-fit:contain}
+.hero-pill__bubble{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:23px;overflow:hidden;
+  background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.05);color:rgba(244,244,242,.88);
+  font-size:14px;font-style:italic;font-weight:500;line-height:21px;letter-spacing:-.03em}
+/* tooltip: light chip (same vocabulary as the View Project cursor pill) so it reads on the black page */
+.hero-pill__tip{position:absolute;z-index:2;left:50%;top:-34px;padding:6px 8px;border-radius:6px;background:var(--ink);color:#0b0b0b;
+  font-size:12px;font-weight:500;line-height:1;letter-spacing:.02em;white-space:nowrap;pointer-events:none;user-select:none;
+  box-shadow:0 8px 20px -6px rgba(0,0,0,.8);opacity:0;transform:translateX(-50%);transition:opacity .55s var(--hero-tip)}
+.hero-pill__tail{position:absolute;top:20px;left:49%;width:34px;height:13px;transform:translateX(-50%);color:var(--ink)}
+.hero-pill:hover .hero-pill__tip{opacity:1}
+
+/* ---------- Headline + copy
+   The H1 is visible from the first paint (it is the page's main heading and LCP text): no fade,
+   only a short CSS rise that needs no script. */
+.hero__title{width:100%;max-width:880px;margin:0;font-size:72px;font-weight:600;line-height:.95;letter-spacing:-.05em;
+  color:var(--hero-ink);text-align:center;text-wrap:balance}
+.motion .hero__title{animation:hero-rise .95s var(--ease) .12s both}
+/* SEO keyword line inside the H1 (client-approved): quiet uppercase eyebrow above the headline */
+.hero__kicker{display:block;margin:0 auto 20px;font-size:13px;font-weight:500;line-height:1.3;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-strong)}
+.hero__headline{display:block}
+@keyframes hero-rise{from{transform:translate3d(0,22px,0)}}
+.hero__copy{width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.hero__lead{font-size:18px;font-weight:400;line-height:1.5;letter-spacing:-.3px;color:var(--hero-ink);text-wrap:balance}
+.hero__body{max-width:520px;font-size:15px;line-height:1.55;letter-spacing:-.2px;color:var(--ink-2);text-wrap:balance}
+
+/* ---------- CTAs (reference "Button Call": Contact + Plans) */
+.hero__cta{display:flex;flex-direction:column;align-items:center;gap:4px}
+/* Two equal tracks meeting at the centre line: "Start a Project" sits right-aligned in the left
+   track, so when its lead opens to "+ You" on hover the button grows to the LEFT only — its label
+   and the "Explore Our Work" button stay put under the pointer (the buttons are ~equal width, so
+   the resting composition is the reference's centred pair). */
+.hero__buttons{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:8px}
+.hero__btn{display:flex}
+.hero__btn:first-child{justify-self:end}
+.hero__btn:last-child{justify-self:start}
+.hero .hero-cta.btn:focus-visible{border-radius:16px}
+.hero .hero-cta--start::before{content:none}            /* the reference Contact button has no wash; its lead opens instead */
+/* brand-mark lead: [mark] at rest; hover/focus slides open to [mark] + [You] (spring 500/60/1).
+   On the white high-emphasis button the mark sits on a dark coin and "You" on a soft grey one. */
+.hero .hero-cta--start .btn__lead{position:relative;width:29px;height:28px;transition:width .7s var(--spring-soft)}
+.hero .hero-cta--start:hover .btn__lead,.hero .hero-cta--start:focus-visible .btn__lead{width:74px}
+.hero .hero-cta__av{position:absolute;z-index:3;left:0;top:0;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(120% 120% at 28% 12%,#3c3c3c 0%,#111 55%,#000 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 2px 6px -2px rgba(0,0,0,.45)}
+.hero .hero-cta__av img{width:20px;height:20px;border-radius:0;object-fit:contain}
+.hero .hero-cta__you{position:absolute;z-index:2;right:1px;top:0;width:28px;height:28px;border-radius:50%;background:#d6d6d2;
+  color:rgba(0,0,0,.62);font-size:10px;font-weight:500;line-height:28px;letter-spacing:0;text-align:center}
+.hero .hero-cta__plus{position:absolute;z-index:1;left:49%;top:50%;transform:translate(-50%,-52%);
+  color:rgba(0,0,0,.42);font-size:16px;font-weight:400;line-height:1}
+
+/* ---------- Badge (reference "Availability": 12px red dot with glow + optional pulse, mono label) */
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px;margin:0}
+.hero-badge__dot{position:relative;width:12px;height:12px;flex:none}
+.hero-badge__dot i{position:absolute;inset:0;border-radius:10px;background:var(--red-dot)}
+.hero-badge__dot i:first-child{opacity:.84}
+.hero-badge__dot i:last-child{box-shadow:0 0 18px 0 rgba(255,59,59,.45)}
+.motion .hero-badge__dot i:first-child{animation:hero-pulse 1.6s infinite}
+@keyframes hero-pulse{
+  0%,37.5%{transform:scale(1);opacity:.84;animation-timing-function:cubic-bezier(.12,.23,.5,1)}
+  81.25%,100%{transform:scale(3);opacity:0}
+}
+.hero-badge__text{font-family:var(--mono);font-size:12px;font-weight:500;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted-strong);user-select:none}   /* real copy (the tagline): informational grey, AA on the page */
+.hero.is-still .hero-badge__dot i:first-child{animation:none}
+
+/* ---------- Media: marquee + gallery (flex column, gap 8) */
+.hero__media{width:100%;display:flex;flex-direction:column;gap:8px}
+
+/* Services marquee (reference logo Ticker: 48px, left, 25px/s, gap 64/40/28, triangular fade mask).
+   Words: Geist 500 20/1 −0.02em in soft white at .5 (4.9:1 on black); a 12px brand mark at .3 in each gap.
+   Decorative (aria-hidden; the services are listed in the sections below and the footer). */
+.hero-marquee{--mq-gap:64px;width:100%;height:48px}
+.hero-marquee__track{height:100%;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 50%,#000 50%,transparent 100%);
+          mask-image:linear-gradient(to right,transparent 0%,#000 50%,#000 50%,transparent 100%)}
+.hero-marquee__list{display:flex;align-items:center;gap:calc(var(--mq-gap) / 2);width:max-content;height:100%;margin:0;padding:0;list-style:none}
+.hero-marquee__item{display:flex;align-items:center;gap:calc(var(--mq-gap) / 2);flex:none;color:var(--ink);user-select:none}
+.hero-marquee__word{font-size:20px;font-weight:500;line-height:1;letter-spacing:-.02em;white-space:nowrap;opacity:.5}
+.hero-marquee__mark{width:12px;height:12px;flex:none;opacity:.3}
+
+/* Gallery frame ("visual": 1000px framed group, hairline, 4 corner handles). On black the frame is a
+   faint white tint with a hairline; the handles stay light so the "selection frame" still reads. */
+.hero-gallery{position:relative;z-index:0;display:flex;align-items:center;justify-content:center;gap:16px;width:100%;height:1000px;padding:0 16px;
+  background:var(--frame)}
+.hero-gallery::after{content:"";position:absolute;inset:0;border:1px solid var(--line);pointer-events:none}
+.hero-gallery__handle{position:absolute;z-index:1;width:8px;height:8px;border-radius:100%;background:#e9e9e6;border:1px solid rgba(0,0,0,.55);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 4px 8px -3px rgba(0,0,0,.8)}
+.hero-gallery__handle--tl{top:-3px;left:-3px}
+.hero-gallery__handle--tr{top:-3px;right:-3px}
+.hero-gallery__handle--bl{bottom:-3px;left:-3px}
+.hero-gallery__handle--br{bottom:-3px;right:-3px}
+.hero-col{flex:1 0 0;width:1px;height:100%;overflow:hidden;overflow:clip}
+.hero-col__list{display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none}
+.hero-col__item{display:block}
+
+/* Tiles: hairline inner frame (light-background shots stay contained on black), radius 0,
+   ZIP hover (zoom 1.018 + mono caption roll). The frame brightens on hover/focus. */
+.hero-tile{position:relative;display:block;overflow:hidden;background:var(--surface-2);color:var(--ink)}
+.hero-tile::after{content:"";position:absolute;inset:0;z-index:2;border:1px solid rgba(255,255,255,.08);pointer-events:none;transition:border-color .4s ease}
+.hero-tile:hover::after{border-color:rgba(255,255,255,.22)}
+.hero-tile__media{display:block;aspect-ratio:var(--ar,4/3)}
+.hero-tile__media img{width:100%;height:100%;object-fit:cover}
+.hero-tile:hover .hero-tile__media.is-in img,.hero-tile:focus-visible .hero-tile__media.is-in img{transform:scale(1.018)}
+.hero-tile:focus-visible{outline:2px solid transparent;outline-offset:-2px;border-radius:0}   /* transparent: still drawn in forced-colors */
+.hero-tile:focus-visible::before{content:"";position:absolute;inset:0;z-index:4;box-shadow:inset 0 0 0 2px var(--red),inset 0 0 0 3px rgba(0,0,0,.55);pointer-events:none}
+.hero-tile__cap{position:absolute;z-index:3;right:10px;bottom:calc(10px + var(--cap-lift,0px));display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;column-gap:7px;
+  max-width:calc(100% - 20px);padding:7px 10px 8px;background:rgba(8,8,8,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 10px 24px -10px rgba(0,0,0,.8);
+  font-family:var(--mono);font-size:11px;font-weight:500;line-height:19px;letter-spacing:.03em;text-transform:uppercase;
+  opacity:0;transform:translate3d(0,6px,0);transition:opacity .3s ease,transform .5s var(--ease);pointer-events:none}
+.hero-tile__cap .roll{height:19px;line-height:19px;vertical-align:middle}
+.hero-tile__dot{color:var(--red-dot)}
+.hero-tile__ind{color:rgba(244,244,242,.66)}
+.hero-tile:hover .hero-tile__cap,.hero-tile:focus-visible .hero-tile__cap{opacity:1;transform:none}
+@media (hover:none){.hero-tile__cap{display:none}}
+/* label pill on EVERY tile, always visible (touch screens never see the hover caption): client vs concept at a
+   glance - ink dot = Client Project, red dot = Interactive Concept / Concept Project / Personal project */
+.hero-tile__tag{position:absolute;z-index:3;left:8px;top:8px;display:inline-flex;align-items:center;gap:6px;max-width:calc(100% - 16px);
+  padding:4px 9px 4px 7px;border-radius:999px;background:rgba(8,8,8,.82);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-family:var(--mono);font-size:10px;font-weight:500;line-height:14px;
+  letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.hero-tile__tag i{flex:none;width:6px;height:6px;border-radius:50%;background:var(--red-dot)}
+.hero-tile__tag--client i{background:var(--ink);box-shadow:0 0 0 2px rgba(244,244,242,.16)}
+/* an Interactive Concept's small "Unofficial, ..." line under its pill (home_hero._label): pill + line stacked in the
+   pill's corner, the line in plain case on the same dark ground */
+.hero-tile__labels{position:absolute;z-index:3;left:8px;top:8px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  max-width:calc(100% - 16px);pointer-events:none}
+.hero-tile__labels .hero-tile__tag{position:static;max-width:100%}
+.hero-tile__note{max-width:100%;padding:3px 9px 4px;border-radius:10px;background:rgba(8,8,8,.82);color:var(--ink-2);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-family:var(--mono);font-size:10px;line-height:13px;letter-spacing:.01em}
+/* phone tiles (about 150 px wide): a long label wraps to a second line instead of being cut */
+@media (max-width:479.98px){.hero-tile__tag{white-space:normal;text-overflow:clip;border-radius:10px;padding:4px 8px 4px 7px;line-height:13px}}
+/* narrow phones: the name gets the caption's width */
+@media (max-width:379.98px){.hero-tile__dot,.hero-tile__ind{display:none}}
+
+/* Pause control (WCAG 2.2.2): frosted dark pill in the frame's top-right corner, sticky below the
+   header while the gallery is on screen. Shown on gallery hover / keyboard focus / when paused, and
+   always on touch screens. Same vocabulary as the idea slideshow toggle. Hover brightens. */
+.hero-gallery__ui{position:absolute;z-index:5;inset:0;display:flex;flex-direction:column;align-items:flex-end;padding:12px 28px;pointer-events:none}
+.hero-motion{position:sticky;top:calc(var(--nav-h) + 12px);display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px 0 11px;
+  border-radius:10px;background:rgba(14,14,14,.74);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);color:var(--ink);
+  font-family:var(--mono);font-size:12px;font-weight:500;line-height:1;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -8px rgba(0,0,0,.8);pointer-events:auto;
+  opacity:0;transform:translate3d(0,-4px,0);transition:opacity .3s ease,transform .5s var(--ease),background-color .3s ease,box-shadow .3s ease}
+.hero-motion[hidden]{display:none}
+.hero-motion::before{content:"";position:absolute;inset:-6px}
+.hero-gallery:hover .hero-motion,.hero-gallery:focus-within .hero-motion,.hero.is-still .hero-motion{opacity:1;transform:none}
+.hero-motion:hover{background:rgba(40,40,40,.84);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.08),0 8px 20px -8px rgba(0,0,0,.8)}
+.hero-motion:active{transform:scale(.97)}
+.hero-motion:focus-visible{border-radius:10px}
+.hero-motion__ic{position:relative;display:inline-flex;gap:3px;width:10px;height:10px}
+.hero-motion__ic i{width:3px;height:10px;border-radius:1px;background:currentColor}
+.hero.is-still .hero-motion__ic i{display:none}
+.hero.is-still .hero-motion__ic::before{content:"";width:0;height:0;margin-left:1px;border-style:solid;border-width:5px 0 5px 8.5px;border-color:transparent transparent transparent currentColor}
+@media (hover:none){.hero-motion{opacity:1;transform:none}}
+
+/* reveal: tiles (and the ticker's clones) open together when the frame first enters, columns staggered */
+.hero-gallery.is-revealing .hero-col--2 .reveal-image img{transition-delay:90ms}
+.hero-gallery.is-revealing .hero-col--3 .reveal-image img{transition-delay:180ms}
+.hero-gallery.is-revealing .hero-col--4 .reveal-image img{transition-delay:270ms}
+
+/* ---------- Tablet (800–1439.98) */
+@media (max-width:1439.98px){
+  .hero__inner{gap:28px}
+  .hero-marquee{--mq-gap:40px}
+  .hero-marquee__track{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%);
+                               mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%)}
+  .hero-col--4{display:none}
+}
+@media (max-width:1023.98px){
+  .hero__title{font-size:64px}
+}
+@media (max-width:809.98px){
+  .hero__lead{font-size:16px}
+}
+
+/* ---------- Phone (≤799.98, canvas 390) */
+@media (max-width:799.98px){
+  .hero.section{gap:48px;padding:64px 16px 56px}
+  .hero.section::before{top:-20px;height:640px;background:radial-gradient(300px 320px at 50% 50%,rgba(255,255,255,.05) 0%,rgba(255,255,255,.016) 55%,transparent 100%)}
+  .hero__lockup{padding:0}
+  .hero__title{max-width:none}
+  .hero__body{font-size:14px}
+  .hero__cta{width:100%}
+  .hero__buttons{grid-template-columns:1fr;width:100%}
+  .hero__btn:is(:first-child,:last-child){justify-self:stretch}
+  .hero__btn,.hero__btn .btn{width:100%}
+  .hero .hero-cta--start .btn__lead,.hero .hero-cta--start:hover .btn__lead{width:74px;transition:none}   /* reference mobile-dark: static [mark] + You */
+  .hero-marquee{--mq-gap:28px}
+  .hero-marquee__track{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%);
+                               mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%)}
+  .hero-gallery{height:100vh;height:100svh;gap:10px;padding:0 8px}
+  .hero-col--3{display:none}
+  .hero-col__list{gap:8px}
+  .hero-gallery__ui{padding:8px 16px}
+  .hero-motion{top:calc(var(--nav-h) + 4px);height:30px;font-size:12px;gap:6px;padding:0 10px 0 9px;border-radius:8px}
+  .hero-motion::before{inset:-7px -6px}                 /* 44px touch target */
+}
+@media (max-width:719.98px){
+  .hero__title{font-size:32px;line-height:1.05}
+  .hero__kicker{margin-bottom:14px;font-size:12px;letter-spacing:.14em}
+}
+/* forced colours: the frame tint, hairlines and handles are drawn by the system palette */
+@media (forced-colors:active){
+  .hero-gallery::after,.hero-tile::after{border-color:CanvasText}
+  .hero.section::before{display:none}
+}
