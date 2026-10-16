@@ -48,6 +48,15 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
 }
 @media (min-width:1920px){.wk-cap{font-size:12px}}
 
+/* ---------- Entrances on this long page (03-motion.css reveals; the same in 36-project.css, scenes in 38-scene.css):
+   a reveal still waiting below the fold is offset by a 2D translate and not pre-promoted, so it holds no composited
+   layer (75 waiting reveals held ~75 layers, re-layerized on every phone scroll frame); the browser promotes each one
+   only while its entrance runs. The non-blur reveals drop their blur(0) filter: a filter transition cannot run on the
+   compositor, so it repainted the card (and its scene) every frame of the entrance. The entrances look the same. */
+.motion .page-work main [data-reveal]:not(.is-in){transform:translate(0,var(--y,40px)) scale(var(--s,1));will-change:auto}
+.motion .page-work main [data-reveal]:not([data-reveal=blur]){filter:none}
+.motion .page-work main [data-split]:not(.is-in) .w__i{transform:translate(0,108%)}
+
 /* ---------- Hero (reference page-hero lockup) */
 .wk-hero{position:relative;padding:64px 0 56px}
 .wk-hero__inner{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}

@@ -7,6 +7,12 @@
    on hover), frames on a #141414 loading plate with a white-6 % hairline so light boards keep an edge.
    ========================================================================== */
 
+/* ---------- Entrances (03-motion.css reveals): waiting reveals hold no composited layer and the non-blur ones run no
+   blur(0) filter transition (it cannot run on the compositor) - as on the Work page, 33-work.css. Same look. */
+.motion .page-project main [data-reveal]:not(.is-in){transform:translate(0,var(--y,40px)) scale(var(--s,1));will-change:auto}
+.motion .page-project main [data-reveal]:not([data-reveal=blur]){filter:none}
+.motion .page-project main [data-split]:not(.is-in) .w__i{transform:translate(0,108%)}
+
 /* ---------- Header */
 .pj-head{padding:40px 0 56px}
 .pj-head__bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:64px}
