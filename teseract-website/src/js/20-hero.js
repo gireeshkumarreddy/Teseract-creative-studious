@@ -95,9 +95,11 @@
       });
     });
     syncLeads();                                   // tickers() (02-core.js) has made the first clones already
-    // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed.
+    // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed. A clone of the first
+    // tile drops the margin standIns() may have given that tile (the loop's start only).
+    const unshift = () => frame.querySelectorAll('[data-ticker-list] > [data-clone][style]').forEach(c => { c.style.marginTop = ''; });
     if ('MutationObserver' in window) {
-      const mo = new MutationObserver(() => { syncLeads(); if (revealed) openAll(); });
+      const mo = new MutationObserver(() => { unshift(); syncLeads(); if (revealed) openAll(); });
       frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     }
 
@@ -148,7 +150,7 @@
       const visTop = Math.max(c.top, headerBottom()), visBottom = Math.min(c.bottom, innerHeight);
       const ih = item.offsetHeight;
       const centre = visBottom - visTop >= ih + 32 ? (visTop + visBottom) / 2 - c.top : col.clientHeight / 2;
-      const offset = item.offsetTop - list.firstElementChild.offsetTop;   // item top inside the list at translate 0
+      const offset = item.offsetTop - list.offsetTop;                      // item top inside the list at translate 0
       let target = centre - ih / 2 - offset;                               // list translate that puts it there
       if (anim && anim.effect) {
         const kfs = anim.effect.getKeyframes();
@@ -182,11 +184,92 @@
     });
   }
 
+  /* Stand-ins (home_hero._columns): where a screen hides a column, its projects' tiles are repeated in the columns
+     still shown, so every project is on every screen. With motion they sit out the first layout (20-hero.css), and
+     after load idle moments let them in one at a time, each only while none of its places in the column (the tile and
+     the ticker's copies of it, which share its .is-on) is on screen, and the column's ticker takes the longer loop from
+     where it is. Stand-ins this screen does not show (another width, a hidden column) are let in at once: the ticker's
+     own rebuild on resize picks them up. */
+  function standIns(frame) {
+    const left = [...frame.querySelectorAll('[data-ticker-list] > :not([data-clone]):is(.hero-col__item--lt1440,.hero-col__item--lt800)')];
+    if (!left.length) return;
+    const narrow = { lt1440: matchMedia('(max-width: 1439.98px)'), lt800: matchMedia('(max-width: 799.98px)') };
+    const parse = kf => parseFloat(String(kf.transform).replace(/[^-\d.]+/g, ' ').trim().split(' ').pop());
+    const MARGIN = 24;                                 // px kept clear around the visible part (the ticker keeps moving)
+    const letIn = li => {
+      const kids = [...li.parentElement.children];
+      const n = kids.filter(k => !k.hasAttribute('data-clone')).length;
+      for (let j = kids.indexOf(li); j >= 0 && j < kids.length; j += n) kids[j].classList.add('is-on');
+    };
+    let scrolled = 0;
+    const onScroll = () => { scrolled = performance.now(); };
+    addEventListener('scroll', onScroll, { passive: true });
+    // The ticker rebuilds each column once just after it starts (02-core.js, its ResizeObserver's first call), which
+    // restarts the loop from the top: nothing comes in before that, or the restart would move what is on screen.
+    const t0 = performance.now(), rebuilt = new Set();
+    const mo = 'MutationObserver' in window ? new MutationObserver(recs => recs.forEach(r => rebuilt.add(r.target))) : null;
+    if (mo) frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
+    const idle = fn => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 120));
+    // Lets li in if none of its places is on screen (true), re-timing its column's loop; false: try again later. What
+    // comes in above the visible part is offset by a negative margin on the list's first tile (above it too), so no tile
+    // on screen moves, in the layout either (no layout shift).
+    const tryIn = li => {
+      const list = li.parentElement, col = list.closest('[data-ticker]');
+      const t = (TS.tickers || []).find(x => x.el === col), anim = t && t.anim, fx = anim && anim.effect;
+      const kfs = fx ? fx.getKeyframes() : [], dur = fx ? fx.getTiming().duration : 0;
+      const from = kfs.length > 1 ? parse(kfs[0]) : NaN, to = kfs.length > 1 ? parse(kfs[kfs.length - 1]) : NaN;
+      if (!(isFinite(from) && isFinite(to) && to !== from && dur > 0)) { letIn(li); return true; }   // no loop to keep
+      if (!rebuilt.has(list) && performance.now() - t0 < 4000) return false;
+      const kids = [...list.children], n = kids.filter(k => !k.hasAttribute('data-clone')).length, first = kids[0];
+      const r = col.getBoundingClientRect(), off = first.getBoundingClientRect().top - r.top;   // the list as drawn
+      const top = Math.max(0, -r.top), bottom = Math.min(r.height, innerHeight - r.top);
+      const seen = bottom > top, a = top - off - MARGIN, b = bottom - off + MARGIN;   // the visible part, in list space
+      let next = li.nextElementSibling;              // the stand-in comes in where its next shown tile is now
+      while (next && !next.offsetParent) next = next.nextElementSibling;
+      if (!next || next.hasAttribute('data-clone')) return false;
+      const len = Math.abs(to - from), at = next.offsetTop - first.offsetTop, places = [];
+      for (let k = 0; k * n < kids.length; k++) places.push(k * len + at);   // the tile, then each copy of it
+      if (seen && places.some(p => p > a && p < b)) return false;
+      const above = seen ? places.filter(p => p <= a).length : 0;
+      letIn(li);
+      const gap = parseFloat(getComputedStyle(list).rowGap) || 0, last = kids[n - 1];
+      const loop = last.offsetTop + last.offsetHeight - first.offsetTop + gap;   // as the ticker measures it
+      if (above) first.style.marginTop = `${(parseFloat(first.style.marginTop) || 0) - above * (li.offsetHeight + gap)}px`;
+      const T = from + (to - from) * (((anim.currentTime || 0) % dur) / dur);   // the ticker's offset: kept
+      const f2 = to > from ? -loop : 0, t2 = to > from ? 0 : -loop;
+      const d2 = loop / (parseFloat(col.dataset.speed) || 25) * 1000;
+      fx.setKeyframes([{ transform: `translateY(${f2}px)` }, { transform: `translateY(${t2}px)` }]);
+      fx.updateTiming({ duration: d2 });
+      anim.currentTime = Math.min(d2 - 1, Math.max(0, (T - f2) / (t2 - f2) * d2));
+      return true;
+    };
+    // One stand-in per idle call (its tile and the ticker's copies of it: well under a long task on a slow phone).
+    const step = () => {
+      for (let i = left.length - 1; i >= 0; i--) {
+        const li = left[i];
+        const shown = narrow[li.classList.contains('hero-col__item--lt800') ? 'lt800' : 'lt1440'].matches && li.closest('[data-ticker]').offsetParent;
+        if (li.classList.contains('is-on') || !shown) { letIn(li); left.splice(i, 1); }
+      }
+      let moved = false;
+      if (left.length && performance.now() - scrolled > 250) {   // mid-scroll the visible part is a moving target
+        const i = left.findIndex(tryIn);
+        if (i >= 0) { left.splice(i, 1); moved = true; }
+      }
+      if (!left.length) { removeEventListener('scroll', onScroll); if (mo) mo.disconnect(); }
+      else if (moved) idle(step);
+      else setTimeout(() => idle(step), 400);        // all on screen for now: the columns move on
+    };
+    const start = () => idle(step);
+    if (document.readyState === 'complete') start(); else addEventListener('load', start, { once: true });
+  }
+
   TS.ready(() => {
     const hero = document.querySelector('.hero');
     if (!hero) return;
     appear(hero);
     pill(hero);
     gallery(hero);
+    const frame = hero.querySelector('[data-hero-gallery]');
+    if (frame && TS.motion()) standIns(frame);
   });
 })();

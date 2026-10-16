@@ -134,8 +134,11 @@
 .hero-col__list{display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none}
 .hero-col__item{display:block}
 /* stand-ins for the columns a screen hides (home_hero._columns): column 4's tiles below 1440px, column 3's below
-   800px. Hidden, a stand-in is not drawn, read or focused (the original is, at those widths). */
+   800px. Hidden, a stand-in is not drawn, read or focused (the original is, at those widths). With motion they sit out
+   the page's first layout (ten tiles a column and the ticker's copies of them doubled a phone's start-up work) and
+   20-hero.js lets them in (.is-on) after load, where it cannot be seen; without JS or motion they are there at once. */
 .hero-col__item--lt1440,.hero-col__item--lt800{display:none}
+.motion .hero-col__item:is(.hero-col__item--lt1440,.hero-col__item--lt800):not(.is-on){display:none}
 
 /* Tiles: hairline inner frame (light-background shots stay contained on black), radius 0,
    ZIP hover (zoom 1.018 + mono caption roll). The frame brightens on hover/focus. */
@@ -287,6 +290,7 @@
 @media (max-width:799.98px) and (hover:none){
   .hero-gallery__ui{padding:8px 0}
   .hero-gallery__motion{margin-right:-12px}             /* centre over the 8px side padding */
+  .hero-gallery__motion::before{inset:-6px -4px -6px -8px}   /* the 44px hit area ends at the screen edge (no sideways scroll) */
 }
 @media (max-width:719.98px){
   .hero__title{font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}   /* ~1.3x the 32px section H2s, as on desktop */

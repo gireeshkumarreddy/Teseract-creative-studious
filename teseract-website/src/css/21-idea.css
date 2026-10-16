@@ -183,7 +183,8 @@
 /* Phones, touch and narrow screens: the laptop's small rise (the fine-pointer path in 21-idea.js 2c) is a CSS
    scroll-driven animation - 40px low as it enters, settled when its foot (the panel's bottom edge, where the stones
    are cropped) reaches the viewport bottom, so no gap opens under the stones. Run by the compositor (no script per
-   frame); static where scroll timelines are unsupported, and under reduced motion (no html.motion). */
+   frame; from 800px, where string E is drawn, 21-idea.js draws it down to the lid's lowest point, so it always ends
+   behind the lid); static where scroll timelines are unsupported, and under reduced motion (no html.motion). */
 @supports (animation-timeline:view()){
   @media not all and (min-width:800px) and (pointer:fine){
     .motion .idea__laptop{view-timeline:--idea-laptop block}

@@ -59,7 +59,9 @@ POSTER_W = 640             # a clip tile's poster: the 480 / 640 frames (cropped
 # column 3's (with the one it took from column 4) join columns 1-2 - ten tiles each on a phone, still one ticker
 # transform per column. A stand-in shows only at those widths (.hero-col__item--lt1440 / --lt800) and keeps its
 # original's slot shape and image file: where the original is on screen the browser already has that file (the
-# tickers' clones load every tile), and a clip's stand-in is the clip's poster frame, so phones get no extra clip.
+# tickers' clones load every tile), and a clip's stand-in is the clip's poster frame, so phones get no extra clip. With
+# motion the stand-ins sit out the page's first layout and 20-hero.js lets them in after load, off screen (without JS or
+# motion they are there from the start).
 SHOWN = (4, 3, 2)          # columns on screen at >= 1440px, 800-1439px, < 800px
 
 

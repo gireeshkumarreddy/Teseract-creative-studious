@@ -78,7 +78,12 @@
     const board = root.querySelector('.idea__board');
     const laptop = root.querySelector('.idea__laptop');
     const eLine = root.querySelector('[data-idea-e]');
-    let liftPx = 0, shift = 0;
+    // 2c moves the laptop here on fine pointers >= 800px; every other screen with motion rises in CSS (21-idea.css) where
+    // scroll timelines exist, which no script follows: there string E is drawn down to the lid's lowest point (the laptop
+    // 40px low), and the rest of it stays hidden behind the lid as the laptop settles.
+    const lift = matchMedia('(min-width: 800px) and (pointer: fine)');
+    const cssRise = motion && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
+    let liftPx = !lift.matches && cssRise ? 40 : 0, shift = 0;
     const dockE = () => {
       if (!eLine || !board) return;
       const k = board.clientWidth / 1600;
@@ -106,10 +111,9 @@
     /* ---------- 2c. Subtle scroll-linked rise of the laptop: 40px low while it enters, settling
        exactly when the panel's bottom edge (where the stones are cropped) reaches the viewport, so
        no gap ever opens under the stones. Fine pointers >= 800px only (Lenis-smoothed scroll; every other screen runs
-       it in CSS, animation-timeline: view()), never under reduced motion. */
-    const lift = matchMedia('(min-width: 800px) and (pointer: fine)');
+       it in CSS, animation-timeline: view(), with string E docked as above), never under reduced motion. */
     if (motion && 'IntersectionObserver' in window) {
-      let on = false, raf = 0;
+      let on = false, raf = 0, moved = 0;
       const update = () => {
         raf = 0;
         let px = 0;
@@ -117,11 +121,12 @@
           const d = root.getBoundingClientRect().bottom - innerHeight;   // untransformed bottom of the laptop
           px = 40 * Math.min(1, Math.max(0, d / (device.offsetHeight || 1)));
         }
-        if (px !== liftPx) {
-          liftPx = px;
+        if (px !== moved) {
+          moved = px;
           device.style.transform = px ? `translate3d(0,${px.toFixed(2)}px,0)` : '';
-          dockE();
         }
+        const dock = lift.matches ? px : cssRise ? 40 : 0;
+        if (dock !== liftPx) { liftPx = dock; dockE(); }
       };
       const onScroll = () => { if (on && !raf) raf = requestAnimationFrame(update); };
       new IntersectionObserver(entries => { on = entries[entries.length - 1].isIntersecting; onScroll(); }, { rootMargin: '10% 0px' }).observe(device);
