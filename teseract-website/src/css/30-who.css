@@ -42,7 +42,8 @@
               (.who-ed, 1125 design px, --v) place every element at its measured design position
               (--x/--y/--w/--h on .at elements).
    <  1200px  everything flows: tablet two-column re-flow, phone single column; leader lines, nodes and
-              grid crosses give way to quiet hairlines.
+              grid crosses give way to quiet hairlines (tablet) or to the phone circuit (< 800px: a trace in the
+              left gutter with a node at each box, two gutter hairlines, globe, "+" and end-mark; 30-who.js).
    Colour: --ink type, --ink-2 secondary, --muted-strong small labels, white hairlines; the hero keeps
    image 5's photographic orange (page-local --who-accent for the display full stop); red appears once
    per band (one node, the boxed question, the promise underline).

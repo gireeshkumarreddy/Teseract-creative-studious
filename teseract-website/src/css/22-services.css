@@ -289,9 +289,11 @@ a.svc-art:focus-visible{outline:2px solid var(--red);outline-offset:-6px;border-
 .svc-small .svc-cap--back{left:auto;right:calc(50% - .86 * min(50%, 210px) + 10px);top:8px;bottom:auto}
 a.svc-art--back:focus-visible{outline:none}
 a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);outline-offset:3px}
-/* concept caption whose label does not fit the one-line pill: the full label on its own line under the name */
-.svc-cap.svc-cap--label{height:auto;flex-wrap:wrap;row-gap:3px;padding:8px 10px 9px 12px;white-space:normal}
-.svc-cap__label{flex:1 0 100%;padding-left:14px;font-size:12px;line-height:16px;letter-spacing:.03em;color:rgba(244,244,242,.72)}
+/* concept caption whose label does not fit the one-line pill: the full label on its own line under the name. A grid
+   (dot · name · arrow, the label across all three) keeps the pill as wide as its longer line (a wrapping flex row sized
+   itself to both lines end to end, reaching into the stack's peeking card on narrow phones) */
+.svc-cap.svc-cap--label{display:inline-grid;grid-template-columns:auto auto 1fr;justify-items:start;height:auto;row-gap:3px;padding:8px 10px 9px 12px;white-space:normal}
+.svc-cap__label{grid-column:1/-1;padding-left:14px;font-size:12px;line-height:16px;letter-spacing:.03em;color:rgba(244,244,242,.72)}
 /* AI & Automation back card: automation flow; the wires run while the card is hovered (on touch: centred, 4.8 s) */
 .svc-flow{width:100%;height:100%}
 .svc-flow__grid{fill:rgba(255,255,255,.16)}
