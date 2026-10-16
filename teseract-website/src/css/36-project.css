@@ -65,6 +65,12 @@
    badge (expand icon) fades in on hover on hover-capable screens; on touch screens the first frame's badge reads
    "Tap to enlarge" (frosted dark pill, the .motion-toggle look) */
 .pj-zoom{position:relative;display:block;width:100%;height:100%;color:var(--ink);cursor:zoom-in;-webkit-tap-highlight-color:transparent}
+/* keyboard focus brings an off-screen still in centred: one taller than the screen under the header would centre with
+   its top edge (and focus ring) under the fixed header, so its scroll margin is the part that does not fit - it lands
+   at the header line. A still that fits keeps no margin (unchanged). The frame is a size container (fixed aspect: the
+   layout does not change) so the link can read its height (cqh) */
+.pj-gallery .pj-frame,.pj-gallery .pj-phone{container-type:size}
+.pj-gallery .pj-zoom{scroll-margin-top:max(0px,100cqh - 100svh + var(--nav-h) + 16px)}
 /* the frame clips its overflow and the (transformed) still paints over the link's own outline: the focus ring is drawn
    by a layer above the still, just inside its edge */
 .pj-zoom:not(.pj-zoom--hero):focus-visible{outline:none}
@@ -86,6 +92,9 @@
   .pj-zoom:hover .pj-zoom__badge,.pj-zoom:focus-visible .pj-zoom__badge{opacity:1;transform:none}
 }
 @media (hover:none){.pj-zoom__badge--hint{opacity:1;transform:none}}
+/* where the plain-frame hero's lead still opens the gallery (pages/project.media_gallery), the hint is the lead's: the
+   rhythm's first frame shows a plain badge there */
+@media (max-width:655.98px){.pj-frame--lead~* .pj-zoom__badge--hint{opacity:0;transform:translateY(4px)}}
 .pj-phone .pj-zoom{border-radius:inherit}   /* the focus ring follows the phone's corners */
 .pj-phone .pj-zoom__badge{right:10px;bottom:10px}
 

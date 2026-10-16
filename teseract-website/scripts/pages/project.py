@@ -194,15 +194,17 @@ def media_gallery(ctx, p, *, skip=None, lead=None):
     phone screens as pairs on a band: the first band after the PHONES_AFTER-th desktop screen, each further band
     after the next desktop row (never two dark bands back to back while desktop screens remain). `lead` (the
     plain-frame hero's first still, which its 4:5 stage swaps for the phone screen) opens the gallery below a
-    PLAIN_NARROW viewport only (36-project.css .pj-frame--lead), so phones still show it. The first frame of the
-    rhythm carries the "Tap to enlarge" hint. Returns '' when there is nothing."""
+    PLAIN_NARROW viewport only (36-project.css .pj-frame--lead), so phones still show it. The first frame phones
+    see carries the "Tap to enlarge" hint (the lead, else the rhythm's first). Returns '' when there is nothing."""
     items = [it for it in p['items'] if it is not skip and it is not lead]
     desk = [it for it in items if it['frame'] != 'phone']
     phones = [it for it in items if it['frame'] == 'phone']
     if not items:
         return ''
     bands = [phones[j:j + 2] for j in range(0, len(phones), 2)]
-    frames = [_frame(ctx, lead, 'full', cls='pj-frame--lead')] if lead else []
+    # the lead is the first frame phones see, so it carries the hint too (the rhythm's copy is hidden under
+    # PLAIN_NARROW, 36-project.css); from PLAIN_NARROW up the lead is hidden and the rhythm's first frame has it
+    frames = [_frame(ctx, lead, 'full', hint=lead['type'] != 'video', cls='pj-frame--lead')] if lead else []
     hint = next((it for it in desk + phones if it['type'] != 'video'), None)
     i, k = 0, 0
     while i < len(desk):
