@@ -167,8 +167,9 @@ GRID_X = (351, 667.5, 1005)          # image 6 vertical hairlines
 def rail(start='pin', end='pin'):
     """Phone circuit rail (< 800px, where the measured wires give way to one column): an empty SVG over the board that
     30-who.js fills with a vertical trace in the left gutter, a node at each [data-who-pin] box ('h' = beside its head /
-    first child, 'l' = its first text line, 'c' = its centre, '!' = the red node) and a short leader into the box. The
-    trace grows one way with scroll; start / end 'edge' run it to the board edge (bands A+B and C read as one trace)."""
+    first child, 'l' = its first text line, 'c' = its centre; flags '!' = the red node, '-' = no node, the leader runs
+    into the box's own marker) and a short leader into the box. The trace grows one way with scroll; start / end 'edge'
+    run it to the board edge (bands A+B and C read as one trace)."""
     return (f'<svg class="who-rail" aria-hidden="true" focusable="false" data-who-rail '
             f'data-from="{start}" data-to="{end}"></svg>')
 
@@ -270,7 +271,7 @@ def _intro(ctx):
         <p class="who-b01__head"><b>{T(BRAND)}</b><span>/01</span></p>
         <ul class="who-b01__list" role="list"><li>Strategy</li><li>Design</li><li>Technology</li><li>Experiences</li></ul>
       </div>
-      <p class="who-note who-note--tagline at" style="{at(1151, 652, 170, '--d:420ms')}" data-reveal aria-hidden="true" data-who-pin="l">{T(BRAND_COPY['tagline'])}</p>
+      <p class="who-note who-note--tagline at" style="{at(1151, 652, 170, '--d:420ms')}" data-reveal aria-hidden="true" data-who-pin="l-">{T(BRAND_COPY['tagline'])}</p>
       {ab_wires}
     </div>'''
     # the rock has its own in-view state (rise + one landing bob as it comes on screen, not when the board's top does)
@@ -293,7 +294,7 @@ def _intro(ctx):
         <p class="who-whobox__text">{b1}</p>
       </div>
     </div>
-    <p class="who-note who-note--work at" style="{at(799, 140, 236, '--d:150ms')}" data-reveal data-who-pin="l">{b2}</p>
+    <p class="who-note who-note--work at" style="{at(799, 140, 236, '--d:150ms')}" data-reveal data-who-pin="l-">{b2}</p>
     {deco_ab}
     {rock}
   </div>'''

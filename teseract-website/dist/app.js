@@ -3190,9 +3190,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     }
 
     /* ---------- phone circuit rails (30-who.css .who-rail): one trace per board in the left gutter, a node beside
-       each [data-who-pin] box (h = its head / first child, l = its first text line, c = its centre, ! = red) and a
-       leader into it. Positions come from the layout boxes (offset chain), so reveal transforms never move a node;
-       rebuilt whenever a board changes size. The trace centre and node edges sit on half pixels (crisp at 1x-3x). */
+       each [data-who-pin] box (h = its head / first child, l = its first text line, c = its centre; ! = red, - = no
+       node: the leader runs from the trace into the box's own marker) and a leader into it. Positions come from the
+       layout boxes (offset chain), so reveal transforms never move a node; rebuilt whenever a board changes size.
+       The trace centre and node edges sit on half pixels (crisp at 1x-3x). */
     const phone = matchMedia('(max-width: 799.98px)');
     const rails = [...document.querySelectorAll('[data-who-rail]')].map(svg => ({ svg, board: svg.parentElement, line: null, pins: [], y0: 0, y1: 0, reach: -Infinity }));
     const boxAt = (el, root) => {
@@ -3231,7 +3232,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
           dy = el.clientTop + parseFloat(cs.paddingTop) + lh / 2;
         }
         // text pins keep a hair's gap before the words; boxes are met at their border
-        pins.push({ y: Math.floor(b.y + dy) + 0.5, xb: Math.round(m[0] === 'l' ? b.x - 3 : b.x), red: m.includes('!') });
+        const bare = m.includes('-');
+        pins.push({ y: Math.floor(b.y + dy) + 0.5, xb: Math.round(m[0] === 'l' && !bare ? b.x - 3 : b.x), red: m.includes('!'), bare });
       });
       if (!pins.length) return;
       pins.sort((a, z) => a.y - z.y);
@@ -3240,10 +3242,14 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       r.y1 = svg.dataset.to === 'edge' ? H : pins[pins.length - 1].y;
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
       svg.innerHTML = `<line class="who-wire who-wire--rail" x1="${x}" y1="${r.y0}" x2="${x}" y2="${r.y1}" pathLength="1"/>`
-        + pins.map(pn => '<g class="who-pin">'
-          + (pn.xb > x + 4.5 ? `<line class="who-rail__lead" x1="${x + 4.5}" y1="${pn.y}" x2="${pn.xb}" y2="${pn.y}" pathLength="1"/>` : '')
-          + `<g class="who-node${pn.red ? ' who-node--red' : ''}"><rect class="who-node__o" x="${x - 4}" y="${pn.y - 4}" width="8" height="8"/>`
-          + `<rect class="who-node__i" x="${x - 1.5}" y="${pn.y - 1.5}" width="3" height="3"/></g></g>`).join('');
+        + pins.map(pn => {
+          const x1 = pn.bare ? x : x + 4.5;
+          return '<g class="who-pin">'
+            + (pn.xb > x1 ? `<line class="who-rail__lead" x1="${x1}" y1="${pn.y}" x2="${pn.xb}" y2="${pn.y}" pathLength="1"/>` : '')
+            + (pn.bare ? '' : `<g class="who-node${pn.red ? ' who-node--red' : ''}"><rect class="who-node__o" x="${x - 4}" y="${pn.y - 4}" width="8" height="8"/>`
+              + `<rect class="who-node__i" x="${x - 1.5}" y="${pn.y - 1.5}" width="3" height="3"/></g>`)
+            + '</g>';
+        }).join('');
       r.line = svg.querySelector('.who-wire--rail');
       r.pins = [...svg.querySelectorAll('.who-pin')].map((g, i) => ({ g, y: pins[i].y }));
       paintRail(r);
@@ -3276,9 +3282,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const items = [];
     const visible = new Set();
     const vio = new IntersectionObserver(es => es.forEach(e => {
-      const it = items.find(x => x.el === e.target);
-      if (!it) return;
-      if (e.isIntersecting) visible.add(it); else visible.delete(it);
+      // a board can carry several items (rock + rail, dial + rail)
+      items.forEach(it => { if (it.el === e.target) { if (e.isIntersecting) visible.add(it); else visible.delete(it); } });
       kick();
     }), { rootMargin: '10% 0px 10% 0px' });
     const add = (el, update) => { if (!el) return; const it = { el, update, s: {} }; items.push(it); vio.observe(el); };

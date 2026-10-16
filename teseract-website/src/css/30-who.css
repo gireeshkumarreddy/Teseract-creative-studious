@@ -17,7 +17,12 @@
 @media (max-width:1023.98px){.pg-hero__title{font-size:64px}}
 @media (max-width:809.98px){.pg-hero__sub{font-size:16px}}
 @media (max-width:799.98px){.pg-hero{padding:48px 0 40px}.pg-hero__inner{padding:0;gap:24px}}
-@media (max-width:719.98px){.pg-hero__title{max-width:none;font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}}   /* ~1.3x the 32px section H2s, as on desktop */
+@media (max-width:719.98px){
+  .pg-hero__title{max-width:none;font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}   /* ~1.3x the 32px section H2s, as on desktop */
+  /* contact ("Let's build something worth remembering."): five words never make three lines without a lone word, so
+     narrow phones keep two (10.4vw = 37.4px at 360: still 1.34x the page's 28px H2s) */
+  .ct-hero .pg-hero__title{font-size:min(var(--h1-phone),10.4vw)}
+}
 
 /* ---------- Reference checklist seal (20x29; dark seal + --ink tick, colours in pages/who.py SEAL) */
 .seal{display:block;width:20px;height:29px;flex:none}
@@ -529,6 +534,7 @@
   .who-rock{width:100%;max-width:420px;margin:0 0 8px}
   .who-whobox__thumb{width:72px;height:72px}
   .who-note--work,.who-note--tagline{border-left:0;padding:16px 0 0;border-top:1px solid var(--who-line)}
+  .who-note--work::before,.who-note--tagline::before{margin-top:calc(.64em - 5.5px)}   /* centred on the first line: the rail's leader meets it */
   .who-board--c{grid-template-columns:minmax(0,1fr);grid-template-areas:"stmt" "chips" "collab" "collage";padding-top:48px}
   .who-stmt{font-size:8.6cqw;line-height:1.1}
   .who-bx{padding:0 .06em}
