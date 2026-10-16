@@ -54,7 +54,7 @@
     const prevBtn = $('[data-viewer-prev]'), nextBtn = $('[data-viewer-next]'), closeBtn = $('[data-viewer-close]');
     let items = [], index = 0, W = 0, H = 0, padX = 12, padY = 78;
     let z = { s: 1, x: 0, y: 0 };              // zoom of the front still: scale + translation (px) from its fitted centre
-    let open = false, closing = false, pushed = false, pending = null, fallback = 0;
+    let open = false, closing = false, pushed = false, pending = null, fallback = 0, reopen = null;
     let g = null, lastTap = null, tapTimer = 0, wheelLock = 0;
     const pts = new Map();
 
@@ -190,7 +190,8 @@
     }
 
     function show(link) {
-      if (open || closing) return;
+      if (closing) { reopen = link; return; }   // a tap while the last still flies home: open once it has landed
+      if (open) return;
       const links = [...document.querySelectorAll('a[data-zoom]')].filter(a => shown(a) && pageImg(a));
       if (!links.includes(link)) links.push(link);
       items = links.map(a => {
@@ -249,13 +250,15 @@
       morph(false, from).then(anims => {
         dlg.close();
         (anims || []).forEach(a => a.cancel());
+        const next = reopen;
         cleanup();
         it.link.focus({ preventScroll: true });
+        if (next) show(next);
       });
     }
     function cleanup() {
       items.forEach(i => { if (i.big) { i.big.onload = i.big.onerror = null; i.big.src = ''; } });
-      track.replaceChildren(); items = [];
+      track.replaceChildren(); items = []; reopen = null;
       dlg.classList.remove('is-dismissing', 'is-zoomed', 'is-grabbing');
       open = false; closing = false;
     }

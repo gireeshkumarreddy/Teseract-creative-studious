@@ -121,12 +121,12 @@ def _marquee(ctx):
 
 
 def _cap(title, industry):
-    """Name caption: rolls in on hover / keyboard focus; on touch screens it stays at the image foot, or opens the
-    strip under the image on a tile that has one (an Interactive Concept's note; 20-hero.css)."""
+    """Name caption: rolls in on hover / keyboard focus; on touch screens it is always shown, in a strip under the
+    image (20-hero.css). A ' | ' binds to the word before it, like lib.name_text's separators."""
     ind = (f'<span class="hero-tile__dot">·</span>'
            f'<span class="hero-tile__ind">{roll(industry)}</span>') if industry else ''
     return (f'<span class="hero-tile__cap" aria-hidden="true">'
-            f'<span class="hero-tile__title">{roll(lib.name_text(title))}</span>{ind}</span>')
+            f'<span class="hero-tile__title">{roll(lib.name_text(title).replace(" | ", chr(160) + "| "))}</span>{ind}</span>')
 
 
 def _label(p):

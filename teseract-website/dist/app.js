@@ -1400,18 +1400,16 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 })();
 
 /* ---- 20-hero.js ---- */
-/* Home hero: load-time appear, rotating statement pill, gallery reveal, keyboard support and a
-   pause control for the hero's moving content (WCAG 2.2.2).
-   Tickers (marquee + gallery columns) and [data-reveal] come from 02-core.js. */
+/* Home hero: load-time appear, rotating statement pill, gallery reveal and keyboard support.
+   Tickers (marquee + gallery columns), [data-reveal] and the hero's pause control (WCAG 2.2.2: the section is a
+   [data-motion-scope] with the shared toggle, TS.motionToggle) come from 02-core.js. */
 (() => {
   'use strict';
   const TS = window.TS || {};
   if (!TS.ready) return;
 
-  /* Shared state: "still" = the visitor paused the hero motion with the gallery control. */
-  const state = { still: false, listeners: [] };
-  const onStill = fn => state.listeners.push(fn);
-  const heroTickers = hero => (TS.tickers || []).filter(t => hero.contains(t.el));
+  /* "Still" = the visitor paused the hero motion with the gallery control (02-core.js; 'ts:motion' on the hero). */
+  const still = el => !!(TS.motionStill && TS.motionStill(el));
   const inView = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width > 0; };
   const headerBottom = () => {
     const h = document.querySelector('[data-header]');
@@ -1456,54 +1454,13 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     };
     const run = () => {
       clearInterval(timer); timer = 0;
-      if (visible && !document.hidden && !state.still) timer = setInterval(step, 2000);
+      if (visible && !document.hidden && !still(slot)) timer = setInterval(step, 2000);
     };
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(([e]) => { visible = e.isIntersecting; run(); }).observe(slot);
     } else run();
     document.addEventListener('visibilitychange', run);
-    onStill(run);
-  }
-
-  /* Pause control: one button (sticky inside the gallery frame) pauses every moving part of the
-     hero — marquee, gallery columns, statement pill and the badge pulse. The shared ticker
-     runtime resumes animations when they re-enter the viewport or are rebuilt on resize, so
-     the paused state is re-applied after those events. Hidden under reduced motion (nothing moves). */
-  function motionControl(hero) {
-    const btn = hero.querySelector('[data-hero-motion]');
-    if (!btn || !TS.motion()) return;
-    const label = btn.querySelector('[data-hero-motion-label]');
-    btn.hidden = false;
-    const hold = () => {
-      if (!state.still) return;
-      heroTickers(hero).forEach(t => { if (t.anim && t.anim.playState !== 'paused') t.anim.pause(); });
-    };
-    const set = still => {
-      state.still = still;
-      hero.classList.toggle('is-still', still);
-      if (label) label.textContent = still ? 'Play motion' : 'Pause motion';
-      if (hero.querySelector('[data-video]')) {   // client video tiles pause with the rest of the hero motion
-        hero.toggleAttribute('data-video-hold', still);
-        if (TS.syncVideos) TS.syncVideos(hero);
-      }
-      if (still) hold();
-      else heroTickers(hero).forEach(t => {
-        const focused = t.el.contains(document.activeElement);
-        if (t.anim && !focused && inView(t.el)) t.anim.play();
-      });
-      state.listeners.forEach(fn => fn());
-    };
-    btn.addEventListener('click', () => set(!state.still));
-    // Re-apply after the ticker runtime resumes an animation on viewport re-entry (its observer
-    // callback may run after this one, so wait a frame) or rebuilds it (clone mutations).
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(() => { hold(); requestAnimationFrame(hold); });
-      heroTickers(hero).forEach(t => io.observe(t.el));
-    }
-    if ('MutationObserver' in window) {
-      const mo = new MutationObserver(hold);
-      hero.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
-    }
+    hero.addEventListener('ts:motion', run);
   }
 
   /* Gallery: open every tile (originals and the ticker's aria-hidden clones) together the first
@@ -1524,9 +1481,25 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); reveal(); } }, { threshold: 0.01 });
       io.observe(frame);
     } else reveal();
+    /* Lead tiles (row 0, 20-hero.css) enter in CSS from the first paint. A ticker clone is a new element and would
+       start that entrance over (a 'down' column shows a clone in its lead's place as soon as it runs), so each clone
+       joins its original's timeline, or skips to the end once the original has finished. */
+    const syncLeads = () => frame.querySelectorAll('[data-ticker-list]').forEach(list => {
+      const lead = list.querySelector(':scope > :not([data-clone]) .hero-tile__media--lead img');
+      const own = lead && lead.getAnimations ? lead.getAnimations() : [];
+      list.querySelectorAll(':scope > [data-clone] .hero-tile__media--lead img').forEach(img => {
+        if (img.dataset.leadSync || !img.getAnimations) return;
+        img.dataset.leadSync = '1';
+        img.getAnimations().forEach(a => {
+          const o = own.find(x => x.animationName === a.animationName);
+          if (o && o.currentTime != null) a.currentTime = o.currentTime; else a.finish();
+        });
+      });
+    });
+    syncLeads();                                   // tickers() (02-core.js) has made the first clones already
     // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed.
     if ('MutationObserver' in window) {
-      const mo = new MutationObserver(() => { if (revealed) openAll(); });
+      const mo = new MutationObserver(() => { syncLeads(); if (revealed) openAll(); });
       frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     }
 
@@ -1607,7 +1580,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       const col = e.target.closest('[data-ticker]');
       if (!col || col.contains(e.relatedTarget)) return;
       const t = tickerOf(col);
-      if (t && t.anim && !TS.reduced() && !state.still && inView(col)) t.anim.play();
+      if (t && t.anim && !TS.reduced() && !still(col) && inView(col)) t.anim.play();
     });
   }
 
@@ -1617,7 +1590,6 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     appear(hero);
     pill(hero);
     gallery(hero);
-    motionControl(hero);
   });
 })();
 
@@ -1631,8 +1603,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       hidden tab or the pause button; never autoplays under reduced motion. When the client's own
       website recordings are supplied (media manifest) the slides hold <video>s instead: only the
       active slide's clip plays (06-video.js holds clips in inert slides), the pause button pauses it.
-   The laptop also gets an optional, very small scroll-linked rise (desktop/tablet fine pointers);
-   string E is kept docked under the lid's top edge whatever the laptop's offset. */
+   The laptop also gets a very small scroll-linked rise (desktop/tablet fine pointers here; phones and touch screens
+   get the same rise as a CSS scroll-driven animation, 21-idea.css); string E is kept docked under the lid's top edge
+   whatever the laptop's offset. */
 (() => {
   'use strict';
   const TS = window.TS || {};
@@ -1728,8 +1701,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 
     /* ---------- 2c. Subtle scroll-linked rise of the laptop: 40px low while it enters, settling
        exactly when the panel's bottom edge (where the stones are cropped) reaches the viewport, so
-       no gap ever opens under the stones. Fine pointers >= 800px only (Lenis-smoothed scroll),
-       never under reduced motion. */
+       no gap ever opens under the stones. Fine pointers >= 800px only (Lenis-smoothed scroll; every other screen runs
+       it in CSS, animation-timeline: view()), never under reduced motion. */
     const lift = matchMedia('(min-width: 800px) and (pointer: fine)');
     if (motion && 'IntersectionObserver' in window) {
       let on = false, raf = 0;
@@ -1821,11 +1794,42 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     device.addEventListener('focusin', e => { const f = onSlide(e.target); if (f !== focused) { focused = f; schedule(); } });
     device.addEventListener('focusout', e => { const f = onSlide(e.relatedTarget); if (f !== focused) { focused = f; schedule(); } });
     document.addEventListener('visibilitychange', schedule);
+    /* The toggle shows what the clip does, not only what was asked: "pause" while it plays (or is about to), "play"
+       while the visitor holds it and whenever it stopped by itself on screen - the phone refused autoplay (iOS Low
+       Power Mode, a no-autoplay setting, Save-Data: 06-video.js marks its frame .is-blocked and fires
+       'ts:videoblocked') or the browser paused it. A tap on "play" starts the clip inside the tap (TS.playVideo),
+       which a phone allows even then. */
+    let stopped = false;                   // the active clip is not playing although nothing holds it
+    const active = el => !!(el && el.closest && el.closest('[data-idea-slide]') === slides[idx]);
+    const shown = () => { const r = device.getBoundingClientRect(); return Math.min(r.bottom, innerHeight) - Math.max(r.top, 0) > r.height / 2; };
+    const paint = () => {
+      const off = paused || stopped;
+      toggle.classList.toggle('is-paused', off);
+      toggle.setAttribute('aria-pressed', String(off));
+    };
+    if (hasVideo) {
+      const v0 = slides[idx] && slides[idx].querySelector('[data-video]');
+      const frame = v0 && (v0.closest('figure') || v0.parentElement);
+      stopped = !!(frame && frame.classList.contains('is-blocked'));   // refused before this script listened (Save-Data)
+      screen.addEventListener('ts:videoblocked', e => { if (active(e.target)) { stopped = true; paint(); } });
+      // media events do not bubble: listen in the capture phase
+      screen.addEventListener('playing', e => { if (active(e.target) && stopped) { stopped = false; paint(); } }, true);
+      screen.addEventListener('pause', e => {   // off-screen, a hidden tab, a slide change or a hold: not "stopped"
+        if (active(e.target) && !paused && !document.hidden && !e.target.closest('[inert]') && shown()) { stopped = true; paint(); }
+      }, true);
+      paint();
+    }
     toggle.addEventListener('click', () => {
-      paused = !paused;
-      toggle.setAttribute('aria-pressed', String(paused));
-      toggle.classList.toggle('is-paused', paused);
-      if (hasVideo) { screen.toggleAttribute('data-video-hold', paused); if (TS.syncVideos) TS.syncVideos(screen); }
+      const play = paused || stopped;
+      paused = !play;
+      stopped = false;
+      if (hasVideo) {
+        screen.toggleAttribute('data-video-hold', paused);
+        const v = play && slides[idx].querySelector('[data-video]');
+        if (v && TS.playVideo) TS.playVideo(v);   // synchronously, inside the tap
+        if (TS.syncVideos) TS.syncVideos(screen);
+      }
+      paint();
       schedule();
     });
   });
@@ -4107,7 +4111,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const prevBtn = $('[data-viewer-prev]'), nextBtn = $('[data-viewer-next]'), closeBtn = $('[data-viewer-close]');
     let items = [], index = 0, W = 0, H = 0, padX = 12, padY = 78;
     let z = { s: 1, x: 0, y: 0 };              // zoom of the front still: scale + translation (px) from its fitted centre
-    let open = false, closing = false, pushed = false, pending = null, fallback = 0;
+    let open = false, closing = false, pushed = false, pending = null, fallback = 0, reopen = null;
     let g = null, lastTap = null, tapTimer = 0, wheelLock = 0;
     const pts = new Map();
 
@@ -4243,7 +4247,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     }
 
     function show(link) {
-      if (open || closing) return;
+      if (closing) { reopen = link; return; }   // a tap while the last still flies home: open once it has landed
+      if (open) return;
       const links = [...document.querySelectorAll('a[data-zoom]')].filter(a => shown(a) && pageImg(a));
       if (!links.includes(link)) links.push(link);
       items = links.map(a => {
@@ -4302,13 +4307,15 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       morph(false, from).then(anims => {
         dlg.close();
         (anims || []).forEach(a => a.cancel());
+        const next = reopen;
         cleanup();
         it.link.focus({ preventScroll: true });
+        if (next) show(next);
       });
     }
     function cleanup() {
       items.forEach(i => { if (i.big) { i.big.onload = i.big.onerror = null; i.big.src = ''; } });
-      track.replaceChildren(); items = [];
+      track.replaceChildren(); items = []; reopen = null;
       dlg.classList.remove('is-dismissing', 'is-zoomed', 'is-grabbing');
       open = false; closing = false;
     }
