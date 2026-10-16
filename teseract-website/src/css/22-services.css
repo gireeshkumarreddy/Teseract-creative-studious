@@ -379,14 +379,18 @@ a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);
   .svc-small__title{letter-spacing:-.04em}
 }
 /* ---------- Narrow phones ≤479.98: a 4px tray ring (radii kept concentric) and 22px card padding give the text
-   ~20px more width; the Tap Here sticker moves to the top-right corner, clear of the project caption, and in from
-   the edge so the stack's clip never cuts it */
+   ~20px more width, and the info cards' chips take the small cards' compact metrics, so most tag lists pair up instead
+   of stacking one chip per line; the Tap Here sticker moves to the top-right corner, clear of the project caption,
+   and in from the edge so the stack's clip never cuts it */
 @media (max-width:479.98px){
   .svc-row,.svc-row--flip,.svc-smalls{padding:4px;gap:6px}
   .svc-row,.svc-row--flip{border-radius:36px}
   .svc-smalls{border-radius:40px}
   .svc-info{padding:22px}
   .svc-small__text{padding:22px 22px 14px}
+  .svc-info .svc-chips{gap:6px}
+  .svc-info .svc-chip{height:30px;padding:5px 9px 5px 7px;gap:5px;font-size:13px;letter-spacing:-.25px}
+  .svc-info .svc-chip svg{width:16px;height:16px}
   .svc-media--stack{clip-path:inset(-6px)}
   .svc-tap{left:calc(100% - 56px);top:14%}
 }
