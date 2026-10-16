@@ -1,16 +1,21 @@
 /* Who We Are (/who-we-are/) — images 5, 6, 7. Markup: scripts/pages/who.py, CSS: 30-who.css.
    - Hero: entrance (light sweep, monitor rise, letters rise, full stop pops) once the monitor image is
-     decoded; idle light loops pause off-screen; fine-pointer tilt on the monitor (±2.5deg, ±6px) with the
-     light counter-moving (±10px); scroll parallax (transform only, <= 40px).
-   - Boards ([data-who-in]): .is-in when they enter (grid draw, leader lines, nodes); .is-off when they
-     leave (pauses the rock float / sphere spin).
-   - Rock: scroll parallax (<= 30px) + the glass tile follows the pointer (±6px, lerped).
-   - Dial: rotation linked to scroll through band C (-20deg -> +20deg), lerped.
+     decoded, then the light settles (bounded CSS, no endless loop); fine-pointer tilt on the monitor (±2.5deg,
+     ±6px) with the light counter-moving (±10px); touch screens get the same tilt and light from the scroll
+     through the hero (P-08); scroll parallax (transform only, <= 40px).
+   - Boards ([data-who-in], also the rock): .is-in when they enter (grid draw, leader lines, nodes, the rock's
+     rise + one bob); .is-off when they leave (pauses a bob in progress).
+   - Phone circuit (< 800px, [data-who-rail]): the trace, nodes and leaders are built from the layout boxes and
+     grow one way with scroll (static and complete without html.motion).
+   - Rock: scroll parallax (<= 30px) + a slight sway; the glass tile follows the pointer (±6px, lerped), or the
+     scroll on touch screens.
+   - Dial: rotation linked to scroll through band C (-20deg -> +20deg), lerped; the sphere turns with it.
    - Steps: each number box fills as its step crosses 55 % of the viewport (one-way progress).
    - Clock: the visitor's local time, minute precision, only while the intro is on screen.
    - How we think: spread counters roll in, the panel mark turns with scroll (±4deg), the light field
-     drifts with the pointer.
-   One rAF loop serves every scroll/pointer-linked item and only runs while one of them is on screen.
+     drifts with the pointer (with the scroll on touch screens).
+   One rAF loop serves every scroll/pointer-linked item and only runs while one of them is on screen; nothing
+   moves on its own for more than a few seconds (WCAG 2.2.2).
    Reduced motion (or no html.motion): nothing moves; everything is visible from the start. */
 (() => {
   'use strict';
@@ -82,6 +87,74 @@
       spreads.forEach(s => pio.observe(s));
     }
 
+    /* ---------- phone circuit rails (30-who.css .who-rail): one trace per board in the left gutter, a node beside
+       each [data-who-pin] box (h = its head / first child, l = its first text line, c = its centre, ! = red) and a
+       leader into it. Positions come from the layout boxes (offset chain), so reveal transforms never move a node;
+       rebuilt whenever a board changes size. The trace centre and node edges sit on half pixels (crisp at 1x-3x). */
+    const phone = matchMedia('(max-width: 799.98px)');
+    const rails = [...document.querySelectorAll('[data-who-rail]')].map(svg => ({ svg, board: svg.parentElement, line: null, pins: [], y0: 0, y1: 0, reach: -Infinity }));
+    const boxAt = (el, root) => {
+      let x = 0, y = 0, n = el;
+      while (n && n !== root) {
+        x += n.offsetLeft; y += n.offsetTop;
+        const p = n.offsetParent;
+        if (p && p !== root) { x += p.clientLeft; y += p.clientTop; }
+        n = p;
+      }
+      return n === root ? { x, y } : null;
+    };
+    const paintRail = r => {   // one-way: the trace reaches the 55 % line of the screen (as the steps do)
+      if (!r.line || !motion) return;
+      r.reach = Math.max(r.reach, innerHeight * 0.55 - r.svg.getBoundingClientRect().top);
+      const f = clamp((r.reach - r.y0) / Math.max(1, r.y1 - r.y0), 0, 1);
+      r.line.style.strokeDashoffset = (1 - f).toFixed(4);
+      r.pins.forEach(pn => { if (r.reach >= pn.y) pn.g.classList.add('is-on'); });
+    };
+    const buildRail = r => {
+      const { svg, board } = r;
+      if (!phone.matches || !board) { if (r.line) { svg.textContent = ''; r.line = null; r.pins = []; } return; }
+      const x = Math.floor(parseFloat(getComputedStyle(board).paddingLeft) / 2) + 0.5;
+      const pins = [];
+      board.querySelectorAll('[data-who-pin]').forEach(el => {
+        const b = boxAt(el, board);
+        if (!b || !el.offsetHeight) return;
+        const m = el.dataset.whoPin;
+        let dy = el.offsetHeight / 2;
+        if (m[0] === 'h' && el.firstElementChild) {
+          const c = el.firstElementChild, cb = boxAt(c, board);
+          if (cb) dy = cb.y - b.y + c.offsetHeight / 2;
+        } else if (m[0] === 'l') {
+          const cs = getComputedStyle(el);
+          const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.2;
+          dy = el.clientTop + parseFloat(cs.paddingTop) + lh / 2;
+        }
+        // text pins keep a hair's gap before the words; boxes are met at their border
+        pins.push({ y: Math.floor(b.y + dy) + 0.5, xb: Math.round(m[0] === 'l' ? b.x - 3 : b.x), red: m.includes('!') });
+      });
+      if (!pins.length) return;
+      pins.sort((a, z) => a.y - z.y);
+      const W = board.clientWidth, H = board.clientHeight;
+      r.y0 = svg.dataset.from === 'edge' ? 0 : pins[0].y;
+      r.y1 = svg.dataset.to === 'edge' ? H : pins[pins.length - 1].y;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.innerHTML = `<line class="who-wire who-wire--rail" x1="${x}" y1="${r.y0}" x2="${x}" y2="${r.y1}" pathLength="1"/>`
+        + pins.map(pn => '<g class="who-pin">'
+          + (pn.xb > x + 4.5 ? `<line class="who-rail__lead" x1="${x + 4.5}" y1="${pn.y}" x2="${pn.xb}" y2="${pn.y}" pathLength="1"/>` : '')
+          + `<g class="who-node${pn.red ? ' who-node--red' : ''}"><rect class="who-node__o" x="${x - 4}" y="${pn.y - 4}" width="8" height="8"/>`
+          + `<rect class="who-node__i" x="${x - 1.5}" y="${pn.y - 1.5}" width="3" height="3"/></g></g>`).join('');
+      r.line = svg.querySelector('.who-wire--rail');
+      r.pins = [...svg.querySelectorAll('.who-pin')].map((g, i) => ({ g, y: pins[i].y }));
+      paintRail(r);
+    };
+    if (rails.length) {
+      const all = () => rails.forEach(buildRail);
+      if ('ResizeObserver' in window) {
+        const ro = new ResizeObserver(es => es.forEach(e => { const r = rails.find(x => x.board === e.target); if (r) buildRail(r); }));
+        rails.forEach(r => r.board && ro.observe(r.board));
+      } else { all(); addEventListener('resize', all, { passive: true }); }
+      if (phone.addEventListener) phone.addEventListener('change', all);
+    }
+
     /* ---------- hero entrance */
     const hero = document.querySelector('[data-who-hero]');
     if (hero) {
@@ -129,7 +202,10 @@
         const r = hero.getBoundingClientRect();
         const p = clamp(-r.top / Math.max(1, r.height), 0, 1);
         const usePtr = finePointer.matches && desktop.matches;
-        const tx = usePtr ? pointer.x : 0, ty = usePtr ? pointer.y : 0;
+        // touch screens (no hover pointer): the same tilt and counter-moving light, fed by the scroll through the
+        // hero - the monitor turns a little and its top leans back as it rises (P-08)
+        const useScroll = !finePointer.matches;
+        const tx = usePtr ? pointer.x : useScroll ? p * 0.7 : 0, ty = usePtr ? pointer.y : useScroll ? -p : 0;
         s.px = lerp(s.px || 0, tx, 0.08); s.py = lerp(s.py || 0, ty, 0.08);
         mon.style.transform = `translate3d(0,${(-40 * p).toFixed(2)}px,0) scale(${(1 - 0.06 * p).toFixed(4)})`;
         tilt.style.transform = `perspective(1400px) rotateX(${(-s.py * 2.5).toFixed(3)}deg) rotateY(${(s.px * 2.5).toFixed(3)}deg) translate3d(${(s.px * 6).toFixed(2)}px,${(s.py * 6).toFixed(2)}px,0)`;
@@ -146,10 +222,14 @@
       add(par.closest('.who-board') || par, it => {
         const s = it.s;
         const r = par.getBoundingClientRect();
-        const c = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);  // -1 .. 1 across the screen
-        par.style.transform = `translate3d(0,${(clamp(c, -1, 1) * -amt / 2).toFixed(2)}px,0)`;
+        const c = clamp((r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2), -1, 1);  // -1 .. 1 across the screen
+        // parallax + a slight sway (the rock's float lives in the scroll; its CSS bob plays once, A11Y-06)
+        par.style.transform = `translate3d(0,${(c * -amt / 2).toFixed(2)}px,0) rotate(${(c * -0.8).toFixed(3)}deg)`;
         if (!glass) return false;
-        const tx = finePointer.matches ? pointer.x * 6 : 0, ty = finePointer.matches ? pointer.y * 6 : 0;
+        // the glass tile drifts against the rock: with the pointer, or with the scroll on touch screens (P-08), so it
+        // reads as a pane floating in front rather than a grey patch
+        const fine = finePointer.matches;
+        const tx = fine ? pointer.x * 6 : c * -5, ty = fine ? pointer.y * 6 : c * 9;
         s.gx = lerp(s.gx || 0, tx, 0.08); s.gy = lerp(s.gy || 0, ty, 0.08);
         glass.style.transform = `translate3d(${s.gx.toFixed(2)}px,${s.gy.toFixed(2)}px,0)`;
         return Math.abs(s.gx - tx) > 0.01 || Math.abs(s.gy - ty) > 0.01;
@@ -160,6 +240,7 @@
     document.querySelectorAll('[data-who-dial]').forEach(dial => {
       const svg = dial.querySelector('svg');
       const band = dial.closest('.who-board') || dial;
+      const sphere = band.querySelector('.who-sphere svg');   // turns with the dial (half a turn each way), no spin of its own
       add(band, it => {
         const s = it.s;
         const r = band.getBoundingClientRect();
@@ -167,6 +248,7 @@
         const target = -20 + 40 * p;
         s.a = s.a == null ? target : lerp(s.a, target, 0.1);
         svg.style.setProperty('--dial', `${s.a.toFixed(3)}deg`);
+        if (sphere) sphere.style.transform = `rotate(${(s.a * 9).toFixed(2)}deg)`;
         return Math.abs(s.a - target) > 0.01;
       });
     });
@@ -182,8 +264,10 @@
         const r = pnl.getBoundingClientRect();
         const p = clamp((innerHeight - r.top) / (innerHeight + r.height), 0, 1);
         vis.style.setProperty('--rot', `${(-4 + 8 * p).toFixed(3)}deg`);
-        if (lightEl && finePointer.matches) {
-          const tx = pointer.x * 6, ty = pointer.y * 6;
+        if (lightEl) {
+          // with the pointer, or with the panel's scroll on touch screens (P-08)
+          const fine = finePointer.matches;
+          const tx = fine ? pointer.x * 6 : (p - 0.5) * 12, ty = fine ? pointer.y * 6 : (0.5 - p) * 8;
           s.lx = lerp(s.lx || 0, tx, 0.06); s.ly = lerp(s.ly || 0, ty, 0.06);
           lightEl.style.setProperty('--lx', `${s.lx.toFixed(2)}%`);
           lightEl.style.setProperty('--ly', `${s.ly.toFixed(2)}%`);
@@ -192,6 +276,9 @@
         return false;
       });
     });
+
+    // phone circuit rails: grow with the scroll while their board is on screen
+    rails.forEach(r => r.board && add(r.board, () => { paintRail(r); return false; }));
 
     let raf = 0;
     function frame() {

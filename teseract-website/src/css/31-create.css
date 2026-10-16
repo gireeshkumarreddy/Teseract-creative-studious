@@ -80,7 +80,7 @@
   .create-cta__side .btn{width:100%}
 }
 @media (max-width:719.98px){
-  .create-hero__title{font-size:32px;line-height:1.05;max-width:none}
+  .create-hero__title{font-size:var(--h1-phone);line-height:var(--h1-phone-lh);max-width:none}   /* ~1.3x the 32px section H2s, as on desktop */
   .create-cta__title{font-size:32px}
   .create-list .svc-info__title{font-size:28px}
 }

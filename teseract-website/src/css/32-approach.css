@@ -278,7 +278,11 @@
   .ap{--gutter:16px;--rail:28px;--col-gap:16px;--step-gap:56px;--steps-top:56px;border-radius:24px;padding:20px var(--gutter) 48px}
   .ap-mast{flex-direction:column;align-items:flex-start;gap:14px}
   .ap-word{font-size:16px;letter-spacing:.32em}
-  .ap-disc{gap:8px 12px;font-size:12px;letter-spacing:.16em}
+  /* the four disciplines as a 2 x 2 block (no "EXPERIENCE" alone on a row; no smaller type), then the poster's tagline
+     under them with its accent rule, as on desktop (P-10: it was hidden below 1200px) */
+  .ap-disc{display:grid;grid-template-columns:repeat(2,max-content);gap:8px 20px;font-size:12px;letter-spacing:.16em}
+  .ap-tag{display:block;position:relative;padding-left:14px;font-size:12px;line-height:16px}
+  .ap-tag::before{left:0;top:2px;height:44px}
   .ap-hero{display:block;margin-top:40px}
   .ap-kicker{margin-top:10px}
   .ap-title{margin-top:40px;font-size:clamp(56px,calc(100cqi / 4.62),110px);line-height:.8;letter-spacing:-.09em}   /* "Experience" + dot = 4.54em: stays inside the gutter */
@@ -296,6 +300,7 @@
   .ap-head--inline .ap-head__title{gap:14px}
   .ap-head--inline .ap-sub{margin-top:8px}
   .ap-step--inline .ap-head .ap-num{line-height:28px}
+  .ap-note,.ap-result__text{font-size:16px;line-height:1.5;text-wrap:pretty}   /* reading copy >= 16px on phones (TYPO-03) */
   .ap-list{max-width:100%;padding:10px 24px 12px;font-size:12px;line-height:20px;letter-spacing:.14em}
   /* 6+ items: two content-sized columns (a multicol box would size to 2 x the widest item and overflow) */
   .ap-list--cols{display:grid;grid-template-rows:repeat(var(--rows),auto);grid-auto-flow:column;grid-auto-columns:max-content;column-gap:20px}

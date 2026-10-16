@@ -3,7 +3,6 @@
   "html_files": 34,
   "errors": [],
   "warnings": [
-    "who-we-are/index.html: <h1 id=page-title> is read letter by letter (\"w h o w e a r e .\"), and so is the region it names (aria-labelledby): keep the letters aria-hidden and give the words once in a .sr-only span (A11Y-04)",
     "6 SAMPLE testimonial(s) on Client Stories: preview only, replace before launch (LAUNCH-CHECKLIST.md 3c; check.py fails once indexable / site_url is set)"
   ]
 }

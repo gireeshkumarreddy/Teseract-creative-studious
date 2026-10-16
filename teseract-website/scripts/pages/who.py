@@ -164,6 +164,15 @@ def grid(vs=(), hs=(), crosses=()):
 GRID_X = (351, 667.5, 1005)          # image 6 vertical hairlines
 
 
+def rail(start='pin', end='pin'):
+    """Phone circuit rail (< 800px, where the measured wires give way to one column): an empty SVG over the board that
+    30-who.js fills with a vertical trace in the left gutter, a node at each [data-who-pin] box ('h' = beside its head /
+    first child, 'l' = its first text line, 'c' = its centre, '!' = the red node) and a short leader into the box. The
+    trace grows one way with scroll; start / end 'edge' run it to the board edge (bands A+B and C read as one trace)."""
+    return (f'<svg class="who-rail" aria-hidden="true" focusable="false" data-who-rail '
+            f'data-from="{start}" data-to="{end}"></svg>')
+
+
 # ================================================================== 1. hero (image 5)
 def _hero(ctx):
     light = (f'<img class="who-hero__raster" src="{ctx.asset(A + "who-hero-light-1536.webp")}" '
@@ -176,7 +185,9 @@ def _hero(ctx):
     ledge = ('M-420 520 C-200 548 0 575 100 590 S300 623 380 630 S600 678 700 694 S1050 735 1200 743 '
              'S1400 736 1536 730 S1800 722 1960 716')
     # "who we are." (Client update 5; image 5 reads "who are we.") - letters rise, the full stop is drawn as image 5's
-    # round dot (the site face's period is square); the real "." stays in the H1 text for its accessible name.
+    # round dot (the site face's period is square). The letter spans are inline-block, so screen readers would spell
+    # them ('w h o w e a r e .', A11Y-04): the visual letters are aria-hidden and the H1 (and the hero region it
+    # labels) is named once by the .sr-only words.
     words = ['who', 'we', 'are']
     letters = []
     k = 0
@@ -208,7 +219,7 @@ def _hero(ctx):
       </div>
       <div class="who-hero__monitor" data-who-monitor><div class="who-hero__tilt" data-who-tilt>{monitor}</div></div>
     </div>
-    <h1 class="who-display" id="page-title" data-who-display><span class="who-display__txt">{title}</span></h1>
+    <h1 class="who-display" id="page-title" data-who-display><span class="sr-only">{E(' '.join(words).capitalize())}.</span><span class="who-display__txt" aria-hidden="true">{title}</span></h1>
   </div>
 </section>'''
 
@@ -255,14 +266,15 @@ def _intro(ctx):
       <span class="who-globe at" style="{at(642, 63, 54)}">{svg('who-globe.svg')}</span>
       <div class="who-time at" style="{at(1297, 20)}" aria-hidden="true"><p class="who-time__in" data-who-time hidden><span class="who-time__l">Your local time</span> <time class="who-time__t" data-who-clock>00:00 AM</time></p></div>
       <span class="who-plus at" style="{at(1098, 77, 26)}"></span>
-      <div class="who-b01 at" style="{at(1051, 295, 246, 155, '--d:300ms')}" data-reveal aria-hidden="true">
+      <div class="who-b01 at" style="{at(1051, 295, 246, 155, '--d:300ms')}" data-reveal aria-hidden="true" data-who-pin="h">
         <p class="who-b01__head"><b>{T(BRAND)}</b><span>/01</span></p>
         <ul class="who-b01__list" role="list"><li>Strategy</li><li>Design</li><li>Technology</li><li>Experiences</li></ul>
       </div>
-      <p class="who-note who-note--tagline at" style="{at(1151, 652, 170, '--d:420ms')}" data-reveal aria-hidden="true">{T(BRAND_COPY['tagline'])}</p>
+      <p class="who-note who-note--tagline at" style="{at(1151, 652, 170, '--d:420ms')}" data-reveal aria-hidden="true" data-who-pin="l">{T(BRAND_COPY['tagline'])}</p>
       {ab_wires}
     </div>'''
-    rock = f'''<div class="who-rock at" style="{at(404, 353, 576, 489)}" aria-hidden="true">
+    # the rock has its own in-view state (rise + one landing bob as it comes on screen, not when the board's top does)
+    rock = f'''<div class="who-rock at" style="{at(404, 353, 576, 489)}" aria-hidden="true" data-who-in>
       <span class="who-rock__glow"></span>
       <div class="who-rock__par" data-who-par="-30"><div class="who-rock__float">
         {img(ctx, A + 'who-rock.webp', '', w=576, h=489, cls='who-rock__img')}
@@ -271,16 +283,17 @@ def _intro(ctx):
     </div>'''
     board_ab = f'''<div class="who-board who-board--ab" data-who-in>
     {grid(GRID_X, (445,), [(x, 445) for x in GRID_X])}
+    {rail(end='edge')}
     <h2 class="who-intro__title at" id="intro-title" style="{at(35, 112, 640)}" data-split>{title}</h2>
-    <p class="who-note who-note--lead at" style="{at(172, 366, 300, '--d:250ms')}" data-reveal>{b0}</p>
-    <div class="who-whobox at" style="{at(35, 571, 325, '--d:200ms')}" data-reveal>
+    <p class="who-note who-note--lead at" style="{at(172, 366, 300, '--d:250ms')}" data-reveal data-who-pin="l!">{b0}</p>
+    <div class="who-whobox at" style="{at(35, 571, 325, '--d:200ms')}" data-reveal data-who-pin="h">
       <p class="who-whobox__label"><span>Who we are</span></p>
       <div class="who-whobox__box">
         <span class="who-whobox__thumb">{img(ctx, A + 'who-abstract-01.webp', '', w=94, h=94)}</span>
         <p class="who-whobox__text">{b1}</p>
       </div>
     </div>
-    <p class="who-note who-note--work at" style="{at(799, 140, 236, '--d:150ms')}" data-reveal>{b2}</p>
+    <p class="who-note who-note--work at" style="{at(799, 140, 236, '--d:150ms')}" data-reveal data-who-pin="l">{b2}</p>
     {deco_ab}
     {rock}
   </div>'''
@@ -314,10 +327,11 @@ def _intro(ctx):
     ]))
     board_c = f'''<div class="who-board who-board--c" data-who-in>
     {grid(GRID_X, (), ())}
+    {rail(start='edge')}
     <p class="who-stmt at" style="{at(503, 196, 800)}" data-split>{stmt}</p>
     <div class="who-deco" aria-hidden="true">
-      <ul class="who-chips at" style="{at(922, 126, 389)}" role="list" aria-hidden="true" data-stagger="70" data-stagger-base="300">{''.join(f'<li data-reveal="fade">{c}</li>' for c in ('Strategy', 'Design', 'Technology', 'Creativity'))}</ul>
-      <div class="who-collab at" style="{at(116, 61, 200)}" data-reveal aria-hidden="true">
+      <ul class="who-chips at" style="{at(922, 126, 389)}" role="list" aria-hidden="true" data-stagger="70" data-stagger-base="300" data-who-pin="h">{''.join(f'<li data-reveal="fade">{c}</li>' for c in ('Strategy', 'Design', 'Technology', 'Creativity'))}</ul>
+      <div class="who-collab at" style="{at(116, 61, 200)}" data-reveal aria-hidden="true" data-who-pin="h!">
         <p class="who-collab__head">{svg('who-crenel.svg', 'who-collab__crenel')}{svg('who-burst.svg', 'who-collab__burst')}</p>
         <ul class="who-collab__list" role="list">{disciplines}</ul>
         <p class="who-collab__foot">{small_team}</p>
@@ -387,7 +401,7 @@ def _why(ctx):
 def _philosophy(ctx):
     p = WHO['philosophy']
     steps = ''.join(
-        f'<li class="who-step" style="--i:{i}" data-who-step data-reveal><span class="who-step__n" aria-hidden="true">{i + 1:02d}</span>'
+        f'<li class="who-step" style="--i:{i}" data-who-step data-reveal data-who-pin="c"><span class="who-step__n" aria-hidden="true">{i + 1:02d}</span>'
         f'<h3 class="who-step__t">{T(s)}</h3></li>' for i, s in enumerate(p['steps']))
     d_wires = wires(1333, 500, ''.join([
         wire([(554, 155), (575, 155), (660, 245)], 500),
@@ -397,16 +411,17 @@ def _philosophy(ctx):
     return f'''<section class="who-phil" id="philosophy" aria-labelledby="philosophy-title">
   <div class="who-board who-board--d" data-who-in>
     {grid(GRID_X, (0,), [(x, 0) for x in GRID_X])}
-    <div class="who-b03 at" style="{at(40, 42, 318, 293)}" data-reveal="fade">
+    {rail()}
+    <div class="who-b03 at" style="{at(40, 42, 318, 293)}" data-reveal="fade" data-who-pin="h">
       <p class="who-b03__head"><span>{T(p['label'])}</span><span class="who-b03__n" aria-hidden="true">/03</span></p>
       <div class="who-b03__img reveal-image">{img(ctx, A + 'who-abstract-02.webp', '', w=197, h=235)}</div>
     </div>
-    <div class="who-panel6 at" style="{at(251, 82, 303, '--d:200ms')}" data-reveal>
+    <div class="who-panel6 at" style="{at(251, 82, 303, '--d:200ms')}" data-reveal data-who-pin="h!">
       <h2 class="who-panel6__title" id="philosophy-title">{' '.join(f'<span class="who-panel6__ln">{T(x)}</span>' for x in _sentences(p['title']))}</h2>
       <p class="who-panel6__body">{T(p['body'])}</p>
     </div>
     <ol class="who-steps at" style="{at(733, 77, 560)}" role="list" data-stagger="110" data-stagger-base="150">{steps}</ol>
-    <p class="who-phil__more at" style="{at(826, 405, None, None, '--d:600ms')}" data-reveal><a class="who-link" href="{link}">{link_text("Our approach: how an idea becomes an experience")}</a></p>
+    <p class="who-phil__more at" style="{at(826, 405, None, None, '--d:600ms')}" data-reveal data-who-pin="l"><a class="who-link" href="{link}">{link_text("Our approach: how an idea becomes an experience")}</a></p>
     <div class="who-deco" aria-hidden="true">{d_wires}</div>
   </div>
 </section>'''

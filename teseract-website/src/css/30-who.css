@@ -17,7 +17,7 @@
 @media (max-width:1023.98px){.pg-hero__title{font-size:64px}}
 @media (max-width:809.98px){.pg-hero__sub{font-size:16px}}
 @media (max-width:799.98px){.pg-hero{padding:48px 0 40px}.pg-hero__inner{padding:0;gap:24px}}
-@media (max-width:719.98px){.pg-hero__title{max-width:none;font-size:32px;line-height:1.05}}
+@media (max-width:719.98px){.pg-hero__title{max-width:none;font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}}   /* ~1.3x the 32px section H2s, as on desktop */
 
 /* ---------- Reference checklist seal (20x29; dark seal + --ink tick, colours in pages/who.py SEAL) */
 .seal{display:block;width:20px;height:29px;flex:none}
@@ -110,8 +110,8 @@
   .who-display__l{color:transparent;-webkit-background-clip:text;background-clip:text;
     background-image:linear-gradient(180deg,#f4f4f2 0%,#f4f4f2 52%,rgba(244,244,242,.46) 100%)}
 }
-/* the full stop: image 5's round dot (Ø 48 dpx = .175em, sitting on the baseline); the "." glyph is kept for the
-   accessible name but visually replaced (the site face's period is square) */
+/* the full stop: image 5's round dot (Ø 48 dpx = .175em, sitting on the baseline); the "." glyph stays in the
+   aria-hidden letters but is visually replaced (the site face's period is square); the H1's name is its .sr-only words */
 .who-display__dot{display:inline-block;padding-left:.035em}
 .who-display__dot::before{content:"";display:inline-block;width:.175em;height:.175em;border-radius:50%;background:var(--who-accent);
   box-shadow:0 0 .16em rgba(247,88,23,.5)}
@@ -130,14 +130,16 @@
 .motion .who-display__l{transition:transform 1s var(--ease) calc(.55s + var(--i) * 38ms)}
 .motion .who-hero:not(.is-on) .who-display__dot::before{transform:scale(0)}
 .motion .who-display__dot::before{transition:transform .6s var(--spring) 1.02s;transform-origin:50% 50%}
-/* idle: the light breathes, the amber core flickers, a sheen travels the streak; paused off-screen */
-.motion .who-hero__light{animation:who-breathe 7s ease-in-out infinite alternate}
-.motion .who-hero__amber{animation:who-flicker 5s ease-in-out infinite alternate}
-.motion .who-hero.is-on .who-hero__sheen{animation:who-sheen 9s cubic-bezier(.45,0,.25,1) 2.2s infinite}
+/* settle: as the light arrives it breathes up once, the amber core flickers once and one sheen travels the streak, then
+   all three rest (WCAG 2.2.2: no motion loop runs longer than ~5 s without a control, A11Y-06); paused off-screen. The
+   light keeps moving only with the visitor: pointer tilt on desktop, scroll on touch (30-who.js). */
+.motion .who-hero.is-on .who-hero__light{animation:who-breathe 4.6s ease-in-out .5s 1 backwards}
+.motion .who-hero.is-on .who-hero__amber{animation:who-flicker 4.4s ease-in-out .8s 1 backwards}
+.motion .who-hero.is-on .who-hero__sheen{animation:who-sheen 3.4s cubic-bezier(.45,0,.25,1) 2.2s 1}
 .who-hero.is-off *{animation-play-state:paused!important}
-@keyframes who-breathe{from{opacity:.86}to{opacity:1}}
+@keyframes who-breathe{0%{opacity:.86}45%{opacity:1}70%{opacity:.93}100%{opacity:1}}
 @keyframes who-flicker{0%{opacity:.9}40%{opacity:1}55%{opacity:.93}100%{opacity:1}}
-@keyframes who-sheen{0%{transform:translateX(-10vw);opacity:0}6%{opacity:1}30%{opacity:.9}38%{transform:translateX(calc(var(--sheen-to,180vw)));opacity:0}100%{transform:translateX(calc(var(--sheen-to,180vw)));opacity:0}}
+@keyframes who-sheen{0%{transform:translateX(-10vw);opacity:0}16%{opacity:1}79%{opacity:.9}100%{transform:translateX(calc(var(--sheen-to,180vw)));opacity:0}}
 .who-hero__sheen{--sheen-to:calc(var(--aw) * 1.7)}
 
 /* tablet: artboard 130 % wide, display one line at 16.3vw; phone: 175 %, display on two lines */
@@ -201,10 +203,12 @@
   box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
 .who-rock__glow{position:absolute;left:-10%;right:-10%;bottom:-12%;height:40%;
   background:radial-gradient(50% 45% at 50% 70%,rgba(255,255,255,.07),transparent 75%)}
-.motion .who-rock__float{animation:who-float 6.5s ease-in-out infinite alternate}
-.who-board.is-off .who-rock__float,.who-board.is-off .who-sphere svg{animation-play-state:paused}
-@keyframes who-float{from{transform:translate3d(0,-5px,0) rotate(-.6deg)}to{transform:translate3d(0,5px,0) rotate(.6deg)}}   /* 10 px travel */
-.motion .who-board:not(.is-in) .who-rock{opacity:0;transform:translate3d(0,36px,0) scale(.96)}
+/* the rock rises and bobs once as it comes on screen (its own [data-who-in]; 10 px travel, back to rest: A11Y-06),
+   then sways only with scroll (30-who.js) */
+.motion .who-rock.is-in .who-rock__float{animation:who-float 4.8s ease-in-out .35s 1}
+.who-rock.is-off .who-rock__float{animation-play-state:paused}
+@keyframes who-float{0%,100%{transform:none}30%{transform:translate3d(0,-5px,0) rotate(-.6deg)}72%{transform:translate3d(0,5px,0) rotate(.6deg)}}
+.motion .who-rock:not(.is-in){opacity:0;transform:translate3d(0,36px,0) scale(.96)}
 .motion .who-rock{transition:opacity 1.1s var(--ease) .15s,transform 1.4s var(--ease) .15s}
 
 /* statement (band C) — boxed words with drawn frames + small line icons */
@@ -248,9 +252,8 @@
 .who-collage{position:relative}
 .who-dial{color:rgba(255,255,255,.3)}
 .who-dial svg{width:100%;height:100%;overflow:visible;transform:rotate(var(--dial,0deg));will-change:transform}
+/* the sphere turns with the scroll through band C (30-who.js, with the dial; no endless spin: A11Y-06) */
 .who-sphere svg{transform-origin:50% 50%}
-.motion .who-sphere svg{animation:who-sphere 18s linear infinite}
-@keyframes who-sphere{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 /* image 6 end-mark: globe tile + checker chip (decorative) */
 .who-endmark{display:flex;align-items:stretch}
 .who-endmark>span{display:grid;place-items:center;border:1px solid var(--who-line)}
@@ -314,7 +317,7 @@
 .who-step.is-done .who-step__n{background:var(--ink);color:#000;border-color:var(--ink)}
 /* descriptive text links: the underline sits on the text (wraps per line on phones), arrow nudges on hover;
    12px vertical padding keeps the tap target >= 44px */
-.who-link{display:inline-block;padding:12px 0;font-size:16px;line-height:1.35;letter-spacing:-.01em;color:var(--ink)}
+.who-link{display:inline-block;padding:12px 0;font-size:16px;line-height:1.35;letter-spacing:-.01em;color:var(--ink);text-wrap:balance}   /* no lone last word ('… becomes an / experience') */
 .who-link__t{background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:2px;
   -webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .5s var(--ease)}
 .who-link .who-arr{display:inline-block;width:14px;height:14px;margin-left:8px;vertical-align:-1px;transition:transform .45s var(--ease)}
@@ -348,6 +351,17 @@
 .motion .who-grid__c{opacity:0;transition:opacity .6s ease .7s}
 .motion .is-in>.who-grid .who-grid__v,.motion .is-in>.who-grid .who-grid__h{transform:none}
 .motion .is-in>.who-grid .who-grid__c{opacity:1}
+
+/* ---- phone circuit (< 800px; bands A+B, C and D): the board language in one column. .who-rail is filled by 30-who.js
+   (trace x = half the gutter, one node per [data-who-pin] box, a short leader into it; crisp half-pixel geometry);
+   the trace grows one way as its 55 % line is scrolled past and each node switches on when the trace reaches it.
+   Static and complete under reduced motion; without JS the boards stay as they are (decorative only). */
+.who-rail{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;display:none}
+.who-rail__lead{fill:none;stroke:var(--who-lead);stroke-width:1}
+.motion .who-rail .who-wire--rail{transition:stroke-dashoffset .2s linear}
+.motion .who-rail .who-pin:not(.is-on) .who-node{opacity:0;transform:scale(.4)}
+.motion .who-rail .who-rail__lead{stroke-dasharray:1;stroke-dashoffset:0;transition:stroke-dashoffset .35s var(--ease) .12s}
+.motion .who-rail .who-pin:not(.is-on) .who-rail__lead{stroke-dashoffset:1}
 
 /* ---------------- desktop: measured image-6 boards (1 dpx = --u) */
 @media (min-width:1200px){
@@ -534,6 +548,26 @@
   .who-step__n{width:44px;height:44px;font-size:17px}
   .who-step{gap:16px}
   .who-step__t{font-size:17px}
+  /* VIS-10: the four chips as a 2 x 2 block (no "CREATIVITY" alone on a second row) */
+  .who-chips{display:grid;grid-template-columns:repeat(2,max-content);gap:8px}
+  .who-chips li{text-align:center}
+  .who-phil__more{text-wrap:pretty}
+  /* phone circuit (P-09, 30-who.js): trace + nodes, two hairline verticals on the gutters (drawn in like the desktop
+     grid), the globe and "+" mark at the ends of the tag and clock rows, the end-mark under band C */
+  .who-board--ab,.who-board--c,.who-board--d{position:relative}
+  .who-rail{display:block}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid{display:block}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid>i{display:none}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::before,
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{content:"";position:absolute;top:0;bottom:0;left:var(--page-pad);width:1px;
+    background:var(--who-grid);transform-origin:50% 0}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{left:auto;right:var(--page-pad)}
+  .motion :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::before,
+  .motion :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{transform:scaleY(0);transition:transform 1.4s var(--ease)}
+  .motion .is-in>.who-grid::before,.motion .is-in>.who-grid::after{transform:none}
+  .who-board--ab .who-globe{display:block;grid-area:tag;justify-self:end;align-self:center;width:30px}
+  .who-board--ab .who-plus{display:block;grid-area:time;justify-self:end;align-self:center;width:22px}
+  .who-board--c .who-endmark{display:flex;grid-area:collage;align-self:end;justify-self:end;position:relative;z-index:1;width:128px;height:44px}
 }
 
 /* founder on tablets: two columns, the aside (bar, plate, roles) pinned while the board, quote and bio scroll */
@@ -736,7 +770,8 @@
   .who-sp{padding:48px 0 56px}
   .who-sp__title{font-size:12cqw}
   .who-sp--1 .who-sp__title{font-size:21cqw;line-height:.78}
-  .who-sp__lead{font-size:28px}
+  .who-sp__lead{font-size:28px;text-wrap:pretty}
+  .who-sp__s{display:block}   /* one sentence per line, as on desktop (inline runs broke 'A / headline', 'Trends / change') */
   .who-sp--2 .who-pnl,.who-sp--3 .who-pnl{aspect-ratio:1}
   .who-sp__body{font-size:16px}
   .who-promise__labels{flex-wrap:wrap;justify-content:flex-start;gap:6px 14px}
@@ -750,7 +785,8 @@
 /* reduced motion / no motion: everything static and visible */
 @media (prefers-reduced-motion:reduce){
   .who-hero__curtain{display:none!important}
-  .who-rock__float,.who-sphere svg,.who-hero__light,.who-hero__amber,.who-hero__sheen{animation:none!important}
+  .who-rock__float,.who-hero__light,.who-hero__amber,.who-hero__sheen{animation:none!important}
+  .who-sphere svg{transform:none!important}
   .who-dial svg,.who-pnl__vis{transform:none!important}
   .who-pnl--2 .who-pnl__vis{transform:translate(-50%,-50%)!important}
   .who-pnl__vis{transform:translate(-50%,-50%)!important}

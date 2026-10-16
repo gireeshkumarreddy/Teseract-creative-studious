@@ -1500,9 +1500,11 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       });
     });
     syncLeads();                                   // tickers() (02-core.js) has made the first clones already
-    // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed.
+    // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed. A clone of the first
+    // tile drops the margin standIns() may have given that tile (the loop's start only).
+    const unshift = () => frame.querySelectorAll('[data-ticker-list] > [data-clone][style]').forEach(c => { c.style.marginTop = ''; });
     if ('MutationObserver' in window) {
-      const mo = new MutationObserver(() => { syncLeads(); if (revealed) openAll(); });
+      const mo = new MutationObserver(() => { unshift(); syncLeads(); if (revealed) openAll(); });
       frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     }
 
@@ -1553,7 +1555,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       const visTop = Math.max(c.top, headerBottom()), visBottom = Math.min(c.bottom, innerHeight);
       const ih = item.offsetHeight;
       const centre = visBottom - visTop >= ih + 32 ? (visTop + visBottom) / 2 - c.top : col.clientHeight / 2;
-      const offset = item.offsetTop - list.firstElementChild.offsetTop;   // item top inside the list at translate 0
+      const offset = item.offsetTop - list.offsetTop;                      // item top inside the list at translate 0
       let target = centre - ih / 2 - offset;                               // list translate that puts it there
       if (anim && anim.effect) {
         const kfs = anim.effect.getKeyframes();
@@ -1587,12 +1589,104 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     });
   }
 
+  /* Stand-ins (home_hero._columns): where a screen hides a column, its projects' tiles are repeated in the columns
+     still shown, so every project is on every screen. With motion they sit out the first layout (20-hero.css), and
+     after load idle moments let them in one at a time, each only while none of its places in the column (the tile and
+     the ticker's copies of it, which share its .is-on) is on screen, and the column's ticker takes the longer loop from
+     where it is. Stand-ins this screen does not show (another width, a hidden column) are let in at once: the ticker's
+     own rebuild on resize picks them up. */
+  /* A stand-in's image waits in <noscript> (home_hero._item) until its tile is let in, so neither it nor the ticker's
+     copies of it download anything before. Let in, they load at once (eager, as the ticker's own copies: a lazy image
+     beyond the column's clip would only start as it scrolls into view). */
+  const unwrap = (li, eager) => li.querySelectorAll('noscript').forEach(ns => {
+    const tpl = document.createElement('template');
+    tpl.innerHTML = ns.textContent;
+    if (eager) tpl.content.querySelectorAll('img').forEach(im => im.setAttribute('loading', 'eager'));
+    ns.replaceWith(tpl.content);
+  });
+  function standIns(frame) {
+    const left = [...frame.querySelectorAll('[data-ticker-list] > :not([data-clone]):is(.hero-col__item--lt1440,.hero-col__item--lt800)')];
+    if (!left.length) return;
+    const narrow = { lt1440: matchMedia('(max-width: 1439.98px)'), lt800: matchMedia('(max-width: 799.98px)') };
+    const parse = kf => parseFloat(String(kf.transform).replace(/[^-\d.]+/g, ' ').trim().split(' ').pop());
+    const MARGIN = 24;                                 // px kept clear around the visible part (the ticker keeps moving)
+    const letIn = (li, shown = true) => {         // not shown at this width: no downloads (lazy) until a resize shows it
+      const kids = [...li.parentElement.children];
+      const n = kids.filter(k => !k.hasAttribute('data-clone')).length;
+      for (let j = kids.indexOf(li); j >= 0 && j < kids.length; j += n) { kids[j].classList.add('is-on'); unwrap(kids[j], shown); }
+    };
+    let scrolled = 0;
+    const onScroll = () => { scrolled = performance.now(); };
+    addEventListener('scroll', onScroll, { passive: true });
+    // The ticker rebuilds each column once just after it starts (02-core.js, its ResizeObserver's first call), which
+    // restarts the loop from the top: nothing comes in before that, or the restart would move what is on screen.
+    const t0 = performance.now(), rebuilt = new Set();
+    const mo = 'MutationObserver' in window ? new MutationObserver(recs => recs.forEach(r => rebuilt.add(r.target))) : null;
+    if (mo) frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
+    const idle = fn => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 120));
+    // Lets li in if none of its places is on screen (true), re-timing its column's loop; false: try again later. What
+    // comes in above the visible part is offset by a negative margin on the list's first tile (above it too), so no tile
+    // on screen moves, in the layout either (no layout shift).
+    const tryIn = li => {
+      const list = li.parentElement, col = list.closest('[data-ticker]');
+      const t = (TS.tickers || []).find(x => x.el === col), anim = t && t.anim, fx = anim && anim.effect;
+      const kfs = fx ? fx.getKeyframes() : [], dur = fx ? fx.getTiming().duration : 0;
+      const from = kfs.length > 1 ? parse(kfs[0]) : NaN, to = kfs.length > 1 ? parse(kfs[kfs.length - 1]) : NaN;
+      if (!(isFinite(from) && isFinite(to) && to !== from && dur > 0)) { letIn(li); return true; }   // no loop to keep
+      if (!rebuilt.has(list) && performance.now() - t0 < 4000) return false;
+      const kids = [...list.children], n = kids.filter(k => !k.hasAttribute('data-clone')).length, first = kids[0];
+      const r = col.getBoundingClientRect(), off = first.getBoundingClientRect().top - r.top;   // the list as drawn
+      const top = Math.max(0, -r.top), bottom = Math.min(r.height, innerHeight - r.top);
+      const seen = bottom > top, a = top - off - MARGIN, b = bottom - off + MARGIN;   // the visible part, in list space
+      let next = li.nextElementSibling;              // the stand-in comes in where its next shown tile is now
+      while (next && !next.offsetParent) next = next.nextElementSibling;
+      if (!next || next.hasAttribute('data-clone')) return false;
+      const len = Math.abs(to - from), at = next.offsetTop - first.offsetTop, places = [];
+      for (let k = 0; k * n < kids.length; k++) places.push(k * len + at);   // the tile, then each copy of it
+      if (seen && places.some(p => p > a && p < b)) return false;
+      const above = seen ? places.filter(p => p <= a).length : 0;
+      letIn(li);
+      const gap = parseFloat(getComputedStyle(list).rowGap) || 0, last = kids[n - 1];
+      const loop = last.offsetTop + last.offsetHeight - first.offsetTop + gap;   // as the ticker measures it
+      if (above) first.style.marginTop = `${(parseFloat(first.style.marginTop) || 0) - above * (li.offsetHeight + gap)}px`;
+      const T = from + (to - from) * (((anim.currentTime || 0) % dur) / dur);   // the ticker's offset: kept
+      const f2 = to > from ? -loop : 0, t2 = to > from ? 0 : -loop;
+      const d2 = loop / (parseFloat(col.dataset.speed) || 25) * 1000;
+      fx.setKeyframes([{ transform: `translateY(${f2}px)` }, { transform: `translateY(${t2}px)` }]);
+      fx.updateTiming({ duration: d2 });
+      anim.currentTime = Math.min(d2 - 1, Math.max(0, (T - f2) / (t2 - f2) * d2));
+      return true;
+    };
+    // One stand-in per idle call (its tile and the ticker's copies of it: well under a long task on a slow phone).
+    const step = () => {
+      for (let i = left.length - 1; i >= 0; i--) {
+        const li = left[i];
+        const shown = narrow[li.classList.contains('hero-col__item--lt800') ? 'lt800' : 'lt1440'].matches && li.closest('[data-ticker]').offsetParent;
+        if (li.classList.contains('is-on') || !shown) { letIn(li, !!shown); left.splice(i, 1); }
+      }
+      let moved = false;
+      if (left.length && performance.now() - scrolled > 250) {   // mid-scroll the visible part is a moving target
+        const i = left.findIndex(tryIn);
+        if (i >= 0) { left.splice(i, 1); moved = true; }
+      }
+      if (!left.length) { removeEventListener('scroll', onScroll); if (mo) mo.disconnect(); }
+      else if (moved) idle(step);
+      else setTimeout(() => idle(step), 400);        // all on screen for now: the columns move on
+    };
+    const start = () => idle(step);
+    if (document.readyState === 'complete') start(); else addEventListener('load', start, { once: true });
+  }
+
   TS.ready(() => {
     const hero = document.querySelector('.hero');
     if (!hero) return;
     appear(hero);
     pill(hero);
     gallery(hero);
+    const frame = hero.querySelector('[data-hero-gallery]');
+    if (!frame) return;
+    if (TS.motion()) standIns(frame);
+    else frame.querySelectorAll('[data-ticker-list] > :is(.hero-col__item--lt1440,.hero-col__item--lt800)').forEach(li => unwrap(li, li.hasAttribute('data-clone')));   // shown from the start
   });
 })();
 
@@ -1677,7 +1771,12 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const board = root.querySelector('.idea__board');
     const laptop = root.querySelector('.idea__laptop');
     const eLine = root.querySelector('[data-idea-e]');
-    let liftPx = 0, shift = 0;
+    // 2c moves the laptop here on fine pointers >= 800px; every other screen with motion rises in CSS (21-idea.css) where
+    // scroll timelines exist, which no script follows: there string E is drawn down to the lid's lowest point (the laptop
+    // 40px low), and the rest of it stays hidden behind the lid as the laptop settles.
+    const lift = matchMedia('(min-width: 800px) and (pointer: fine)');
+    const cssRise = motion && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
+    let liftPx = !lift.matches && cssRise ? 40 : 0, shift = 0;
     const dockE = () => {
       if (!eLine || !board) return;
       const k = board.clientWidth / 1600;
@@ -1705,10 +1804,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     /* ---------- 2c. Subtle scroll-linked rise of the laptop: 40px low while it enters, settling
        exactly when the panel's bottom edge (where the stones are cropped) reaches the viewport, so
        no gap ever opens under the stones. Fine pointers >= 800px only (Lenis-smoothed scroll; every other screen runs
-       it in CSS, animation-timeline: view()), never under reduced motion. */
-    const lift = matchMedia('(min-width: 800px) and (pointer: fine)');
+       it in CSS, animation-timeline: view(), with string E docked as above), never under reduced motion. */
     if (motion && 'IntersectionObserver' in window) {
-      let on = false, raf = 0;
+      let on = false, raf = 0, moved = 0;
       const update = () => {
         raf = 0;
         let px = 0;
@@ -1716,11 +1814,12 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
           const d = root.getBoundingClientRect().bottom - innerHeight;   // untransformed bottom of the laptop
           px = 40 * Math.min(1, Math.max(0, d / (device.offsetHeight || 1)));
         }
-        if (px !== liftPx) {
-          liftPx = px;
+        if (px !== moved) {
+          moved = px;
           device.style.transform = px ? `translate3d(0,${px.toFixed(2)}px,0)` : '';
-          dockE();
         }
+        const dock = lift.matches ? px : cssRise ? 40 : 0;
+        if (dock !== liftPx) { liftPx = dock; dockE(); }
       };
       const onScroll = () => { if (on && !raf) raf = requestAnimationFrame(update); };
       new IntersectionObserver(entries => { on = entries[entries.length - 1].isIntersecting; onScroll(); }, { rootMargin: '10% 0px' }).observe(device);
@@ -3003,17 +3102,22 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 /* ---- 30-who.js ---- */
 /* Who We Are (/who-we-are/) — images 5, 6, 7. Markup: scripts/pages/who.py, CSS: 30-who.css.
    - Hero: entrance (light sweep, monitor rise, letters rise, full stop pops) once the monitor image is
-     decoded; idle light loops pause off-screen; fine-pointer tilt on the monitor (±2.5deg, ±6px) with the
-     light counter-moving (±10px); scroll parallax (transform only, <= 40px).
-   - Boards ([data-who-in]): .is-in when they enter (grid draw, leader lines, nodes); .is-off when they
-     leave (pauses the rock float / sphere spin).
-   - Rock: scroll parallax (<= 30px) + the glass tile follows the pointer (±6px, lerped).
-   - Dial: rotation linked to scroll through band C (-20deg -> +20deg), lerped.
+     decoded, then the light settles (bounded CSS, no endless loop); fine-pointer tilt on the monitor (±2.5deg,
+     ±6px) with the light counter-moving (±10px); touch screens get the same tilt and light from the scroll
+     through the hero (P-08); scroll parallax (transform only, <= 40px).
+   - Boards ([data-who-in], also the rock): .is-in when they enter (grid draw, leader lines, nodes, the rock's
+     rise + one bob); .is-off when they leave (pauses a bob in progress).
+   - Phone circuit (< 800px, [data-who-rail]): the trace, nodes and leaders are built from the layout boxes and
+     grow one way with scroll (static and complete without html.motion).
+   - Rock: scroll parallax (<= 30px) + a slight sway; the glass tile follows the pointer (±6px, lerped), or the
+     scroll on touch screens.
+   - Dial: rotation linked to scroll through band C (-20deg -> +20deg), lerped; the sphere turns with it.
    - Steps: each number box fills as its step crosses 55 % of the viewport (one-way progress).
    - Clock: the visitor's local time, minute precision, only while the intro is on screen.
    - How we think: spread counters roll in, the panel mark turns with scroll (±4deg), the light field
-     drifts with the pointer.
-   One rAF loop serves every scroll/pointer-linked item and only runs while one of them is on screen.
+     drifts with the pointer (with the scroll on touch screens).
+   One rAF loop serves every scroll/pointer-linked item and only runs while one of them is on screen; nothing
+   moves on its own for more than a few seconds (WCAG 2.2.2).
    Reduced motion (or no html.motion): nothing moves; everything is visible from the start. */
 (() => {
   'use strict';
@@ -3085,6 +3189,74 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       spreads.forEach(s => pio.observe(s));
     }
 
+    /* ---------- phone circuit rails (30-who.css .who-rail): one trace per board in the left gutter, a node beside
+       each [data-who-pin] box (h = its head / first child, l = its first text line, c = its centre, ! = red) and a
+       leader into it. Positions come from the layout boxes (offset chain), so reveal transforms never move a node;
+       rebuilt whenever a board changes size. The trace centre and node edges sit on half pixels (crisp at 1x-3x). */
+    const phone = matchMedia('(max-width: 799.98px)');
+    const rails = [...document.querySelectorAll('[data-who-rail]')].map(svg => ({ svg, board: svg.parentElement, line: null, pins: [], y0: 0, y1: 0, reach: -Infinity }));
+    const boxAt = (el, root) => {
+      let x = 0, y = 0, n = el;
+      while (n && n !== root) {
+        x += n.offsetLeft; y += n.offsetTop;
+        const p = n.offsetParent;
+        if (p && p !== root) { x += p.clientLeft; y += p.clientTop; }
+        n = p;
+      }
+      return n === root ? { x, y } : null;
+    };
+    const paintRail = r => {   // one-way: the trace reaches the 55 % line of the screen (as the steps do)
+      if (!r.line || !motion) return;
+      r.reach = Math.max(r.reach, innerHeight * 0.55 - r.svg.getBoundingClientRect().top);
+      const f = clamp((r.reach - r.y0) / Math.max(1, r.y1 - r.y0), 0, 1);
+      r.line.style.strokeDashoffset = (1 - f).toFixed(4);
+      r.pins.forEach(pn => { if (r.reach >= pn.y) pn.g.classList.add('is-on'); });
+    };
+    const buildRail = r => {
+      const { svg, board } = r;
+      if (!phone.matches || !board) { if (r.line) { svg.textContent = ''; r.line = null; r.pins = []; } return; }
+      const x = Math.floor(parseFloat(getComputedStyle(board).paddingLeft) / 2) + 0.5;
+      const pins = [];
+      board.querySelectorAll('[data-who-pin]').forEach(el => {
+        const b = boxAt(el, board);
+        if (!b || !el.offsetHeight) return;
+        const m = el.dataset.whoPin;
+        let dy = el.offsetHeight / 2;
+        if (m[0] === 'h' && el.firstElementChild) {
+          const c = el.firstElementChild, cb = boxAt(c, board);
+          if (cb) dy = cb.y - b.y + c.offsetHeight / 2;
+        } else if (m[0] === 'l') {
+          const cs = getComputedStyle(el);
+          const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.2;
+          dy = el.clientTop + parseFloat(cs.paddingTop) + lh / 2;
+        }
+        // text pins keep a hair's gap before the words; boxes are met at their border
+        pins.push({ y: Math.floor(b.y + dy) + 0.5, xb: Math.round(m[0] === 'l' ? b.x - 3 : b.x), red: m.includes('!') });
+      });
+      if (!pins.length) return;
+      pins.sort((a, z) => a.y - z.y);
+      const W = board.clientWidth, H = board.clientHeight;
+      r.y0 = svg.dataset.from === 'edge' ? 0 : pins[0].y;
+      r.y1 = svg.dataset.to === 'edge' ? H : pins[pins.length - 1].y;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.innerHTML = `<line class="who-wire who-wire--rail" x1="${x}" y1="${r.y0}" x2="${x}" y2="${r.y1}" pathLength="1"/>`
+        + pins.map(pn => '<g class="who-pin">'
+          + (pn.xb > x + 4.5 ? `<line class="who-rail__lead" x1="${x + 4.5}" y1="${pn.y}" x2="${pn.xb}" y2="${pn.y}" pathLength="1"/>` : '')
+          + `<g class="who-node${pn.red ? ' who-node--red' : ''}"><rect class="who-node__o" x="${x - 4}" y="${pn.y - 4}" width="8" height="8"/>`
+          + `<rect class="who-node__i" x="${x - 1.5}" y="${pn.y - 1.5}" width="3" height="3"/></g></g>`).join('');
+      r.line = svg.querySelector('.who-wire--rail');
+      r.pins = [...svg.querySelectorAll('.who-pin')].map((g, i) => ({ g, y: pins[i].y }));
+      paintRail(r);
+    };
+    if (rails.length) {
+      const all = () => rails.forEach(buildRail);
+      if ('ResizeObserver' in window) {
+        const ro = new ResizeObserver(es => es.forEach(e => { const r = rails.find(x => x.board === e.target); if (r) buildRail(r); }));
+        rails.forEach(r => r.board && ro.observe(r.board));
+      } else { all(); addEventListener('resize', all, { passive: true }); }
+      if (phone.addEventListener) phone.addEventListener('change', all);
+    }
+
     /* ---------- hero entrance */
     const hero = document.querySelector('[data-who-hero]');
     if (hero) {
@@ -3132,7 +3304,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         const r = hero.getBoundingClientRect();
         const p = clamp(-r.top / Math.max(1, r.height), 0, 1);
         const usePtr = finePointer.matches && desktop.matches;
-        const tx = usePtr ? pointer.x : 0, ty = usePtr ? pointer.y : 0;
+        // touch screens (no hover pointer): the same tilt and counter-moving light, fed by the scroll through the
+        // hero - the monitor turns a little and its top leans back as it rises (P-08)
+        const useScroll = !finePointer.matches;
+        const tx = usePtr ? pointer.x : useScroll ? p * 0.7 : 0, ty = usePtr ? pointer.y : useScroll ? -p : 0;
         s.px = lerp(s.px || 0, tx, 0.08); s.py = lerp(s.py || 0, ty, 0.08);
         mon.style.transform = `translate3d(0,${(-40 * p).toFixed(2)}px,0) scale(${(1 - 0.06 * p).toFixed(4)})`;
         tilt.style.transform = `perspective(1400px) rotateX(${(-s.py * 2.5).toFixed(3)}deg) rotateY(${(s.px * 2.5).toFixed(3)}deg) translate3d(${(s.px * 6).toFixed(2)}px,${(s.py * 6).toFixed(2)}px,0)`;
@@ -3149,10 +3324,14 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       add(par.closest('.who-board') || par, it => {
         const s = it.s;
         const r = par.getBoundingClientRect();
-        const c = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);  // -1 .. 1 across the screen
-        par.style.transform = `translate3d(0,${(clamp(c, -1, 1) * -amt / 2).toFixed(2)}px,0)`;
+        const c = clamp((r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2), -1, 1);  // -1 .. 1 across the screen
+        // parallax + a slight sway (the rock's float lives in the scroll; its CSS bob plays once, A11Y-06)
+        par.style.transform = `translate3d(0,${(c * -amt / 2).toFixed(2)}px,0) rotate(${(c * -0.8).toFixed(3)}deg)`;
         if (!glass) return false;
-        const tx = finePointer.matches ? pointer.x * 6 : 0, ty = finePointer.matches ? pointer.y * 6 : 0;
+        // the glass tile drifts against the rock: with the pointer, or with the scroll on touch screens (P-08), so it
+        // reads as a pane floating in front rather than a grey patch
+        const fine = finePointer.matches;
+        const tx = fine ? pointer.x * 6 : c * -5, ty = fine ? pointer.y * 6 : c * 9;
         s.gx = lerp(s.gx || 0, tx, 0.08); s.gy = lerp(s.gy || 0, ty, 0.08);
         glass.style.transform = `translate3d(${s.gx.toFixed(2)}px,${s.gy.toFixed(2)}px,0)`;
         return Math.abs(s.gx - tx) > 0.01 || Math.abs(s.gy - ty) > 0.01;
@@ -3163,6 +3342,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     document.querySelectorAll('[data-who-dial]').forEach(dial => {
       const svg = dial.querySelector('svg');
       const band = dial.closest('.who-board') || dial;
+      const sphere = band.querySelector('.who-sphere svg');   // turns with the dial (half a turn each way), no spin of its own
       add(band, it => {
         const s = it.s;
         const r = band.getBoundingClientRect();
@@ -3170,6 +3350,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         const target = -20 + 40 * p;
         s.a = s.a == null ? target : lerp(s.a, target, 0.1);
         svg.style.setProperty('--dial', `${s.a.toFixed(3)}deg`);
+        if (sphere) sphere.style.transform = `rotate(${(s.a * 9).toFixed(2)}deg)`;
         return Math.abs(s.a - target) > 0.01;
       });
     });
@@ -3185,8 +3366,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         const r = pnl.getBoundingClientRect();
         const p = clamp((innerHeight - r.top) / (innerHeight + r.height), 0, 1);
         vis.style.setProperty('--rot', `${(-4 + 8 * p).toFixed(3)}deg`);
-        if (lightEl && finePointer.matches) {
-          const tx = pointer.x * 6, ty = pointer.y * 6;
+        if (lightEl) {
+          // with the pointer, or with the panel's scroll on touch screens (P-08)
+          const fine = finePointer.matches;
+          const tx = fine ? pointer.x * 6 : (p - 0.5) * 12, ty = fine ? pointer.y * 6 : (0.5 - p) * 8;
           s.lx = lerp(s.lx || 0, tx, 0.06); s.ly = lerp(s.ly || 0, ty, 0.06);
           lightEl.style.setProperty('--lx', `${s.lx.toFixed(2)}%`);
           lightEl.style.setProperty('--ly', `${s.ly.toFixed(2)}%`);
@@ -3195,6 +3378,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         return false;
       });
     });
+
+    // phone circuit rails: grow with the scroll while their board is on screen
+    rails.forEach(r => r.board && add(r.board, () => { paintRail(r); return false; }));
 
     let raf = 0;
     function frame() {
