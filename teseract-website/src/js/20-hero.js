@@ -190,16 +190,25 @@
      the ticker's copies of it, which share its .is-on) is on screen, and the column's ticker takes the longer loop from
      where it is. Stand-ins this screen does not show (another width, a hidden column) are let in at once: the ticker's
      own rebuild on resize picks them up. */
+  /* A stand-in's image waits in <noscript> (home_hero._item) until its tile is let in, so neither it nor the ticker's
+     copies of it download anything before. Let in, they load at once (eager, as the ticker's own copies: a lazy image
+     beyond the column's clip would only start as it scrolls into view). */
+  const unwrap = (li, eager) => li.querySelectorAll('noscript').forEach(ns => {
+    const tpl = document.createElement('template');
+    tpl.innerHTML = ns.textContent;
+    if (eager) tpl.content.querySelectorAll('img').forEach(im => im.setAttribute('loading', 'eager'));
+    ns.replaceWith(tpl.content);
+  });
   function standIns(frame) {
     const left = [...frame.querySelectorAll('[data-ticker-list] > :not([data-clone]):is(.hero-col__item--lt1440,.hero-col__item--lt800)')];
     if (!left.length) return;
     const narrow = { lt1440: matchMedia('(max-width: 1439.98px)'), lt800: matchMedia('(max-width: 799.98px)') };
     const parse = kf => parseFloat(String(kf.transform).replace(/[^-\d.]+/g, ' ').trim().split(' ').pop());
     const MARGIN = 24;                                 // px kept clear around the visible part (the ticker keeps moving)
-    const letIn = li => {
+    const letIn = (li, shown = true) => {         // not shown at this width: no downloads (lazy) until a resize shows it
       const kids = [...li.parentElement.children];
       const n = kids.filter(k => !k.hasAttribute('data-clone')).length;
-      for (let j = kids.indexOf(li); j >= 0 && j < kids.length; j += n) kids[j].classList.add('is-on');
+      for (let j = kids.indexOf(li); j >= 0 && j < kids.length; j += n) { kids[j].classList.add('is-on'); unwrap(kids[j], shown); }
     };
     let scrolled = 0;
     const onScroll = () => { scrolled = performance.now(); };
@@ -248,7 +257,7 @@
       for (let i = left.length - 1; i >= 0; i--) {
         const li = left[i];
         const shown = narrow[li.classList.contains('hero-col__item--lt800') ? 'lt800' : 'lt1440'].matches && li.closest('[data-ticker]').offsetParent;
-        if (li.classList.contains('is-on') || !shown) { letIn(li); left.splice(i, 1); }
+        if (li.classList.contains('is-on') || !shown) { letIn(li, !!shown); left.splice(i, 1); }
       }
       let moved = false;
       if (left.length && performance.now() - scrolled > 250) {   // mid-scroll the visible part is a moving target
@@ -270,6 +279,8 @@
     pill(hero);
     gallery(hero);
     const frame = hero.querySelector('[data-hero-gallery]');
-    if (frame && TS.motion()) standIns(frame);
+    if (!frame) return;
+    if (TS.motion()) standIns(frame);
+    else frame.querySelectorAll('[data-ticker-list] > :is(.hero-col__item--lt1440,.hero-col__item--lt800)').forEach(li => unwrap(li, li.hasAttribute('data-clone')));   // shown from the start
   });
 })();

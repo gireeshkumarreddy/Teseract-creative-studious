@@ -60,8 +60,8 @@ POSTER_W = 640             # a clip tile's poster: the 480 / 640 frames (cropped
 # transform per column. A stand-in shows only at those widths (.hero-col__item--lt1440 / --lt800) and keeps its
 # original's slot shape and image file: where the original is on screen the browser already has that file (the
 # tickers' clones load every tile), and a clip's stand-in is the clip's poster frame, so phones get no extra clip. With
-# motion the stand-ins sit out the page's first layout and 20-hero.js lets them in after load, off screen (without JS or
-# motion they are there from the start).
+# motion the stand-ins sit out the page's first layout and 20-hero.js lets them in after load, off screen, and only then
+# loads their images (held in <noscript>); without JS they are plain tiles from the start.
 SHOWN = (4, 3, 2)          # columns on screen at >= 1440px, 800-1439px, < 800px
 
 
@@ -287,8 +287,11 @@ def _item(ctx, t):
     open_tag, close_tag = lib.project_tag(ctx, p, 'hero-tile', label=name, extra=extra)
     shows = '' if t['own'] else (' hero-col__item--lt1440' if 3 in t['shows'] else ' hero-col__item--lt800')
     box = 'hero-tile__media hero-tile__media--lead' if t['lead'] else 'hero-tile__media reveal-image'
+    media = _media(ctx, t)
+    if not t['own']:                       # a stand-in's image waits in <noscript> until 20-hero.js lets the tile in (no
+        media = f'<noscript>{media}</noscript>'   # download before; the ticker's copies of it too); without JS it is a plain <img>
     return (f'<li class="hero-col__item{shows}">{open_tag}'
-            f'<span class="{box}" style="--ar:{t["ar"]}">{_media(ctx, t)}</span>{_cap(p["title"], p["industry"])}{_label(p)}'
+            f'<span class="{box}" style="--ar:{t["ar"]}">{media}</span>{_cap(p["title"], p["industry"])}{_label(p)}'
             f'{close_tag}</li>')
 
 
