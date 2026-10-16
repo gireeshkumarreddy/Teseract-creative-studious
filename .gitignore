@@ -12,3 +12,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# stray tool logs at the project root (QA scripts write their logs in the session scratchpad)
+/*.log
