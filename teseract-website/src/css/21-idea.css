@@ -171,7 +171,7 @@
      the deck's far-left tip is cropped by the panel */
   .idea__laptop{position:relative;right:auto;bottom:auto;width:122%;margin:36px 0 0 -22%}
   .idea__toggle{height:30px;font-size:12px;gap:6px;padding:0 9px 0 8px;border-radius:8px}
-  .idea__toggle::before{inset:-7px -9px}              /* 44 x 45px touch target (the 27px icon-only button) */
+  .idea__toggle::before{inset:-7px -9px}              /* 45 x 44px touch target (the 27 x 30px icon-only button) */
 }
 /* the phone diagram scales with the width; keep its dots near the poster's 4-5px on large phones */
 @media (min-width:520px) and (max-width:799.98px){
