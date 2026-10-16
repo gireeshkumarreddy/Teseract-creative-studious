@@ -338,14 +338,15 @@ def _ground(sl):
 
 # AI & Automation has no project of its own: the brand's 3D mark on a deep gradient with
 # construction rings; on the large card its tags float around the mark like the reference's
-# 2D & 3D tag pills. (position, rotation, drift on hover)
+# 2D & 3D tag pills. (rotation, drift on hover / while centred on touch); the positions are CSS (.svc-pill--1..6,
+# 22-services.css), so the phone panel can re-space all six
 _PILLS = [
-    ('left:7%;top:13%', -6, (-10, -6)),
-    ('right:6%;top:19%', 5, (10, -6)),
-    ('left:4%;top:47%', 4, (-12, 0)),
-    ('right:4%;top:53%', -4, (12, 0)),
-    ('left:11%;bottom:13%', -3, (-8, 8)),
-    ('right:10%;bottom:15%', 6, (8, 8)),
+    (-6, (-10, -6)),
+    (5, (10, -6)),
+    (4, (-12, 0)),
+    (-4, (12, 0)),
+    (-3, (-8, 8)),
+    (6, (8, 8)),
 ]
 
 
@@ -354,8 +355,8 @@ def _brand_panel(ctx, cls, size=240, tags=()):
              '<i class="svc-brand__ring svc-brand__ring--2"></i>'
              '<i class="svc-brand__orbit"><b></b><b></b></i><i class="svc-brand__axis"></i>')
     pills = ''.join(
-        f'<span class="svc-pill" style="{pos};--r:{r}deg;--dx:{dx}px;--dy:{dy}px;--i:{i}">{chip_icon(t)}<span>{E(t)}</span></span>'
-        for i, (t, (pos, r, (dx, dy))) in enumerate(zip(tags, _PILLS)))
+        f'<span class="svc-pill svc-pill--{i + 1}" style="--r:{r}deg;--dx:{dx}px;--dy:{dy}px;--i:{i}">{chip_icon(t)}<span>{E(t)}</span></span>'
+        for i, (t, (r, (dx, dy))) in enumerate(zip(tags, _PILLS)))
     mark = lib.img(ctx, 'assets/brand/logo-mark-3d.webp', '', w=size, h=round(size * 519 / 515), cls='svc-brand__mark')
     return f'<div class="svc-brand {cls}" aria-hidden="true">{rings}{pills}{mark}</div>'
 
@@ -408,7 +409,9 @@ def media(ctx, s, *, stack=False):
     if not stack:
         return f'<div class="svc-media">{"".join(cards)}</div>'
     one = len({x['p']['slug'] if x['p'] else None for x in shown}) == 1 and shown[0]['p']
-    tap = (f'<button class="svc-tap" type="button" data-stack-next aria-label="Show the next image{" of this project" if one else ""}">'
+    # named by its service, so the page's stack buttons are told apart in a screen reader's list
+    name = f'Show the next {s["name"]} image' + (' of this project' if one else '')
+    tap = (f'<button class="svc-tap" type="button" data-stack-next aria-label="{E(name)}">'
            '<span class="svc-tap__icon" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false">'
            '<path d="M15.5 3.5v5.25a3.25 3.25 0 0 1-3.25 3.25H4.5M8 8.5 4.5 12 8 15.5" fill="none" stroke="currentColor" '
            'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'

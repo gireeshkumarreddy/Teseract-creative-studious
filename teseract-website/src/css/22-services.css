@@ -120,9 +120,10 @@
 .svc-folder__front{position:absolute;left:0;right:0;bottom:0;height:31px;border-radius:8.04px;
   background:linear-gradient(174deg,rgba(98,101,106,.86) 0%,rgba(54,57,63,.88) 78.4%,rgba(46,49,55,.9) 100%);
   -webkit-backdrop-filter:blur(1.15px);backdrop-filter:blur(1.15px);box-shadow:inset 0 .5px 1.15px rgba(252,255,255,.6),inset 0 0 0 .5px rgba(255,255,255,.08)}
-.svc-info:hover .svc-folder__paper,.svc-folder:hover .svc-folder__paper{transition:transform .5s var(--svc-spring-in)}
-.svc-info:hover .svc-folder__paper--back{transform:translate(-2px,-11px) rotate(-12deg)}
-.svc-info:hover .svc-folder__paper--front{transform:translate(2px,-12.5px) rotate(6deg)}
+/* .is-live = the touch stand-in for :hover (22-services.js: the card is centred on a screen without hover) */
+.svc-info:hover .svc-folder__paper,.svc-folder:hover .svc-folder__paper,.svc-info.is-live .svc-folder__paper{transition:transform .5s var(--svc-spring-in)}
+.svc-info:hover .svc-folder__paper--back,.svc-info.is-live .svc-folder__paper--back{transform:translate(-2px,-11px) rotate(-12deg)}
+.svc-info:hover .svc-folder__paper--front,.svc-info.is-live .svc-folder__paper--front{transform:translate(2px,-12.5px) rotate(6deg)}
 
 /* ---------- Image card (§2.7): 50% of the frame, aspect 1.32727, r40, same shadow stack.
    It stretches with the row when the info card is taller (the image is cover-fitted). */
@@ -181,6 +182,9 @@ a:hover .svc-cap__icon,a:focus-visible .svc-cap__icon{transform:translate(2px,-2
   .svc-media--stack .svc-media__card[data-pos="1"]:hover{--sc:1.1;--r:-1deg;transition:transform var(--spring-d) var(--spring)}
   .svc-media--stack .svc-media__card[data-pos="-1"]:hover{--sc:1.1;--r:12deg;transition:transform var(--spring-d) var(--spring)}
 }
+/* touch: the parked cards lift while the stack is centred (before :active, so a press still sinks them to 1.06) */
+.svc-media--stack.is-live .svc-media__card[data-pos="1"]{--sc:1.1;--r:-1deg;transition:transform var(--spring-d) var(--spring)}
+.svc-media--stack.is-live .svc-media__card[data-pos="-1"]{--sc:1.1;--r:12deg;transition:transform var(--spring-d) var(--spring)}
 .svc-media--stack .svc-media__card[data-pos="1"]:active,.svc-media--stack .svc-media__card[data-pos="-1"]:active{--sc:1.06}
 .svc-tap{position:absolute;z-index:4;left:88%;top:83%;display:flex;align-items:center;gap:4px;width:99px;height:36px;margin:-18px 0 0 -49.5px;padding:0 9px 0 5px;
   border-radius:12px;background:var(--svc-hi);color:#000;font-size:14px;font-weight:600;line-height:1.2;letter-spacing:-.01em;white-space:nowrap;
@@ -209,25 +213,36 @@ a:hover .svc-cap__icon,a:focus-visible .svc-cap__icon{transform:translate(2px,-2
 .svc-brand__ring--2{border:1px dashed rgba(255,255,255,.1)}
 .svc-brand__orbit b{position:absolute;left:50%;top:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff;box-shadow:0 0 12px 2px rgba(255,255,255,.45)}
 .svc-brand__orbit b+b{top:100%;width:5px;height:5px;background:var(--red);box-shadow:0 0 12px 2px rgba(251,38,41,.5)}
-/* ambient motion runs only while the card is hovered (no endless idle motion, no idle repaints) */
+/* ambient motion runs only while the card is hovered (no endless idle motion, no idle repaints); on touch while the
+   panel is centred, resting after 4.8 s (.is-rest, WCAG 2.2.2) until its next pass (22-services.js) */
 .motion .svc-brand__orbit{animation:svc-orbit 16s linear infinite;animation-play-state:paused}
-.motion .svc-row:hover .svc-brand__orbit,.motion .svc-small:hover .svc-brand__orbit{animation-play-state:running}
+.motion .svc-row:hover .svc-brand__orbit,.motion .svc-small:hover .svc-brand__orbit,
+.motion .svc-media.is-live:not(.is-rest) .svc-brand__orbit,.motion .svc-small__art.is-live:not(.is-rest) .svc-brand__orbit{animation-play-state:running}
 .svc-brand__axis{inset:0}
 .svc-brand__axis::before,.svc-brand__axis::after{content:"";position:absolute;background:rgba(255,255,255,.07)}
 .svc-brand__axis::before{left:0;right:0;top:50%;height:1px}
 .svc-brand__axis::after{top:0;bottom:0;left:50%;width:1px}
 .svc-brand__mark{position:absolute;z-index:1;left:50%;top:50%;width:auto;height:46%;max-width:none;translate:-50% -50%;filter:drop-shadow(0 22px 30px rgba(0,0,0,.55)) drop-shadow(0 2px 4px rgba(0,0,0,.4));
   transition:transform .9s var(--spring-soft)}
-.svc-row:hover .svc-brand__mark,.svc-small:hover .svc-brand__mark{transform:translateY(-6px) rotate(-8deg)}
+.svc-row:hover .svc-brand__mark,.svc-small:hover .svc-brand__mark,
+.svc-media.is-live .svc-brand__mark,.svc-small__art.is-live .svc-brand__mark{transform:translateY(-6px) rotate(-8deg)}
 .svc-pill{position:absolute;z-index:2;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px 0 8px;border-radius:10px;
   background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13),0 8px 18px -10px rgba(0,0,0,.6);
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:rgba(255,255,255,.86);
   font-size:13px;font-weight:500;line-height:1;letter-spacing:-.2px;white-space:nowrap;
   transform:rotate(var(--r));transition:transform .8s var(--spring-soft)}
 .svc-pill svg{width:16px;height:16px;flex:none;fill:none;stroke:rgba(255,255,255,.66);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* the six tags around the mark (% of the panel; service_cards._PILLS keeps their tilt and drift); the phone panel
+   re-spaces them (≤799.98) */
+.svc-pill--1{left:7%;top:13%}
+.svc-pill--2{right:6%;top:19%}
+.svc-pill--3{left:4%;top:47%}
+.svc-pill--4{right:4%;top:53%}
+.svc-pill--5{left:11%;bottom:13%}
+.svc-pill--6{right:10%;bottom:15%}
 .motion .svc-pill{animation:svc-float 6.5s ease-in-out infinite;animation-delay:calc(var(--i) * -1.1s);animation-play-state:paused}
-.motion .svc-row:hover .svc-pill{animation-play-state:running}
-.svc-row:hover .svc-pill{transform:translate(var(--dx),var(--dy)) rotate(calc(var(--r) * 1.5))}
+.motion .svc-row:hover .svc-pill,.motion .svc-media.is-live:not(.is-rest) .svc-pill{animation-play-state:running}
+.svc-row:hover .svc-pill,.svc-media.is-live .svc-pill{transform:translate(calc(var(--dx) * var(--drift,1)),calc(var(--dy) * var(--drift,1))) rotate(calc(var(--r) * 1.5))}
 
 /* ---------- Small cards (§2.8–2.9): text + chips, then 210px artwork that rises on hover */
 .svc-small{position:relative;z-index:1;flex:1 0 0;width:1px;display:flex;flex-direction:column;overflow:hidden;overflow:clip;
@@ -257,8 +272,9 @@ a.svc-art:focus-visible{outline:2px solid var(--red);outline-offset:-6px;border-
 .svc-art__card img{width:100%;height:100%;object-fit:cover}
 .svc-art__card--front{z-index:2;top:52px;width:min(64%,270px);aspect-ratio:4/3;transform:translateX(-64%) rotate(-6deg)}
 .svc-art__card--back{z-index:1;top:18px;width:min(50%,210px);aspect-ratio:4/3;transform:translateX(-14%) rotate(7deg)}
-.svc-small:hover .svc-art__card--front,.svc-small:focus-within .svc-art__card--front{transform:translateX(-64%) translateY(-30px) rotate(-3deg)}
-.svc-small:hover .svc-art__card--back,.svc-small:focus-within .svc-art__card--back{transform:translateX(-14%) translateY(-46px) rotate(10deg)}
+/* on touch the prints rise once, the first time the artwork is centred on screen (.was-live, 22-services.js) */
+.svc-small:hover .svc-art__card--front,.svc-small:focus-within .svc-art__card--front,.svc-small__art.was-live .svc-art__card--front{transform:translateX(-64%) translateY(-30px) rotate(-3deg)}
+.svc-small:hover .svc-art__card--back,.svc-small:focus-within .svc-art__card--back,.svc-small__art.was-live .svc-art__card--back{transform:translateX(-14%) translateY(-46px) rotate(10deg)}
 /* AI & Automation back card: a dark dotted canvas (was a white sheet) — graphite step nodes and the
    AI step flipped to the white high-emphasis node with the red accent square */
 .svc-art__card--paper{display:grid;place-items:center;background:linear-gradient(160deg,#202020 0%,#121212 100%);color:var(--ink)}
@@ -275,8 +291,8 @@ a.svc-art--back:focus-visible{outline:none}
 a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);outline-offset:3px}
 /* concept caption whose label does not fit the one-line pill: the full label on its own line under the name */
 .svc-cap.svc-cap--label{height:auto;flex-wrap:wrap;row-gap:3px;padding:8px 10px 9px 12px;white-space:normal}
-.svc-cap__label{flex:1 0 100%;padding-left:14px;font-size:10px;line-height:14px;letter-spacing:.03em;color:rgba(244,244,242,.72)}
-/* AI & Automation back card: automation flow; the wires run while the card is hovered */
+.svc-cap__label{flex:1 0 100%;padding-left:14px;font-size:12px;line-height:16px;letter-spacing:.03em;color:rgba(244,244,242,.72)}
+/* AI & Automation back card: automation flow; the wires run while the card is hovered (on touch: centred, 4.8 s) */
 .svc-flow{width:100%;height:100%}
 .svc-flow__grid{fill:rgba(255,255,255,.16)}
 .svc-flow__node{fill:#262626;stroke:rgba(255,255,255,.14);stroke-width:.75}
@@ -288,7 +304,7 @@ a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);
 .svc-flow__pin{fill:rgba(244,244,242,.7)}
 .svc-flow__wire{fill:none;stroke:rgba(255,255,255,.34);stroke-width:1.1;stroke-dasharray:3 3}
 .motion .svc-flow__wire{animation:svc-dash 1.2s linear infinite;animation-play-state:paused}
-.motion .svc-small:hover .svc-flow__wire{animation-play-state:running}
+.motion .svc-small:hover .svc-flow__wire,.motion .svc-small__art.is-live:not(.is-rest) .svc-flow__wire{animation-play-state:running}
 
 /* ---------- 1200–1439.98: keep the desktop rows, fluid side padding (spec §5) */
 @media (max-width:1439.98px){
@@ -345,14 +361,32 @@ a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);
   .svc-small__text{padding:28px 28px 16px}
   .svc-small__art{height:200px}
   .svc-cap{left:14px;bottom:14px;height:30px}
-  .svc-pill{height:26px;padding:0 9px 0 7px;font-size:12px;gap:4px}
+  .svc-pill{height:26px;padding:0 9px 0 7px;font-size:12px;gap:4px;--drift:.5}
   .svc-pill svg{width:14px;height:14px}
-  .svc-pill:nth-of-type(n+5){display:none}
+  /* all six tags on the smaller panel: the upper four nearer the edges, the lower two under the mark, staggered */
+  .svc-pill--1{left:5%;top:9%}
+  .svc-pill--2{right:4%;top:15%}
+  .svc-pill--3{left:3%;top:44%}
+  .svc-pill--4{right:3%;top:52%}
+  .svc-pill--5{left:4%;top:76%;bottom:auto}
+  .svc-pill--6{right:5%;top:82%;bottom:auto}
   .svc-chip--more{padding:5px 10px 5px 12px!important}
 }
 @media (max-width:719.98px){
   .svc-info__title,.svc-small__title{font-size:28px}
   .svc-small__title{letter-spacing:-.04em}
+}
+/* ---------- Narrow phones ≤479.98: a 4px tray ring (radii kept concentric) and 22px card padding give the text
+   ~20px more width; the Tap Here sticker moves to the top-right corner, clear of the project caption, and in from
+   the edge so the stack's clip never cuts it */
+@media (max-width:479.98px){
+  .svc-row,.svc-row--flip,.svc-smalls{padding:4px;gap:6px}
+  .svc-row,.svc-row--flip{border-radius:36px}
+  .svc-smalls{border-radius:40px}
+  .svc-info{padding:22px}
+  .svc-small__text{padding:22px 22px 14px}
+  .svc-media--stack{clip-path:inset(-6px)}
+  .svc-tap{left:calc(100% - 56px);top:14%}
 }
 
 /* Tap Here idle "attention wiggle": hold 2s, then 6°, −4°, 6°, −4°, 0° in 100ms steps */

@@ -1,7 +1,8 @@
 /* What We Create — the reference "works" stack on the Website Design image card
    (ref-services-testimonials §2.7). The next image peeks from the bottom-right corner, the previous
    one from the top-right; clicking a peeking card brings it forward, the "Tap Here" badge advances
-   (and wraps). The current card stays a normal link to the project.
+   (and wraps). The current card stays a normal link to the project. On touch screens the cards' hover motion plays
+   while a card is centred (.is-live, below).
    Markup: scripts/sections/service_cards.py media(stack=True); styles: src/css/22-services.css. */
 (() => {
   'use strict';
@@ -50,6 +51,22 @@
       if (next) next.addEventListener('click', () => { used(); set(index + 1, true); });
       set(0, false);
     });
+
+    /* Touch screens have no hover, so each card's hover motion plays while it is centred on screen instead (.is-live:
+       it crosses the middle 30 % of the viewport): the folder papers lift (.svc-info); the parked stack cards lift and
+       the AI mark rises with its orbit, tags and flow wires running (.svc-media, .svc-small__art); the small-card
+       prints rise once (.was-live). The loops rest after 4.8 s (.is-rest, inside WCAG 2.2.2's 5 s, as the Tap Here
+       cue) and play again on the next pass. Hover screens keep :hover; nothing moves under reduced motion. */
+    if (TS.motion && TS.motion() && matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+      const rest = new WeakMap();
+      const live = new IntersectionObserver(entries => entries.forEach(({ target: el, isIntersecting: on }) => {
+        clearTimeout(rest.get(el));
+        el.classList.toggle('is-live', on);
+        el.classList.remove('is-rest');
+        if (on) { el.classList.add('was-live'); rest.set(el, setTimeout(() => el.classList.add('is-rest'), 4800)); }
+      }), { rootMargin: '-35% 0px -35% 0px' });
+      document.querySelectorAll('.svc-info, .svc-media, .svc-small__art').forEach(el => live.observe(el));
+    }
 
     /* Service rows are anchors (/what-we-create/#e-commerce, the page index, the home "+N" chips).
        A row that has not been revealed yet still carries its 60px reveal offset, so the scroll
