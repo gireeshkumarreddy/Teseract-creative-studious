@@ -2,10 +2,11 @@
    fed by scripts/media-manifest.json - see MEDIA-GUIDE.md). Markup:
      <video class="media-video" muted playsinline loop preload="none" poster="..." data-video
             data-srcs='[{"w":640,"src":"..."},{"w":1280,"src":"..."}]'></video>
-   - Picks the smallest variant at least as wide as the element x devicePixelRatio (DPR capped at 2),
-     else the largest, and sets src only when the video comes within ~300px of the viewport. Hero gallery tiles
+   - Picks the smallest variant at least as wide as the element x devicePixelRatio (DPR capped at 2), else the
+     largest, and sets src only when the video comes within ~300px of the viewport. Hero gallery tiles
      ([data-ticker]) wait until they are 25% visible: the tiles that only drift through the strip of gallery under
-     the hero copy never start a download.
+     the hero copy never start a download. Their DPR counts up to 2.75: a 3x phone at 430 px or in landscape takes
+     the 640 rung, one at 390 px keeps the 480 (drawn at most ~1.09x, 3 / 2.75).
    - data-poster (lib.video lazy posters, JSON like data-srcs: the hero tiles, whose columns are display:none at
      some widths): the poster for the element's width x DPR is set only once the element is rendered (on register,
      after a ticker rebuild, on resize), as browsers fetch a poster attribute even for a hidden element.
@@ -20,7 +21,8 @@
    - Autoplay refused (iOS Low Power Mode, a browser's no-autoplay setting) or Save-Data: the frame gets
      .is-blocked and its control turns into a "Play" pill; the tap starts the clip (a gesture may). A clip in a
      section with its own control fires 'ts:videoblocked' (bubbles) for that control instead.
-   - On resize a sharper variant is loaded only when the needed width grows by more than 1.5x.
+   - On resize a sharper variant is loaded only when the needed width grows by more than 1.5x (a hero gallery
+     tile: as soon as it needs the next rung, e.g. a phone turned to landscape).
    API: TS.observeVideos(root) registers videos in inserted content (e.g. ticker clones);
         TS.syncVideos(root) re-applies play/pause after a hold changed (slideshow, pause buttons);
         TS.preloadVideo(v) sets the src of a held video ahead of time (the next slideshow clip), never plays it;
@@ -40,9 +42,10 @@
 
   const saveData = () => !!(navigator.connection && navigator.connection.saveData);
   const quiet = () => reducedMQ.matches || saveData();
-  const dpr = () => Math.min(2, window.devicePixelRatio || 1);
+  const tile = v => !!v.closest('[data-ticker]');          // a hero gallery tile (480 / 640 rungs)
+  const dpr = v => Math.min(tile(v) ? 2.75 : 2, window.devicePixelRatio || 1);
   const held = v => !!v.closest('[inert],[data-video-hold]');
-  const need = v => (v.clientWidth || (v.parentElement && v.parentElement.clientWidth) || +v.getAttribute('width') || 0) * dpr();
+  const need = v => (v.clientWidth || (v.parentElement && v.parentElement.clientWidth) || +v.getAttribute('width') || 0) * dpr(v);
   const pick = (srcs, px) => srcs.find(s => s.w >= px) || srcs[srcs.length - 1];
   const list = json => { try { return JSON.parse(json || '[]').filter(s => s && s.src && s.w > 0).sort((a, b) => a.w - b.w); } catch (e) { return []; } };
   const stored = () => { try { return sessionStorage.getItem(HOLD_KEY) === '1'; } catch (e) { return false; } };
@@ -157,7 +160,7 @@
       const st = state.get(v);
       if (!st || !st.cur || st.failed) return;
       const px = need(v);
-      if (px <= st.need * 1.5) return;
+      if (px <= st.need * (tile(v) ? 1 : 1.5)) return;    // a tile's rungs are small: take the next one as soon as it is needed
       st.need = px;
       const s = pick(st.srcs, px);
       if (s.w <= st.cur) return;
@@ -207,7 +210,7 @@
     v.addEventListener('error', () => { st.failed = true; paint(v); }, { once: true });   // missing/unsupported file: poster stays
     v.addEventListener('playing', () => { if (st.blocked) { st.blocked = false; paint(v); } });
     poster(v);
-    if (!st.cur && !v.closest('[data-ticker]')) near.observe(v);
+    if (!st.cur && !tile(v)) near.observe(v);
     seen.observe(v);
     if (v.hasAttribute('data-video-eager') && !quiet()) load(v, st);
     addControl(v, st);
