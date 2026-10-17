@@ -431,6 +431,10 @@
 @media (max-width:374.98px){
   .ap-list--cols{display:block}
 }
+/* very narrow phones: two 16px bullet columns need ~260px; below 350px they stack (no "The / structure" breaks) */
+@media (max-width:349.98px){
+  .ap-bullets{grid-template-columns:minmax(0,1fr)}
+}
 @media (max-width:379.98px){
   .ap .ap-dec__mini text{font-size:12.4px}
 }
