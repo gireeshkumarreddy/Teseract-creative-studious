@@ -378,3 +378,13 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   SPELLED_NAMES_ERROR = True once mobile group 7 lands). LAUNCH-CHECKLIST 3d / 3e / 14 updated (models, sneakers, desk
   site confirmed; Sedile's open questions).
 - OWNER (15 Oct ~16:15): his PHOTO is supplied (the 'Founders Series' poster; text-free 4:5 portrait cut from it, poster grid hairlines blended out: scripts/supplied.json 'founder-portrait' -> sections/founder.py FOUNDER_PORTRAIT, the Who We Are plate; the plate's centre crosshair is hidden over the photo). The NAME is "Gireesh" only, never the full name (content.WHO founder name, founder-content.md, Person JSON-LD; one-line nameplate). A larger original photo would be sharper on 3x phones.
+- OWNER REQUEST (17 Oct) - SIX LANDING-PAGE CONCEPTS from his public repo gireeshkumarreddy/landing-concepts (live on
+  GitHub Pages; 'Six interactive SaaS and personal-brand landing page concepts'): sagewell, vantline, tidings, emberpost,
+  ines-morrow (folder creative-portfolio), maren-holt -> full portfolio projects (group concept, 'Concept Project',
+  Work page + project pages), LEADING the home hero gallery, every one of the six tiles autoplaying its own clip (hero
+  first, then the second section). 'we are targeting SaaS and professional people, professional websites'.
+  HOME GALLERY ONLY (owner): remove AARADHYA ('Durga Mata') and what matters least to professional clients - chosen:
+  aaradhya, one-piece, tavra, thenga, saanjh, gireesh-cinematic (they stay on the Work page with their pages). Gallery =
+  the six landing pages + the 10 client tiles + vyrn, velora, vesper, gireesh-desk (20). PRODUCT & SAAS service card
+  (owner: yes) shows two of the SaaS landing pages instead of LiveCV. Captures: C:/Teseract-media/<slug> (tile.mp4 =
+  hero -> second section loop). Integration after the mobile-fix finish run.
