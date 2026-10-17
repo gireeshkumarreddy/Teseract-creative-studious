@@ -301,6 +301,8 @@
   .ap-head--inline .ap-sub{margin-top:8px}
   .ap-step--inline .ap-head .ap-num{line-height:28px}
   .ap-note,.ap-result__text{font-size:16px;line-height:1.5;text-wrap:pretty}   /* reading copy >= 16px on phones (TYPO-03) */
+  /* an odd last bullet ("The visual direction") takes both columns: at 16px it no longer fits one column on narrow phones */
+  .ap-bullets li:last-child:nth-child(odd){grid-column:1 / -1}
   .ap-list{max-width:100%;padding:10px 24px 12px;font-size:12px;line-height:20px;letter-spacing:.14em}
   /* 6+ items: two content-sized columns (a multicol box would size to 2 x the widest item and overflow) */
   .ap-list--cols{display:grid;grid-template-rows:repeat(var(--rows),auto);grid-auto-flow:column;grid-auto-columns:max-content;column-gap:20px}

@@ -381,7 +381,7 @@ a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);
   .svc-info__title,.svc-small__title{font-size:28px}
   .svc-small__title{letter-spacing:-.04em}
 }
-/* ---------- Narrow phones ≤479.98: a 4px tray ring (radii kept concentric) and 22px card padding give the text
+/* ---------- Narrow phones ≤479.98 (and ≤379.98 below): a 4px tray ring (radii kept concentric) and 22px card padding give the text
    ~20px more width, and the info cards' chips take the small cards' compact metrics (both 1px tighter at the sides,
    the text size kept), so most tag lists pair up instead of stacking one chip per line; the Tap Here sticker moves to
    the top-right corner, clear of the project caption, and in from the edge so the stack's clip never cuts it */
@@ -397,6 +397,12 @@ a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);
   .svc-info .svc-chip svg{width:16px;height:16px}
   .svc-media--stack{clip-path:inset(-6px)}
   .svc-tap{left:calc(100% - 56px);top:14%}
+}
+/* ≤379.98 (360-class phones): 4px more line each side and chips 1px tighter, so the longest tag pairs ("Scroll
+   animations" + "Interactive storytelling", the home card's first two tags) still share a line */
+@media (max-width:379.98px){
+  .svc-info,.svc-small__text{padding-inline:18px}
+  .svc-info .svc-chip,.svc-chips--compact .svc-chip{padding:5px 7px 5px 5px;gap:3px}
 }
 
 /* Tap Here idle "attention wiggle": hold 2s, then 6°, −4°, 6°, −4°, 0° in 100ms steps */
