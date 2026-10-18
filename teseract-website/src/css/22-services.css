@@ -396,7 +396,12 @@ a.svc-art--back:focus-visible .svc-art__card--back{outline:2px solid var(--red);
   .svc-info .svc-chip,.svc-chips--compact .svc-chip{padding:5px 8px 5px 6px;gap:4px}
   .svc-info .svc-chip svg{width:16px;height:16px}
   .svc-media--stack{clip-path:inset(-6px)}
-  .svc-tap{left:calc(100% - 56px);top:14%}
+  .svc-tap{left:calc(100% - 56px);top:max(14%,36px)}   /* 36px floor (360-class and narrower): the focus ring's top corner stays inside the clip, also where outlines paint square */
+  /* Product & SaaS (service_cards.MEDIA '06' 'tap': 'low'; owner, 17 Oct: the landing pages' headlines stay whole): both
+     heroes centre a wide headline that reaches the top-right corner on a phone card, so the sticker sits low on the
+     right instead - over the gardens / the field, above the next card's peek; 64px floor: its tilted lower corner stays
+     clear of the caption (14px + 30px high) on 360-class cards */
+  .svc-media--tap-low .svc-tap{top:auto;bottom:max(24%,64px)}
 }
 /* ≤379.98 (360-class phones): 4px more line each side and chips 1px tighter, so the longest tag pairs ("Scroll
    animations" + "Interactive storytelling", the home card's first two tags) still share a line */

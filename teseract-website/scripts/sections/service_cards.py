@@ -21,7 +21,8 @@ import projects
 from content import PRIMARY_CTA, NAV, HOME, CREATE
 
 # ------------------------------------------------------------------ imagery per service
-# Owner, 14 Oct (DARK-THEME.md 'Client update 8'), services 01-05 - 'images': the card's images in order (front first):
+# Owner, 14 Oct (DARK-THEME.md 'Client update 8'), services 01-05 (and 06 since 17 Oct) - 'images': the card's images in
+# order (front first):
 #   {'supplied': name}   an owner-supplied image (scripts/supplied.json: the owner's own designs and sites, not
 #                        portfolio projects): no project caption, the card links to The Work page
 #   + 'slug'             ... of a site that IS a shown portfolio project (VYRN, owner 14-15 Oct): captioned with its
@@ -30,9 +31,17 @@ from content import PRIMARY_CTA, NAV, HOME, CREATE
 #   {'slug', 'role'}     a captured still of a shown project (captioned with its name + label, linked to its page);
 #                        a still the project skips (portfolio.json "skip", e.g. Mahira Select's) is never shown
 #   'focal'              object-position for this card (default: the supplied image's / projects.focal)
+#   'zoom'               (scale, origin) - a captured still drawn that much larger about that point (CSS scale, so
+#                        the reveal and hover zooms still apply), for a screen whose own page margin would show as
+#                        a light band along the card's edge (Vantline's and Sagewell's inset hero frames)
+#   'small'              {'focal', 'zoom'} - this still's own framing as a small card's BACK print only (the front
+#                        print, the row cards and the stack keep the above): the back print shows only the part the
+#                        front print and its caption leave free, so a centred headline there reads as fragments
+# and per service 'tap': 'low' - on phones the stack's Tap Here sticker sits low on the right, not in the top-right
+# corner (for stills whose centred headline reaches that corner; 22-services.css .svc-media--tap-low)
 # A small card shows the first two images (front / back); a large row shows the first, or - with more than one -
 # all of them (at most three) as the "works" stack (What We Create page).
-# Services 06-08 keep the earlier project mapping: 'slug' + 'roles' (captured stills, primary first); a mapped project
+# Services 07-08 keep the earlier project mapping: 'slug' + 'roles' (captured stills, primary first); a mapped project
 # that is not captured yet falls back to the first shown project of 'fallback', captioned with the portfolio section's
 # name and linked to The Work page ('label': 'work' - the client's 13 Oct mechanism, kept for Digital Strategy).
 # AI & Automation has no matching project: brand-mark card. 'focal': object-position per still for the row cards,
@@ -56,7 +65,29 @@ MEDIA = {
     # ('Good things. Slowly savoured.' / 'The essence of subtle romance') beside its bottle
     '05': {'images': [{'slug': 'saanjh', 'role': 'gallery-01', 'focal': '0% 50%'},
                       {'slug': 'velora', 'role': 'gallery-01', 'focal': '0% 50%'}]},
-    '06': {'slug': 'livecv', 'fallback': [('aeroskys-careers', ['gallery-05', 'gallery-07'])]},
+    # Product & SaaS = two of the owner's SaaS landing-page concepts (owner, 17 Oct: instead of LiveCV, which stays a
+    # client project everywhere else), the two whose capture reports call them SaaS product landing pages: SAGEWELL (AI
+    # reasoning model) in front, VANTLINE (decision-intelligence copilot) behind it, each site's hero. Both headlines are
+    # centred on the 16:10 screen, so the cover crop of the ~4:3 cards keeps them whole ('The model that thinks before it
+    # speaks.' / 'Know what changed and what to do about it.'); Vantline's is taken a little right of centre ('60% 50%'),
+    # so the end of its wordmark at the screen's left edge is not left as a stray letter. On the home small card that
+    # is true of the front print. 'tap': 'low' - on phones the What We Create stack's Tap Here sticker sits low on the
+    # right, over the gardens / the field, instead of the top-right corner, where it covered the end of each headline
+    # (22-services.css).
+    # Vantline's hero frame sits inset on the site's white page (a 1.4% band above it, 6.3% below, read as a screenshot's
+    # edge at the card's foot): drawn at 110% about '60% 20%' (18 Oct), neither band shows and its headline (x .32-.68 of
+    # the screen, in a window of .15-.90) stays whole. Sagewell's frame is inset the same way (a cream margin, its last
+    # 1.4% of the still, under the dark garden: a light strip at the card's foot, 18 Oct verifier): drawn at 103.5% about
+    # '50% 20%', the window is y .007-.973 (the margin starts at .986) and x .10-.90, its headline (x .29-.71, y .23-.38)
+    # whole.
+    # Home small card (18 Oct verifier): behind the front print, Vantline's headline was cut to '...changed / ...about it.'
+    # on desktop and by its own caption on tablets and phones; as the BACK print ('small') it shows the scene under the
+    # headline instead - dusk sky, the glass pillar, the walker in the field - (the still's x .56-.92, y .48-.915: below
+    # its 'Try Vantline free' button, above the white page margin), as on the Brand card. Drawn 2.3x larger there, so
+    # _art asks for a larger file (_back_sizes).
+    '06': {'images': [{'slug': 'sagewell', 'role': 'gallery-01', 'focal': '50% 50%', 'zoom': (1.035, '50% 20%')},
+                      {'slug': 'vantline', 'role': 'gallery-01', 'focal': '60% 50%', 'zoom': (1.1, '60% 20%'),
+                       'small': {'focal': '100% 50%', 'zoom': (2.3, '83.5% 85%')}}], 'tap': 'low'},
     '07': {'slug': None},
     # Digital Strategy: TAVRA's cursor-free stills (owner, 15 Oct: gallery-05 caught the site's ring cursor) - 'The Store'
     # (gallery-06) in front, the hero (gallery-01) behind; both checked at 100 %: no cursor ring, hover bubble or bag cursor
@@ -67,6 +98,7 @@ WORK_LABEL = next(label for key, label, _ in NAV if key == 'work')   # "The Work
 ROW_SIZES = '(min-width:1440px) 584px, (min-width:1200px) 46vw, (min-width:800px) calc(100vw - 128px), calc(100vw - 48px)'
 ROW_AR = 1.32727         # the large row's image card (.svc-media aspect-ratio, 22-services.css)
 ART_SIZES = '(min-width:1200px) 290px, (min-width:800px) 300px, 70vw'
+BACK_W = (210, 50, 24)   # a small card's back print: min(50%, 210px) of the artwork (22-services.css), ~50vw - 24px on phones
 
 
 def slug(name):
@@ -227,7 +259,7 @@ def _pick(p, roles):
 
 
 def resolve(n):
-    """(project, stills, work_label) for a service mapped by project (06-08); (None, [], False) = the brand-mark card."""
+    """(project, stills, work_label) for a service mapped by project (07-08); (None, [], False) = the brand-mark card."""
     m = MEDIA[n]
     if 'slug' in m and m['slug'] is None:
         return None, [], False
@@ -287,7 +319,8 @@ def slides(n):
         if not st:                           # project not shown, or the still is not (owner skip list)
             continue
         out.append({'p': p, 'entry': st['entry'], 'alt': _alt(p, s), 'pos': it.get('focal') or projects.focal(p, st),
-                    'fit': 'cover', 'ground': None, 'work': False, 'cap': _cap_text(p['title'], p)})
+                    'fit': 'cover', 'ground': None, 'work': False, 'cap': _cap_text(p['title'], p), 'zoom': it.get('zoom'),
+                    'small': it.get('small')})
     return out
 
 
@@ -310,9 +343,22 @@ def _tag(ctx, sl, cls, extra=''):
 
 def _img(ctx, sl, alt, sizes, max_width, extra_style=''):
     style = '' if sl['fit'] == 'contain' else f'object-position:{sl["pos"]}'     # contained: centred by the card (CSS)
-    style = ';'.join(x for x in (style, extra_style) if x)
+    zoom = f'scale:{sl["zoom"][0]};transform-origin:{sl["zoom"][1]}' if sl.get('zoom') else ''   # MEDIA 'zoom'
+    style = ';'.join(x for x in (style, zoom, extra_style) if x)
     return lib.media_img(ctx, sl['entry'], alt, sizes=sizes, max_width=max_width,
                          attrs=f'style="{style}"' if style else '')
+
+
+def _back_sizes(sl):
+    """(sizes, max_width) for a small card's back print: ART_SIZES and the 640 file, or - for a still drawn larger by
+    its 'zoom' (MEDIA 'small') - the width it is drawn at (cover on the 4:3 print, times the scale), up to the 1280 file,
+    so a 2-3x phone or a 2x desktop never stretches a 640 file across it."""
+    if not sl.get('zoom') or sl['fit'] == 'contain':
+        return ART_SIZES, 640
+    top = max(sl['entry']['variants'], key=lambda v: v['width'])
+    k = max(1, top['width'] / top['height'] / (4 / 3)) * sl['zoom'][0]
+    w, vw, px = BACK_W
+    return f'(min-width:800px) {w * k:.0f}px, calc({vw * k:.0f}vw - {px * k:.0f}px)', 1280
 
 
 def _row_sizes(sl):
@@ -417,7 +463,8 @@ def media(ctx, s, *, stack=False):
            'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
            '<span class="svc-tap__label">Tap Here</span></button>')
     status = '<span class="sr-only" data-stack-status aria-live="polite"></span>'
-    return f'<div class="svc-media svc-media--stack" data-svc-stack>{"".join(cards)}{tap}{status}</div>'
+    low = ' svc-media--tap-low' if MEDIA[s['n']].get('tap') == 'low' else ''   # MEDIA 'tap': 'low' (Product & SaaS)
+    return f'<div class="svc-media svc-media--stack{low}" data-svc-stack>{"".join(cards)}{tap}{status}</div>'
 
 
 # ------------------------------------------------------------------ info card + rows
@@ -476,7 +523,9 @@ def _art(ctx, s):
     other = len(sl) > 1 and sl[1]['p'] and not sl[1]['work'] and sl[1]['p'] is not first['p']
     if len(sl) > 1:
         gcls, gstyle = _ground(sl[1])
-        back_img = _img(ctx, sl[1], '', ART_SIZES, 640)
+        sm = sl[1].get('small') or {}            # MEDIA 'small': the still's own framing as a back print
+        back = {**sl[1], 'pos': sm.get('focal') or sl[1]['pos'], 'zoom': sm.get('zoom') or sl[1].get('zoom')}
+        back_img = _img(ctx, back, '', *_back_sizes(back))
     else:  # a single image: the back print is a detail crop of it
         gcls, gstyle = _ground(first)
         back_img = _img(ctx, first, '', ART_SIZES, 1280, 'transform-origin:50% 40%;transform:scale(1.6)')

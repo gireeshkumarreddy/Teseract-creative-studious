@@ -11,8 +11,11 @@ files; LAUNCH GUARD: an error while a SAMPLE review remains and site.config.json
 owner's 14-15 Oct decisions: Kingfisher gone, VYRN without its A-COLD-WALL / Nike / sneaker screens and the cinematic
 portfolio without its tool-logo screens and phone closing shot (OWNER_SKIPS) while the home laptop keeps its film,
 E-commerce on exactly the owner's shops, a supplied frame of a project linked to that project, Aivinci's review card on
-its tiger poster, Sedile prepared and listed everywhere as a Concept Project (OWNER_ADDED), the Work page's count; headings
-read letter by letter (A11Y-04: warning until SPELLED_NAMES_ERROR); the founder (owner, 15 Oct): every line of
+its tiger poster, Sedile prepared and listed everywhere as a Concept Project (OWNER_ADDED), the Work page's count; the
+owner's 17 Oct decision: the six landing-page concepts (LANDING_SIX) as Concept Projects leading the home gallery, every
+tile of a prepared one playing its clip (phones too), Aivinci's tile its tiger, 7 gallery clips at most, two of them on
+the Product & SaaS card instead of LiveCV (one without prepared media yet: a warning); headings
+read letter by letter (A11Y-04: an error, SPELLED_NAMES_ERROR); the founder (owner, 15 Oct): every line of
 _ref/specs/founder-content.md verbatim on Who We Are, the founder section directly after the hero, no image of
 him while none is supplied, the old 'Why we started' copy gone, the Person JSON-LD, the home teaser + its link, his
 name as one screen-reader text and the restore toggles' accessible-name spacing.
@@ -29,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DIST = Path(sys.argv[sys.argv.index('--dist') + 1]).resolve() if '--dist' in sys.argv else ROOT / 'dist'
 sys.path.insert(0, str(ROOT / 'scripts'))
 import projects  # noqa: E402
+import seo  # noqa: E402  (TITLE_MAX: the landing pages' page titles)
 import lib  # noqa: E402  (longpath: the workspace path can exceed Windows MAX_PATH)
 from sections import service_cards  # noqa: E402  (MEDIA: which owner-supplied images each service card shows)
 from pages import stories  # noqa: E402  (the Client Stories reviews: testimonials(), samples())
@@ -72,6 +76,16 @@ HOME_FILM = 'vyrn'
 ECOMMERCE = {'derlin-haus', 'mahira-select', 'siaara', 'vyrn'}
 # Stills never shown on a service card (owner, 15 Oct: TAVRA gallery-05 caught the site's ring cursor).
 NOT_ON_CARDS = {'tavra': {'gallery-05'}}
+# Owner, 17 Oct (DARK-THEME.md): the six landing-page concepts of his repo landing-concepts - Concept Projects that LEAD
+# the home gallery (portfolio.json home_gallery, in this order), every one of their tiles playing its own clip, plus
+# Aivinci's tiger (TIGER): 7 clips (home_hero.MAX_VIDEO_TILES). They are captured and re-captured one after another, so
+# one without prepared media yet is a warning (not shown); with it, an error when it is not listed and shown like
+# OWNER_ADDED, does not lead the gallery or has a tile that does not play its clip. The Product & SaaS card (service 06)
+# shows two of them (their SaaS heroes) instead of LiveCV, which stays a client project everywhere else.
+LANDING_SIX = ('sagewell', 'vantline', 'tidings', 'emberpost', 'ines-morrow', 'maren-holt')
+TIGER = ('aivinci', 'tiger')
+GALLERY_CLIPS = 7
+SAAS_CARD = '06'
 
 
 def webp_size(path):
@@ -183,9 +197,9 @@ class Page(HTMLParser):
 
 
 # A11Y-04 (mobile audit, 15 Oct): a heading built from per-letter spans is read letter by letter ('w h o w e a r e .' on
-# Who We Are) unless the letters are aria-hidden next to one .sr-only text (the founder nameplate's pattern). A warning
-# while the Who We Are H1 waits for its fix (mobile fix group 7); set True once it has landed.
-SPELLED_NAMES_ERROR = False
+# Who We Are) unless the letters are aria-hidden next to one .sr-only text (the founder nameplate's pattern). An error
+# since the Who We Are H1 fix landed (mobile fix group 7: sr-only 'Who we are.' + aria-hidden letters).
+SPELLED_NAMES_ERROR = True
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'}
 
 
@@ -336,11 +350,12 @@ for p in pages:
                 errors.append(f'{rel}: hero tile of {x["slug"]} without its label pill "{x["label"]}"')
             if x.get('note') and f'<span class="hero-tile__note">{esc(x["note"])}</span>' not in inner:
                 errors.append(f'{rel}: hero tile of {x["slug"]} without its "{x["note"]}" line')
-        for x in projects.CASES:                 # a portfolio.json "tile_clip" (Aivinci's tiger) plays on the project's tile
-            clip = x.get('tile_clip')
-            if clip and x['slug'] in (projects.DATA.get('home_gallery') or []) and clip is not x.get('hero') and not any(
-                    href.rstrip('/').endswith(f"{x['route']}/index.html") and clip['variants'][0]['file'] in inner for href, inner in tiles):
-                errors.append(f'{rel}: no hero tile of {x["slug"]} plays its tile clip ({clip["variants"][0]["file"]})')
+        for x in projects.CASES:                 # a portfolio.json "tile_clip" (Aivinci's tiger, the landing pages' loops) plays
+            clips = x.get('tile_clips') or []    # on the project's tile (one of its list, the one that suits the slot)
+            if any(c is not x.get('hero') for c in clips) and x['slug'] in (projects.DATA.get('home_gallery') or []) and not any(
+                    href.rstrip('/').endswith(f"{x['route']}/index.html") and any(c['variants'][0]['file'] in inner for c in clips)
+                    for href, inner in tiles):
+                errors.append(f'{rel}: no hero tile of {x["slug"]} plays its tile clip ({clips[0]["variants"][0]["file"]})')
     if rel == 'client-stories/index.html':       # client reviews, the "Client Deck": a dot (tab) + a card slot per review (pages/stories.py)
         sec = re.search(r'<section class="section sto-rev".*?</section>', html, re.S)
         sec = sec.group(0) if sec else ''
@@ -504,9 +519,12 @@ for extra in ('llms.txt', 'sitemap.xml'):       # GEO files: no retired / remove
 # portfolio slug that is not shown or an excluded one); skipped roles never reach the output; no two touching
 # Work cards share a scene colour family when an arrangement without a clash exists.
 catalogue = {e['slug'] for e in projects.CATALOGUE}
+_prepared = {mp.get('slug') for mp in lib.media_manifest()['projects']}
 for key in ('home_gallery', 'home_laptop'):
     for s in projects.DATA.get(key) or []:
         ok = projects.by_slug(s) or (key == 'home_laptop' and s not in catalogue and lib.media_entry(s))
+        if key == 'home_gallery' and s in LANDING_SIX and s not in _prepared:
+            continue                             # a landing page waiting for its media: warned below (LANDING_SIX)
         if not ok or s in projects.EXCLUDED:
             errors.append(f'portfolio.json {key}: "{s}" is not a shown project')
 page_html = {p.relative_to(DIST).as_posix(): lib.longpath(p).read_text(encoding='utf-8') for p in pages}
@@ -557,7 +575,8 @@ for x in projects.CASES:
 _mf = lib.media_manifest()
 _prepared = {mp.get('slug') for mp in _mf['projects']}
 for e in projects.CATALOGUE:
-    if e['slug'] not in projects.EXCLUDED and e['slug'] not in _prepared and e['slug'] not in OWNER_ADDED:
+    if (e['slug'] not in projects.EXCLUDED and e['slug'] not in _prepared and e['slug'] not in OWNER_ADDED
+            and e['slug'] not in LANDING_SIX):     # (the landing pages' own warning: below)
         warnings.append(f"portfolio.json {e['slug']}: not in scripts/media-manifest.json 'projects', so not shown"
                         + (" (left out with prepare_media.py --skip)" if e['slug'] in _mf['order'] else ''))
 _work = page_html.get('work/index.html', '')
@@ -588,7 +607,8 @@ _llms = lib.longpath(DIST / 'llms.txt').read_text(encoding='utf-8') if (DIST / '
 _smap = lib.longpath(DIST / 'sitemap.xml').read_text(encoding='utf-8') if (DIST / 'sitemap.xml').exists() else None
 _tiles = re.findall(r'<a class="hero-tile[^"]*" href="([^"]+)"', page_html.get('index.html', ''))
 _NOTE = re.compile(r'\b\d{3,4} ?px\b|\b\d+(?:\.\d+)? s\b|website (?:screen|recording) \d+ of \d+$')
-for slug, (group, label) in OWNER_ADDED.items():
+# (the landing pages - LANDING_SIX, owner 17 Oct - go through the same checks once their media is prepared)
+for slug, (group, label) in {**OWNER_ADDED, **{s: ('concept', 'Concept Project') for s in LANDING_SIX if s in _prepared}}.items():
     e = next((c for c in projects.CATALOGUE if c['slug'] == slug), None)
     x = projects.by_slug(slug)
     if not e:
@@ -625,6 +645,121 @@ for slug, (group, label) in OWNER_ADDED.items():
     if slug not in (projects.DATA.get('home_gallery') or []) and any(h.rstrip('/').endswith(route) for h in _tiles):
         errors.append(f'index.html: a home hero tile shows {slug}, which portfolio.json home_gallery does not list '
                       '(owner default, 15 Oct: his 20 tiles)')
+
+# Owner, 17 Oct (LANDING_SIX): each landing page a Concept Project in portfolio.json with its live url and tile clip;
+# prepared, it leads home_gallery and EVERY hero tile of it plays its clip (its own tile a <video>, a stand-in for a
+# hidden column the same clip from its <template data-clip>, so phones play it too); without prepared media yet a
+# warning. Aivinci's own tile plays the tiger; the gallery's own tiles play GALLERY_CLIPS clips at most; the Product &
+# SaaS card shows landing pages only (never LiveCV), each prepared one's still linked to its page on both pages. A tile
+# playing a landing page's loop is a .hero-tile--loop: its labels sit at the frame's foot, clear of the site's headline
+# (on touch phones in the name strip under the frame, 18 Oct). Its page title names its industry (seo.project_meta drops
+# to '<name> — Website' when the industry makes it longer than seo.TITLE_MAX: 18 Oct, Maren Holt's).
+_home = page_html.get('index.html', '')
+_items = re.findall(r'<li class="hero-col__item([^"]*)"><a class="(hero-tile[^"]*)" href="([^"]+)"[^>]*>(.*?)</a></li>', _home, re.S)
+_tile_cls = [(acls.split(), href, inner) for _, acls, href, inner in _items]
+_items = [(cls, href, inner) for cls, _, href, inner in _items]
+_gal = list(projects.DATA.get('home_gallery') or [])
+
+
+def _plays(inner, clips):
+    """True when a <video> in the tile's markup (its own, or the one in its <template data-clip>) plays one of clips."""
+    return any(c['variants'][0]['file'] in v for v in re.findall(r'<video\b[^>]*>', inner) for c in clips)
+
+
+for s in LANDING_SIX:
+    e = next((c for c in projects.CATALOGUE if c['slug'] == s), None)
+    if not e:
+        errors.append(f'portfolio.json: no "{s}" entry (owner, 17 Oct: one of the six landing-page concepts)')
+        continue
+    if (e['group'], e.get('label')) != ('concept', 'Concept Project') or not e.get('url') or not e.get('tile_clip'):
+        errors.append(f'portfolio.json {s}: a landing-page concept is group "concept", label "Concept Project", with its '
+                      'live url and its "tile_clip" (owner, 17 Oct)')
+    if s not in _prepared:
+        warnings.append(f"{s}: landing page without prepared media yet, so not on the site (waits for its reviewed capture; "
+                        f"then python scripts/prepare_media.py --src C:/Teseract-media without --skip {s})")
+        continue
+    x = projects.by_slug(s)
+    if not x:
+        continue                                 # prepared but not shown: the OWNER_ADDED checks above report it
+    if s not in _gal[:len(LANDING_SIX)]:
+        errors.append(f'portfolio.json home_gallery: {s} must lead the gallery with the other landing pages (owner, 17 Oct)')
+    route = f"{x['route']}/index.html"
+    mine = [(cls, inner) for cls, href, inner in _items if href.rstrip('/').endswith(route)]
+    _t = re.search(r'<title>(.*?)</title>', page_html.get(route, ''), re.S)
+    if _t and x['industry'] not in _h.unescape(_t.group(1)):
+        errors.append(f'{route}: the page title "{_h.unescape(_t.group(1))}" leaves out the industry "{x["industry"]}" '
+                      f'(longer than seo.TITLE_MAX = {seo.TITLE_MAX} with it): shorten portfolio.json {s} industry')
+    if not x['tile_clips']:
+        errors.append(f'{s}: no tile clip prepared (C:/Teseract-media/{s}/tile.mp4 or hero.mp4) - its home tile must play one')
+    elif not any('--lt' not in cls and '<template' not in inner and _plays(inner, x['tile_clips']) for cls, inner in mine):
+        errors.append(f'index.html: the home hero tile of {s} does not play its clip (owner, 17 Oct: every landing-page tile moves)')
+    for cls, inner in mine:
+        if not _plays(inner, x['tile_clips']) or ('--lt' in cls and '<template data-clip>' not in inner):
+            errors.append(f'index.html: a hero tile of {s}{" (a stand-in)" if "--lt" in cls else ""} does not play its '
+                          'clip - every landing-page tile moves, on phones too (owner, 17 Oct)')
+            break
+    loops = [c for c in x['tile_clips'] if c['variants'][0]['file'].rsplit('/', 1)[-1].startswith('tile-')]
+    if any(href.rstrip('/').endswith(route) and _plays(inner, loops) and 'hero-tile--loop' not in acls
+           for acls, href, inner in _tile_cls):
+        errors.append(f'index.html: a hero tile of {s} plays its loop without the hero-tile--loop class (owner, 17 Oct: '
+                      "the loop shows the site's hero - its labels sit at the frame's foot, clear of the nav and headline)")
+_tiger = projects.by_slug(TIGER[0])
+if _tiger and TIGER[0] in _gal:
+    tiger = [c for c in _tiger.get('tile_clips') or () if c['variants'][0]['file'].rsplit('/', 1)[-1].startswith(TIGER[1] + '-')]
+    if not tiger or not any('--lt' not in cls and '<template' not in inner and _plays(inner, tiger)
+                            for cls, href, inner in _items if href.rstrip('/').endswith(f"{_tiger['route']}/index.html")):
+        errors.append(f'index.html: Aivinci\'s home hero tile does not play the {TIGER[1]} clip (owner, 17 Oct: keep the tiger moving)')
+# Every project of the gallery is on screen at every width (4 / 3 / 2 columns: own tiles + stand-ins, owner 15 Oct: the
+# phone "has to be exactly the same"), and a project shown twice there (fewer projects than slots, while landing pages
+# wait for their media) never in the same or a neighbouring column: the columns slide past each other, and a column's
+# last tile runs on into its lead (home_hero._plan; 18 Oct, two Siaara tiles side by side at the gallery's top).
+_shown_gal = [x for x in (projects.by_slug(s) for s in _gal) if x]
+for n in (4, 3, 2):
+    _at = [(int(c), href) for c, body in re.findall(r'<div class="hero-col hero-col--(\d)"[^>]*>(.*?)</ul></div>', _home, re.S)
+           for cls, href in re.findall(r'<li class="hero-col__item([^"]*)"><a class="hero-tile[^"]*" href="([^"]+)"', body)
+           if int(c) <= n and ('--lt' not in cls or ('--lt1440' in cls and n < 4) or ('--lt800' in cls and n == 2))]
+    for x in _shown_gal:
+        cs = sorted(c for c, href in _at if href.rstrip('/').endswith(f"{x['route']}/index.html"))
+        if not cs:
+            errors.append(f'index.html: with {n} gallery columns no hero tile shows {x["title"]} (every gallery project at '
+                          'every width, owner 15 Oct)')
+        elif any(b - a <= 1 for a, b in zip(cs, cs[1:])):
+            errors.append(f'index.html: with {n} gallery columns {x["title"]} shows twice in the same or neighbouring '
+                          f'columns {cs} (home_hero._plan keeps a repeat two columns away)')
+# Never two clips stacked in a column, at any width (owner, 17 Oct; the column's last tile runs on into its lead): a clip's
+# stand-in counts where it shows (18 Oct: Emberpost's had gone straight above Sagewell's clip at 834px). A stand-in right
+# under a lead tile at 3 columns is on screen from a tablet's first paint and comes in only seconds later: a warning.
+for n in (4, 3, 2):
+    for c, body in re.findall(r'<div class="hero-col hero-col--(\d)"[^>]*>(.*?)</ul></div>', _home, re.S):
+        if int(c) > n:
+            continue
+        seq = [(cls, '<video' in inner or '<template data-clip>' in inner, href)
+               for cls, href, inner in re.findall(r'<li class="hero-col__item([^"]*)"><a class="hero-tile[^"]*" href="([^"]+)"[^>]*>(.*?)</a></li>', body, re.S)
+               if '--lt' not in cls or ('--lt1440' in cls and n < 4) or ('--lt800' in cls and n == 2)]
+        for a, b in zip(seq, seq[1:] + seq[:1]):
+            if a[1] and b[1] and a is not b:
+                errors.append(f'index.html: with {n} gallery columns, column {c} stacks two clips ({a[2]} and {b[2]}) - '
+                              'never two clips stacked in a column (owner, 17 Oct; home_hero._columns)')
+        if n == 3 and len(seq) > 1 and '--lt' in seq[1][0]:
+            warnings.append(f'index.html: with 3 gallery columns, column {c} has a stand-in ({seq[1][2]}) right under its '
+                            "lead tile - on a tablet it comes in only once that place has left the screen")
+_own_clips = sum(1 for cls, href, inner in _items if '--lt' not in cls and '<template' not in inner and '<video' in inner)
+if _own_clips > GALLERY_CLIPS:
+    errors.append(f'index.html: the home hero gallery plays {_own_clips} clips (at most {GALLERY_CLIPS}: the six landing '
+                  'pages + the tiger, owner 17 Oct)')
+_saas = [it for it in service_cards.MEDIA[SAAS_CARD].get('images') or ()]
+if not _saas or any(it.get('slug') not in LANDING_SIX or it.get('supplied') for it in _saas):
+    errors.append(f'service_cards.MEDIA["{SAAS_CARD}"] (Product & SaaS): two captured stills of the SaaS landing pages, '
+                  'nothing else (owner, 17 Oct: instead of LiveCV)')
+for it in _saas:
+    x = projects.by_slug(it.get('slug') or '')
+    if not x:
+        warnings.append(f'Product & SaaS card: {it.get("slug")} is not shown yet, so the card shows fewer landing pages')
+        continue
+    for rel in ('index.html', 'what-we-create/index.html'):
+        if not re.search(r'<a class="svc-[^"]*" href="[^"]*' + re.escape(x['route']) + r'/index\.html"[^>]*>(?:(?!</a>).)*assets/media/'
+                         + re.escape(f"{x['slug']}/{it['role']}-"), page_html.get(rel, ''), re.S):
+            errors.append(f'{rel}: the Product & SaaS card does not show {x["slug"]} {it["role"]} linked to its page')
 
 # Client Stories reviews (content.STORIES['testimonials'], owner 14 Oct): one per shown CLIENT project (never a concept;
 # company, industry, label, still and link come from it), rating 1.0-5.0 with one decimal, a quote (warning above 320

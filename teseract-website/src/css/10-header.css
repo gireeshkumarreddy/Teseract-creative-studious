@@ -8,6 +8,9 @@
   -webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);
   box-shadow:inset 0 -1px 0 rgba(255,255,255,.07);transition:opacity .45s var(--ease)}
 .site-header.is-scrolled::before{opacity:1}
+/* without JS nothing sets .is-scrolled: the bar is always there, so scrolled content (the hero's services marquee under
+   the logo, 18 Oct verifier) never shows through the header */
+.no-js .site-header::before{opacity:1}
 .motion .site-header{animation:hdr-appear .7s cubic-bezier(.25,.1,.25,1) backwards}
 @keyframes hdr-appear{from{opacity:.001}}
 

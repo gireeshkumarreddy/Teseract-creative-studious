@@ -388,3 +388,128 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   the six landing pages + the 10 client tiles + vyrn, velora, vesper, gireesh-desk (20). PRODUCT & SAAS service card
   (owner: yes) shows two of the SaaS landing pages instead of LiveCV. Captures: C:/Teseract-media/<slug> (tile.mp4 =
   hero -> second section loop). Integration after the mobile-fix finish run.
+  OWNER (17 Oct): keep AIVINCI's tiger moving too -> the home gallery plays 7 clips (the six landing pages + the tiger);
+  all six landing-page tiles must also move on phones.
+  OWNER (17 Oct, later): fix every landing site's own issues in the landing-concepts repo (Sagewell first, then the other
+  five) and re-capture the fixed parts; add the six to the TESERACT site SOONER (with the captures ready) and swap the
+  re-captured media in later.
+- DONE 16 Oct (mobile fixes run) - groups 2-8 of the 15 Oct mobile audit (58 findings), integration pass 17 Oct; owner
+  defaults of the audit applied, nothing beyond them. SHELL: viewport-fit=cover + safe-area page padding, 56px header in
+  short landscape, the footer ring at phone size (upper arc, 480 thumbs), footer links 3+2+2 and footer/menu copy >= 14px,
+  menu tagline + palette chips on phones, --h1-phone (clamp 42-46px) on every page H1 under 720px, one shared "Pause
+  motion" control (TS.motionToggle + [data-motion-scope]; 32px icon, 44px hit area on touch) used by the hero gallery,
+  the Work marquee and clips. HOME: stand-in tiles put every gallery project on phones, static tile captions on touch,
+  first row eager (LCP), hero tag notes under the image, The Idea's play/pause follows the clip (Low Power Mode), laptop
+  rise on scroll for touch, FAQ wider and :hover only on hover screens. MEDIA: 4:5 hero clips 480/640 at CRF 28, lazy
+  tile posters, a PLAY pill where autoplay is refused, a pause toggle on every other looping clip, 1440 + 480 still
+  rungs, 96/192 copies of the 3D mark. WORK + PROJECTS: phone screens in a swipe strip (72vw, snap), a tap-to-enlarge
+  still viewer on every project page (pinch / double-tap zoom, swipe, Esc / Back / X; default 1), Geetha opens on a
+  phone screen, landscape heroes fit the screen, scene names >= 24px with a scrim, content-visibility on scene stages,
+  Work numbers inline. STORIES / CONTACT / 404: pinch-zoom and selectable quotes on the deck, the swipe drives the card
+  light, 44px dots, lazy back-card stills, field outlines 3.6:1, Enter moves to the next field, contact pulse x3, 404
+  float x2 with Start a Project first on phones. WHO / APPROACH / CREATE: the Who We Are H1 reads as one heading (sr-only
+  + aria-hidden letters; check.py SPELLED_NAMES_ERROR now True), a phone "circuit" rail through the boards, scroll-driven
+  tilt / light on touch, loops play once, one sentence per line, the approach tagline on phones, 16px notes, the Define
+  bullets never leave a word alone. SERVICE CARDS: the card centred on screen plays its hover motion on touch (.is-live,
+  rests after 4.8s), all 6 AI pills, Tap Here sticker clear of the captions, 12px caption labels, buttons named "Show the
+  next <service> image". Integration: The Idea and Our Approach keep their copy out of a landscape notch (safe-area
+  padding; the Idea's hand and laptop still run to the screen edges), clean rebuild (build.py --clean). Micro-labels in use under default 11, for the owner's approval: "Play",
+  "Pause the video — <project>", "Pause motion" / "Play motion", "Tap to enlarge", "Previous screen" / "Next screen" /
+  "Close", "Show the next <service> image". Still with the owner: sharper believe / who photos and a >= 1400px 3D logo
+  render (defaults 2-4: no change, the 3D render stays in the How-we-think panels, no 960 laptop clips), Sedile's
+  industry line + white-glass backdrop. Open: the footer ring spins without a pause control (WCAG 2.2.2), the 404
+  float runs 15s; a real-iPhone pass (notch, Low Power Mode, :active washes).
+  OWNER (17 Oct): Tidings - swap the eight real-person avatar photos for original illustrated avatars (in the
+  landing-concepts repo), then re-capture the Tidings files that show them.
+- DONE 17 Oct (landing-six integration, first run - the media the captures had reviewed by then): portfolio.json has all
+  six as Concept Projects, first in the concepts group (orders 13-18; the earlier concepts keep their order after them),
+  titles = the names the sites show (info.txt / wordmark; each page title in its note): Sagewell ('AI reasoning SaaS
+  concept', green-white + monitor), Vantline ('Decision-intelligence SaaS concept', sky-white + laptop), Tidings
+  ('Chat-commerce SaaS concept', violet-white + monitor; label_note 'Not affiliated with WhatsApp or Meta', the site's
+  own line, as its capture review asks), Emberpost, Ines Morrow, Maren Holt (from the sites' own code until captured;
+  scenes provisional, scene_confirmed false for all six). home_gallery = the six + the 14 (aaradhya, one-piece, tavra,
+  thenga, saanjh, gireesh-cinematic left the gallery only). Gallery: 7 clips (MAX_VIDEO_TILES) seated together
+  (home_hero._video_slots: even spread, never stacked, VIDEO_SLOTS 1-4, crop <= 0.5): the landing pages play their 16:9
+  tile.mp4 in landscape slots (portfolio.json tile_clip ['tile', 'hero']: the phone loop only where a portrait slot is
+  left), the tiger a 3/2 slot; a clip's stand-in for a hidden column now plays the clip (<template data-clip>, 20-hero.js),
+  so all of them move at 834 / 390 / 360 too, each only while on screen (posters under reduced motion / Save-Data, no
+  JS); a clip project is never a still repeat. Product & SaaS card (service 06) = the Sagewell + Vantline heroes
+  (LiveCV stays a client project). check.py: LANDING_SIX / TIGER / GALLERY_CLIPS / SAAS_CARD (a landing page without
+  media = a warning). On the site now: Sagewell, Vantline, Tidings; Emberpost, Ines Morrow, Maren Holt wait for their
+  reviewed captures (the refresh run prepares them; until then 3 of the 7 clips are client phone scrolls).
+  Repair 1 (18 Oct, after the verifiers): a landing page's loop tile (.hero-tile--loop) carries its label pill (and
+  Tidings' note) at the FOOT of the frame, bottom left, at every width - the top-corner pill covered the sites' headlines
+  on phones / tablets and the note did on desktop; on pointer screens the pill gives way to the hover caption (the
+  tiger and the stills keep the top corner). Column 2's 4th slot is 16:9 (was 3:2): six exact 16:9 slots for the six
+  loops, the tiger keeps the 3:2 (Vantline's wordmark and 'Start free' are no longer cropped off). Phones: stand-ins
+  no longer push a column's first landing page down (Sagewell is the 2nd tile of column 2). What We Create: the
+  Product & SaaS Tap Here sticker sits low on the right on phones (MEDIA '06' 'tap': 'low'), clear of both headlines and
+  the caption; Vantline's crop '60% 50%' (no stray letter of its wordmark). Work cards: the year stays on the line of
+  the industry's last word. Tidings alts (gallery-04 / -06) no longer name the headings above the frame; Maren Holt's
+  industry 'Book editor personal-brand concept' (README). _tools/nojs.cjs takes a base URL (default :4273), widths
+  and --routes=.
+  Repair 2 (18 Oct): while landing pages wait for their media (fewer projects than the 20 slots), a repeated project
+  sits only in the columns smaller screens hide first (column 4, then 3), never in its own or a neighbouring column (a
+  column's last tile running on into its lead counts: two Siaara tiles had met at the gallery's top) - tablets and
+  phones show every project once (check.py). The gallery columns take a fixed share of the frame (4 / 3 / 2 columns),
+  so a first paint with only part of the gallery parsed no longer narrows them later (layout shift). Phones: the
+  stand-ins come in at the page's start (the gallery's top tiles on screen included), not after load - with the gallery
+  already on screen at the start (a restored scroll) they still wait for their place to leave the screen (no layout
+  shift). Product & SaaS: Vantline's hero is drawn at 110% about '60% 20%' (service_cards MEDIA 'zoom'), so its site's
+  white page margin no longer shows as a light band at the card's foot.
+- OWNER REQUEST (18 Oct, ~00:45) - QUEUED, start ONLY after the six-landing-pages work (captures, repo fixes, integration,
+  refreshes, final sync) is finished: 'do the SEO and AEO and GEO ... super level ... keep all the keywords and also
+  technical SEO ... tell me what you did ... if someone enters our company name the 1st [result] should be our company
+  and in the suggestions also ... highly important'. Existing base: scripts/seo.py (titles/descriptions, JSON-LD, llms.txt,
+  sitemap when site_url is set); site.config.json site_url is empty and indexable is false (noindex,nofollow).
+  OWNER ANSWERS (18 Oct) for the SEO pass: indexing LATER, AT LAUNCH (do all SEO work now, keep noindex until the owner
+  says launch); domain: the owner WILL BUY one (prepare everything for a custom domain - site_url/canonical/sitemap/CNAME
+  switch in one place - he will tell the address); location: REMOTE / INDIA-WIDE (no city; serves clients across India
+  and worldwide - no fake address).
+  OWNER (18 Oct ~19:05): ALSO HIDE GEETHA JEWELLERS from the home gallery (keeps its Work card + page). Gallery = the six
+  landing pages + 13 others (aivinci, derlin-haus, aeroskys, mahira-select, siaara, san-media, vynk, livecv, hidden-stories,
+  vyrn, velora, vesper, gireesh-desk) in the same 4 columns / 20 tiles - no new columns (owner: replace, don't extend).
+- OWNER REQUEST (18 Oct ~19:35): WHAT WE BELIEVE (home section 4) - delete the six previous strip images
+  (public/assets/believe/believe-01..06) and REPLACE them with six images the owner supplied in chat, saved as originals in
+  C:/Teseract-media/_supplied/believe-2026-10-18/ (a exhibition-screens 960x540, b ai-agent-monitor 736x736, c
+  people-first-poster 1086x1448, d orange-visor 736x977, e puppet-screens 900x1600, f overload-poster 736x1040).
+  Licence to confirm before launch: they look like web-sourced images (736 px Pinterest-size copies); b shows a third-party
+  UI design and brand ('ORRISO', 'Vireel'), e shows Facebook-like page screenshots, f shows TV-news screenshots with real people.
+  DONE 18 Oct (believe): the six believe-01..06 files are deleted (public/ and dist/, no reference left in code) and the
+  strip shows the owner's six in the approved caption order: 1 Intuitive experiences = b monitor, 2 Thoughtful design =
+  d orange visor, 3 People first = c PEOPLE FIRST poster (the tall slot), 4 Complex made simple = f OVERLOAD poster,
+  5 Purposeful technology = e puppet screens, 6 The right idea = a exhibition hall. Web copies in public/assets/believe/
+  <name>-<w>.webp, two widths each (320/640, 640/1086, 360/600, 600/960; never above the original, metadata stripped,
+  srcset + sizes per slot, lazy; ~117 KB on a desktop, ~254 KB on a 3x phone; OVERLOAD's halftone pre-blurred 1 px against
+  moire). Literal alts (poster text read exactly; never the team or a client). 23-believe.css: same artboard, rhythm,
+  captions, corner captions and motion; slots 1-2 148/155 (visor shows head + shoulders), 3 315/397 (poster lettering
+  untouched), 4-5 now 3:4 and taller (top at 43 %; OVERLOAD centred on the word, the puppet from the hand down), 6 an exact
+  16:9 at the top band's height; tablet: the exhibition spans 5 columns; phones: it spans both columns and the two corner
+  captions close the strip below it, left and right. Licence: LAUNCH-CHECKLIST.md 3g (item 8 no longer lists believe/).
+- DONE 18 Oct (landing-six integration, refresh run): all six captures reviewed, none re-capturing (lc-wait) -
+  prepare_media.py without --skip brought in EMBERPOST, INES MORROW and MAREN HOLT (Sagewell, Vantline, Tidings unchanged:
+  not re-captured since the first run). portfolio.json reconciled with their capture reports: verified true; industry
+  'People-first email SaaS concept' (README 'people-first email'), 'Film editor portfolio concept', 'Book editor
+  personal-brand concept'; taglines = the reports' tagline_verbatim ('Email organised around the people behind it.',
+  'Cuts that keep people watching', 'Notes for better books'); notes cite the captures; alt overrides where a 'shows'
+  line carried capture notes (px, scroll positions, 'the only control clicked') and Emberpost gallery-02's top strip
+  (its review). Scenes kept, scene_confirmed false: white-glass + laptop, blue-studio + monitor, grey-wall + laptop.
+  Gallery: the six 16:9 tile.mp4 loops in the six 16:9 slots (no crop) + the tiger in column 4's 3:2 = 7 clips, all
+  moving at 1440 / 834 / 390 / 360 (phones load only these 7 x 480 files). home_hero._columns: a clip's stand-in never
+  sits beside another clip, and no stand-in goes right under a lead tile at 3 columns where another gap is free
+  (Emberpost's had stacked on Sagewell's clip at 834px and, on screen from the first paint, came in ~7 s late); check.py:
+  two clips stacked in a column at any width = error, a stand-in under a lead tile at 3 columns = warning. Product & SaaS
+  card unchanged (Sagewell + Vantline). With Geetha Jewellers out of the gallery (19 projects) Derlin Haus repeats in
+  column 4 (shown at 1440px+ only, three columns from its own tile).
+  OWNER (18 Oct ~19:45): the six believe images are AI-GENERATED (his words: 'they are AI generated, so I believe there is no
+  copyright'). Licence item answered by the owner; keep only a light note about the visible brand-like names / news-style
+  faces inside the images.
+  DONE 18 Oct (believe, follow-up): LAUNCH-CHECKLIST 3g rewritten as answered (AI-generated per the owner; only a light note
+  on the made-up brand-like names ORRISO / Vireel, the Facebook-like screens and the presenter-like faces; row 8 'see 3g';
+  home_believe.py comment likewise). A 1x-desktop copy added per image (monitor 160, visor 160, poster 320, OVERLOAD 180,
+  puppet 180, exhibition 288; srcset now three widths, src = the middle copy): ~43 KB on a 1x desktop instead of ~117 KB,
+  2x / 3x pick the same files as before. The PEOPLE FIRST alt also reads the sub-line ('Every face has a story. Every story
+  deserves to be seen.'). 23-believe.css: tablet exhibition at 1.62 (as tall as the monitor / visor, ±1 px, captions on one
+  line; ~4.5 % off each side, silhouette whole); 520-899 OVERLOAD / puppet captions keep a one-line box so a wrapped
+  'PURPOSEFUL TECHNOLOGY' no longer lifts its image; corner-caption lines balanced ('BUILT AROUND / YOUR BUSINESS' at 320).
+  OWNER (18 Oct ~21:35): the footer ring keeps AUTOPLAYING - no pause control, no stop after one turn (closes the WCAG 2.2.2 question).

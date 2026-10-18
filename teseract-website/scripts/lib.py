@@ -601,7 +601,7 @@ def clip_owner(entry):
     return media_project(mp)['title'] if mp else ''
 
 
-def video(ctx, entry, label='', *, cls='', eager=False, max_width=None, poster_width=1280, lazy_poster=None):
+def video(ctx, entry, label='', *, cls='', eager=False, max_width=None, poster_width=1280, lazy_poster=None, still=True):
     """Muted, looping, inline <video> for a manifest media item; decorative unless `label` is given.
     No src in the HTML: 06-video.js picks the variant for the element's width x DPR and loads it when the
     video approaches the viewport; the poster (largest variant <= poster_width) shows without JS, under
@@ -611,7 +611,8 @@ def video(ctx, entry, label='', *, cls='', eager=False, max_width=None, poster_w
     widths, and browsers fetch a poster attribute even for a hidden element): the posters <= poster_width go in
     data-poster (JSON, like data-srcs) and 06-video.js sets the one for the tile's width x DPR once the tile is
     rendered; poster="" (empty: no frame yet) keeps the attribute, and a <noscript> copy of the poster shows the
-    frame without JS (06-video.css hides the empty video there)."""
+    frame without JS (06-video.css hides the empty video there) - still=False leaves that copy out where the caller
+    gives its own no-JS frame (a home gallery stand-in's clip, which waits in a <template>: home_hero._item)."""
     variants = sorted(entry.get('variants') or [], key=lambda v: v['width'])
     if max_width:
         variants = [v for v in variants if v['width'] <= max_width] or variants[:1]
@@ -632,7 +633,7 @@ def video(ctx, entry, label='', *, cls='', eager=False, max_width=None, poster_w
     name = f' data-video-name="{E(owner)}"' if owner else ''
     still = (f'<noscript><img class="media-video media-video--still{(" " + cls) if cls else ""}" src="{ctx.asset(poster[0]["file"])}" '
              f'alt="" width="{poster[0]["width"]}" height="{poster[0]["height"]}" loading="lazy" decoding="async"></noscript>'
-             if lazy and poster else '')
+             if lazy and poster and still else '')
     return (f'<video class="media-video{(" " + cls) if cls else ""}" muted playsinline loop preload="none" '
             f'disablepictureinpicture disableremoteplayback {a11y}{poster_attr} width="{top["width"]}" height="{top["height"]}" '
             f"data-video{' data-video-eager' if eager else ''}{name} data-srcs='{_attr_json(srcs)}'></video>{still}")

@@ -53,9 +53,9 @@ permission: yes
 | File | Where it appears | What to supply |
 |---|---|---|
 | `laptop` | Home page, the laptop screen in "The Idea" section. Up to 4 projects take turns, cross-fading; only the one on screen plays. They replace the screenshots shown now. | A **landscape** screen recording of the website, 16:10 or 16:9, ideally **1920 px wide or more** (2560 or 4K is welcome). 8-15 seconds that loops cleanly. |
-| `hero` | Home page hero gallery. Up to 6 tiles, spread across the columns. | A **5-10 second loop**, portrait or landscape. The tile crops it to its own shape, so keep the subject in the middle. |
+| `hero` | Home page hero gallery. Up to 7 clips play there, spread across the columns (on phones too). | A **5-10 second loop**, portrait or landscape. The tile crops it to its own shape, so keep the subject in the middle. |
 | `gallery-01`, `gallery-02`, ... | The project page gallery, in this order (ready for when the portfolio pages are rebuilt). | Any mix of videos and images. |
-| any other name, e.g. `tiger.mp4` (+ `tiger.png`) | A **named loop clip**: shown where `scripts/portfolio.json` names it - `"card_clip"` plays it on the project's Work page card (muted, looped, only while on screen), `"tile_clip"` on its home hero tile instead of `hero`. Aivinci uses its tiger. | A short silent loop. An image with the same name is used as its still (poster) instead of a frame from the video. |
+| any other name, e.g. `tiger.mp4` (+ `tiger.png`) | A **named loop clip**: shown where `scripts/portfolio.json` names it - `"card_clip"` plays it on the project's Work page card (muted, looped, only while on screen), `"tile_clip"` on its home hero tile instead of `hero`. Aivinci uses its tiger; the six landing pages use `tile.mp4` (a 16:9 desktop loop: hero, then the second section) and their `hero.mp4` where only a portrait tile is left. | A short silent loop. An image with the same name is used as its still (poster) instead of a frame from the video. |
 
 ## 4. Quality notes
 

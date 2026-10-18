@@ -22,7 +22,9 @@ spread()), by_slug(slug) (a shown project or None). Each project dict:
   None when portfolio.json "skip" lists 'laptop' / 'hero'), card_clip (the named clip on the Work card's screen,
   portfolio.json "card_clip", else None), card_poster (that clip's poster as a still item - the project's profile
   image where a still is shown, e.g. the Client Stories card - else None),
-  tile_clip (the home hero tile's clip: portfolio.json "tile_clip", else hero),
+  tile_clip (the home hero tile's clip: portfolio.json "tile_clip", else hero), tile_clips (every clip the tile may play,
+  preferred first: portfolio.json "tile_clip" may list several - owner, 17 Oct: the landing pages' 16:9 'tile' loop and
+  their phone 'hero' - and the gallery plays the one that suits its slot, sections/home_hero._video_slots),
   home_laptop (the film the home laptop plays when portfolio.json "home_laptop" lists the project: its
   "home_laptop_clip" - played there even when "skip" keeps it off the project page, VYRN's film - else laptop),
   alts (portfolio.json "alt" overrides by role)
@@ -89,6 +91,17 @@ def _clip(mp, name, alts):
     return dict(m, alt=alts[name]) if m and alts.get(name) else m
 
 
+def _tile_clips(mp, e, skip, alts):
+    """The clips a home hero tile may play, preferred first: portfolio.json "tile_clip" (a clip name or a list of them;
+    owner, 17 Oct: the six landing pages' ['tile', 'hero'] = the 16:9 desktop loop, then the phone scroll), else - or
+    when none of them is prepared - the hero.mp4 phone scroll. 'skip' keeps a skipped 'hero' out of either."""
+    names = e.get('tile_clip') or []
+    names = [names] if isinstance(names, str) else list(names)
+    clips = [m for m in (_clip(mp, n, alts) for n in names if not (n == 'hero' and 'hero' in skip)) if m]
+    hero = None if 'hero' in skip else _video(mp, 'hero')
+    return clips or ([hero] if hero else [])
+
+
 def _poster(clip, name, title, alts):
     """The poster of a named clip as a still item (the project's profile image where a still is shown: the Client
     Stories card), alt text from portfolio.json "alt" ("<name>-poster"), else the clip's own."""
@@ -116,6 +129,7 @@ def _build(e, mp):
     items = _items(mp, title, skip, alts)
     stills = [it for it in items if it['type'] == 'image']
     laptop = None if 'laptop' in skip else _video(mp, 'laptop')
+    tile_clips = _tile_clips(mp, e, skip, alts)
     if not stills:
         return None
     return {
@@ -141,7 +155,7 @@ def _build(e, mp):
         'card_clip': _clip(mp, e.get('card_clip'), alts),
         # its poster = the profile image wherever a still stands for the project (owner, 15 Oct: Aivinci's review card)
         'card_poster': _poster(_clip(mp, e.get('card_clip'), alts), e.get('card_clip'), title, alts),
-        'tile_clip': _clip(mp, e.get('tile_clip'), alts) or (None if 'hero' in skip else _video(mp, 'hero')),
+        'tile_clip': (tile_clips or [None])[0], 'tile_clips': tile_clips,
         # the home laptop's film ("The Idea", portfolio.json home_laptop): portfolio.json "home_laptop_clip" names a
         # recording the home laptop plays even when "skip" keeps it off the project page (owner, 15 Oct: VYRN's film
         # stays on the home laptop, its project page shows clean stills only); else the page's laptop clip

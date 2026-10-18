@@ -13112,6 +13112,3606 @@
     "site_is": "An editorial fashion storefront ('Editorial fashion storefront', README) for VYRN, a label of 'Modern essentials'. The home page runs a sequence of animated editorial sections: an opening logo sequence, the hero, categories, VYRN Studio, an editorial statement, a collection carousel, the Drop 07 product grid and a 'future essentials' campaign. The site also has a filterable collection page, product pages with size selection, a bag saved in a database, a journal, about and information pages, and a checkout. Payments are switched off. The site's terms call it 'a private preview of the VYRN storefront and creative direction', and the README says it is 'a private creative and shopping-flow preview, not an operational live merchant.' It is a Vinext/Cloudflare Worker app with a D1 database and is not hosted anywhere yet.",
     "tagline_verbatim": "Modern essentials. Independent expression."
    }
+  },
+  {
+   "slug": "emberpost",
+   "info": {
+    "name": "Emberpost",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/emberpost/",
+    "permission": "yes",
+    "laptop_poster": "1.0",
+    "hero_poster": "1.0",
+    "tile_poster": "0.5"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/laptop-640.mp4",
+       "width": 640,
+       "height": 400,
+       "bytes": 594269
+      },
+      {
+       "file": "assets/media/emberpost/laptop-1280.mp4",
+       "width": 1280,
+       "height": 800,
+       "bytes": 2582103
+      },
+      {
+       "file": "assets/media/emberpost/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 2522197
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/emberpost/laptop-640.webp",
+       "width": 640,
+       "height": 400
+      },
+      {
+       "file": "assets/media/emberpost/laptop-1280.webp",
+       "width": 1280,
+       "height": 800
+      },
+      {
+       "file": "assets/media/emberpost/laptop-1920.webp",
+       "width": 1920,
+       "height": 1200
+      }
+     ],
+     "duration": 16.0,
+     "fps": 30.0,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1200,
+      "codec": "h264",
+      "file": "emberpost/laptop.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 16.0
+     },
+     "alt": "Desktop scroll (1440 x 900 CSS px, rendered 1920 x 1200) from 0 to 4515 px, 16 s. It holds 1.5 s on the hero in its default state (Sofia Reyes and Theo Lindqvist notification cards, the portrait tiles floating gently), then the app window rises through the frame; 'Sorted by who, not by when.' with the classic 'All mail' list fills the screen at about 5.3 s, 'Four small tools, one calm inbox.' and the Screener at about 8-8.5 s, Lanes and Nudges at about 10.5 s and the dark Keyboard card at about 11.8 s. From about 12.1 s the people-wall portraits drop in on their strings, from the centre outwards, while the columns drift at different speeds; the clip ends with a 1.6 s hold on the complete people wall ('Everyone you write to, in one calm place.').",
+     "frame": "video"
+    },
+    "hero": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/hero-480.mp4",
+       "width": 480,
+       "height": 600,
+       "bytes": 344179
+      },
+      {
+       "file": "assets/media/emberpost/hero-640.mp4",
+       "width": 640,
+       "height": 800,
+       "bytes": 539343
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/emberpost/hero-480.webp",
+       "width": 480,
+       "height": 600
+      },
+      {
+       "file": "assets/media/emberpost/hero-640.webp",
+       "width": 640,
+       "height": 800
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 28,
+     "source": {
+      "width": 780,
+      "height": 1688,
+      "codec": "h264",
+      "file": "emberpost/hero.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "Phone loop (390 x 844 CSS px, rendered 780 x 1688), 7 s. It holds the phone hero for 2.5 s (badge, headline, sub-line, 'Join the waitlist', Theo Lindqvist's notification card and the top of the inbox with its avatar row). A 2 s glide (0 to 1288 px) passes the inbox thread and reply box and stops on the second section: '01 — BY PERSON', 'Sorted by who, not by when.', the lead, the 'Classic inbox' / 'Emberpost' switch and the top six rows of the 'All mail' list. It holds about 2 s, then the last 0.5 s crossfades back into the first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 119596
+      },
+      {
+       "file": "assets/media/emberpost/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 215783
+      },
+      {
+       "file": "assets/media/emberpost/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 758635
+      },
+      {
+       "file": "assets/media/emberpost/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 1460639
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/emberpost/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/emberpost/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/emberpost/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/emberpost/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "emberpost/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "emberpost/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "16:9 loop for the home gallery tile (1600 x 900 CSS px viewport, rendered 1920 x 1080), 7 s. It holds the desktop hero for 2.4 s in its default state: 'Talk [envelope tile] to people, not to piles of mail.', the sub-line, 'Join the waitlist', the two floating portrait tiles and the top of the sample inbox with the Sofia Reyes and Theo Lindqvist notification cards. A 2.3 s glide (0 to 1259 px) lifts the inbox window up through the frame; on the way the page's own sample feed swaps Sofia's card for Amara Osei's ('Holding 27 and 28 March…'). It then holds about 1.8 s on the second section: '01 — BY PERSON', 'Sorted by who, not by when.', the lead, the 'Classic inbox' / 'Emberpost' switch and the complete eight-row 'All mail' list. The last 0.5 s crossfades back into the clip's first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 17292,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 25612
+      },
+      {
+       "file": "assets/media/emberpost/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 65330
+      },
+      {
+       "file": "assets/media/emberpost/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 75462
+      },
+      {
+       "file": "assets/media/emberpost/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 105320
+      },
+      {
+       "file": "assets/media/emberpost/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 149092
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "emberpost/gallery-01.png"
+     },
+     "alt": "Emberpost hero at 1440 px. A frosted, double-ringed floating nav holds the lowercase 'emberpost' wordmark with a small violet spark, 'Manifesto', 'Workflows' and a black 'Join the waitlist' pill with a bolt. Under the badge 'Now inviting small teams' the headline reads 'Talk [violet round tile with a white envelope] to people, / not to piles of mail.', then 'Emberpost groups every email by the person behind it, so you can catch up on a relationship in seconds and reply like you’re in the same room.' and a violet 'Join the waitlist' pill. Two tilted portrait tiles (Marcus Bell left, Amara Osei right) hang on thin curved lines that run down to a violet app window: the sample inbox with Teammates (Maya Chen), People (Sofia Reyes 2, Marcus Bell selected, Amara Osei, Theo Lindqvist 3) and Notifications in the sidebar, a 'Sample feed on' pill with a pause button in the window bar, and the open thread 'Draft budget for the spring launch' (5 messages · 14 Mar 2026, 09:40, '3 older messages, show all', messages from You and Marcus Bell). Two notification cards float over the window edges: Sofia Reyes 'Could we move Thursday’s review to the …' (10:14 PM, +2) and Theo Lindqvist 'Sent the revised contract, two small cha…' (11:05 PM, +3). Faint vertical grid lines run down the grey background.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 12072,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 18170
+      },
+      {
+       "file": "assets/media/emberpost/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 49292
+      },
+      {
+       "file": "assets/media/emberpost/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 57444
+      },
+      {
+       "file": "assets/media/emberpost/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 81988
+      },
+      {
+       "file": "assets/media/emberpost/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 118712
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "emberpost/gallery-02.png"
+     },
+     "alt": "The hero's sample inbox, scrolled so the whole app window shows (the CTA sits just under the nav). Sidebar: Teammates (Maya Chen; the next two rows are under a card, with Kofi Mensah's unread badge beside it), People (Sofia Reyes 2, Marcus Bell selected, Amara Osei 1, Theo Lindqvist 3), Notifications (Billing, Calendar, Status alerts, Release notes). Thread 'Draft budget for the spring launch': You, 12 Mar, 18:22 'Love that. Marcus, could you fold Amara’s quote in and send a clean draft?'; Marcus Bell, 14 Mar, 09:40 'Morning Ines, the draft budget is attached with Amara’s quote folded … and the pop-up has a small buffer for the venue. Could you sign it off by Tuesday so Rosa can hold the space?'; a 'Reply to Marcus…' box with 'Draft a reply' and 'Send Ctrl ↵'; the hint line 'Click inside the window to use the keyboard' with J K move, E done, R reply, Ctrl ↵ send. The left card now shows the sample feed's first arrival, Amara Osei 'Holding 27 and 28 March. I’ll send the sh…' (Just now, +1); Theo Lindqvist's card (11:05 PM, +3) covers the end of the first line of Marcus's message. The bottoms of the two portrait tiles and one descender of the headline show in the thin strip above the floating nav.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 10214,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 15328
+      },
+      {
+       "file": "assets/media/emberpost/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 40236
+      },
+      {
+       "file": "assets/media/emberpost/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 47906
+      },
+      {
+       "file": "assets/media/emberpost/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 65548
+      },
+      {
+       "file": "assets/media/emberpost/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 93804
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "emberpost/gallery-03.png"
+     },
+     "alt": "Second section: '01 — BY PERSON', 'Sorted by who, not by when.' and 'A classic inbox sorts by arrival time, so your work with Marcus gets shuffled in among everybody else’s subject lines.' with a 'Classic inbox' / 'Emberpost' switch (Classic inbox on). An 'All mail' card ('Arrival order · Marcus shows up 3 times') lists eight rows in time order: Marcus Bell – Draft budget for the spring launch 09:40; Sofia Reyes – Thursday packaging review 08:52; Theo Lindqvist – Revised supplier contract 08:15; Marcus Bell – Pop-up venue shortlist Fri; Sofia Reyes – Second round of label samples Fri; Theo Lindqvist – Delivery window for April Thu; Marcus Bell – Launch timeline, version 3 Wed; Sofia Reyes – Label colours: final pick Tue. Marcus's three rows carry a violet bar and a violet name.",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11568,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 17754
+      },
+      {
+       "file": "assets/media/emberpost/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 44804
+      },
+      {
+       "file": "assets/media/emberpost/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 51026
+      },
+      {
+       "file": "assets/media/emberpost/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 71414
+      },
+      {
+       "file": "assets/media/emberpost/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 100454
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "emberpost/gallery-04.png"
+     },
+     "alt": "The same section after switching it to 'Emberpost' (the only control clicked during the capture). The lead now reads 'Emberpost pulls every thread from one person into a single card, so you reply to people rather than to subject lines.' Three person cards: Marcus Bell, Launch producer, 3 (Draft budget for the spring launch 09:40, Pop-up venue shortlist Fri, Launch timeline, version 3 Wed); Sofia Reyes, Packaging designer, 3 (Thursday packaging review 08:52, Second round of label samples Fri, Label colours: final pick Tue); Theo Lindqvist, Supplier accounts, 2 (Revised supplier contract 08:15, Delivery window for April Thu). Below: '8 subject lines → 3 people. Same mail, much less hunting.'",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11998,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 17774
+      },
+      {
+       "file": "assets/media/emberpost/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 48000
+      },
+      {
+       "file": "assets/media/emberpost/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 55744
+      },
+      {
+       "file": "assets/media/emberpost/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 79850
+      },
+      {
+       "file": "assets/media/emberpost/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 113786
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "emberpost/gallery-05.png"
+     },
+     "alt": "Tools section: '… one calm inbox.' (the first line 'Four small tools,' is behind the nav) and 'None of them shout. Each one takes away a small decision you would otherwise make dozens of times a day.' The full Screener card: 'SCREENER', 'New senders knock before they come in.', 'The first email from anyone new waits in the Screener. Let a sender in once and they reach you from then on; turn them away and they never ping you again.', 'Try it: let someone in, turn someone away, then undo.' 'At the door 4': Nora Fitzgerald (nora@fitzgerald-law.example, Trademark search for the spring range), Growth Weekly (news@growthweekly.example, Nine tricks to triple your open rate), Elin Sandberg (elin@slowcraft.example, Guest spot on Slow Craft Radio?) and Flash Deals (offers@flashdeals.example, Final hours: half price on everything), each with a violet 'Let in' and an outlined 'Turn away' button; below, the empty buckets 'Let in – Their mail reaches you directly – 0 – No one so far' and 'Turned away – Silenced for good – 0 – No one so far'.",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-06-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 15532,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-06-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 23588
+      },
+      {
+       "file": "assets/media/emberpost/gallery-06-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 58896
+      },
+      {
+       "file": "assets/media/emberpost/gallery-06-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 67068
+      },
+      {
+       "file": "assets/media/emberpost/gallery-06-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 97594
+      },
+      {
+       "file": "assets/media/emberpost/gallery-06-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 135030
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "emberpost/gallery-06.png"
+     },
+     "alt": "The people wall (the site's signature animation): a white rounded panel with ten columns of portrait cards hanging on dashed strings from its top edge at different drops (a blank, faded 'ghost' card tops each column), around the badge 'The people behind your inbox', 'Everyone you write to, / in one calm place.' (second line grey), 'Clients, suppliers, teammates and the odd new face. Each of them gets a card, and every thread they have ever sent you lives inside it.' and a black 'Join the waitlist →' button. The portraits are the sample contacts' stock photos (Unsplash).",
+     "frame": "desktop"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-07-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 22106,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-07-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 33234
+      },
+      {
+       "file": "assets/media/emberpost/gallery-07-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 79534
+      },
+      {
+       "file": "assets/media/emberpost/gallery-07-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 89736
+      },
+      {
+       "file": "assets/media/emberpost/gallery-07-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 116794
+      },
+      {
+       "file": "assets/media/emberpost/gallery-07-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 161272
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "emberpost/gallery-07.png"
+     },
+     "alt": "The Manifesto after the page re-tints to near-black: '04 — MANIFESTO' and 'em·ber·post  mail that stays warm between replies'. The scroll-filled statement 'An ember is the part of a fire that keeps glowing after the flames die down, ready to catch again. Good conversations work the same way. They pause between replies without going cold. Emberpost keeps the people you talk to warm in one place, and lets everything else cool off quietly.' is caught mid-fill: the first two lines white, 'Good conversations work the same way.' violet, the next lines grey and the last line and a half still dark (they light up as the page scrolls on). Below, three principles over thin rules: 01 People first ('Every message is filed under the human who sent it, so context is one glance away instead of one search away.'), 02 Quiet by default ('Receipts and alerts wait in their own lane. Nothing asks for your attention unless a person is waiting.'), 03 Private by design ('Your mail is never used to train models or to target ads, and you can export all of it whenever you like.'). The nav is in its dark version with a white 'Join the waitlist'.",
+     "frame": "desktop"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-08-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 50214,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-08-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 71434
+      },
+      {
+       "file": "assets/media/emberpost/gallery-08-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 133182
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "emberpost/gallery-08.png"
+     },
+     "alt": "Phone hero at 390 px: the 'emberpost' wordmark, a black 'Waitlist' pill and a menu button; the two portrait tiles in the top corners; the badge 'Now inviting small teams'; the headline 'Talk [envelope tile] to people, / not to piles of mail.'; the sub-line over four lines; the violet 'Join the waitlist' pill. Below, one notification card (Amara Osei, 'Holding 27 and 28 March. I’ll send …', Just now, +1, the sample feed's first arrival) above the phone layout of the inbox: a violet window with a row of round avatars (Maya, Oliver, Kofi 1, Sofia 2, Marcus selected, a cut-off 'Ama…' at the edge of the scrolling row) and the 'Marcus Bell – Draft budget for the spring launch' thread header (5 messages · 14 Mar 2026, 09:40).",
+     "frame": "phone"
+    },
+    "gallery-09": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/emberpost/gallery-09-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 38368,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/emberpost/gallery-09-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 55004
+      },
+      {
+       "file": "assets/media/emberpost/gallery-09-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 105898
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "emberpost/gallery-09.png"
+     },
+     "alt": "Phone people wall: the white panel with four columns of hanging portrait cards (six photos and the faded ghost cards at the top), 'The people behind your inbox', 'Everyone you write to, / in one calm place.', 'Clients, suppliers, teammates and the odd new face. Each of them gets a card, and every thread they have ever sent you lives inside it.' and a black 'Join the waitlist →' button.",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "Emberpost",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/emberpost/",
+    "group": "concept",
+    "site_is": "A concept landing page for Emberpost, an invented people-first email app that files every email under the person who sent it. Repo README: 'Emberpost — people-first email', with the signature interaction 'Fully clickable inbox: switch people, reply, mark done/undo, keyboard shortcuts' and the signature animation 'Hanging people wall: drifting portrait columns that tilt toward the pointer'. The page title is 'Emberpost — email sorted by the people behind it', the page description says 'Emberpost groups every email by the person who sent it. A concept landing page with a working sample inbox you can click through.', and the footer line under the wordmark is 'Email organised around the people behind it.' The site states its demo nature in its own words: 'Emberpost is a concept product for a design portfolio. People and messages are sample data.' (footer) and 'This is a demo form. Nothing you type is sent or saved.' (waitlist). It is one of six pages in the public repo gireeshkumarreddy/landing-concepts (README: 'Six independent, fully interactive landing pages'), built with React, GSAP ScrollTrigger, Motion and Lenis smooth scrolling. The demo is set at Halden Supply, a fictional outdoor-goods brand preparing a spring launch (data.js).",
+    "tagline_verbatim": "Email organised around the people behind it."
+   }
+  },
+  {
+   "slug": "ines-morrow",
+   "info": {
+    "name": "Ines Morrow",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/creative-portfolio/",
+    "permission": "yes",
+    "laptop_poster": "1.0",
+    "hero_poster": "0.5",
+    "tile_poster": "0.5"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/laptop-640.mp4",
+       "width": 640,
+       "height": 400,
+       "bytes": 471352
+      },
+      {
+       "file": "assets/media/ines-morrow/laptop-1280.mp4",
+       "width": 1280,
+       "height": 800,
+       "bytes": 1439031
+      },
+      {
+       "file": "assets/media/ines-morrow/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 2010553
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/ines-morrow/laptop-640.webp",
+       "width": 640,
+       "height": 400
+      },
+      {
+       "file": "assets/media/ines-morrow/laptop-1280.webp",
+       "width": 1280,
+       "height": 800
+      },
+      {
+       "file": "assets/media/ines-morrow/laptop-1920.webp",
+       "width": 1920,
+       "height": 1200
+      }
+     ],
+     "duration": 14.3,
+     "fps": 30.0,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1200,
+      "codec": "h264",
+      "file": "ines-morrow/laptop.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 14.3
+     },
+     "alt": "Desktop scroll (1440 x 900 CSS px, rendered 1920 x 1200), 14.3 s. It is made of two takes joined by a 0.5 s crossfade at 5.5-6.0 s. The join skips the work grid, whose film titles are invisible on the live site (see issues). Part 1, 0-864 px: a 1.5 s hold on the hero while the reel timeline plays (the monitor shows Neon Hours, then Afterglow). The page glides down from 1.5 to 4.5 s and re-tints from white to near-black at about 3 s as the Reel arrives. It then holds on the scale strip: 'FRAMES FROM THE REEL', the stills swelling around the Neon Hours tower-block frame, the caption '01 Neon Hours 00:00:09:12' and the filter chips. Part 2, 3520-4990 px: the 'On editing' statement 'Editing is mostly leaving things out. …' is already partly filled and fills word by word as the scroll resumes at about 6.5 s. At about 8.4 s the page re-tints to paper grey for Process, and the nav highlight moves from REEL to PROCESS at about 8.7 s. The sticky edit timeline opens on 'NEON_HOURS_v01 · PASS 1/4 · LOG & SYNC' (8 clips, 0 transitions). It re-lays itself as each step enters its band: PASS 2/4 · STORY CUT at about 10.2 s, PASS 3/4 · PICTURE LOCK at about 11.0 s and PASS 4/4 · FINISH at about 11.8 s ('NEON_HOURS_v04', 10 clips, 2 transitions, 'Graded · Rec.709', 'Final mix · -14 LUFS'). The clip ends with a 2.0 s hold (12.3-14.3 s) on steps 02 Story cut, 03 Picture lock and 04 Finish, with Finish active. The last lines of step 01 show faintly through the frosted white nav, as they do on the live page.",
+     "frame": "video"
+    },
+    "hero": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/hero-480.mp4",
+       "width": 480,
+       "height": 600,
+       "bytes": 335142
+      },
+      {
+       "file": "assets/media/ines-morrow/hero-640.mp4",
+       "width": 640,
+       "height": 800,
+       "bytes": 530361
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/ines-morrow/hero-480.webp",
+       "width": 480,
+       "height": 600
+      },
+      {
+       "file": "assets/media/ines-morrow/hero-640.webp",
+       "width": 640,
+       "height": 800
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 28,
+     "source": {
+      "width": 780,
+      "height": 1688,
+      "codec": "h264",
+      "file": "ines-morrow/hero.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "Phone loop (390 x 844 CSS px, rendered 780 x 1688), 7 s. It holds the phone hero for about 2.5 s: the note, badge, headline, CTA and the playing reel monitor. The monitor dissolves from Afterglow ('02 AFTERGLOW', the car, 00:00:20) to Grandfather’s Hands (the older man adjusting his glasses) at about 0.8 s. A 2 s glide (0 to 643 px, 2.5-4.5 s) re-tints the page to near-black. The clip then holds about 2 s on the start of the Reel. At the top is the hero's last row: the collaborator chips The Weekend Review and OSLO NORTH, and 'FICTIONAL COLLABORATORS FOR THIS CONCEPT' with its chevron. The hero's transport row shows faintly through the frosted nav, which is how the live page looks at this position. Below are 'FRAMES FROM THE REEL' and the strip centred on the Neon Hours tower-block frame between the Afterglow car and Grandfather’s Hands, with the caption '01 Neon Hours 00:00:09:12'. The bottom third is empty near-black, because the Reel heading is still below the fold. Ocean Avenue does not appear. The strip was centred by one sideways wheel gesture before the take. The last 0.5 s crossfades back into the first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 120197
+      },
+      {
+       "file": "assets/media/ines-morrow/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 183351
+      },
+      {
+       "file": "assets/media/ines-morrow/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 537514
+      },
+      {
+       "file": "assets/media/ines-morrow/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 1335002
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/ines-morrow/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/ines-morrow/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/ines-morrow/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/ines-morrow/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "ines-morrow/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "ines-morrow/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "16:9 loop for the home gallery tile (1600 x 900 CSS px viewport, rendered 1920 x 1080), 7 s. It holds the desktop hero for about 2.4 s: the headline, the blue CTA, the reel timeline playing (the monitor goes from Neon Hours to Afterglow at about 0.8 s) and the six collaborator names. A glide of about 2.2 s (0 to 908 px, 2.4-4.6 s) re-tints the page from white to near-black. The clip then holds about 1.9 s on the second section, the Reel's scale strip: the nav as a full-width dark bar with REEL active, 'FRAMES FROM THE REEL' and 'SCROLL OR DRAG', and the stills swelling around the Neon Hours tower-block frame (caption '01 Neon Hours 00:00:09:12'). The frame sits between the Afterglow car under its red 'DINNER' sign and Grandfather’s Hands, with the aerial Coastline sea at the left edge and small frames shrinking to the right. The filter chips 'ALL 6 · COMMERCIAL 2 · MUSIC VIDEO 2 · DOCUMENTARY 1 · SOCIAL 1' sit at the bottom right. Nothing of the hero peeks above or shows through the nav during the hold. The strip was centred on that frame by one sideways wheel gesture before the take (the site's own 'scroll or drag' input). The last 0.5 s crossfades into the clip's first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11116,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 16338
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 42432
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 48046
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 68580
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 97240
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "ines-morrow/gallery-01.png"
+     },
+     "alt": "Ines Morrow hero at 1440 px on white. Nav: 'INES MORROW' on the left, INDEX (active pill), PROCESS, REEL, STUDIO, CONTACT in the centre and 'START A PROJECT' on the right. The handwritten note 'Cuts that keep people watching' with a drawn squiggle arrow, the badge 'EDIT · GRADE · SOUND' with a film icon, and the three-line headline 'I’m [portrait tile] the editor who turns / hours of [scissors tile] footage into / the two minutes that matter', then a blue 'START A PROJECT' button with a calendar icon. Below, the scrubbable reel timeline: a preview monitor riding the red playhead ('01 NEON HOURS', '● TK_A003_C021', burnt-in timecode 00:00:05:19, a rain-soaked Tokyo street at night), a ruler from 00:00:10:00 to 00:00:50:00 over six coloured segments (one per film), and the transport row 'II 00:00:05:19 ● NEON HOURS · COMMERCIAL' with 'FR 0145 / 1500 · 25 FPS'. At the bottom, the collaborator names OSLO NORTH, Paper Kite Films, HALDEN & CO, Studio Fjeld, lowtide and The Weekend Review, each set in its own type style, and 'FICTIONAL COLLABORATORS FOR THIS CONCEPT' with a round chevron button. The reel plays by itself, so the timecode is simply the moment of capture.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 10574,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 16720
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 48168
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 57052
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 85706
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 126368
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "ines-morrow/gallery-02.png"
+     },
+     "alt": "The scale strip at the start of the Reel (the site's signature animation) after the page has re-tinted to near-black (scroll 864 px). Before the shot, one sideways wheel gesture on the strip (the site's own 'scroll or drag' input) brought the third of its eleven frames to the centre. 'FRAMES FROM THE REEL' on the left and 'SCROLL OR DRAG' on the right above the row of stills that swell towards the centre. The large centre frame is a Neon Hours still: a tower block at night with pink- and blue-lit balconies under the moon. It is flanked by Afterglow (a wedge-shaped sports car with glowing headlights under a red 'DINNER' neon sign) and Grandfather’s Hands (an older man adjusting his glasses). The aerial turquoise sea of Coastline sits at the left edge. On the right, smaller frames shrink to slivers: the Backstreet Bloom alley, the Tokyo street, the Ocean Avenue street (too small to read any sign), a black-and-white portrait of a young man, a wave, the car and an alley. Caption '01 Neon Hours 00:00:09:12'. Bottom right: the film filters 'ALL 6' (selected), 'COMMERCIAL 2', 'MUSIC VIDEO 2', 'DOCUMENTARY 1' and 'SOCIAL 1'. The nav is a full-width dark bar with REEL active. Nothing of the hero shows above or behind it.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 13658,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 19902
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 43792
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 47908
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 62030
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 82468
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "ines-morrow/gallery-03.png"
+     },
+     "alt": "The 'On editing' statement on the near-black page (scroll 3650 px). The nav is dark with REEL still active, because the statement has no nav entry. The eyebrow 'ON EDITING' sits above one large sentence: 'Editing is mostly leaving things out. I keep cutting until every frame left on the timeline has earned its place, and the moments you never see are the reason the rest of the film lands.' It fills word by word as the page scrolls. At this position everything up to 'the reason the' is white, and 'rest of the film lands.' still fades from light to dark grey. Signature line '—— INES MORROW, COPENHAGEN'. The lower part of the screen is empty near-black, and nothing of the next section shows. This replaces the earlier work-grid still, whose film titles were invisible on the live site (see issues).",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 22224,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 33736
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 91242
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 108626
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 160828
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 228226
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "ines-morrow/gallery-04.png"
+     },
+     "alt": "The case-study modal for Neon Hours, opened by clicking its card (the only control clicked for the gallery) and scrolled inside to its colour-grade comparison. Header 'Project 01 / 06' with previous, next and close buttons. The before/after grade slider rests at its default middle position: the left half is labelled 'LOG · S-LOG3' (a flat, washed-out version of the Tokyo street) and the right half 'GRADED · REC.709' (deep blues and magenta), split by a white line with a round ‹ › handle. Under it 'BEFORE / AFTER GRADE' and 'Drag the handle, or focus it and use the arrow keys.', then the cards '‹ PREVIOUS Ocean Avenue' and 'NEXT › Afterglow'. The dimmed work grid shows around the modal.",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 12064,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 18518
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 54166
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 64744
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 93728
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 136682
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "ines-morrow/gallery-05.png"
+     },
+     "alt": "Process on the paper-grey page (scroll 4493 px), with PROCESS active in the nav. '02 PROCESS', 'One timeline, four honest passes.' (the second half in grey) and 'Each film goes through the same four stages, and you get to see the sequence after every one. Choose a stage, or keep scrolling, and watch the timeline tighten from first sync to final mix.' The steps list: 01 Log & sync (Days 1-2, 'Every frame, labelled.' and its text; active), 02 Story cut (Days 3-6, 'Structure before style.'), 03 Picture lock (Days 7-9, 'Nothing moves after this.', cut off at the bottom). On the right is the sticky edit timeline '● NEON_HOURS_v01 · PASS 1/4 · LOG & SYNC · 03:16': a ruler from 00:00 to 02:40 with a red playhead at 01:20, V2 (CUTAWAY_12, CUTAWAY_19) and V1 (SC03_TK2, SC05_TK1, SC07_TK4) clips with thumbnail filmstrips, A1 (DIAL_03, DIAL_05), A2 (SCORE_v2), a footer '8 clips · 0 transitions · Camera log · Production sound', and four progress dashes with the first one filled.",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-06-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 9308,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-06-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 14754
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-06-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 45616
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-06-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 53880
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-06-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 77220
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-06-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 116728
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "ines-morrow/gallery-06.png"
+     },
+     "alt": "Services on white (scroll 5850 px). '03 SERVICES', 'Ways we can work together.' and 'Laid out like an EDL, because old habits stick. The rates are examples for this concept; a real project gets a written quote after a short call.' A table with the columns # / SERVICE / TURNAROUND / FROM. Row 001 Campaign films (3–4 weeks, €3,200) is open by default: 'Hero films and every cut-down that follows, from the first assembly to the final export. I can join early to help plan coverage, or start the day the drives arrive.', DELIVERABLES (ProRes 4444 master plus review copies; 20, 10 and 6-second versions; Separate dialogue, music and effects stems), TYPICAL RANGE €3,200 – €8,000, TURNAROUND 3–4 weeks, and a blue 'ENQUIRE ABOUT CAMPAIGN FILMS →'. Then four closed rows, each with a + button: 002 Music videos 8–12 days €1,900; 003 Documentary 5–10 weeks €7,000; 004 Social versions 2–4 days €520; 005 Colour & finishing 2–4 days €780 / day. The nav still highlights PROCESS, because Services has no nav entry.",
+     "frame": "desktop"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-07-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 12620,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-07-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 18946
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-07-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 55028
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-07-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 66906
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-07-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 96222
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-07-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 143466
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "ines-morrow/gallery-07.png"
+     },
+     "alt": "Studio on white (scroll 6900 px), with STUDIO active in the nav. A black-and-white portrait of a woman, the stand-in photo for Ines, with 'IM_STUDIO_02' and '55.68° N · 12.57° E' burnt in and the caption 'In the studio, Copenhagen. Hover to see it in colour.' Beside it: '04 STUDIO', 'I edit for rhythm first. The rest follows.', the two bio paragraphs ('I’m Ines, a film and commercial editor working from a small studio in Copenhagen. Before cutting my own projects I spent years as an assistant editor, …' and 'Now I edit campaigns, music videos and the occasional documentary for directors and production companies, mostly remotely and across time zones. …'), TOOLKIT (DaVinci Resolve Studio – Edit, grade, Fairlight; Premiere Pro – Agency handovers; After Effects – Titles and clean-up; Frame.io – Reviews and approvals) and PRACTICALITIES (Studio – Copenhagen, Denmark; Works – Remote, worldwide; Languages – English, Danish; Time zone – CET (UTC+1 / +2)).",
+     "frame": "desktop"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-08-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 56988,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-08-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 80180
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-08-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 156664
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "ines-morrow/gallery-08.png"
+     },
+     "alt": "Phone hero at 390 px: 'INES MORROW', a 'START A PROJECT' pill and a menu button; the handwritten note 'Cuts that keep people watching', the 'EDIT · GRADE · SOUND' badge, the headline over three lines with the portrait and scissors tiles, and the blue 'START A PROJECT' button. Below, the full-width reel monitor ('01 NEON HOURS', '● TK_A003_C021', timecode 00:00:05:24, the Tokyo street), the timeline ruler (00:00:20:00, 00:00:40:00) with the red playhead over the six coloured segments, the transport row 'II 00:00:05:24 ● NEON HOURS' with 'FR 0150', the sliding marquee of collaborator names (Paper Kite Films, HALDEN & CO and Studio Fjeld, cut by the screen edges as they move) and 'FICTIONAL COLLABORATORS FOR THIS CONCEPT'.",
+     "frame": "phone"
+    },
+    "gallery-09": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/ines-morrow/gallery-09-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 51652,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-09-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 74546
+      },
+      {
+       "file": "assets/media/ines-morrow/gallery-09-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 149552
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "ines-morrow/gallery-09.png"
+     },
+     "alt": "Phone Process (scroll 4249 px): '02 PROCESS', 'One timeline, four honest passes.', the lede, the edit-timeline card ('● NEON_HOURS_v01', 03:16; V2 CUTAWAY_12 and CUTAWAY_19, V1 SC03_TK2, SC05_TK1 and SC07_TK4, A1 DIAL_03 and DIAL_05, A2 SCORE_v2; '8 clips 0 transitions Camera log Production sound'; the pass label is left out on phones), the four progress dashes, and step 01 'Log & sync', Days 1-2, 'Every frame, labelled.' with its text. The red playhead marker sits over the '01:20' ruler label.",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "Ines Morrow",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/creative-portfolio/",
+    "group": "concept",
+    "site_is": "A portfolio concept for Ines Morrow, a fictional film and commercial editor in Copenhagen. Repo README: 'Ines Morrow — film editor (fictional)', with the signature interaction 'Scrubbable hero timeline, case studies with before/after colour-grade slider' and the signature animation 'Scale strip: film stills swell as they pass the centre; scroll or drag'. The page title is 'Ines Morrow — Film editor, Copenhagen (concept)' and the page description says 'Portfolio concept for Ines Morrow, a fictional film and commercial editor in Copenhagen. Scrub the reel timeline, compare grades and start a project.' The Studio section introduces her as 'I’m Ines, a film and commercial editor working from a small studio in Copenhagen.' The site states its demo nature in its own words: 'Ines Morrow is a fictional editor created for this portfolio concept. Concept project for a design portfolio.' (footer), 'FICTIONAL COLLABORATORS FOR THIS CONCEPT' (hero) and 'Demo only: nothing is sent or saved.' (contact form). It is one of six pages in the public repo gireeshkumarreddy/landing-concepts (README: 'Six independent, fully interactive landing pages'), built with React, GSAP ScrollTrigger, Motion and Lenis smooth scrolling. It is aimed at production companies and brands hiring a freelance editor: six case-study films, a four-stage process, priced services and a project enquiry form.",
+    "tagline_verbatim": "Cuts that keep people watching"
+   }
+  },
+  {
+   "slug": "maren-holt",
+   "info": {
+    "name": "Maren Holt",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/maren-holt/",
+    "permission": "yes",
+    "laptop_poster": "1.0",
+    "hero_poster": "1.0",
+    "tile_poster": "0.5"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/laptop-640.mp4",
+       "width": 640,
+       "height": 400,
+       "bytes": 1011190
+      },
+      {
+       "file": "assets/media/maren-holt/laptop-1280.mp4",
+       "width": 1280,
+       "height": 800,
+       "bytes": 4197435
+      },
+      {
+       "file": "assets/media/maren-holt/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 12448043
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/maren-holt/laptop-640.webp",
+       "width": 640,
+       "height": 400
+      },
+      {
+       "file": "assets/media/maren-holt/laptop-1280.webp",
+       "width": 1280,
+       "height": 800
+      },
+      {
+       "file": "assets/media/maren-holt/laptop-1920.webp",
+       "width": 1920,
+       "height": 1200
+      }
+     ],
+     "duration": 16.0,
+     "fps": 30.0,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1200,
+      "codec": "h264",
+      "file": "maren-holt/laptop.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 16.0
+     },
+     "alt": "Desktop scroll (1440 x 900 CSS px, rendered 1920 x 1200) through the whole page, 0 to 8127 px, 16 s. It holds about 1.5 s on the finished hero (keycap headline, newsletter field, featured tray), then the essay ring turns into view and fills the screen at about 3.6 s (the cards keep drifting round the circle and speed up with the scroll), the essay list with its filters at about 5 s and the eight essay cards after it, Services with the open Manuscript assessment item at about 7.7 s; at about 8.4 s the page re-tints to near-black for 'Four things every strong draft gets right.' (about 9 s) and back to light for the Workshops ('Small rooms, real pages, practical change.', format chips, three workshops and the 'Request a workshop' form) at about 10.4 s. The About statement lights up word by word at about 12-12.3 s, the contact card ('Tell me about your draft.') passes at about 13 s and the clip ends with a 1.5 s hold on the footer: 'Notes for [white keycap] better books', the MH brand with 'Maren Holt is a fictional editor created for this portfolio concept. Essays are sample content.', the On this page / Elsewhere links and 'Concept project for a design portfolio. Photography: Unsplash. Type: Plus Jakarta Sans & Newsreader.'",
+     "frame": "video"
+    },
+    "hero": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/hero-480.mp4",
+       "width": 480,
+       "height": 600,
+       "bytes": 275391
+      },
+      {
+       "file": "assets/media/maren-holt/hero-640.mp4",
+       "width": 640,
+       "height": 800,
+       "bytes": 484799
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/maren-holt/hero-480.webp",
+       "width": 480,
+       "height": 600
+      },
+      {
+       "file": "assets/media/maren-holt/hero-640.webp",
+       "width": 640,
+       "height": 800
+      }
+     ],
+     "duration": 7.5,
+     "fps": 30.0,
+     "crf": 28,
+     "source": {
+      "width": 780,
+      "height": 1688,
+      "codec": "h264",
+      "file": "maren-holt/hero.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.5
+     },
+     "alt": "Phone loop (390 x 844 CSS px, rendered 780 x 1688), 7.5 s. It holds the phone hero for 2.6 s (headline over four lines with both keycaps, the blinking rest caret, the intro, the email field with its blinking '_' placeholder cursor and 'Get the notes', the top of the featured tray), glides 2.2 s (0 to 900 px) past the featured tray, and holds about 2.2 s on the second section: three cards of the essay ring drifting round over 'Short reads for the long work of a book.', 'Browse all essays' and the three facts. The last 0.5 s crossfades back into the first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 162413
+      },
+      {
+       "file": "assets/media/maren-holt/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 269200
+      },
+      {
+       "file": "assets/media/maren-holt/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 892485
+      },
+      {
+       "file": "assets/media/maren-holt/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 1860034
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/maren-holt/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/maren-holt/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/maren-holt/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/maren-holt/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 7.5,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "maren-holt/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "maren-holt/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.5
+     },
+     "alt": "16:9 loop for the home gallery tile (1600 x 900 CSS px viewport, rendered 1920 x 1080), 7.5 s. It holds the desktop hero for 2.6 s (the keycap headline with its blinking rest caret, the intro, the 'your@email' field and 'Get the notes', 'From the notebook' and the three featured cards), glides 2.2 s (0 to 1078 px) past the featured tray's titles, and holds about 2.2 s on the second section: the essay ring drifting slowly round over 'Short reads for the long work of a book.', 'Browse all essays' and the three facts. The last 0.5 s crossfades back into the clip's first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 12568,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 18978
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 51008
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 58982
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 85784
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 125464
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "maren-holt/gallery-01.png"
+     },
+     "alt": "Maren Holt hero at 1440 px, in its framed page: a light grey frame around the off-white page with thin vertical guide lines. The nav has the warm-grey 'MH' monogram and 'Maren Holt', a white pill with Essays, Services, Workshops, About and Contact, a search icon and 'Sign in'. Under the label 'Editing notes, every Sunday' (book glyph) the headline reads 'Turn your [white 3D keycap with a pen glyph] manuscript into / a book readers recommend [pink 3D keycap with a bookmark glyph]', with 'readers recommend' in a slate-to-violet-to-pink gradient. Below: 'I’m a developmental editor. I help first-time and returning authors shape stronger books — and I write down what I learn along the way.', an email field showing its 'your@email' placeholder and a dark 'Get the notes' button. At the bottom, 'From the notebook' with 'All essays →' and the featured tray: 'Three passes / a revision method' over a studio microphone photo, a row of worn cloth book spines and two figures silhouetted against a sunset over the sea.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 18028,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 26530
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 69128
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 80016
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 114480
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 165298
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "maren-holt/gallery-02.png"
+     },
+     "alt": "The second section, the essay ring (the site's signature animation): essay photo cards ride a large circle over the heading, tilted along it and largest at the top. The upright apex card is the sunset silhouette; to its left the book spines, the studio microphone, a black-and-white typewriter by a curtained window and a cut-off red leather-bound book; to its right an orange typewriter, a notebook with a coffee ring on a dark desk, a colour-sorted bookshelf and a cut-off dark card. In the centre: 'From the Sunday notes', 'Short reads for the / long work of a book.' ('long' in italic serif), 'Pick one from the ring — each essay takes about two minutes and fixes one thing.', a dark 'Browse all essays →' button and three facts: 'Eight essays – Sample writing for this concept', 'Four themes – From structure to the writing life', 'Two-minute reads – One idea you can use today'. 'Essays' is marked active in the nav.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 15076,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 23600
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 68154
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 77868
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 114696
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 165374
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "maren-holt/gallery-03.png"
+     },
+     "alt": "The essay list: label 'Essays', 'Notes on turning a draft into a book.', 'Practical pieces on structure, revision, publishing and the writing life. Every essay here is sample writing for this concept.', a 'Search essays /' button and the theme filters 'All 8' (selected), 'Structure 2', 'Revision 2', 'Publishing 2', 'Writing life 2'. The lead card pairs a tall microphone photo with 'Revision · 2 min read', 'Revision in three passes', the serif excerpt 'Trying to fix everything at once is why revision feels endless. Split the work into passes and each one becomes finite.' and 'Read ↗'; beside it the book-spines card 'Structure · 2 min read', 'Why your opening needs a question, not an answer', 'Openings that explain everything ask the reader to wait. Openings that raise a question give them a reason to keep going.' and 'Read ↗'. The tops of the next three photo cards (sunset, typewriter, notebook) show at the bottom; a ring card shows through the frosted nav as a soft dark blur at the top left.",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 14008,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 20018
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 51600
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 59926
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 85922
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 124520
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "maren-holt/gallery-04.png"
+     },
+     "alt": "The reader, opened by clicking the lead essay's title in the list (the only control clicked during the capture): a white drawer slides in from the right over the dimmed, blurred page. Its bar says 'Sample essay, written for this concept' with a round close button; then 'Revision · 2 min read · Sample', 'Revision in three passes', the italic standfirst 'Trying to fix everything at once is why revision feels endless. Split the work into passes and each one becomes finite.', the microphone photo with the caption 'Photograph via Unsplash.', and the first part of the essay: 'Pass one: the shape' – 'Read the whole draft without changing a sentence. List what happens in each chapter and mark the places your own attention drifted.' and 'This pass is about order, purpose and pace. Nothing else is allowed to distract you.'",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 10358,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 16402
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 43356
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 50048
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 70360
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 99022
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "maren-holt/gallery-05.png"
+     },
+     "alt": "Services: 'Services' (pen glyph), 'Editing that starts with the whole book.', 'I work on the big questions first — premise, structure, pace — so the sentence-level polish lands on pages that will stay.' and 'Services describe a fictional practice and are sample content.' On the right, a numbered accordion with its first item open (its default state): 01 'Manuscript assessment' – 'A clear read of where your draft stands.', WHAT’S INCLUDED (A full read of the manuscript; A written report on structure, character and pace; The three changes that would help most; A follow-up call to talk it through), SUITS ('Finished drafts, before you commit to a full edit.'), a black 'Ask about this →' button and 'Jumps to the contact form with this service chosen.'; then the closed items 02 'Developmental edit' – 'Deep work on the shape of the book.' and 03 'Book coaching' – 'Steady support while the book is being written.' with round + buttons.",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-06-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 9268,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-06-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 13978
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-06-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 36776
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-06-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 41076
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-06-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 56898
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-06-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 80656
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "maren-holt/gallery-06.png"
+     },
+     "alt": "'What I read for', after the whole page re-tints to near-black: a dark rounded panel with 'Four things every strong draft gets right.' and 'Whatever the genre, my first read checks the same four foundations. Press a key to see what each one needs.' Four white keycap-like flip cards, each with a small line drawing: 01 Premise (a bar over the words who / wants / but) 'The sentence the whole book grows from.', 02 Structure (a rising curve over I, II, III) 'Where the story turns, and why.', 03 Voice (bars labelled 'sentence length') 'How the book sounds on every page.', 04 Ending (a dashed arc from 'p.1' to 'last page') 'The promise of page one, kept.', each with 'What it needs →'. Below: 'Checklists are sample content written for this concept.' and 'Read the essays →'. The nav is in its dark version.",
+     "frame": "desktop"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-07-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 17188,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-07-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 25604
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-07-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 57998
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-07-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 64938
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-07-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 86180
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-07-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 114758
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "maren-holt/gallery-07.png"
+     },
+     "alt": "About: the scroll-filled statement fully lit, 'Fourteen years editing fiction and narrative non-fiction from a small studio in Bristol — helping good drafts become the books they were meant to be.' ('fiction' and 'narrative non-fiction' in italic serif); then 'A NOTE ON MAREN' – 'Maren Holt is a fictional editor created for this portfolio concept. The studio, the fourteen years and every essay on this page are invented sample content.' with 'Get the Sunday notes →' and 'Browse the essays'. The top of the white contact card enters at the bottom ('Contact', 'I’m interested in', the chips 'Manuscript assessment' (selected) and 'Developmental edit', and the first line of 'Tell me about your draft.' cut by the frame). The 'About' label and the large MH avatar have just gone under the frosted nav (a faint blur at the top right); 'About' is active in the nav.",
+     "frame": "desktop"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-08-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 39060,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-08-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 55636
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-08-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 115490
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "maren-holt/gallery-08.png"
+     },
+     "alt": "Phone hero at 390 px: 'MH' monogram and 'Maren Holt', a search icon and a round menu button; 'Editing notes, every Sunday'; the headline over four lines, 'Turn your [white pen keycap] / manuscript into a book / readers / recommend [pink bookmark keycap]' with the gradient on 'readers recommend'; the intro sentence; a full-width email field ('your@email') and a full-width 'Get the notes' button; 'From the notebook' with 'All essays →' and the start of the sideways-scrolling featured tray ('Three passes / a revision method' on the microphone photo, the edge of the book-spines card).",
+     "frame": "phone"
+    },
+    "gallery-09": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/maren-holt/gallery-09-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 40120,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-09-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 57154
+      },
+      {
+       "file": "assets/media/maren-holt/gallery-09-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 109416
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "maren-holt/gallery-09.png"
+     },
+     "alt": "Phone essay ring: three cards show on the smaller ring (the book spines on the left, the upright sunset silhouette at the top, the orange typewriter on the right; the side cards run off the screen edges by design), over 'From the Sunday notes', 'Short reads for the / long work of a book.', 'Pick one from the ring — each essay takes about two minutes and fixes one thing.', 'Browse all essays →' and the three facts 'Eight essays', 'Four themes', 'Two-minute reads' with their sub-lines. The edges of the next two ring cards show at the bottom corners.",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "Maren Holt",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/maren-holt/",
+    "group": "concept",
+    "site_is": "A concept landing page for Maren Holt, a fictional developmental editor who writes a weekly newsletter on making books better (brief: 'a fictional developmental editor who writes a weekly newsletter on making books better'). The repo README lists it as 'Maren Holt — book editor (fictional)', with the signature interaction 'Typewriter headline with pressable 3D keycaps, essay filters, search palette, reader' and the signature animation 'Rotating arc: essay cards circle over the heading and react to scroll speed'; the site registry calls it 'Editor & newsletter' and 'An editorial brand with pressable keycap type, essay filters, a search palette and a reader.' The page title is 'Maren Holt — developmental editor and Sunday notes (concept)' and the page description says 'Concept site for Maren Holt, a fictional developmental editor: keycap headline, sample essays with a reader and search, services, workshops and contact.' The site states its demo nature in its own words: 'Maren Holt is a fictional editor created for this portfolio concept. Essays are sample content.' (footer), 'The studio, the fourteen years and every essay on this page are invented sample content.' (About) and 'Concept project for a design portfolio.' It is one of six pages in the public repo gireeshkumarreddy/landing-concepts (README: 'Six independent, fully interactive landing pages'), built with React, GSAP ScrollTrigger, Motion and Lenis smooth scrolling.",
+    "tagline_verbatim": "Notes for better books"
+   }
+  },
+  {
+   "slug": "sagewell",
+   "info": {
+    "name": "Sagewell",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/sagewell/",
+    "permission": "yes",
+    "laptop_poster": "1.3",
+    "hero_poster": "1.0",
+    "tile_poster": "0.5"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/laptop-640.mp4",
+       "width": 640,
+       "height": 400,
+       "bytes": 928190
+      },
+      {
+       "file": "assets/media/sagewell/laptop-1280.mp4",
+       "width": 1280,
+       "height": 800,
+       "bytes": 4776218
+      },
+      {
+       "file": "assets/media/sagewell/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 8548722
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/sagewell/laptop-640.webp",
+       "width": 640,
+       "height": 400
+      },
+      {
+       "file": "assets/media/sagewell/laptop-1280.webp",
+       "width": 1280,
+       "height": 800
+      },
+      {
+       "file": "assets/media/sagewell/laptop-1920.webp",
+       "width": 1920,
+       "height": 1200
+      }
+     ],
+     "duration": 16.0,
+     "fps": 30.0,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1200,
+      "codec": "h264",
+      "file": "sagewell/laptop.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 16.0
+     },
+     "alt": "Desktop scroll (1440 x 900 CSS px) from 0 to 4811 px. It holds 1.5 s on the hero while the composer types 'Why does my list re-render on every keystroke?'. It then scrolls through '01 Getting started', where the terminal moves from step 1 to step 3 as the steps pass. The page tints to near-black for 'Before the answer', whose words light up one by one ('The first answer that comes to mind is rarely the best one. …'), and for the 02 Playground code card. It tints back to cream at '03 Research — Four passes, one visible trail.' over the meadow painting, passes the Plan / Investigate / Cross-check / Conclude capsules, and ends with a 1.5 s hold on '04 In practice — Questions with consequences.' and its four painted cards.",
+     "frame": "video"
+    },
+    "hero": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/hero-480.mp4",
+       "width": 480,
+       "height": 600,
+       "bytes": 349927
+      },
+      {
+       "file": "assets/media/sagewell/hero-640.mp4",
+       "width": 640,
+       "height": 800,
+       "bytes": 639655
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/sagewell/hero-480.webp",
+       "width": 480,
+       "height": 600
+      },
+      {
+       "file": "assets/media/sagewell/hero-640.webp",
+       "width": 640,
+       "height": 800
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 28,
+     "source": {
+      "width": 780,
+      "height": 1688,
+      "codec": "h264",
+      "file": "sagewell/hero.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "Phone loop (390 x 844 CSS px). It holds the phone hero for 2.5 s: headline, sub-line, the composer with 'Why does my list re-render on every keyst…' (which starts to erase and retype), the chips and the bird painting. A 2 s glide (0 to 836 px) brings in '01 Getting started — Three steps to your first traced answer.' with the lede and the stepper (Issue a key done, Add the client active, Ask with a trail), plus the top of the terminal card. It holds about 2 s, then the last 0.5 s crossfades back into the first hero frame for a seamless loop.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 145593
+      },
+      {
+       "file": "assets/media/sagewell/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 300379
+      },
+      {
+       "file": "assets/media/sagewell/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 1189306
+      },
+      {
+       "file": "assets/media/sagewell/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 2921654
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/sagewell/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/sagewell/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/sagewell/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/sagewell/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "sagewell/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "sagewell/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "16:9 loop for the home gallery tile (1440 x 810 CSS px viewport). It shows the hero for 2.5 s while the composer types 'Why does my list re-render on every keystroke?'. A 2 s glide (0 to 808 px) brings in the second section, '01 Getting started — Three steps to your first traced answer.', which holds about 2 s. There step 1 'Issue a key' is active and the terminal reads '# A key is shown once. Put it straight into your secrets manager.', '$ sagewell keys create --label laptop', 'created  laptop  sw_key_••••••••••••••3f9a' (the terminal keeps the double spaces), '$ export SAGEWELL_API_KEY=\"sw_key_••••3f9a\"' and 'Step 1 of 3'. The last 0.5 s crossfades back into the clip's first hero frame, so the last frame matches the first and the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 30466,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 48744
+      },
+      {
+       "file": "assets/media/sagewell/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 161620
+      },
+      {
+       "file": "assets/media/sagewell/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 195804
+      },
+      {
+       "file": "assets/media/sagewell/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 294282
+      },
+      {
+       "file": "assets/media/sagewell/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 447634
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "sagewell/gallery-01.png"
+     },
+     "alt": "Sagewell hero at 1440 px. A rounded inset frame holds a misty painted garden path: green shrubs, pink and violet flowering bushes, blue-tinted trees and a sunlit path on the right, fading into warm white at the top. The header has the Sagewell mark and wordmark, Research, Developers, Pricing and Journal, and a black 'Request access' button. Below are the badge 'Preview | Sagewell 2 reads a million tokens', the headline 'The model that thinks before it speaks.' and the line 'Sagewell plans, checks and revises its own reasoning before it replies — so every answer comes with a trail you can follow, cite and defend.' A frosted glass composer shows the rotating sample question 'Which of these three suppliers is the riskiest, and why?' with add, microphone and send buttons. Under it are four sample chips: Two-moon tides, Supplier risk, React re-renders and Four-day week.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 9938,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 15036
+      },
+      {
+       "file": "assets/media/sagewell/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 39418
+      },
+      {
+       "file": "assets/media/sagewell/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 46684
+      },
+      {
+       "file": "assets/media/sagewell/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 64944
+      },
+      {
+       "file": "assets/media/sagewell/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 92218
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "sagewell/gallery-02.png"
+     },
+     "alt": "'01 Getting started' section: the headline 'Three steps to your first traced answer.' and the line 'One key, one endpoint, and a depth setting you can change per question. Tools, schemas and live trails are there when you want them.' A vertical stepper lists Issue a key (done, with a tick), Add the client (active) and Ask with a trail, each with a short description. On the right, a dark terminal 'shell — ~/harbour' with a Copy button sits on a blurred green painting. It shows '$ pnpm add @sagewell/client', '+ @sagewell/client 2.1.0', '# Python', '$ uv add sagewell' and 'Resolved 1 package in 0.4s', with the footer 'Step 2 of 3 · pnpm · uv'. At the top is the floating pill nav with Developers highlighted.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11830,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 19308
+      },
+      {
+       "file": "assets/media/sagewell/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 52912
+      },
+      {
+       "file": "assets/media/sagewell/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 62090
+      },
+      {
+       "file": "assets/media/sagewell/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 86258
+      },
+      {
+       "file": "assets/media/sagewell/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 125094
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "sagewell/gallery-03.png"
+     },
+     "alt": "The near-black interlude: '02 Playground — One endpoint. Adjustable depth.' with 'Switch language, model or depth and the request below is rewritten in place. Deeper settings spend more tokens planning and cross-checking before Sagewell replies.' A light code card has Python / TypeScript / HTTP tabs, Copy, a Model menu set to 'sagewell-2' and a Depth slider (brief / standard / thorough) on standard. Its 15-line Python sample asks question=\"Which of last night’s deploys should we roll back first?\" with trail=True and prints each trail step. The card footer reads 'POST /v2/answers' and 'sagewell-2 · depth: standard'. The right column lists 01 Live trails (on(\"trail.step\", render)), 02 Your own tools (tools=[lookup_runbook]) and 03 Shaped replies (schema=IncidentSummary). The floating nav is in its dark version.",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 21540,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 32924
+      },
+      {
+       "file": "assets/media/sagewell/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 88926
+      },
+      {
+       "file": "assets/media/sagewell/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 104370
+      },
+      {
+       "file": "assets/media/sagewell/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 148452
+      },
+      {
+       "file": "assets/media/sagewell/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 215848
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "sagewell/gallery-04.png"
+     },
+     "alt": "The Research section's four reasoning passes as long capsules on cream, below the bottom edge of a painted meadow band. They alternate sides and are joined by a dotted thread. Plan (dark moss): 'Sets out what would need to be true for an answer to hold. Loose terms are pinned down before any searching begins.' Investigate (leaf green): 'Collects evidence from your sources and its tools. Each claim keeps a pointer back to where it was found.' Cross-check (sand): 'Tests the draft against the evidence and against itself. Contradictions are raised in the open instead of smoothed over.' Conclude (near-black): 'Replies plainly and states how sure it is. Whatever would change the conclusion is listed next to it.' Each capsule has a round icon chip numbered 01 to 04. The nav highlights Research.",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 31844,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 52344
+      },
+      {
+       "file": "assets/media/sagewell/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 161964
+      },
+      {
+       "file": "assets/media/sagewell/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 195164
+      },
+      {
+       "file": "assets/media/sagewell/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 291758
+      },
+      {
+       "file": "assets/media/sagewell/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 424838
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "sagewell/gallery-05.png"
+     },
+     "alt": "'04 In practice — Questions with consequences.' with the line 'Send any of these to the composer at the top of the page and watch a scripted trail unfold, pass by pass.' Below are four tall painted cards: a forest of tall trunks, dark banana leaves, fan palms with a red-breasted bird and orange flowers, and lush ferns with pink flowers. Each card has a frosted panel and an 'Ask this ↑' button. Literature reviews: 'What does the research actually say about spaced repetition?' Incident post-mortems: 'What should a blameless post-mortem for a 40-minute outage include?' Policy comparison: 'How do the GDPR and the CCPA differ on consent?' Product strategy: 'Should we build our own billing system or buy one?'",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-06-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 9502,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-06-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 14616
+      },
+      {
+       "file": "assets/media/sagewell/gallery-06-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 39424
+      },
+      {
+       "file": "assets/media/sagewell/gallery-06-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 45738
+      },
+      {
+       "file": "assets/media/sagewell/gallery-06-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 64020
+      },
+      {
+       "file": "assets/media/sagewell/gallery-06-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 93116
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "sagewell/gallery-06.png"
+     },
+     "alt": "'05 Pricing — Pay for thinking, not seats.' with 'Billed per million tokens, with the trail counted as output. Choosing a lighter depth for routine questions is the simplest way to keep a bill small.' A price table lists sagewell-2 ('Full-depth reasoning for questions with consequences.', $2.50 prompt and $12.00 reply + trail per 1M tokens) and sagewell-2-swift ('Lighter trails for high-volume, everyday work.', $0.30 / $1.50), with the note 'Illustrative pricing for a concept product.' On the right is the 'Rough monthly cost' estimator. It has a sagewell-2 / sagewell-2-swift toggle and shows '$510 a month, before tax' (Prompts $150, Replies $360, Per question $0.010). Its sliders are Questions per month 50k, Typical prompt length (tokens) 1,200 and Typical reply with trail (tokens) 600. It ends with 'A sketch, not a quote. Trail length varies with the question and the depth you choose.' and a 'Request access →' button.",
+     "frame": "desktop"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-07-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 37250,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-07-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 62222
+      },
+      {
+       "file": "assets/media/sagewell/gallery-07-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 184824
+      },
+      {
+       "file": "assets/media/sagewell/gallery-07-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 219760
+      },
+      {
+       "file": "assets/media/sagewell/gallery-07-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 320124
+      },
+      {
+       "file": "assets/media/sagewell/gallery-07-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 464934
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "sagewell/gallery-07.png"
+     },
+     "alt": "Closing call to action: a rounded inset card with a pale watercolour of a tropical forest stream (palms, ferns, a leaning moss-hung trunk and rocks in the water). It carries 'Ask something difficult.', 'Join the preview, work through the three-step setup, and read the trail behind each reply for yourself.' and the buttons 'Request access' and 'Read the docs →'. The floating nav at the top highlights Journal.",
+     "frame": "desktop"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-08-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 73432,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-08-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 101368
+      },
+      {
+       "file": "assets/media/sagewell/gallery-08-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 201902
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "sagewell/gallery-08.png"
+     },
+     "alt": "Phone hero at 390 px: the Sagewell wordmark and a menu button, the 'Preview | Sagewell 2 reads a million tokens' badge, the headline 'The model that thinks before it speaks.' over three lines and the sub-line. The composer shows the sample question cut to one line, 'Which of these three suppliers is the riskie…'. Below it is the swipeable chip row: Two-moon tides, Supplier risk, and React re-renders running off the right edge. The lower half is the phone hero painting: two black-headed white wading birds among tropical leaves and red-orange foliage on a teal ground.",
+     "frame": "phone"
+    },
+    "gallery-09": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/sagewell/gallery-09-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 48502,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/sagewell/gallery-09-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 68320
+      },
+      {
+       "file": "assets/media/sagewell/gallery-09-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 135938
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "sagewell/gallery-09.png"
+     },
+     "alt": "Phone Research section: the floating nav pill over the bottom of the painted meadow band. Below it, the Plan, Investigate and Cross-check passes are stacked as rounded cards (dark moss, leaf green, sand), each with its description and a round icon chip (list, magnifier, swap arrows), joined by the dotted thread.",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "Sagewell",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/sagewell/",
+    "group": "concept",
+    "site_is": "A concept landing page for Sagewell, an invented AI reasoning model aimed at developers and teams. README: 'Sagewell — AI reasoning model', with the signature interaction 'Prompt composer with streamed reasoning-trace demo, API playground, cost estimator'. The page description says: 'Sagewell is a concept reasoning model that plans, checks and revises its own reasoning, and shows the trail behind every reply.' The footer line is 'A reasoning model that shows its work.' It is one of six pages in the public repo gireeshkumarreddy/landing-concepts (GitHub description: 'Six interactive landing page concepts — React, GSAP, Motion'), built with React, GSAP ScrollTrigger, Motion and Lenis smooth scrolling. The site states its demo nature in its own words. The footer says 'Sagewell is a concept product for a design portfolio. Nothing you type leaves this page.', and the pricing says 'Illustrative pricing for a concept product.'",
+    "tagline_verbatim": "The model that thinks before it speaks."
+   }
+  },
+  {
+   "slug": "tidings",
+   "info": {
+    "name": "Tidings",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/tidings/",
+    "permission": "yes",
+    "laptop_poster": "1.0",
+    "hero_poster": "1.0",
+    "tile_poster": "0.5"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/tidings/laptop-640.mp4",
+       "width": 640,
+       "height": 400,
+       "bytes": 711491
+      },
+      {
+       "file": "assets/media/tidings/laptop-1280.mp4",
+       "width": 1280,
+       "height": 800,
+       "bytes": 3233962
+      },
+      {
+       "file": "assets/media/tidings/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 3641217
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/tidings/laptop-640.webp",
+       "width": 640,
+       "height": 400
+      },
+      {
+       "file": "assets/media/tidings/laptop-1280.webp",
+       "width": 1280,
+       "height": 800
+      },
+      {
+       "file": "assets/media/tidings/laptop-1920.webp",
+       "width": 1920,
+       "height": 1200
+      }
+     ],
+     "duration": 16.0,
+     "fps": 30.0,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1200,
+      "codec": "h264",
+      "file": "tidings/laptop.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 16.0
+     },
+     "alt": "Desktop scroll (1440 x 900 CSS px) from 0 to 4195 px. It holds 1.5 s on the hero (phone, the two tilted cards, gently drifting light columns). As the page scrolls, the phone turns slightly in 3D and rises while the cards and markers lift away at different speeds (about 1.7-5 s). The Platform heading with the Broadcasts and Product messages cards fills the screen at about 5.3 s, the Pay in chat and Journeys cards at about 7.5 s, and the campaign builder with its live-preview phone at about 10.7 s. At about 12.4 s the whole page fades from white to near-black navy (about 0.5 s) for 'See what every message earns.', and the clip ends with a 1.6 s hold on the full analytics dashboard (funnel, £41,310 revenue tile, rate tiles and taps-per-hour chart).",
+     "frame": "video"
+    },
+    "hero": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/tidings/hero-480.mp4",
+       "width": 480,
+       "height": 600,
+       "bytes": 410428
+      },
+      {
+       "file": "assets/media/tidings/hero-640.mp4",
+       "width": 640,
+       "height": 800,
+       "bytes": 531389
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/tidings/hero-480.webp",
+       "width": 480,
+       "height": 600
+      },
+      {
+       "file": "assets/media/tidings/hero-640.webp",
+       "width": 640,
+       "height": 800
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 28,
+     "source": {
+      "width": 780,
+      "height": 1688,
+      "codec": "h264",
+      "file": "tidings/hero.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "Phone loop (390 x 844 CSS px). It holds the phone hero for 2.5 s: the badge, the four-line headline, the sub-line, 'Launch a campaign', the two message cards and the top of the phone. A 1.8 s glide (0 to 1125 px) scrolls past the phone's chat list to the second section: 'PLATFORM — Everything a chat-first shop needs', its lead and the blue Broadcasts card with the 'Spring linen drop · Fern & Field' panel (15,240 unique contacts, Sent). It holds about 2 s, then the last 0.5 s crossfades back into the first hero frame for a seamless loop.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/tidings/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 160064
+      },
+      {
+       "file": "assets/media/tidings/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 259917
+      },
+      {
+       "file": "assets/media/tidings/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 928687
+      },
+      {
+       "file": "assets/media/tidings/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 1784925
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/tidings/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/tidings/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/tidings/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/tidings/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "tidings/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "tidings/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "16:9 loop for the home gallery tile (1680 x 945 CSS px viewport). It holds the hero for 2.5 s: 'Turn WhatsApp into your best sales channel', the sub-line, 'Launch a campaign', the floating phone with the chat list and the two tilted message cards. A 1.8 s glide (0 to 1094 px) lifts the hero away while the phone turns and rises. It then holds about 2 s on the second section, 'Everything a chat-first shop needs' with its lead and the complete Broadcasts (15,240 contacts, Sent) and Product messages cards. The last 0.5 s crossfades back into the clip's first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 18338,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 28162
+      },
+      {
+       "file": "assets/media/tidings/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 71526
+      },
+      {
+       "file": "assets/media/tidings/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 81754
+      },
+      {
+       "file": "assets/media/tidings/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 113522
+      },
+      {
+       "file": "assets/media/tidings/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 160748
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "tidings/gallery-01.png"
+     },
+     "alt": "Tidings hero at 1440 px. The header has the blue 'tidings' wordmark (its two i's are dotted with small speech bubbles), Platform and Learn menus, Pricing, Company, a grey 'Sign in' pill, a black 'Book a demo' pill with an arrow chip and a UK flag region switch. Under a pill badge 'New — take payments inside the chat' (green chat-bubble glyph) the headline reads 'Turn WhatsApp into' with 'your best sales channel' in a blue-to-violet gradient, then 'Send personalised broadcasts, win back abandoned carts and take payments right in the chat — with opt-in built in and every message measured.' and a blue 'Launch a campaign' pill. The lower half fades from white into a violet glow with soft light columns: a blue-framed phone shows 'Chats' with a search field, Priya Nair ('YES please, size M', 11:08, 2 unread) and Tomás Ortega ('Could we make it 8:30?', 10:24). A tilted card on the left says 'Hi Priya — the linen shirt you saved is back in your size. Reply YES and we’ll hold one for 24 hours.' with 'Reserve mine'; a tilted card on the right says 'Hi Tomás — your table for four at Casa Verde is confirmed for Friday at 8:00 pm.' above a photo of a bistro table with wine glasses and a bentwood chair, and 'View booking'. Typing-dot bubbles, a link marker and a calendar marker float around them.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 14660,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 22486
+      },
+      {
+       "file": "assets/media/tidings/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 57920
+      },
+      {
+       "file": "assets/media/tidings/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 68526
+      },
+      {
+       "file": "assets/media/tidings/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 98096
+      },
+      {
+       "file": "assets/media/tidings/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 137638
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "tidings/gallery-02.png"
+     },
+     "alt": "The second section, 'PLATFORM — Everything a chat-first shop needs' ('chat-first shop' in blue), with the lead 'Four connected tools on one opted-in audience — the message, the product, the payment and the follow-up all live in the same thread.' Below are the first two bento cards. The blue '01 Broadcasts' card ('Reach your whole opted-in list in one go, with every message personalised and sent at a pace WhatsApp is comfortable with.') holds a white panel 'Spring linen drop · Fern & Field' with a green 'Sent' tag, '15,240 unique contacts', the chips Regulars · 2,180, Recent orders · 4,320 and Newsletter list · 9,600, a full progress bar, Sent 15,240, Delivered 14,783, Read 12,375 and a 'Replay' button. The beige '02 Product messages' card ('Share a card with photo, price and a button — plus a tracked short link that is unique to each customer.') shows a chat bubble on a dotted wallpaper with a link preview ('£58', 'SIX COURSES', 'Spring tasting menu', 'Six courses, from £58 a head. Thursdays to Sundays.', casaverde.example), the text 'Hannah, the new spring menu starts this week. Book a table here: casaverde.example/spring?c=hannah', 09:30 with read ticks, and a link row with a black 'Copy link' button. The tops of the next two cards show at the bottom edge.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11012,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 17602
+      },
+      {
+       "file": "assets/media/tidings/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 46460
+      },
+      {
+       "file": "assets/media/tidings/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 54008
+      },
+      {
+       "file": "assets/media/tidings/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 76700
+      },
+      {
+       "file": "assets/media/tidings/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 110772
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "tidings/gallery-03.png"
+     },
+     "alt": "The lower bento row. The light '03 Pay in chat' card ('Send a ready-to-pay order that customers settle in a couple of taps, right where the conversation happened.') shows a 'Ready to pay' bubble for 'Fern & Field · Order #7320': Linen camp shirt (Sage · M · Qty 1) £58.00, Woven market basket (Natural · Qty 1) £24.00, Loyalty reward (10%) −£8.20, Delivery Free, Total £73.80 and a blue 'Pay £73.80' button, with 'Cards and wallets, without leaving the conversation.' The navy '04 Journeys' card ('Set a trigger, a pause and a message once — Tidings follows up on baskets, bookings and restocks for you.') shows three linked steps, WHEN 'Basket is left', PAUSE 'Wait 2 hours' ('Never during quiet hours') and THEN 'Send a nudge' ('Cart reminder template'), a 'Pause before the nudge' switch (30 min / 2 hours selected / 24 hours) and 'Latest journeys SAMPLE' with small portrait avatars: Daniel · basket £64 'Won back', Lena · basket £38 'Nudge in 1h 12m' and Rafael · basket £112 'Nudge sent'. The bottom of the blue Broadcasts card tints the frosted nav at the top left.",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 13844,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 22048
+      },
+      {
+       "file": "assets/media/tidings/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 61176
+      },
+      {
+       "file": "assets/media/tidings/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 71226
+      },
+      {
+       "file": "assets/media/tidings/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 99856
+      },
+      {
+       "file": "assets/media/tidings/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 145808
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "tidings/gallery-04.png"
+     },
+     "alt": "The campaign builder. Left: Template 'Back in stock'; Message (138 / 1,024) 'Hi {{first_name}} — good news: the {{item}} you saved is back in your size. Reply *YES* to hold one for 24 hours, or order here: {{link}}'; the variable chips {{first_name}}, {{item}} and {{link}}; Audience segments, all ticked: Regulars 2,180, Recent orders 4,320, Browsed, didn’t buy 1,140, Newsletter list 9,600; 'Estimated recipients: up to 17,240. Contacts in several segments get the message once.'; Schedule 'Send now' / 'Pick a time'; Preview as Priya (selected), Tomás, Hannah and Kenji with avatars; a blue 'Send test message' button and 'Tests appear in the preview phone only — no customer receives anything.' Right, on a violet panel with light columns: the tiles Recipients ≤ 17,240, Characters 138/1,024 and Sends Now, and a phone with Priya Nair ('Template · Back in stock'), 'Today' and a 'LIVE PREVIEW' bubble that fills the variables in: 'Hi Priya — good news: the linen camp shirt you saved is back in your size. Reply YES to hold one for 24 hours, or order here: fernandfield.example/hold/priya', 'Reserve mine', and 'Seen by Priya · details filled in'. The section heading 'Write it once. It reads personal.' is just above the frame; only a blur of it shows behind the frosted nav.",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 13076,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 19866
+      },
+      {
+       "file": "assets/media/tidings/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 48530
+      },
+      {
+       "file": "assets/media/tidings/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 55518
+      },
+      {
+       "file": "assets/media/tidings/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 77296
+      },
+      {
+       "file": "assets/media/tidings/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 111714
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "tidings/gallery-05.png"
+     },
+     "alt": "Analytics after the page has re-tinted to near-black navy: 'ANALYTICS — See what every message earns.' and 'Follow each campaign from the first delivery to the last sale. Pick a sample campaign to explore.' A glowing dashboard card has the tabs Spring linen drop (selected), Weekend table offer and Loyalty double points, and a 'SAMPLE DATA' tag. The funnel for 'Broadcast · Fern & Field, Sent Thu 3 Apr, 10:00' shows Sent 15,240 (100%), Delivered 14,806 (97.2%), Read 12,377 (81.2%), Tapped 3,962 (26.0%) and Converted 918 (6.0%) as blue-violet bars, with the note 'Every stage counts unique contacts. A conversion is a purchase or booking made within 7 days of tapping the message.' Right: a violet tile 'Attributed revenue · GBP £41,310', tiles Read rate 83.6%, Tap rate 26.8% and Conversion 6.2%, and a 'Taps per hour' line chart (Send to +24h) marked '690 taps · hour 3 (peak)'. The nav is in its dark version with a white 'Book a demo'.",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-06-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 14414,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-06-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 21846
+      },
+      {
+       "file": "assets/media/tidings/gallery-06-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 58530
+      },
+      {
+       "file": "assets/media/tidings/gallery-06-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 67662
+      },
+      {
+       "file": "assets/media/tidings/gallery-06-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 96404
+      },
+      {
+       "file": "assets/media/tidings/gallery-06-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 136466
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "tidings/gallery-06.png"
+     },
+     "alt": "Pricing ('Straightforward plans, fees passed through at cost.' sits just above the frame, blurred behind the frosted nav). Visible: 'All plans include the builder, product messages and core analytics. Pay yearly and two months are on us.', a Monthly / Yearly switch ('2 months free') on Monthly, and a currency switch £ GBP (selected) / $ USD / € EUR with flag icons. Three plan cards: Starter ('For small shops sending their first campaigns.', £15 / month billed monthly, 'Start on Starter', 1 business number, Up to 2,500 contacts, Broadcasts & approved templates, Product messages with tracked links, Help centre & email support); the blue featured Growth card with a 'Popular' badge ('For teams selling in the chat every week.', £49 / month, 'Start on Growth', 3 business numbers, Up to 20,000 contacts, Pay in chat, Journeys & automations, Campaign analytics, Priority support); and Scale ('For high-volume brands and multi-site groups.', Custom 'priced on your volume', 'Talk to sales', Unlimited numbers & locations, Volume-based contact pricing, Higher API & webhook limits, SSO and audit log, Dedicated onboarding).",
+     "frame": "desktop"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-07-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11548,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-07-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 16874
+      },
+      {
+       "file": "assets/media/tidings/gallery-07-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 39156
+      },
+      {
+       "file": "assets/media/tidings/gallery-07-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 44476
+      },
+      {
+       "file": "assets/media/tidings/gallery-07-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 62690
+      },
+      {
+       "file": "assets/media/tidings/gallery-07-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 85326
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "tidings/gallery-07.png"
+     },
+     "alt": "The closing band: a large rounded blue-to-violet panel with light columns and small light specks. It has the eyebrow 'START SMALL, MEASURE EVERYTHING', the headline 'Your customers are already in the chat.', the line 'Draft a first campaign, preview it on a real conversation and send only when it feels right.', a white 'Launch a campaign' pill with a blue arrow chip and a glass 'Talk to sales' pill. White page above and below, header at the top.",
+     "frame": "desktop"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-08-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 49206,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-08-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 68254
+      },
+      {
+       "file": "assets/media/tidings/gallery-08-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 130440
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "tidings/gallery-08.png"
+     },
+     "alt": "Phone hero at 390 px: the 'tidings' wordmark, a black 'Book a demo' pill and a round menu button; the badge 'New — take payments inside the chat'; the headline over four lines ('Turn WhatsApp / into / your best sales / channel'); the sub-line; the 'Launch a campaign' pill. Below, over the violet glow, the two tilted message cards to Priya and Tomás (text only on phones, no photo or link) and the top of the phone with 'Chats' and 'Search chats'. The cards run slightly past both screen edges.",
+     "frame": "phone"
+    },
+    "gallery-09": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/tidings/gallery-09-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 38154,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/tidings/gallery-09-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 53870
+      },
+      {
+       "file": "assets/media/tidings/gallery-09-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 100034
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "tidings/gallery-09.png"
+     },
+     "alt": "Phone view of the builder's live preview: the violet preview panel with the tiles Recipients ≤ 17,240, Characters 138/1,024 and Sends Now, and the preview phone with Priya Nair ('Template · Back in stock'), 'Today', the 'LIVE PREVIEW' bubble 'Hi Priya — good news: the linen camp shirt you saved is back in your size. Reply YES to hold one for 24 hours, or order here: fernandfield.example/hold/priya', 'Reserve mine', and 'Seen by Priya · details filled in'. The header with the wordmark, 'Book a demo' and the menu button sits on top.",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "Tidings",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/tidings/",
+    "group": "concept",
+    "site_is": "A concept landing page for Tidings, an invented WhatsApp commerce and marketing platform for small shops and restaurants. README: 'Tidings — WhatsApp commerce platform', with the signature interaction 'Clickable phone chats, campaign builder with live preview, 3-step campaign wizard' and the signature animation 'Floating 3D phone: idle float, pointer tilt and a scroll turn, still fully clickable'. The page title is 'Tidings — WhatsApp campaigns customers actually want to open', and the page description says: 'Tidings is a concept WhatsApp commerce platform: personalised broadcasts, product messages, payments in the chat and automated journeys, with a live campaign builder.' The footer line is 'WhatsApp campaigns customers actually want to open — broadcasts, product messages, payments and journeys in one place.' It is one of six pages in the public repo gireeshkumarreddy/landing-concepts (README: 'Six independent, fully interactive landing pages'), built with React, GSAP ScrollTrigger, Motion and Lenis smooth scrolling. The site states its demo nature in its own words: 'Tidings is a concept product for a design portfolio. Not affiliated with WhatsApp or Meta.' (footer) and 'Tidings is a concept product, designed as a portfolio study of consent-first messaging software.' (Company section). The two businesses in the demo, Fern & Field and Casa Verde, are fictional sample businesses (data.js).",
+    "tagline_verbatim": "WhatsApp campaigns customers actually want to open"
+   }
+  },
+  {
+   "slug": "vantline",
+   "info": {
+    "name": "Vantline",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/vantline/",
+    "permission": "yes",
+    "laptop_poster": "1.0",
+    "hero_poster": "1.0",
+    "tile_poster": "0.5"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/vantline/laptop-640.mp4",
+       "width": 640,
+       "height": 400,
+       "bytes": 711666
+      },
+      {
+       "file": "assets/media/vantline/laptop-1280.mp4",
+       "width": 1280,
+       "height": 800,
+       "bytes": 4825446
+      },
+      {
+       "file": "assets/media/vantline/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 8825503
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/vantline/laptop-640.webp",
+       "width": 640,
+       "height": 400
+      },
+      {
+       "file": "assets/media/vantline/laptop-1280.webp",
+       "width": 1280,
+       "height": 800
+      },
+      {
+       "file": "assets/media/vantline/laptop-1920.webp",
+       "width": 1920,
+       "height": 1200
+      }
+     ],
+     "duration": 16.0,
+     "fps": 30.0,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1200,
+      "codec": "h264",
+      "file": "vantline/laptop.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 16.0
+     },
+     "alt": "Desktop scroll (1440 x 900 CSS px, rendered at 2x and downscaled to 1920 x 1200) from 0 to 4230 px. It holds 1.5 s on the hero. As the page scrolls, the hero copy lifts and fades, the photo drifts and the compact nav drops in. The five Vantline loop cards rise as a tight stack and fan out on their arc (about 4.6 s). The 'Clarity' panel then widens from an inset card to full width over the green hills while the chart line draws itself in (about 5.2-7.2 s). At about 8.4 s the page re-tints to near-black for 'Better calls, made together' and the three iridescent principle cards (about 9.6 s), and the statement's words fill in white as it passes. At about 12.7 s the page fades back to light grey and cream for 'Plans that grow with your team'. For about half a second during that fade (about 12.7-13.2 s) a hard horizontal band edge crosses the screen and the nav and statement look briefly ghosted; this is the site's own re-tint timing (see issues). The clip ends with a 1.5 s hold on the Team and Business plan cards over the foggy meadow. No seam lines: a full-width line scan of all 480 frames finds none.",
+     "frame": "video"
+    },
+    "hero": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/vantline/hero-480.mp4",
+       "width": 480,
+       "height": 600,
+       "bytes": 246306
+      },
+      {
+       "file": "assets/media/vantline/hero-640.mp4",
+       "width": 640,
+       "height": 800,
+       "bytes": 481820
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/vantline/hero-480.webp",
+       "width": 480,
+       "height": 600
+      },
+      {
+       "file": "assets/media/vantline/hero-640.webp",
+       "width": 640,
+       "height": 800
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 28,
+     "source": {
+      "width": 780,
+      "height": 1688,
+      "codec": "h264",
+      "file": "vantline/hero.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "Phone loop (390 x 844 CSS px). It holds the phone hero for 2.5 s: the headline, sub-line, 'Try Vantline free', the walker and the glass slab. A 2 s glide (0 to 768 px) brings in the second section with the dark floating nav bar. That section has '+ The Vantline loop', 'From raw numbers to a clear brief — in minutes', card 01 Connect sources (with the edge of card 02 peeking in on the right), the arrows, the 'Walk through the loop' pill and the dots. It holds about 2 s, then the last 0.5 s crossfades back into the first hero frame for a seamless loop.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/vantline/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 103046
+      },
+      {
+       "file": "assets/media/vantline/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 173590
+      },
+      {
+       "file": "assets/media/vantline/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 679633
+      },
+      {
+       "file": "assets/media/vantline/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 1946159
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/vantline/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/vantline/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/vantline/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/vantline/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 7.0,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "vantline/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "vantline/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 7.0
+     },
+     "alt": "16:9 loop for the home gallery tile (1680 x 945 CSS px viewport). It holds the hero for 2.5 s: the dusk field, tree, walker and glass slab, 'Know what changed / and what to do about it.', the sub-line and 'Try Vantline free'. A 2 s glide (0 to 952 px) lifts the hero away while the stage cards open from a stack into the full fan. It holds about 2 s on the second section, 'The Vantline loop — From raw numbers to a clear brief — in minutes', with all five cards spread, 01 Connect sources in the centre, the 'Walk through the loop' controls, the dots and the dark floating nav. The last 0.5 s crossfades back into the clip's first hero frame, so the clip loops seamlessly.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 20484,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 32672
+      },
+      {
+       "file": "assets/media/vantline/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 96300
+      },
+      {
+       "file": "assets/media/vantline/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 117030
+      },
+      {
+       "file": "assets/media/vantline/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 178146
+      },
+      {
+       "file": "assets/media/vantline/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 267698
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "vantline/gallery-01.png"
+     },
+     "alt": "Vantline hero at 1440 px. A rounded inset photo frame holds a dusk field: a large leafy tree silhouetted against a pink and blue-grey evening sky, and a person in a long dark padded coat and blue trousers walking through the grass on the right. Beside the walker stands a tall frosted-glass slab that catches the pink sky. The header has the vantline wordmark with its horizon-and-chevron mark, a glass pill nav (Product, Workflows, Principles, Plans) and a 'Start free' button. The headline reads 'Know what changed' with a serif-italic second line 'and what to do about it.', then 'Vantline reads your metrics, docs and team threads, explains every shift in plain language, and suggests the next move.', a white 'Try Vantline free' pill with a black arrow chip, and '(Keep scrolling)' at the bottom left.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11002,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 16548
+      },
+      {
+       "file": "assets/media/vantline/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 43518
+      },
+      {
+       "file": "assets/media/vantline/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 50464
+      },
+      {
+       "file": "assets/media/vantline/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 72042
+      },
+      {
+       "file": "assets/media/vantline/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 103766
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "vantline/gallery-02.png"
+     },
+     "alt": "'The Vantline loop' section on warm white: the eyebrow '+ The Vantline loop', the headline 'From raw numbers to a clear brief — in minutes' and the five stage cards fanned out on an arc. In the centre is 01 Connect sources ('Plug in metrics, docs and team threads. Vantline keeps them in sync.') with a red evening sky. To the right are 02 Spot the shift (a prism on black) and 03 Explain the cause (a man on a hazy hilltop). To the left are 05 Share the brief (a seated silhouette against a bright beam) and 04 Weigh the options (a lone figure on a dusk hill). Below are the previous and next arrows, a black 'Walk through the loop' pill and five progress dots. At the top is the dark compact floating nav with a white 'Start free'.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 20496,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 33660
+      },
+      {
+       "file": "assets/media/vantline/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 105812
+      },
+      {
+       "file": "assets/media/vantline/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 128282
+      },
+      {
+       "file": "assets/media/vantline/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 190296
+      },
+      {
+       "file": "assets/media/vantline/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 284054
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "vantline/gallery-03.png"
+     },
+     "alt": "'Clarity, built into every view' with the line 'Read the numbers, question them and act, without opening another dashboard.' Glass cards sit over misty green hills. The chart card shows 'Weekly active accounts' 2,210, '+41% vs last quarter', a 'Sample data' tag, a 1W / 1M / 1Q range control on 1M and the 'Show last quarter' switch turned on. The chartreuse line climbs from about 1k (Sep 13) to about 2.2k (Oct 12) above a dashed last-quarter baseline. A hover tooltip reads 'Sun, Sep 27', '1,201 accounts', 'Last quarter 1,221'. Under the chart is 'Signal over noise — Vantline separates real movement from everyday wobble, so you only hear about the changes worth a conversation.' On the right are a photo card, 'Made for the people in the room' ('Briefs written for product, finance and ops, not only whoever owns the dashboard.', a man walking into dry grass, seen from behind), and the 'Depth of analysis' card ('Choose how hard Vantline digs before it answers.'), whose slider is set to 'Deep read · ~28s' between Skim and Full investigation, with 'Pulls in docs, release notes and team threads before answering.' For this still the switch was clicked and the pointer rests on the chart.",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 18584,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 29068
+      },
+      {
+       "file": "assets/media/vantline/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 77424
+      },
+      {
+       "file": "assets/media/vantline/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 91890
+      },
+      {
+       "file": "assets/media/vantline/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 131854
+      },
+      {
+       "file": "assets/media/vantline/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 184908
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "vantline/gallery-04.png"
+     },
+     "alt": "The near-black principles interlude (#111511). It has the eyebrow 'principles', the headline 'Better calls, made together' and the line 'Vantline pairs careful analysis with the judgement of the people who know the business, so the next call is easier to make and easier to explain.' Below are three tall cards with iridescent artworks: a human figure traced in rainbow light streaks, folds of iridescent glass, and mirrored glass arcs. Their captions are 01 'Explanations, not dashboards' ('Every shift arrives as a short, plain-language account of what moved and why.'), 02 'Grounded in your own data' ('Each answer cites the exact metric, doc or thread it was built from.') and 03 'Sharper every week' ('Mark a brief as useful or off target, and the next one adjusts to how you work.'). The floating nav is in its light version.",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 9940,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 14822
+      },
+      {
+       "file": "assets/media/vantline/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 35886
+      },
+      {
+       "file": "assets/media/vantline/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 41128
+      },
+      {
+       "file": "assets/media/vantline/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 55508
+      },
+      {
+       "file": "assets/media/vantline/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 76766
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "vantline/gallery-05.png"
+     },
+     "alt": "The scroll-filled statement, fully lit in large white type on the near-black interlude: 'A chart shows that a number moved. A good brief says why it moved, who feels it, and what your team could try before Friday.' ('why it moved,' in serif italic). The light floating nav sits at the top, with the rounded bottom edges of the three principle cards just leaving the frame behind it. Below, the dark ground fades into the grey fog at the top of the pricing photo, where the heading 'Plans that grow with your team' has risen in white. Its lede has not faded in yet at this position, and the page has not yet re-tinted to light.",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-06-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 12522,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-06-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 19324
+      },
+      {
+       "file": "assets/media/vantline/gallery-06-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 56256
+      },
+      {
+       "file": "assets/media/vantline/gallery-06-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 67076
+      },
+      {
+       "file": "assets/media/vantline/gallery-06-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 98772
+      },
+      {
+       "file": "assets/media/vantline/gallery-06-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 145672
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "vantline/gallery-06.png"
+     },
+     "alt": "'Plans that grow with your team' over a foggy green meadow, with 'Per-seat pricing with every plan billed the same way, monthly or yearly.' and a Monthly / Yearly toggle ('Save 20%' in a chartreuse badge) set to Monthly. The light glass Team card shows $24.00 / seat / month, billed monthly, and 'For small teams who want a clear weekly read on their numbers.' It lists Weekly change briefs, Plain-language explanations, 12 data connectors, Shared workspace and Email support, with a black 'Choose Team' button. The near-black Business card ('Multi-team' in chartreuse) shows $64.00 / seat / month, billed monthly, and 'For companies running decisions across several teams at once.' It lists Everything in Team, Unlimited connectors, Scenario forecasts, Roles & audit log and Priority support, with a white 'Choose Business' button.",
+     "frame": "desktop"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-07-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 8792,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-07-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 13068
+      },
+      {
+       "file": "assets/media/vantline/gallery-07-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 31074
+      },
+      {
+       "file": "assets/media/vantline/gallery-07-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 35778
+      },
+      {
+       "file": "assets/media/vantline/gallery-07-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 49954
+      },
+      {
+       "file": "assets/media/vantline/gallery-07-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 70892
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "vantline/gallery-07.png"
+     },
+     "alt": "Closing band on near-black: '(Ready when you are)', the very large headline 'Make the next call' with the serif-italic line 'a clear one.', a hairline, 'Connect a few sources and read your first Vantline brief this week.' and a white 'Try Vantline free' pill. Below is the top of the footer: the vantline wordmark, 'A copilot that explains what changed in your numbers, and what to do next.' and the link columns Explore (Product, Workflows, Principles, Plans), Get started (Try Vantline free, Request the Business plan, Compare plans) and Concept (All concepts, Back to top ↑).",
+     "frame": "desktop"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-08-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 63906,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-08-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 94456
+      },
+      {
+       "file": "assets/media/vantline/gallery-08-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 201244
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "vantline/gallery-08.png"
+     },
+     "alt": "Phone hero at 390 px: the vantline wordmark, a glass 'Start free' button and a round menu button over the dusk photo. Below them are the headline 'Know what changed / and what to do about it.', the sub-line over three lines and the 'Try Vantline free' pill. The lower half shows the tree branches, the walker in the padded coat and the frosted-glass slab, with '(Keep scrolling)' at the bottom.",
+     "frame": "phone"
+    },
+    "gallery-09": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/vantline/gallery-09-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 56386,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/vantline/gallery-09-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 85006
+      },
+      {
+       "file": "assets/media/vantline/gallery-09-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 186514
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "vantline/gallery-09.png"
+     },
+     "alt": "Phone features panel: the dark floating nav bar ('vantline', 'Start free', menu), 'Clarity, built into every view' with its line, and the full 'Weekly active accounts' glass chart card. It shows 2,210, '+41% vs last quarter', 'Sample data', 1W / 1M / 1Q, 'Show last quarter' (off) and the rising chartreuse line from Sep 13 to Oct 12. It ends with 'Signal over noise' and its text. The top of the 'Made for the people in the room' photo card shows at the bottom.",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "Vantline",
+    "url": "https://gireeshkumarreddy.github.io/landing-concepts/vantline/",
+    "group": "concept",
+    "site_is": "A concept landing page for Vantline, an invented decision-intelligence copilot for teams. README: 'Vantline — decision-intelligence copilot', with the signature interaction 'Fanned insight deck, live chart controls, plans toggle, scroll colour transition' and the signature animation 'Scroll-fanned deck: cards fan out from a stack as the section scrolls through'. The page description says: 'Vantline is a decision-intelligence copilot that explains what changed in your numbers and what to do next. A design concept.' The footer line is 'A copilot that explains what changed in your numbers, and what to do next.' It is one of six pages in the public repo gireeshkumarreddy/landing-concepts (GitHub description: 'Six interactive landing page concepts — React, GSAP, Motion'), built with React, GSAP ScrollTrigger, Motion and Lenis smooth scrolling. The site states its demo nature in its own words. The footer says 'Vantline is a concept product for a design portfolio. Chart values are sample data.', and the chart carries a 'Sample data' tag.",
+    "tagline_verbatim": "Know what changed and what to do about it."
+   }
   }
  ],
  "order": [
@@ -13137,6 +16737,12 @@
   "sedile",
   "gireesh-desk",
   "gireesh-cinematic",
-  "vyrn"
+  "vyrn",
+  "emberpost",
+  "ines-morrow",
+  "maren-holt",
+  "sagewell",
+  "tidings",
+  "vantline"
  ]
 }

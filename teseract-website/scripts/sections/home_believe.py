@@ -43,22 +43,48 @@ def T(text):
 # Section 4 — WHAT WE BELIEVE (image 10)
 # ==================================================================================================
 
-# Six crops of the client's reference image (public/assets/believe/, non-manifest, WebP).
-# file, intrinsic w, h, alt (literal, these are mood images — never the team or a client),
-# micro-caption (restates document wording; source in the comment).
+# The owner's six images (18 Oct; AI-generated, owner 18 Oct; note: LAUNCH-CHECKLIST.md 3g; originals in
+# C:/Teseract-media/_supplied/believe-2026-10-18/). Web copies in public/assets/believe/ (non-manifest WebP, metadata
+# stripped) at three widths each, <stem>-<w>.webp: 1x desktop (just above the slot's widest 1x box, 900–1439.98 and
+# ≥ 1440), 2x desktop, 3x phone (the largest never above the original); src = the middle copy. The slot shapes and
+# crops are in 23-believe.css (.bel__fig--1 … --6, list order = slot order = reading order).
+# stem, widths, intrinsic w, h (of the largest copy), alt (literal: these are mood images, never the team or a
+# client; any text in the image read in full), micro-caption (client-approved wording and order, unchanged; source
+# in the comment).
 PHOTOS = [
-    ('believe-01-glass.webp', 148, 155, 'Two translucent orange glass discs on a pale surface',
+    ('believe-ai-agent-monitor', (160, 320, 640), 640, 640,
+     'A desktop monitor showing an AI agent app: a blurred photo of football players under the headline '
+     '“Engineered Comfort, Maximum Running Speed”, a text prompt and tool buttons',
      'Intuitive experiences'),        # CREATE.services[0] "feel intuitive" + "digital experiences"
-    ('believe-02-stone.webp', 148, 155, 'Close-up of rough grey stone in black and white',
+    ('believe-orange-visor', (160, 320, 640), 640, 850,
+     'A figure in black wearing a glowing orange visor over the eyes, against a white background',
      'Thoughtful design'),            # HOME.hero.lead "thoughtful … digital experiences"
-    ('believe-03-hood.webp', 315, 397, 'Hooded figure in orange-tinted goggles against a pale grey sky',
+    ('believe-people-first-poster', (320, 640, 1086), 1086, 1448,
+     'Black-and-white poster reading “People first. Stories always.” and “Every face has a story. Every story '
+     'deserves to be seen.”, between two groups of people dressed in black, one standing on the floor and one '
+     'upside down on the ceiling',
      'People first'),                 # WHO.think[0] "People first."
-    ('believe-04-knot.webp', 167, 180, 'White looped sculpture against a white tiled wall',
+    ('believe-overload-poster', (180, 360, 600), 600, 848,
+     'Poster reading “Overload”: a dark, smeared face behind a black bar, surrounded by screenshots of TV news',
      'Complex made simple'),          # HOME.believe.body[2] "We make complex things feel simple."
-    ('believe-05-prism.webp', 167, 180, 'Glass panel with a yellow gradient beside perforated metal',
+    ('believe-puppet-screens', (180, 360, 640), 640, 1138,
+     'A hand pulling red strings tied to floating, glitching browser windows on a black background',
      'Purposeful technology'),        # HOME.agency.closing "technology that serves a purpose"
-    ('believe-06-headset.webp', 212, 212, 'Silhouette of a person wearing a headset against a pale blue sky',
+    ('believe-exhibition-screens', (288, 600, 960), 960, 540,
+     'A silhouetted figure standing in a dark hall of glowing image screens and coloured plinths',
      'The right idea'),               # WHO.philosophy.steps[2] "Then we find the right idea."
+]
+
+# `sizes` per slot (the CSS width of .bel__fig--N in 23-believe.css): ≥ 1440 the 1344 px artboard, 900–1439.98
+# the artboard at 100vw − 80 px, 520–899.98 the 12-column grid (≤ 760 px: 3, 6 or 5 columns), < 520 the
+# two-column flow (half or full width of 100vw − 32 px).
+SLOT_SIZES = [
+    '(min-width:1440px) 149px, (min-width:900px) calc(11.08vw - 9px), (min-width:520px) calc(25vw - 14px), calc(50vw - 20px)',
+    '(min-width:1440px) 149px, (min-width:900px) calc(11.08vw - 9px), (min-width:520px) calc(25vw - 14px), calc(50vw - 20px)',
+    '(min-width:1440px) 315px, (min-width:900px) calc(23.44vw - 19px), (min-width:520px) calc(50vw - 20px), calc(100vw - 32px)',
+    '(min-width:1440px) 170px, (min-width:900px) calc(12.6vw - 10px), (min-width:520px) calc(25vw - 14px), calc(50vw - 20px)',
+    '(min-width:1440px) 170px, (min-width:900px) calc(12.6vw - 10px), (min-width:520px) calc(25vw - 14px), calc(50vw - 20px)',
+    '(min-width:1440px) 280px, (min-width:900px) calc(20.81vw - 17px), (min-width:520px) calc(42vw - 18px), calc(100vw - 32px)',
 ]
 
 ARROW = ('<svg class="bel__arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" '
@@ -81,9 +107,11 @@ def _corner(text, before, side, delay):
 
 def _strip(ctx):
     items = []
-    for i, (file, w, h, alt, cap) in enumerate(PHOTOS, 1):
+    for i, ((stem, widths, w, h, alt, cap), sizes) in enumerate(zip(PHOTOS, SLOT_SIZES), 1):
         d = (i - 1) * 90
-        img = lib.img(ctx, f'assets/believe/{file}', alt, w=w, h=h, cls='bel__img')
+        srcset = ', '.join(f'{ctx.asset(f"assets/believe/{stem}-{x}.webp")} {x}w' for x in widths)
+        img = lib.img(ctx, f'assets/believe/{stem}-{widths[1]}.webp', alt, w=w, h=h, cls='bel__img',
+                      attrs=f'srcset="{E(srcset)}" sizes="{sizes}"')
         items.append(
             f'<li class="bel__fig bel__fig--{i}" data-reveal style="--d:{d}ms">'
             f'<figure><div class="bel__media">{img}</div>'

@@ -120,9 +120,12 @@
 .hero-marquee__mark{width:12px;height:12px;flex:none;opacity:.3}
 
 /* Gallery frame ("visual": 1000px framed group, hairline, 4 corner handles). On black the frame is a
-   faint white tint with a hairline; the handles stay light so the "selection frame" still reads. */
-.hero-gallery{position:relative;z-index:0;display:flex;align-items:center;justify-content:center;gap:16px;width:100%;height:1000px;padding:0 16px;
-  background:var(--frame)}
+   faint white tint with a hairline; the handles stay light so the "selection frame" still reads. The columns have the
+   width of their share of the frame (--cols shown, --col-gap between them; 18 Oct): with an equal share of whatever
+   was there (flex:1), the columns a first paint had parsed (1-2 of 4 on a slow load) took the whole width and
+   narrowed when the rest arrived - a layout shift. */
+.hero-gallery{--cols:4;--col-gap:16px;position:relative;z-index:0;display:flex;align-items:center;justify-content:flex-start;gap:var(--col-gap);
+  width:100%;height:1000px;padding:0 16px;background:var(--frame)}
 .hero-gallery::after{content:"";position:absolute;inset:0;border:1px solid var(--line);pointer-events:none}
 .hero-gallery__handle{position:absolute;z-index:1;width:8px;height:8px;border-radius:100%;background:#e9e9e6;border:1px solid rgba(0,0,0,.55);
   box-shadow:0 0 0 1px rgba(255,255,255,.12),0 4px 8px -3px rgba(0,0,0,.8)}
@@ -130,13 +133,14 @@
 .hero-gallery__handle--tr{top:-3px;right:-3px}
 .hero-gallery__handle--bl{bottom:-3px;left:-3px}
 .hero-gallery__handle--br{bottom:-3px;right:-3px}
-.hero-col{flex:1 0 0;width:1px;height:100%;overflow:hidden;overflow:clip}
+.hero-col{flex:none;width:calc((100% - (var(--cols) - 1) * var(--col-gap)) / var(--cols));height:100%;overflow:hidden;overflow:clip}
 .hero-col__list{display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none}
 .hero-col__item{display:block}
 /* stand-ins for the columns a screen hides (home_hero._columns): column 4's tiles below 1440px, column 3's below
    800px. Hidden, a stand-in is not drawn, read or focused (the original is, at those widths). With motion they sit out
    the page's first layout (ten tiles a column and the ticker's copies of them doubled a phone's start-up work) and
-   20-hero.js lets them in (.is-on) after load, where it cannot be seen; without JS or motion they are there at once. */
+   20-hero.js lets them in (.is-on) from the page's start, where it cannot be seen (their images after load); without
+   JS or motion they are there at once. */
 .hero-col__item--lt1440,.hero-col__item--lt800{display:none}
 .motion .hero-col__item:is(.hero-col__item--lt1440,.hero-col__item--lt800):not(.is-on){display:none}
 
@@ -228,6 +232,40 @@
   .hero-tile__tag,.hero-tile__labels .hero-tile__tag{white-space:normal;text-overflow:clip;text-wrap:balance;border-radius:9px}
   .hero-tile__dot,.hero-tile__ind{display:none}
 }
+/* A landing page's loop (.hero-tile--loop, home_hero._item; owner, 17 Oct): every frame of it opens with the site's own
+   nav and headline, which the pill in the top corner covered (the first headline line on phones and tablets, and on
+   desktop Tidings' note under it), so its labels sit at the foot of the frame, bottom left - over the site's lower half
+   (its imagery, cards, inputs). Pointer screens: the hover caption rolls in at the same foot, so the pill and note give
+   way to it while it shows (the link name keeps the label). Touch screens and phones: the name strip (and a note) follow
+   the image, so the frame's foot is found from the tile's width (container units) and the slot's aspect (--ar, on the
+   tile); a browser without container units keeps the pill in the top corner. */
+@media (hover:hover) and (min-width:480px){
+  .hero-tile--loop :is(.hero-tile__tag,.hero-tile__labels){top:auto;bottom:8px}
+}
+@media (hover:hover){
+  .hero-tile--loop :is(.hero-tile__tag,.hero-tile__note){transition:opacity .3s ease}
+  .hero-tile--loop:is(:hover,:focus-visible) :is(.hero-tile__tag,.hero-tile__note){opacity:0}
+}
+@supports (top:1cqw){
+  @media (max-width:479.98px),(hover:none){
+    .hero-tile--loop{container-type:inline-size}
+    .hero-tile--loop .hero-tile__tag{top:calc(100cqw / (var(--ar)) - 8px);translate:0 -100%}
+  }
+  @media (max-width:479.98px){
+    .hero-tile--loop .hero-tile__tag{top:calc(100cqw / (var(--ar)) - 6px)}
+  }
+}
+/* Touch phones (tiles ~150-200px, the 16:9 frame ~85-110px tall; 18 Oct verifier): at the frame's foot the pill still
+   hid the lower third of each site's second section (Sagewell's steps, Tidings' stats card, Emberpost's inbox, Maren
+   Holt's book row), so a loop's pill leaves the frame for the name strip under it - name, pill (then Tidings' note) -
+   and the whole loop shows. Static from the first paint, like the strip (no layout shift). 8px from the edges (the
+   docked pause button's 12px in column 2), so the pill stays on one line on a 360px phone's 151px tiles. */
+@media (hover:none) and (max-width:599.98px){
+  .hero-tile--loop .hero-tile__cap{padding-bottom:6px}
+  .hero-tile--loop .hero-tile__tag,.hero-tile--loop .hero-tile__labels .hero-tile__tag{position:static;display:flex;width:fit-content;
+    max-width:calc(100% - 8px - max(8px, var(--clear,0px)));margin:0 0 9px 8px;translate:none}
+  .hero-tile--loop .hero-tile__labels .hero-tile__tag{margin-bottom:6px}
+}
 
 /* Pause control (WCAG 2.2.2; the shared .motion-toggle, 02-components.css, for the hero's [data-motion-scope]):
    sticky below the header while the gallery is on screen. Pointer screens: the frosted "Pause motion" pill in the
@@ -255,6 +293,7 @@
   .hero-marquee{--mq-gap:40px}
   .hero-marquee__track{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%);
                                mask-image:linear-gradient(to right,transparent 0%,#000 20%,#000 80%,transparent 100%)}
+  .hero-gallery{--cols:3}
   .hero-col--4{display:none}
   .hero-col__item--lt1440{display:block}
 }
@@ -280,7 +319,7 @@
   .hero-marquee{--mq-gap:28px}
   .hero-marquee__track{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%);
                                mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%)}
-  .hero-gallery{height:100vh;height:100svh;gap:10px;padding:0 8px}
+  .hero-gallery{--cols:2;--col-gap:10px;height:100vh;height:100svh;padding:0 8px}
   .hero-col--3{display:none}
   .hero-col__item--lt800{display:block}
   .hero-col__list{gap:8px}
@@ -296,6 +335,19 @@
   .hero__title{font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}   /* ~1.3x the 32px section H2s, as on desktop */
   .hero__kicker{margin-bottom:14px;font-size:12px;letter-spacing:.14em}
 }
+/* Without motion (reduced motion, or no JS: the head script sets .motion before the first paint, only where motion is
+   allowed) the columns stand still, and the frame's fixed height (1000px; a phone's screen) clipped them: 10 of the 19
+   projects on a phone, 12 on a tablet, 15 at 1440 (18 Oct verifier). The frame takes its longest column's height
+   instead, the lead tiles at the top as before, so every gallery project is on screen at every width there too (owner,
+   15 Oct: every project at every width). The ticker's copies of a list (02-core.js makes them under reduced motion too,
+   for its loop) are not drawn there: each project shows once, as without JS. The Idea section rises over the hero's
+   foot (21-idea.css --idea-lift 176 / 136 / 88px less the hero's 56px padding = --over), so the frame keeps that much
+   clear under its last tiles (their names were under it). */
+:root:not(.motion) .hero-gallery{--over:120px;height:auto;align-items:flex-start;padding-block:var(--col-gap) calc(var(--col-gap) + var(--over))}
+:root:not(.motion) .hero-col{height:auto}
+@media (max-width:1439.98px){:root:not(.motion) .hero-gallery{--over:80px}}
+@media (max-width:799.98px){:root:not(.motion) .hero-gallery{--over:32px}}
+:root:not(.motion) .hero-gallery [data-ticker-list]>[data-clone]{display:none}
 /* forced colours: the frame tint, hairlines and handles are drawn by the system palette */
 @media (forced-colors:active){
   .hero-gallery::after,.hero-tile::after{border-color:CanvasText}

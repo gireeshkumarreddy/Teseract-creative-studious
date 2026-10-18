@@ -150,8 +150,11 @@ def card(ctx, p, n, size):
         note = f'<span class="wk-tag__note">{E(p["note"])}</span>' if p.get('note') else ''
         meta.append(f'<p class="wk-tag wk-tag--{E(p["label_kind"])}"><i aria-hidden="true"></i>'
                     f'<span class="wk-tag__label">{E(p["label"])}</span>{note}</p>')
-    meta.append(f'<p class="wk-meta"><span class="wk-meta__k">Industry:</span> {E(p["industry"])}'
-                f'<span class="wk-meta__sep" aria-hidden="true"> · </span><span class="sr-only">. Year: </span>{E(p["year"])}</p>')
+    # the year stays on the line of the industry's last word (never ' · 2026' alone on a line, e.g. at tablet width)
+    head, _, last = p['industry'].rpartition(' ')
+    meta.append(f'<p class="wk-meta"><span class="wk-meta__k">Industry:</span> {E(head + " " if head else "")}'
+                f'<span class="wk-meta__item">{E(last)}<span class="wk-meta__sep" aria-hidden="true"> · </span>'
+                f'<span class="sr-only">. Year: </span>{E(p["year"])}</span></p>')
     svc = services(p)
     if svc:
         # each service stays on one line with its trailing separator; lines break between services

@@ -16,7 +16,7 @@ Validation prototype (black theme, Geist, real crops, not site code): `WD/_work/
 | Typeface look | Neo-grotesk (Helvetica-Neue-like), uppercase display with tight tracking. All display styles share one weight (stem/cap 0.101–0.105), i.e. **Light-Regular**. Geist (project font) is about 12–15 % wider, so the recommended sizes sit about 5 % under the measured caps with lighter tracking (§5) |
 | Colours (ref) | ink `#000`; grey statement `#7E7E7E`–`#838383`; captions `#5A5A5A`; corner captions `#B9B9B9`; body `#2E2E2E`–`#363636`; red dots `#F73E48`–`#F9484F`; red rule core `#DB434E`; divider ≈ 1 px `#C8C8C8` |
 | Black-theme mapping | §6. Ink `--ink`, grey continuation `rgba(244,244,242,.5)` (4.89:1), captions and body `--ink-2` (10.2:1), corner, side and stat labels `--muted-strong` (7.2:1), dots `--red-dot`, rule `--red`, divider `--line-3` |
-| Photos | 6 rectangular crops in `teseract-website/public/assets/believe/` (§3.2), all 148–315 px wide. They display at **≤ 1.23×** native size at every tested width |
+| Photos | **Superseded 18 Oct:** the strip now shows the owner's six AI-generated images (home_believe.PHOTOS, `<stem>-<w>.webp` with srcset/sizes; DARK-THEME.md 18 Oct believe entries). The crops below were deleted. Originally: 6 rectangular crops in `teseract-website/public/assets/believe/` (§3.2), all 148–315 px wide. They display at **≤ 1.23×** native size at every tested width |
 | Breakpoints (section-local) | **≥ 1024**: poster artboard (absolute % placement, faithful). **800–1023.98**: 12-col two-band strip. **≤ 799.98**: 2-col stacked flow. This matches the project's 1023.98 / 799.98 presets |
 
 ---
@@ -98,6 +98,8 @@ Text grid: **24.39 % | 39.09 % | 36.52 %** of the content box (332 | 532 | 497 p
 - **Caption rows:** caption cap-top is 8.5–9.2 px under its photo. All captions are single-line, left-aligned to the photo's left edge, and never wider than the photo.
 
 ### 3.2 Extracted crops → `teseract-website/public/assets/believe/` (WebP q90, method 6)
+
+**Superseded 18 Oct:** the strip now shows the owner's six AI-generated images (home_believe.PHOTOS, `<stem>-<w>.webp` with srcset/sizes; DARK-THEME.md 18 Oct believe entries). The crops below were deleted.
 
 Edges were trimmed **inside** the half-max boundary: only pixels with ≥ 90 % coverage are kept. Any edge row or column still ≥ 4 levels lighter than its inner neighbour was then dropped (no white fringe on black). Paired photos were centre-trimmed to one common size. Ring check (outer 1 px ring vs. 2 px inside, + = lighter): −2.3 / −12.1 / −4.1 / −2.6 / −0.8 / −0.6, so no light fringe on any crop. The stone's −12 is a dark edge, which is invisible on black.
 

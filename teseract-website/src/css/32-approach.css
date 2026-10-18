@@ -201,7 +201,8 @@
    FLOW (< 1200px): single timeline with a left rail
    ========================================================================== */
 @media (max-width:1199.98px){
-  .ap{--gutter:40px;--rail:48px;--col-gap:24px;--step-gap:72px;--steps-top:88px;padding:28px var(--gutter) 64px}
+  /* gutter >= the landscape safe-area inset (viewport-fit=cover): no copy under a notched phone's sensor housing */
+  .ap{--gutter:max(40px,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px));--rail:48px;--col-gap:24px;--step-gap:72px;--steps-top:88px;padding:28px var(--gutter) 64px}
   .br-d{display:none}
   .ap-mast{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
   .ap-word{font-size:18px}
@@ -275,7 +276,7 @@
 
 /* ---------- phone */
 @media (max-width:799.98px){
-  .ap{--gutter:16px;--rail:28px;--col-gap:16px;--step-gap:56px;--steps-top:56px;border-radius:24px;padding:20px var(--gutter) 48px}
+  .ap{--gutter:max(16px,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px));--rail:28px;--col-gap:16px;--step-gap:56px;--steps-top:56px;border-radius:24px;padding:20px var(--gutter) 48px}
   .ap-mast{flex-direction:column;align-items:flex-start;gap:14px}
   .ap-word{font-size:16px;letter-spacing:.32em}
   /* the four disciplines as a 2 x 2 block (no "EXPERIENCE" alone on a row; no smaller type), then the poster's tagline

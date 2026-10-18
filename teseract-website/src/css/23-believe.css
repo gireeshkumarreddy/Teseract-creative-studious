@@ -7,8 +7,8 @@
    without container queries.
    Layout tiers (section-local):
      strip   ≥ 900 poster artboard (absolute % placement, faithful to the reference)
-             520–899.98 two-band 12-column grid (max 760 px so the crops stay ≤ ~1.25× native)
-             < 520 two-column flow (max 384 px, same reason)
+             520–899.98 two-band 12-column grid (max 760 px: keeps the band composition)
+             < 520 two-column flow at the full content width (the exhibition and the tall poster span both)
      text    ≥ 1024 three-column grid (0 | 24.39 % | 63.48 % as in the reference)
              800–1023.98 16 % | 1fr | 1fr · ≤ 799.98 single column
    Colours: --ink (19.1:1) for the headline, statement lead, emphasis and values; the statement
@@ -44,27 +44,35 @@
 .font-hn-real .bel__title{font-size:calc(7.8 * var(--cq));letter-spacing:-.05em}
 
 /* ==========================================================================
-   Editorial strip — artboard = reference box 1361 × 401.2 (the hood's height); captions hang below
+   Editorial strip — artboard = reference box 1361 × 401.2 (the tall slot's height); captions hang below.
+   The owner's six images (18 Oct, home_believe.PHOTOS; list order = slot order): the reference rhythm is kept
+   (two small slots top left · the tall poster · a pair bottom-aligned with it · air · one slot top right, the
+   three top slots one height), the slot shapes follow the images:
+     1 monitor 1:1 and 2 visor 0.75 in the two 148/155 slots (2 shows the head and shoulders: --pos top)
+     3 PEOPLE FIRST poster 0.75 in the 315/397 slot (≈ 3 % off top and bottom; the lettering is at mid-height)
+     4 OVERLOAD poster 0.71 and 5 puppet 0.56 in two 3:4 slots (4 centred on the word, 5 from the top: the hand)
+     6 exhibition 16:9, exact, as wide as the top band's height allows (tablet band: 1.62, the pair's height)
+   --r is each slot's aspect (the tablet / phone grids size the media box with it), --pos the object-position.
    ========================================================================== */
 .bel__strip{position:relative;margin-top:56px;aspect-ratio:1361/401.2}
 .bel__fig{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h)}
 .bel__fig figure{position:relative;height:100%}
 .bel__media{position:relative;height:100%;overflow:hidden;background:var(--surface-1)}
 .bel__media::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
-.bel__img{width:100%;height:100%;object-fit:cover}
+.bel__img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%)}
 .bel__fig--1{--x:0%;--y:0%;--w:11.08%;--h:39.7%;--r:148/155}
-.bel__fig--2{--x:11.52%;--y:0%;--w:11.08%;--h:39.7%;--r:148/155}
+.bel__fig--2{--x:11.52%;--y:0%;--w:11.08%;--h:39.7%;--r:148/155;--pos:50% 0%}
 .bel__fig--3{--x:23.15%;--y:0%;--w:23.44%;--h:100%;--r:315/397}
-.bel__fig--4{--x:47.41%;--y:54.29%;--w:12.6%;--h:45.71%;--r:167/180}
-.bel__fig--5{--x:60.51%;--y:54.29%;--w:12.6%;--h:45.71%;--r:167/180}
-.bel__fig--6{--x:84.13%;--y:0%;--w:15.87%;--h:53.86%;--r:1/1}
+.bel__fig--4{--x:47.41%;--y:43%;--w:12.6%;--h:57%;--r:3/4}
+.bel__fig--5{--x:60.51%;--y:43%;--w:12.6%;--h:57%;--r:3/4;--pos:50% 0%}
+.bel__fig--6{--x:79.19%;--y:0%;--w:20.81%;--h:39.7%;--r:16/9}
 /* micro-captions: photo captions --ink-2, corner captions one tier lighter (--muted-strong) */
 .bel__cap,.bel__corner{font-size:clamp(11px,calc(.93 * var(--cq)),12.5px);font-weight:470;line-height:1.2;letter-spacing:-.005em;text-transform:uppercase}
 .bel__cap{position:absolute;left:0;top:100%;max-width:100%;margin-top:6px;color:var(--ink-2)}
 .bel__corner{position:absolute;top:calc(100% + 6px);font-size:clamp(11px,calc(1.04 * var(--cq)),14px);font-weight:400;line-height:1.25;color:var(--muted-strong)}
 .bel__corner--l{left:0}
 .bel__corner--r{right:0;text-align:right}
-.bel__corner span{display:block}
+.bel__corner span{display:block;text-wrap:balance}   /* a wrapped line never leaves one word alone ("BUILT AROUND / YOUR BUSINESS" at 320) */
 
 /* strip motion: each photo opens upward (clip) while the image settles from 1.16 → 1, staggered in
    reading order (--d from the markup); its caption follows. The <li> carries the 02-core reveal
@@ -154,8 +162,9 @@
    ========================================================================== */
 @media (max-width:1023.98px){.bel__divider{margin-top:104px}}
 @media (max-width:899.98px){
-  /* band 1 (top-aligned): glass | stone | air | headset · band 2: hood, corner captions in the void,
-     knot + prism bottom-aligned with the hood (as on desktop) */
+  /* band 1 (top-aligned): monitor | visor | air | exhibition (5 columns at 1.62: as tall as the pair, ± 1 px)
+     · band 2: the PEOPLE FIRST poster, corner captions in the void, OVERLOAD + puppet bottom-aligned with the
+     poster (as on desktop) */
   .bel__strip{aspect-ratio:auto;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:40px 8px;max-width:760px;margin-top:48px}
   .bel__fig{position:relative;left:auto;top:auto;width:auto;height:auto}
   .bel__fig figure{height:auto}
@@ -163,7 +172,10 @@
   .bel__cap,.bel__corner{position:static;display:block;margin-top:8px;font-size:12px}
   .bel__fig--1{grid-column:1/4;grid-row:1;align-self:start}
   .bel__fig--2{grid-column:4/7;grid-row:1;align-self:start}
-  .bel__fig--6{grid-column:9/13;grid-row:1;align-self:start}
+  /* --r 1.62 (not 16:9): 5 columns + 4 gaps over the height of the 3-column 148/155 slots stays 1.619–1.635 from 520
+     to 899 px, so the three top slots keep one height and their captions one line (≈ 4.5 % off each side of the
+     16:9 image, centred: the silhouette stays whole) */
+  .bel__fig--6{grid-column:8/13;grid-row:1;align-self:start;--r:1.62}
   .bel__fig--3{grid-column:1/7;grid-row:2/4}
   .bel__fig--4{grid-column:7/10;grid-row:3;align-self:end}
   .bel__fig--5{grid-column:10/13;grid-row:3;align-self:end}
@@ -173,6 +185,12 @@
   /* 5–6 line statement: balance evens the rag ("… / easy to understand, / easy to explore / and easy to
      remember.") where pretty left a short "explore and" line; ≥ 900 keeps pretty (the reference's breaks) */
   .bel__statement{text-wrap:balance}
+}
+/* 520–899.98: OVERLOAD and the puppet are bottom-aligned with the poster as whole figures (image + caption), so a
+   caption that wraps (PURPOSEFUL TECHNOLOGY below ≈ 700 px) would lift its image one line above the others: each keeps
+   a one-line box (1.2em = its own line-height) and a second line hangs below it, in the space before the divider */
+@media (min-width:520px) and (max-width:899.98px){
+  .bel__fig--4 .bel__cap,.bel__fig--5 .bel__cap{height:1.2em}
 }
 @media (min-width:800px) and (max-width:1023.98px){
   .bel__grid{grid-template-columns:16% minmax(0,1fr) minmax(0,1fr);column-gap:32px;margin-top:64px}
@@ -226,9 +244,11 @@
   .bel__fig--3{grid-column:1/3;grid-row:2}
   .bel__fig--4{grid-column:1;grid-row:3;align-self:start}
   .bel__fig--5{grid-column:2;grid-row:3;align-self:start}
-  .bel__fig--6{grid-column:2;grid-row:4;align-self:start}
-  .bel__corner--l{grid-column:1;grid-row:4;align-self:start;margin:0}
-  .bel__corner--r{grid-column:1;grid-row:4;align-self:end;margin:0;text-align:left}   /* bottom-aligned with the headset caption */
+  /* the 16:9 exhibition takes the full width (one column would draw it under 100 px tall); the corner captions
+     close the strip below it, left and right as on desktop */
+  .bel__fig--6{grid-column:1/3;grid-row:4;--r:16/9}   /* exact again (the tablet band's 1.62 does not apply here) */
+  .bel__corner--l{grid-column:1;grid-row:5;align-self:start;margin:0}
+  .bel__corner--r{grid-column:2;grid-row:5;align-self:start;margin:0;text-align:right}
   .bel__cap,.bel__corner{font-size:12px}
 }
 

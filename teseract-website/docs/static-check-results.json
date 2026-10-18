@@ -1,6 +1,6 @@
 {
-  "routes": 34,
-  "html_files": 34,
+  "routes": 40,
+  "html_files": 40,
   "errors": [],
   "warnings": [
     "6 SAMPLE testimonial(s) on Client Stories: preview only, replace before launch (LAUNCH-CHECKLIST.md 3c; check.py fails once indexable / site_url is set)"

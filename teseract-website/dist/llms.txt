@@ -67,6 +67,12 @@ With nearly five years of professional experience across aviation, business, tec
 
 Self-initiated concepts and fan projects, not client commissions. Fan pieces are unofficial and not affiliated with the rights holders.
 
+- [Sagewell](projects/sagewell/index.html): AI reasoning SaaS concept; 2026; Concept Project. Tagline: “The model that thinks before it speaks.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/sagewell/
+- [Vantline](projects/vantline/index.html): Decision-intelligence SaaS concept; 2026; Concept Project. Tagline: “Know what changed and what to do about it.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/vantline/
+- [Tidings](projects/tidings/index.html): Chat-commerce SaaS concept; 2026; Concept Project, not affiliated with WhatsApp or Meta. Tagline: “WhatsApp campaigns customers actually want to open”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/tidings/
+- [Emberpost](projects/emberpost/index.html): People-first email SaaS concept; 2026; Concept Project. Tagline: “Email organised around the people behind it.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/emberpost/
+- [Ines Morrow](projects/ines-morrow/index.html): Film editor portfolio concept; 2026; Concept Project. Tagline: “Cuts that keep people watching”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/creative-portfolio/
+- [Maren Holt](projects/maren-holt/index.html): Book editor & newsletter concept; 2026; Concept Project. Tagline: “Notes for better books”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/maren-holt/
 - [ONE PIECE | Luffy](projects/one-piece/index.html): Cinematic fan tribute; 2026; Interactive Concept, unofficial, not affiliated with the rights holders. Tagline: “More than a hat. A promise.” Live site: https://gireeshkumarreddy.github.io/one-piece-/
 - [TĀVRA](projects/tavra/index.html): Sportswear concept; 2026; Concept Project. Tagline: “Women's sportswear drawn from India's textile art.”
 - [VELORA](projects/velora/index.html): Fragrance concept; 2026; Concept Project. Tagline: “The essence of subtle romance”.
@@ -77,8 +83,8 @@ Self-initiated concepts and fan projects, not client commissions. Fan pieces are
 - [Gireesh](projects/gireesh-portfolio/index.html): Designer portfolio; 2026; Personal project. Tagline: “Thoughtful design. Lasting impact.” Live site: https://gireeshuiux.vercel.app/
 - [THENGA](projects/thenga/index.html): Beverage brand concept; 2026; Concept Project. Tagline: “A taste of Kerala in every sip.”
 - [Gireesh — a designer's working desk](projects/gireesh-desk/index.html): UI/UX portfolio; 2026; Personal project. Tagline: “I turn ‘what if’ into things people love to use.”
-- [GIREESH — Artist · Creative · Storyteller](projects/gireesh-cinematic/index.html): Cinematic portfolio; 2026; Personal project. Tagline: “Welcome to my world”.
 - [Sedile](projects/sedile/index.html): 3D chair showroom concept; 2026; Concept Project. Tagline: “Explore our collection and find the chair that fits your work style.” Live site: https://gireeshkumarreddy.github.io/Sedile/
+- [GIREESH — Artist · Creative · Storyteller](projects/gireesh-cinematic/index.html): Cinematic portfolio; 2026; Personal project. Tagline: “Welcome to my world”.
 
 ## Pages
 

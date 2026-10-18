@@ -6,14 +6,14 @@
     "industry: short and factual, from the capture report's site_is ('verified': true) - unverified labels are the owner's draft and must be checked against the capture report once the site is captured.",
     "services: default Website Design + Website Development; 'E-commerce' for the owner's shops (derlin-haus, mahira-select, siaara, vyrn: owner confirmed 14 Oct, DARK-THEME.md 'Client update 8' and its 23:20 decisions) and nowhere else (check.py) - not Sedile's demo cart either (owner default, 15 Oct).",
     "Heeding and StepAI are excluded by the owner and must never be added. vyrn (VYRN) is a Concept Project since the owner's 14 Oct decision; its launch film also plays on the home laptop (home_laptop, home_laptop_clip).",
-    "label (owner, 14 Oct, DARK-THEME.md 'Client update 8'): shown on every Work card, project page head, home tile and service-card caption. 'Client Project' for all client work; 'Interactive Concept' (one-piece), 'Concept Project' (aaradhya, tavra, velora, saanjh, vesper, vyrn, thenga, sedile) or 'Personal project' (gireesh-portfolio, gireesh-desk, gireesh-cinematic) for the concepts group. label_note: the small secondary line under an Interactive Concept built on someone else's brand or IP ('Unofficial, not affiliated with the rights holders' / '... with the brand'). fan: true = a fan piece on film/TV/anime IP (keeps the Work page's fan-project sentence). scripts/check.py enforces the labels.",
+    "label (owner, 14 Oct, DARK-THEME.md 'Client update 8'): shown on every Work card, project page head, home tile and service-card caption. 'Client Project' for all client work; 'Interactive Concept' (one-piece), 'Concept Project' (aaradhya, tavra, velora, saanjh, vesper, vyrn, thenga, sedile and the six landing-page concepts sagewell, vantline, tidings, emberpost, ines-morrow, maren-holt - owner, 17 Oct) or 'Personal project' (gireesh-portfolio, gireesh-desk, gireesh-cinematic) for the concepts group. label_note: the small secondary line under an Interactive Concept built on someone else's brand or IP ('Unofficial, not affiliated with the rights holders' / '... with the brand'); also a Concept Project built around a third-party platform keeps its site's own not-affiliated line (Tidings: 'Not affiliated with WhatsApp or Meta', its capture review, 17 Oct). fan: true = a fan piece on film/TV/anime IP (keeps the Work page's fan-project sentence). scripts/check.py enforces the labels.",
     "scene: device-scene backdrop (lib.SCENE_STYLES: red-horizon, blue-studio, stone-red, white-glass, grey-wall, violet-rock, violet-white, green-white, sky-white, amber-rock) or null = shown as plain images (Geetha Jewellers, owner). device: monitor | laptop. scene_still: the gallery still on the Work card's screen (default gallery-01). spill: tint of the light the screen throws on the surface. scene_confirmed: false = provisional pairing, to be chosen from the capture's colours when it arrives.",
     "skip: roles not shown on the site - gallery stills ('gallery-NN') and the recordings ('laptop' = the device-scene clip on the project page, 'hero' = the phone clip on a home tile; without them the scene shows the Work still and the tile a still); remove an entry to show it again. skip_note says why.",
     "home_laptop_clip: the recording the home laptop ('The Idea') plays when home_laptop lists the project, even when skip keeps it off the project page. Owner, 15 Oct: VYRN's launch film (vyrn/laptop.mp4) opens on the A-COLD-WALL hero; it stays on the home laptop (his choice) while the VYRN project page shows clean stills only (skip 'laptop').",
     "alt: per-still alt text overrides ({\"gallery-04\": \"...\"}) for capture-report 'shows' lines that carry capture notes or private names (the capture reports themselves are read-only).",
     "Every project the owner removed (DARK-THEME.md) is listed in projects.EXCLUDED and check.py FORBIDDEN: never add one back here, in home_gallery / home_laptop or in C:/Teseract-media/order.txt.",
-    "card_clip / tile_clip: a named loop clip of the project's media folder (prepare_media.py: <name>.mp4 + its <name>.png poster) played muted, looped and inline, only while in view (poster under reduced motion / Save-Data): card_clip = on the Work card's screen (the one card that autoplays), tile_clip = its home hero tile (instead of the hero.mp4 phone scroll). Owner, 14 Oct: Aivinci's profile = the tiger from aivinci.ai's 'AI Video Story' section (aivinci/tiger.mp4 + tiger.png); its project page keeps the laptop scene video. Owner, 14 Oct (later): the tiger must read as the website, not a zoomed video - tiger.mp4 is a 16:9 desktop view of the whole section (header, heading, panel with the tiger at its size in the page, intro line), never a crop of the video alone. The card_clip's poster (<name>.png) is the project's profile image wherever a still stands for it (owner, 15 Oct: Aivinci's Client Stories card shows the tiger poster, the same still as its Work card; alt text: alt '<name>-poster').",
-    "home_gallery: the projects of the home hero gallery's 20 tiles (sections/home_hero.COLUMNS: 4 columns x 5 slots, up to 6 clips), one tile each. With 23 shown projects (15 Oct) Careers at Aeroskys, the earlier Gireesh portfolio and Sedile (owner default, 15 Oct: keep his 20 tiles) are left out of it (all three stay on the Work page with their pages); swap names here to change the selection."
+    "card_clip / tile_clip: a named loop clip of the project's media folder (prepare_media.py: <name>.mp4 + its <name>.png poster) played muted, looped and inline, only while in view (poster under reduced motion / Save-Data): card_clip = on the Work card's screen (the one card that autoplays), tile_clip = its home hero tile (instead of the hero.mp4 phone scroll). Owner, 14 Oct: Aivinci's profile = the tiger from aivinci.ai's 'AI Video Story' section (aivinci/tiger.mp4 + tiger.png); its project page keeps the laptop scene video. Owner, 14 Oct (later): the tiger must read as the website, not a zoomed video - tiger.mp4 is a 16:9 desktop view of the whole section (header, heading, panel with the tiger at its size in the page, intro line), never a crop of the video alone. The card_clip's poster (<name>.png) is the project's profile image wherever a still stands for it (owner, 15 Oct: Aivinci's Client Stories card shows the tiger poster, the same still as its Work card; alt text: alt '<name>-poster'). tile_clip may list several clips, preferred first: the home gallery plays the one that suits the shape of the slot its tile gets (owner, 17 Oct: the six landing pages' ['tile', 'hero'] - tile.mp4, the 16:9 desktop loop hero -> second section, in a landscape slot; hero.mp4, the same on a phone, only where a portrait slot is left).",
+    "home_gallery: the projects of the home hero gallery's 20 tiles (sections/home_hero.COLUMNS: 4 columns x 5 slots, up to 7 clips), one tile each. Owner, 17 Oct (DARK-THEME.md): the six landing-page concepts FIRST (each tile plays its own clip, Aivinci's tiger keeps moving: 7 clips), then the client tiles and vyrn, velora, vesper, gireesh-desk; AARADHYA, ONE PIECE, TĀVRA, THENGA, SAANJH and the cinematic portfolio left the gallery only (they keep their Work cards and pages), as did Careers at Aeroskys, the earlier Gireesh portfolio and Sedile (15 Oct). A listed project without prepared media yet is simply not shown (check.py warns); swap names here to change the selection."
   ],
   "year": "2026",
   "default_services": [
@@ -101,7 +101,7 @@
       }
     },
     {
-      "order": 21,
+      "order": 27,
       "slug": "vesper",
       "title": "Vesper",
       "group": "concept",
@@ -329,7 +329,7 @@
       "tagline_verbatim": "Go further. Grow further."
     },
     {
-      "order": 15,
+      "order": 21,
       "slug": "one-piece",
       "title": "ONE PIECE | Luffy",
       "group": "concept",
@@ -353,7 +353,7 @@
       "note": "Captured 14 Oct: unofficial single-page fan tribute to Monkey D. Luffy (footer credits Eiichiro Oda / Shueisha, Toei Animation)."
     },
     {
-      "order": 16,
+      "order": 22,
       "slug": "aaradhya",
       "title": "AARADHYA",
       "group": "concept",
@@ -375,7 +375,7 @@
       "note": "Owner screen recording ('durga saree.mp4'); the site calls itself 'A fashion editorial concept'."
     },
     {
-      "order": 17,
+      "order": 23,
       "slug": "tavra",
       "title": "TĀVRA",
       "group": "concept",
@@ -400,7 +400,7 @@
       }
     },
     {
-      "order": 18,
+      "order": 24,
       "slug": "velora",
       "title": "VELORA",
       "group": "concept",
@@ -422,7 +422,7 @@
       "note": "Owner screen recording ('Perfume.mp4'). info.txt name VELORA; the capture report names it VELORA PARIS. Online ordering not open, so no E-commerce."
     },
     {
-      "order": 19,
+      "order": 25,
       "slug": "saanjh",
       "title": "SAANJH",
       "group": "concept",
@@ -444,7 +444,7 @@
       "note": "Owner screen recording ('saanjh.mp4')."
     },
     {
-      "order": 24,
+      "order": 30,
       "slug": "gireesh-portfolio",
       "title": "Gireesh",
       "group": "concept",
@@ -464,7 +464,7 @@
       "note": "Captured 14 Oct: the studio owner's own one-page personal site (UX/UI Product Designer, France). Dark black/orange site: violet-rock (dark rock, violet family) chosen from the capture's colours instead of the provisional bright violet-white studio."
     },
     {
-      "order": 20,
+      "order": 26,
       "slug": "vyrn",
       "title": "VYRN",
       "group": "concept",
@@ -502,7 +502,7 @@
       }
     },
     {
-      "order": 22,
+      "order": 28,
       "slug": "thenga",
       "title": "THENGA",
       "group": "concept",
@@ -528,7 +528,7 @@
       }
     },
     {
-      "order": 23,
+      "order": 29,
       "slug": "sedile",
       "title": "Sedile",
       "group": "concept",
@@ -561,7 +561,7 @@
       }
     },
     {
-      "order": 25,
+      "order": 31,
       "slug": "gireesh-desk",
       "title": "Gireesh — a designer's working desk",
       "keep_title": true,
@@ -590,7 +590,7 @@
       }
     },
     {
-      "order": 26,
+      "order": 32,
       "slug": "gireesh-cinematic",
       "title": "GIREESH — Artist · Creative · Storyteller",
       "keep_title": true,
@@ -623,11 +623,217 @@
         "gallery-06": "The 'Projects' scene: twelve glowing project screens float in an arc around a figure standing in a lit floor circle: Build Without Limits (top centre), Timeless Experiences, Driven by Better Design, More Than A Game, Play Create Repeat, Your Ideas In Motion, Sound & Second Motion, Good Food Brighter Moods, Travel Explore Belong, Find Your Space, Designing A Cleaner Tomorrow and Small Steps Big Change, with the corner captions 'PROJECTS', 'Ideas / Interfaces / Experiences / Real Impact', 'Scroll / Explore / Interact', 'Real Projects Real Stories' and 'Designing A Brighter Tomorrow'.",
         "gallery-09": "The 'Projects' scene on a phone, recomposed as a vertical stack of seven project screens around the figure in the floor circle: Build Without Limits at the top, then Timeless Experiences, Driven by Better Design, Good Food Brighter Moods, Travel Explore Belong, Designing A Cleaner Tomorrow and Small Steps Big Change, with the corner captions."
       }
+    },
+    {
+      "order": 13,
+      "slug": "sagewell",
+      "title": "Sagewell",
+      "group": "concept",
+      "industry": "AI reasoning SaaS concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/landing-concepts/sagewell/",
+      "label": "Concept Project",
+      "scene": "green-white",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "spill": "rgba(196,222,176,.1)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "The model that thinks before it speaks.",
+      "tile_clip": [
+        "tile",
+        "hero"
+      ],
+      "note": "Captured 17 Oct from the live GitHub Pages site (public repo gireeshkumarreddy/landing-concepts, src/sites/sagewell; capture report reviewed: verify2 ok): a concept landing page for an invented AI reasoning model for developers and teams (README: 'Sagewell — AI reasoning model'; page title 'Sagewell — the model that thinks before it speaks'), with a prompt composer, a reasoning-trace demo, an API playground and a cost estimator; the footer says 'Sagewell is a concept product for a design portfolio.' Owner, 17 Oct: one of the six landing-page concepts, a Concept Project leading the home gallery (its 16:9 tile.mp4: hero, then 'Getting started'). Warm white paper, moss and leaf green, painted gardens: green-white + monitor proposed (scene_confirmed false until the owner has seen it). Its artworks are hotlinked Unsplash images (capture report; LAUNCH-CHECKLIST).",
+      "alt": {
+        "gallery-01": "Home page first screen: a rounded inset frame holds a misty painted garden path - green shrubs, pink and violet flowering bushes, blue-tinted trees and a sunlit path - fading into warm white at the top. The header has the Sagewell mark and wordmark, Research, Developers, Pricing, Journal and a black 'Request access' button. Below are the badge 'Preview | Sagewell 2 reads a million tokens', the headline 'The model that thinks before it speaks.' and the line 'Sagewell plans, checks and revises its own reasoning before it replies — so every answer comes with a trail you can follow, cite and defend.' A frosted glass composer shows the sample question 'Which of these three suppliers is the riskiest, and why?' with add, microphone and send buttons, over four sample chips: Two-moon tides, Supplier risk, React re-renders and Four-day week.",
+        "gallery-08": "Home page first screen on a phone: the Sagewell wordmark and a menu button, the 'Preview | Sagewell 2 reads a million tokens' badge, the headline 'The model that thinks before it speaks.' over three lines and the sub-line. The composer shows a sample question cut to one line, above the swipeable row of sample chips (Two-moon tides, Supplier risk, React re-renders). The lower half is a painting of two black-headed white wading birds among tropical leaves and red-orange foliage on a teal ground.",
+        "laptop": "Desktop scroll down the home page: it holds on the hero while the composer types 'Why does my list re-render on every keystroke?', then scrolls through '01 Getting started', where the terminal moves from step 1 to step 3. The page tints to near-black for the 'Before the answer' statement, whose words light up one by one, and for the 02 Playground code card, then back to cream at '03 Research — Four passes, one visible trail.' over a meadow painting and the Plan, Investigate, Cross-check and Conclude capsules. It ends on '04 In practice — Questions with consequences.' and its four painted question cards."
+      }
+    },
+    {
+      "order": 14,
+      "slug": "vantline",
+      "title": "Vantline",
+      "group": "concept",
+      "industry": "Decision-intelligence SaaS concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/landing-concepts/vantline/",
+      "label": "Concept Project",
+      "scene": "sky-white",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(232,184,163,.1)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "Know what changed and what to do about it.",
+      "tile_clip": [
+        "tile",
+        "hero"
+      ],
+      "note": "Captured 17 Oct from the live GitHub Pages site (public repo gireeshkumarreddy/landing-concepts, src/sites/vantline; capture report reviewed: verify2 ok after the laptop.mp4 re-take): a concept landing page for an invented decision-intelligence copilot for teams (README: 'Vantline — decision-intelligence copilot'; page title 'Vantline — Know what changed'), with a scroll-fanned insight deck, live chart controls ('Sample data'), a depth slider and a plans toggle; the footer says 'Vantline is a concept product for a design portfolio. Chart values are sample data.' Owner, 17 Oct: one of the six landing-page concepts, a Concept Project leading the home gallery (its 16:9 tile.mp4: hero, then 'The Vantline loop'). Warm white with near-black interludes and a blue-grey / pink dusk hero: sky-white + laptop proposed (scene_confirmed false until the owner has seen it). Its photographs are hotlinked Unsplash images, some with unnamed people (capture report; LAUNCH-CHECKLIST).",
+      "alt": {
+        "gallery-01": "Home page first screen: a rounded inset photo frame holds a dusk field - a large leafy tree silhouetted against a pink and blue-grey evening sky, and a person in a long dark padded coat walking through the grass beside a tall frosted-glass slab that catches the pink sky. The header has the vantline wordmark with its horizon-and-chevron mark, a glass pill nav (Product, Workflows, Principles, Plans) and a 'Start free' button. The headline reads 'Know what changed' with a serif-italic second line 'and what to do about it.', then 'Vantline reads your metrics, docs and team threads, explains every shift in plain language, and suggests the next move.', a white 'Try Vantline free' pill with a black arrow chip, and '(Keep scrolling)' at the bottom left.",
+        "gallery-03": "'Clarity, built into every view' with the line 'Read the numbers, question them and act, without opening another dashboard.' Glass cards sit over misty green hills. The chart card shows 'Weekly active accounts' 2,210, '+41% vs last quarter', a 'Sample data' tag, a 1W / 1M / 1Q range control on 1M and the 'Show last quarter' switch turned on; the chartreuse line climbs from about 1k (Sep 13) to about 2.2k (Oct 12) above a dashed last-quarter baseline, with the tooltip 'Sun, Sep 27', '1,201 accounts', 'Last quarter 1,221'. Under the chart is 'Signal over noise — Vantline separates real movement from everyday wobble, so you only hear about the changes worth a conversation.' On the right are a photo card, 'Made for the people in the room', with a man walking into dry grass seen from behind, and the 'Depth of analysis' card, whose slider is set to 'Deep read · ~28s' between Skim and Full investigation.",
+        "gallery-05": "The scroll-filled statement, fully lit in large white type on the near-black principles section: 'A chart shows that a number moved. A good brief says why it moved, who feels it, and what your team could try before Friday.' ('why it moved,' in serif italic), under the light floating nav, with the rounded bottom edges of the three principle cards leaving the frame behind it. Below, the dark ground fades into the grey fog at the top of the pricing photo, where the heading 'Plans that grow with your team' has risen in white.",
+        "gallery-08": "Home page first screen on a phone: the vantline wordmark, a glass 'Start free' button and a round menu button over the dusk photo; the headline 'Know what changed / and what to do about it.', the sub-line over three lines and the 'Try Vantline free' pill. The lower half shows the tree branches, the walker in the padded coat and the frosted-glass slab, with '(Keep scrolling)' at the bottom.",
+        "laptop": "Desktop scroll down the home page: from the hero, whose copy lifts and fades while the compact nav drops in, the five Vantline loop cards rise as a stack and fan out on their arc; the 'Clarity' panel widens to full width over green hills while the chart line draws itself in; the page re-tints to near-black for 'Better calls, made together' and its three iridescent principle cards, the statement's words fill in white, and the page turns light again for 'Plans that grow with your team', ending on the Team and Business plan cards over a foggy meadow."
+      }
+    },
+    {
+      "order": 15,
+      "slug": "tidings",
+      "title": "Tidings",
+      "group": "concept",
+      "industry": "Chat-commerce SaaS concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/landing-concepts/tidings/",
+      "label": "Concept Project",
+      "label_note": "Not affiliated with WhatsApp or Meta",
+      "scene": "violet-white",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "spill": "rgba(106,92,255,.1)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "WhatsApp campaigns customers actually want to open",
+      "tile_clip": [
+        "tile",
+        "hero"
+      ],
+      "note": "Captured 17 Oct from the live GitHub Pages site (public repo gireeshkumarreddy/landing-concepts, src/sites/tidings; capture report reviewed: verify ok): a concept landing page for an invented WhatsApp commerce and marketing platform for small shops and restaurants (README: 'Tidings — WhatsApp commerce platform'; page title 'Tidings — WhatsApp campaigns customers actually want to open'), with clickable phone chats, a campaign builder with a live preview and a three-step campaign wizard; the footer says 'Tidings is a concept product for a design portfolio. Not affiliated with WhatsApp or Meta.' Owner, 17 Oct: one of the six landing-page concepts, a Concept Project leading the home gallery (its 16:9 tile.mp4: hero, then 'Everything a chat-first shop needs'). The capture review asks to keep the site's not-affiliated line next to it wherever it is shown (label_note: the concept is built around WhatsApp, a third-party brand; no WhatsApp or Meta logo is drawn) - owner to confirm, LAUNCH-CHECKLIST. White / cloud grounds with vivid blue and violet: violet-white + monitor proposed (scene_confirmed false until the owner has seen it). Its avatars are real Unsplash portraits under invented names (model-release question, capture report); owner, 17 Oct: they are replaced by original illustrated avatars in the landing-concepts repo and the Tidings files re-captured - the media here is swapped in the next prepare_media.py run.",
+      "alt": {
+        "gallery-01": "Home page first screen: the header has the blue 'tidings' wordmark (its two i's dotted with small speech bubbles), Platform and Learn menus, Pricing, Company, a grey 'Sign in' pill, a black 'Book a demo' pill and a UK flag region switch. Under the badge 'New — take payments inside the chat' the headline reads 'Turn WhatsApp into' with 'your best sales channel' in a blue-to-violet gradient, then 'Send personalised broadcasts, win back abandoned carts and take payments right in the chat — with opt-in built in and every message measured.' and a blue 'Launch a campaign' pill. The lower half fades from white into a violet glow with soft light columns: a blue-framed phone shows 'Chats' with Priya Nair ('YES please, size M') and Tomás Ortega ('Could we make it 8:30?'); a tilted card on the left offers Priya the linen shirt she saved ('Reserve mine'), a tilted card on the right confirms Tomás's table for four at Casa Verde above a photo of a bistro table ('View booking').",
+        "gallery-04": "The campaign builder, below its heading. Left: Template 'Back in stock'; the message 'Hi {{first_name}} — good news: the {{item}} you saved is back in your size. Reply *YES* to hold one for 24 hours, or order here: {{link}}' (138 / 1,024) with the variable chips {{first_name}}, {{item}} and {{link}}; the audience segments Regulars 2,180, Recent orders 4,320, Browsed, didn’t buy 1,140 and Newsletter list 9,600, all ticked ('Estimated recipients: up to 17,240'); Schedule 'Send now' / 'Pick a time'; Preview as Priya (selected), Tomás, Hannah and Kenji; a blue 'Send test message' button and 'Tests appear in the preview phone only — no customer receives anything.' Right, on a violet panel: the tiles Recipients ≤ 17,240, Characters 138/1,024 and Sends Now, and a phone whose 'LIVE PREVIEW' bubble fills the variables in for Priya: 'Hi Priya — good news: the linen camp shirt you saved is back in your size. …', with 'Reserve mine' and 'Seen by Priya · details filled in'.",
+        "gallery-06": "The Pricing section, below its heading: 'All plans include the builder, product messages and core analytics. Pay yearly and two months are on us.', a Monthly / Yearly switch ('2 months free') on Monthly and a currency switch £ GBP (selected) / $ USD / € EUR. Three plan cards: Starter ('For small shops sending their first campaigns.', £15 / month, 'Start on Starter'), the blue featured Growth card with a 'Popular' badge ('For teams selling in the chat every week.', £49 / month, 'Start on Growth') and Scale ('For high-volume brands and multi-site groups.', Custom, 'priced on your volume', 'Talk to sales'), each with its list of features.",
+        "gallery-08": "Home page first screen on a phone: the 'tidings' wordmark, a black 'Book a demo' pill and a round menu button; the badge 'New — take payments inside the chat'; the headline 'Turn WhatsApp into your best sales channel' over four lines; the sub-line and the 'Launch a campaign' pill. Below, over the violet glow, the two tilted message cards to Priya and Tomás and the top of the phone with 'Chats' and 'Search chats'.",
+        "laptop": "Desktop scroll down the home page: it holds on the hero (the phone, the two tilted message cards and drifting light columns); as the page scrolls the phone turns slightly in 3D and rises while the cards lift away. The Platform section follows with the Broadcasts and Product messages cards, then the Pay in chat and Journeys cards and the campaign builder with its live-preview phone; the whole page then fades from white to near-black navy for 'See what every message earns.', ending on the analytics dashboard (the funnel, a £41,310 revenue tile, rate tiles and a taps-per-hour chart)."
+      }
+    },
+    {
+      "order": 16,
+      "slug": "emberpost",
+      "title": "Emberpost",
+      "group": "concept",
+      "industry": "People-first email SaaS concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/landing-concepts/emberpost/",
+      "label": "Concept Project",
+      "scene": "white-glass",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(123,109,255,.08)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "Email organised around the people behind it.",
+      "tile_clip": [
+        "tile",
+        "hero"
+      ],
+      "note": "Captured 17-18 Oct from the live GitHub Pages site (public repo gireeshkumarreddy/landing-concepts, src/sites/emberpost; capture report reviewed: verify ok): a concept landing page for an invented people-first email app that files every email under the person who sent it (README: 'Emberpost — people-first email'; page title 'Emberpost — email sorted by the people behind it'; hero 'Talk to people, not to piles of mail.'), with a clickable sample inbox, a classic-inbox / by-person switch, the Screener, Lanes, Nudges and Keyboard tools and a hanging people wall; the footer says 'Emberpost is a concept product for a design portfolio. People and messages are sample data.' Owner, 17 Oct: one of the six landing-page concepts, a Concept Project leading the home gallery (its 16:9 tile.mp4: hero, then 'Sorted by who, not by when.'). Light grey and white with a restrained violet: white-glass + laptop proposed (scene_confirmed false until the owner has seen it). Its portraits are hotlinked Unsplash photos of real models used as invented sample contacts (capture report; owner, 18 Oct: bugs only, keep the photos; LAUNCH-CHECKLIST).",
+      "alt": {
+        "gallery-01": "Home page first screen on a light grey page with faint vertical grid lines. A frosted, double-ringed floating nav holds the lowercase 'emberpost' wordmark with a small violet spark, Manifesto, Workflows and a black 'Join the waitlist' pill. Under the badge 'Now inviting small teams' the headline reads 'Talk [a violet round tile with a white envelope] to people, not to piles of mail.', then 'Emberpost groups every email by the person behind it, so you can catch up on a relationship in seconds and reply like you’re in the same room.' and a violet 'Join the waitlist' pill. Two tilted portrait tiles (Marcus Bell on the left, Amara Osei on the right) hang on thin curved lines that run down to a violet app window: the sample inbox with Teammates (Maya Chen), People (Sofia Reyes, Marcus Bell selected, Amara Osei, Theo Lindqvist) and Notifications in the sidebar, a 'Sample feed on' pill in the window bar and the open thread 'Draft budget for the spring launch' (5 messages · 14 Mar 2026, 09:40) with messages from You and Marcus Bell. Two notification cards float over the window edges: Sofia Reyes 'Could we move Thursday’s review to the …' and Theo Lindqvist 'Sent the revised contract, two small cha…'.",
+        "gallery-02": "The hero's sample inbox, scrolled so the whole app window shows under the floating nav, with the violet 'Join the waitlist' pill just below the nav and eye-level slices of the two portrait tiles in the thin strip above it. Sidebar: Teammates (Maya Chen, and Kofi Mensah's unread badge beside a notification card), People (Sofia Reyes, Marcus Bell selected, Amara Osei, Theo Lindqvist) and Notifications (Billing, Calendar, Status alerts, Release notes). Thread 'Draft budget for the spring launch': You, 12 Mar, 18:22 'Love that. Marcus, could you fold Amara’s quote in and send a clean draft?'; Marcus Bell, 14 Mar, 09:40 'Morning Ines, the draft budget is attached with Amara’s quote folded … Could you sign it off by Tuesday so Rosa can hold the space?'; a 'Reply to Marcus…' box with 'Draft a reply' and 'Send Ctrl ↵'; and the hint 'Click inside the window to use the keyboard' with the J, K, E, R and Ctrl ↵ shortcuts. The card on the left shows a new arrival from Amara Osei, 'Holding 27 and 28 March. I’ll send the sh…'; Theo Lindqvist's card covers the end of the first line of Marcus's message.",
+        "gallery-04": "The 'By person' section switched to 'Emberpost': the lead now reads 'Emberpost pulls every thread from one person into a single card, so you reply to people rather than to subject lines.' Three person cards: Marcus Bell, Launch producer, 3 (Draft budget for the spring launch 09:40, Pop-up venue shortlist Fri, Launch timeline, version 3 Wed); Sofia Reyes, Packaging designer, 3 (Thursday packaging review 08:52, Second round of label samples Fri, Label colours: final pick Tue); Theo Lindqvist, Supplier accounts, 2 (Revised supplier contract 08:15, Delivery window for April Thu). Below: '8 subject lines → 3 people. Same mail, much less hunting.'",
+        "gallery-08": "Home page first screen on a phone: the 'emberpost' wordmark, a black 'Waitlist' pill and a menu button; the two portrait tiles in the top corners; the badge 'Now inviting small teams'; the headline 'Talk [envelope tile] to people, not to piles of mail.'; the sub-line over four lines; the violet 'Join the waitlist' pill. Below, a notification card from Amara Osei ('Holding 27 and 28 March. I’ll send …', Just now) above the phone layout of the inbox: a violet window with a row of round avatars (Maya, Oliver, Kofi, Sofia, Marcus selected, and Amara cut off at the edge of the scrolling row) and the 'Marcus Bell – Draft budget for the spring launch' thread header (5 messages · 14 Mar 2026, 09:40).",
+        "laptop": "Desktop scroll down the home page: it holds on the hero, with the portrait tiles floating gently and the Sofia Reyes and Theo Lindqvist notification cards, then the app window rises through the frame; 'Sorted by who, not by when.' with the classic 'All mail' list fills the screen, then 'Four small tools, one calm inbox.' with the Screener, the Lanes and Nudges cards and the dark Keyboard card. The people-wall portraits then drop in on their strings from the centre outwards while the columns drift at different speeds, and it ends on the complete people wall ('Everyone you write to, in one calm place.')."
+      }
+    },
+    {
+      "order": 17,
+      "slug": "ines-morrow",
+      "title": "Ines Morrow",
+      "group": "concept",
+      "industry": "Film editor portfolio concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/landing-concepts/creative-portfolio/",
+      "label": "Concept Project",
+      "scene": "blue-studio",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "spill": "rgba(47,107,255,.1)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "Cuts that keep people watching",
+      "tile_clip": [
+        "tile",
+        "hero"
+      ],
+      "note": "Captured 17-18 Oct from the live GitHub Pages site (public repo gireeshkumarreddy/landing-concepts, folder src/sites/creative-portfolio; capture report reviewed: verify2 ok after its fix round): a portfolio concept for Ines Morrow, a fictional film and commercial editor in Copenhagen (README: 'Ines Morrow — film editor (fictional)'; page title 'Ines Morrow — Film editor, Copenhagen (concept)'; hero 'I’m the editor who turns hours of footage into the two minutes that matter'), with a scrubbable reel timeline, a scale strip of film stills, case studies with a before/after grade slider, an NLE-style process timeline and priced services; the footer says 'Ines Morrow is a fictional editor created for this portfolio concept.' Owner, 17 Oct: one of the six landing-page concepts, a Concept Project leading the home gallery (its 16:9 tile.mp4: hero, then the Reel's scale strip). White with one blue accent, a record red and near-black Reel sections: blue-studio + monitor proposed (scene_confirmed false until the owner has seen it). The live site's dark Reel section draws its heading and film titles in its background colour, so the stills and clips leave the work grid out until the site is fixed; its photographs are hotlinked Unsplash images, real models' faces among them presented as the fictional persona (capture report; LAUNCH-CHECKLIST).",
+      "alt": {
+        "gallery-01": "Home page first screen on white. Nav: 'INES MORROW' on the left, INDEX (active pill), PROCESS, REEL, STUDIO, CONTACT in the centre and 'START A PROJECT' on the right. The handwritten note 'Cuts that keep people watching' with a drawn squiggle arrow, the badge 'EDIT · GRADE · SOUND' with a film icon, and the three-line headline 'I’m [portrait tile] the editor who turns / hours of [scissors tile] footage into / the two minutes that matter', then a blue 'START A PROJECT' button with a calendar icon. Below, the scrubbable reel timeline: a preview monitor riding the red playhead ('01 NEON HOURS', '● TK_A003_C021', a burnt-in timecode, a rain-soaked Tokyo street at night), a timecode ruler over six coloured segments (one per film) and the transport row with play/pause, the timecode, '● NEON HOURS · COMMERCIAL' and the frame counter. At the bottom, the collaborator names OSLO NORTH, Paper Kite Films, HALDEN & CO, Studio Fjeld, lowtide and The Weekend Review, each set in its own type style, and 'FICTIONAL COLLABORATORS FOR THIS CONCEPT' with a round chevron button.",
+        "gallery-02": "The scale strip at the start of the Reel (the site's signature animation), after the page has re-tinted to near-black: 'FRAMES FROM THE REEL' on the left and 'SCROLL OR DRAG' on the right above a row of film stills that swell towards the centre. The large centre frame is a Neon Hours still, a tower block at night with pink- and blue-lit balconies under the moon. It is flanked by Afterglow (a wedge-shaped sports car with glowing headlights under a red 'DINNER' neon sign) and Grandfather’s Hands (an older man adjusting his glasses), with the aerial turquoise sea of Coastline at the left edge; to the right, smaller frames shrink to slivers. Caption '01 Neon Hours 00:00:09:12'. Bottom right: the film filters 'ALL 6' (selected), 'COMMERCIAL 2', 'MUSIC VIDEO 2', 'DOCUMENTARY 1' and 'SOCIAL 1'. The nav is a full-width dark bar with REEL active.",
+        "gallery-03": "The 'On editing' statement on the near-black page, under the dark nav with REEL still active: the eyebrow 'ON EDITING' above one large sentence, 'Editing is mostly leaving things out. I keep cutting until every frame left on the timeline has earned its place, and the moments you never see are the reason the rest of the film lands.', which fills word by word as the page scrolls - white up to 'the reason the', with 'rest of the film lands.' still fading from light to dark grey - and the signature line '—— INES MORROW, COPENHAGEN'.",
+        "gallery-04": "The case-study modal for Neon Hours, scrolled to its colour-grade comparison. Header 'Project 01 / 06' with previous, next and close buttons. The before/after grade slider rests at its middle position: the left half is labelled 'LOG · S-LOG3' (a flat, washed-out version of the Tokyo street) and the right half 'GRADED · REC.709' (deep blues and magenta), split by a white line with a round ‹ › handle. Under it 'BEFORE / AFTER GRADE' and 'Drag the handle, or focus it and use the arrow keys.', then the cards '‹ PREVIOUS Ocean Avenue' and 'NEXT › Afterglow'. The dimmed work grid shows around the modal.",
+        "gallery-05": "Process on the paper-grey page, with PROCESS active in the nav. '02 PROCESS', 'One timeline, four honest passes.' (the second half in grey) and 'Each film goes through the same four stages, and you get to see the sequence after every one. Choose a stage, or keep scrolling, and watch the timeline tighten from first sync to final mix.' The steps list: 01 Log & sync (Days 1-2, 'Every frame, labelled.' and its text; active), 02 Story cut (Days 3-6, 'Structure before style.'), 03 Picture lock (Days 7-9, 'Nothing moves after this.', cut off at the bottom). On the right is the sticky edit timeline '● NEON_HOURS_v01 · PASS 1/4 · LOG & SYNC · 03:16': a ruler from 00:00 to 02:40 with a red playhead at 01:20, V2 (CUTAWAY_12, CUTAWAY_19) and V1 (SC03_TK2, SC05_TK1, SC07_TK4) clips with thumbnail filmstrips, A1 (DIAL_03, DIAL_05), A2 (SCORE_v2), a footer '8 clips · 0 transitions · Camera log · Production sound', and four progress dashes with the first one filled.",
+        "gallery-06": "Services on white: '03 SERVICES', 'Ways we can work together.' and 'Laid out like an EDL, because old habits stick. The rates are examples for this concept; a real project gets a written quote after a short call.' A table with the columns # / SERVICE / TURNAROUND / FROM. Row 001 Campaign films (3–4 weeks, €3,200) is open: 'Hero films and every cut-down that follows, from the first assembly to the final export. I can join early to help plan coverage, or start the day the drives arrive.', DELIVERABLES (ProRes 4444 master plus review copies; 20, 10 and 6-second versions; Separate dialogue, music and effects stems), TYPICAL RANGE €3,200 – €8,000, TURNAROUND 3–4 weeks, and a blue 'ENQUIRE ABOUT CAMPAIGN FILMS →'. Then four closed rows, each with a + button: 002 Music videos 8–12 days €1,900; 003 Documentary 5–10 weeks €7,000; 004 Social versions 2–4 days €520; 005 Colour & finishing 2–4 days €780 / day. The nav highlights PROCESS.",
+        "gallery-07": "Studio on white, with STUDIO active in the nav. A black-and-white portrait of a woman, the site's photo of Ines, with 'IM_STUDIO_02' and '55.68° N · 12.57° E' burnt in and the caption 'In the studio, Copenhagen. Hover to see it in colour.' Beside it: '04 STUDIO', 'I edit for rhythm first. The rest follows.', the two bio paragraphs ('I’m Ines, a film and commercial editor working from a small studio in Copenhagen. Before cutting my own projects I spent years as an assistant editor, …' and 'Now I edit campaigns, music videos and the occasional documentary for directors and production companies, mostly remotely and across time zones. …'), TOOLKIT (DaVinci Resolve Studio – Edit, grade, Fairlight; Premiere Pro – Agency handovers; After Effects – Titles and clean-up; Frame.io – Reviews and approvals) and PRACTICALITIES (Studio – Copenhagen, Denmark; Works – Remote, worldwide; Languages – English, Danish; Time zone – CET (UTC+1 / +2)).",
+        "gallery-08": "Home page first screen on a phone: 'INES MORROW', a 'START A PROJECT' pill and a menu button; the handwritten note 'Cuts that keep people watching', the 'EDIT · GRADE · SOUND' badge, the headline over three lines with the portrait and scissors tiles, and the blue 'START A PROJECT' button. Below, the full-width reel monitor ('01 NEON HOURS', '● TK_A003_C021', the Tokyo street), the timeline ruler with the red playhead over the six coloured segments, the transport row '● NEON HOURS', the sliding marquee of collaborator names (Paper Kite Films, HALDEN & CO and Studio Fjeld, cut by the screen edges as they move) and 'FICTIONAL COLLABORATORS FOR THIS CONCEPT'.",
+        "gallery-09": "Process on a phone: '02 PROCESS', 'One timeline, four honest passes.', the lede, the edit-timeline card ('● NEON_HOURS_v01', 03:16; V2 CUTAWAY_12 and CUTAWAY_19, V1 SC03_TK2, SC05_TK1 and SC07_TK4, A1 DIAL_03 and DIAL_05, A2 SCORE_v2; '8 clips 0 transitions Camera log Production sound'), the four progress dashes, and step 01 'Log & sync', Days 1-2, 'Every frame, labelled.' with its text. The red playhead marker sits over the '01:20' ruler label.",
+        "laptop": "Desktop scroll down the home page: it holds on the hero while the reel timeline plays (the monitor shows Neon Hours, then Afterglow), glides down as the page re-tints from white to near-black for the Reel and holds on its scale strip of film stills around the Neon Hours tower-block frame. It then moves on to the 'On editing' statement, which fills word by word, and re-tints to paper grey for Process, where the sticky edit timeline re-lays itself pass by pass (Log & sync, Story cut, Picture lock, Finish). It ends on the steps 02 Story cut, 03 Picture lock and 04 Finish, with Finish active."
+      }
+    },
+    {
+      "order": 18,
+      "slug": "maren-holt",
+      "title": "Maren Holt",
+      "group": "concept",
+      "industry": "Book editor & newsletter concept",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "https://gireeshkumarreddy.github.io/landing-concepts/maren-holt/",
+      "label": "Concept Project",
+      "scene": "grey-wall",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(231,132,159,.08)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "Notes for better books",
+      "tile_clip": [
+        "tile",
+        "hero"
+      ],
+      "note": "Captured 18 Oct from the live GitHub Pages site (public repo gireeshkumarreddy/landing-concepts, src/sites/maren-holt; capture report reviewed: verify2 ok): a concept site for Maren Holt, a fictional developmental editor who writes a weekly newsletter (README: 'Maren Holt — book editor (fictional)'; page title 'Maren Holt — developmental editor and Sunday notes (concept)'; hero 'Turn your manuscript into a book readers recommend'), with a typewriter headline of pressable 3D keycaps, a rotating essay ring, essay filters, a search palette and a reader, services, workshops and contact; the footer says 'Maren Holt is a fictional editor created for this portfolio concept. Essays are sample content.' Owner, 17 Oct: one of the six landing-page concepts, a Concept Project leading the home gallery (its 16:9 tile.mp4: hero, then the essay ring). Soft greys and off-white with a slate-to-violet-to-pink gradient and a pink keycap: grey-wall + laptop proposed (scene_confirmed false until the owner has seen it). Its photos are hotlinked Unsplash images; one shows real published books with legible titles and authors on their spines (capture report; LAUNCH-CHECKLIST).",
+      "alt": {
+        "gallery-01": "Home page first screen, in its framed page: a light grey frame around the off-white page with thin vertical guide lines. The nav has the warm-grey 'MH' monogram and 'Maren Holt', a white pill with Essays, Services, Workshops, About and Contact, a search icon and 'Sign in'. Under the label 'Editing notes, every Sunday' (book glyph) the headline reads 'Turn your [white 3D keycap with a pen glyph] manuscript into / a book readers recommend [pink 3D keycap with a bookmark glyph]', with 'readers recommend' in a slate-to-violet-to-pink gradient. Below: 'I’m a developmental editor. I help first-time and returning authors shape stronger books — and I write down what I learn along the way.', an email field showing its 'your@email' placeholder and a dark 'Get the notes' button. At the bottom, 'From the notebook' with 'All essays →' and the featured tray: 'Three passes / a revision method' over a studio microphone photo, a row of worn cloth book spines and two figures silhouetted against a sunset over the sea.",
+        "gallery-04": "The essay reader: a white drawer slides in from the right over the dimmed, blurred page. Its bar says 'Sample essay, written for this concept' with a round close button; then 'Revision · 2 min read · Sample', 'Revision in three passes', the italic standfirst 'Trying to fix everything at once is why revision feels endless. Split the work into passes and each one becomes finite.', the microphone photo with the caption 'Photograph via Unsplash.', and the first part of the essay: 'Pass one: the shape' – 'Read the whole draft without changing a sentence. List what happens in each chapter and mark the places your own attention drifted.' and 'This pass is about order, purpose and pace. Nothing else is allowed to distract you.'",
+        "gallery-08": "Home page first screen on a phone: 'MH' monogram and 'Maren Holt', a search icon and a round menu button; 'Editing notes, every Sunday'; the headline over four lines, 'Turn your [white pen keycap] / manuscript into a book / readers / recommend [pink bookmark keycap]' with the gradient on 'readers recommend'; the intro sentence; a full-width email field ('your@email') and a full-width 'Get the notes' button; 'From the notebook' with 'All essays →' and the start of the sideways-scrolling featured tray ('Three passes / a revision method' on the microphone photo, the edge of the book-spines card).",
+        "laptop": "Desktop scroll down the whole home page: it holds on the finished hero (keycap headline, newsletter field, featured tray), then the essay ring turns into view, its cards drifting round the circle and speeding up with the scroll, followed by the essay list with its filters and the eight essay cards and Services with the open Manuscript assessment item. The page re-tints to near-black for 'Four things every strong draft gets right.' and back to light for the Workshops ('Small rooms, real pages, practical change.', format chips, three workshops and the 'Request a workshop' form); the About statement lights up word by word, the contact card ('Tell me about your draft.') passes, and it ends on the footer: 'Notes for [white keycap] better books', the MH brand with 'Maren Holt is a fictional editor created for this portfolio concept. Essays are sample content.', the On this page / Elsewhere links and 'Concept project for a design portfolio. Photography: Unsplash. Type: Plus Jakarta Sans & Newsreader.'"
+      }
     }
   ],
   "home_gallery": [
+    "sagewell",
+    "vantline",
+    "tidings",
+    "emberpost",
+    "ines-morrow",
+    "maren-holt",
     "aivinci",
-    "geetha-jewellers",
     "derlin-haus",
     "aeroskys",
     "mahira-select",
@@ -636,14 +842,8 @@
     "vynk",
     "livecv",
     "hidden-stories",
-    "one-piece",
     "vyrn",
-    "aaradhya",
-    "tavra",
-    "thenga",
     "velora",
-    "saanjh",
-    "gireesh-cinematic",
     "vesper",
     "gireesh-desk"
   ],
