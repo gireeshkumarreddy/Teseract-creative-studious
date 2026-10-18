@@ -236,9 +236,10 @@
    nav and headline, which the pill in the top corner covered (the first headline line on phones and tablets, and on
    desktop Tidings' note under it), so its labels sit at the foot of the frame, bottom left - over the site's lower half
    (its imagery, cards, inputs). Pointer screens: the hover caption rolls in at the same foot, so the pill and note give
-   way to it while it shows (the link name keeps the label). Touch screens and phones: the name strip (and a note) follow
-   the image, so the frame's foot is found from the tile's width (container units) and the slot's aspect (--ar, on the
-   tile); a browser without container units keeps the pill in the top corner. */
+   way to it while it shows (the link name keeps the label). Touch screens: the pill leaves the frame (below). Pointer
+   windows under 480px (the note in a strip under the image, the caption still rolling in on hover): the frame's foot
+   is found from the tile's width (container units) and the slot's aspect (--ar, on the tile); a browser without
+   container units keeps the pill in the top corner. */
 @media (hover:hover) and (min-width:480px){
   .hero-tile--loop :is(.hero-tile__tag,.hero-tile__labels){top:auto;bottom:8px}
 }
@@ -247,20 +248,18 @@
   .hero-tile--loop:is(:hover,:focus-visible) :is(.hero-tile__tag,.hero-tile__note){opacity:0}
 }
 @supports (top:1cqw){
-  @media (max-width:479.98px),(hover:none){
+  @media (hover:hover) and (max-width:479.98px){
     .hero-tile--loop{container-type:inline-size}
-    .hero-tile--loop .hero-tile__tag{top:calc(100cqw / (var(--ar)) - 8px);translate:0 -100%}
-  }
-  @media (max-width:479.98px){
-    .hero-tile--loop .hero-tile__tag{top:calc(100cqw / (var(--ar)) - 6px)}
+    .hero-tile--loop .hero-tile__tag{top:calc(100cqw / (var(--ar)) - 6px);translate:0 -100%}
   }
 }
-/* Touch phones (tiles ~150-200px, the 16:9 frame ~85-110px tall; 18 Oct verifier): at the frame's foot the pill still
-   hid the lower third of each site's second section (Sagewell's steps, Tidings' stats card, Emberpost's inbox, Maren
-   Holt's book row), so a loop's pill leaves the frame for the name strip under it - name, pill (then Tidings' note) -
-   and the whole loop shows. Static from the first paint, like the strip (no layout shift). 8px from the edges (the
-   docked pause button's 12px in column 2), so the pill stays on one line on a 360px phone's 151px tiles. */
-@media (hover:none) and (max-width:599.98px){
+/* Touch screens (18 Oct verifiers): at the frame's foot the pill still hid the lower third of each site's second
+   section (Sagewell's steps, Tidings' stats card, Emberpost's inbox, Maren Holt's book row) - on phones (16:9 frames
+   ~85-110px tall) and on tablets (834px: 225px tiles, a 126px frame), with no hover to fade it - so a loop's pill leaves
+   the frame for the name strip under it - name, pill (then Tidings' note) - and the whole loop shows. Static from the
+   first paint, like the strip (no layout shift). 8px from the edges (the docked pause button's 12px in column 2), so the
+   pill stays on one line on a 360px phone's 151px tiles. */
+@media (hover:none){
   .hero-tile--loop .hero-tile__cap{padding-bottom:6px}
   .hero-tile--loop .hero-tile__tag,.hero-tile--loop .hero-tile__labels .hero-tile__tag{position:static;display:flex;width:fit-content;
     max-width:calc(100% - 8px - max(8px, var(--clear,0px)));margin:0 0 9px 8px;translate:none}

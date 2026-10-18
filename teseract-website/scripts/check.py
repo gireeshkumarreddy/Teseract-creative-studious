@@ -83,9 +83,15 @@ NOT_ON_CARDS = {'tavra': {'gallery-05'}}
 # OWNER_ADDED, does not lead the gallery or has a tile that does not play its clip. The Product & SaaS card (service 06)
 # shows two of them (their SaaS heroes) instead of LiveCV, which stays a client project everywhere else.
 LANDING_SIX = ('sagewell', 'vantline', 'tidings', 'emberpost', 'ines-morrow', 'maren-holt')
+# Owner, 17-18 Oct: taken out of the home gallery ONLY - each keeps its Work card and page: AARADHYA, ONE PIECE, TAVRA,
+# THENGA, SAANJH and the cinematic portfolio (17 Oct), Geetha Jewellers (18 Oct ~19:05), the designer's desk portfolio
+# (18 Oct ~22:05). portfolio.json home_gallery listing one, or a hero tile in the built page showing any project the
+# list does not name (a stale dist after a home_gallery change), is an error - the auto-sync never publishes it.
+GALLERY_HIDDEN = ('aaradhya', 'one-piece', 'tavra', 'thenga', 'saanjh', 'gireesh-cinematic', 'geetha-jewellers', 'gireesh-desk')
 TIGER = ('aivinci', 'tiger')
 GALLERY_CLIPS = 7
 SAAS_CARD = '06'
+ALT_MAX = 400                  # a landing page's still / recording alt text, at most (18 Oct: one or two sentences)
 
 
 def webp_size(path):
@@ -642,9 +648,19 @@ for slug, (group, label) in {**OWNER_ADDED, **{s: ('concept', 'Concept Project')
     for img in re.findall(r'<img\b[^>]*assets/media/' + re.escape(slug) + r'/[^>]*>', ''.join(own) + article(_work, slug)):
         if not re.search(r'\balt="[^"]+"', img):                  # (the footer ring's copies are decorative: alt="")
             errors.append(f'{slug}: a page or Work card image without alt text ({img[:90]})')
-    if slug not in (projects.DATA.get('home_gallery') or []) and any(h.rstrip('/').endswith(route) for h in _tiles):
-        errors.append(f'index.html: a home hero tile shows {slug}, which portfolio.json home_gallery does not list '
-                      '(owner default, 15 Oct: his 20 tiles)')
+# No home hero tile for a project home_gallery does not list (owner default, 15 Oct: his 20 tiles) - any project, not
+# only the ones above (18 Oct: the designer's desk portfolio was taken out of the list while the built page still showed
+# it, and nothing failed); the owner-hidden ones (GALLERY_HIDDEN) never back in the list, and they keep their Work card.
+for x in projects.PROJECTS:
+    if x['slug'] not in (projects.DATA.get('home_gallery') or []) and any(h.rstrip('/').endswith(f"{x['route']}/index.html") for h in _tiles):
+        errors.append(f'index.html: a home hero tile shows {x["slug"]}, which portfolio.json home_gallery does not list '
+                      '(owner default, 15 Oct: his 20 tiles; a stale build? run python scripts/build.py)')
+for s in GALLERY_HIDDEN:
+    if s in (projects.DATA.get('home_gallery') or []):
+        errors.append(f'portfolio.json home_gallery: "{s}" is out of the home gallery (owner, 17-18 Oct; it keeps its Work card)')
+    if not projects.by_slug(s) or not article(_work, s):
+        errors.append(f'work/index.html: no Work card for {s} - out of the home gallery only, it keeps its card and page '
+                      '(owner, 17-18 Oct)')
 
 # Owner, 17 Oct (LANDING_SIX): each landing page a Concept Project in portfolio.json with its live url and tile clip;
 # prepared, it leads home_gallery and EVERY hero tile of it plays its clip (its own tile a <video>, a stand-in for a
@@ -652,7 +668,7 @@ for slug, (group, label) in {**OWNER_ADDED, **{s: ('concept', 'Concept Project')
 # warning. Aivinci's own tile plays the tiger; the gallery's own tiles play GALLERY_CLIPS clips at most; the Product &
 # SaaS card shows landing pages only (never LiveCV), each prepared one's still linked to its page on both pages. A tile
 # playing a landing page's loop is a .hero-tile--loop: its labels sit at the frame's foot, clear of the site's headline
-# (on touch phones in the name strip under the frame, 18 Oct). Its page title names its industry (seo.project_meta drops
+# (on touch screens in the name strip under the frame, 18 Oct). Its page title names its industry (seo.project_meta drops
 # to '<name> — Website' when the industry makes it longer than seo.TITLE_MAX: 18 Oct, Maren Holt's).
 _home = page_html.get('index.html', '')
 _items = re.findall(r'<li class="hero-col__item([^"]*)"><a class="(hero-tile[^"]*)" href="([^"]+)"[^>]*>(.*?)</a></li>', _home, re.S)
@@ -689,6 +705,12 @@ for s in LANDING_SIX:
     if _t and x['industry'] not in _h.unescape(_t.group(1)):
         errors.append(f'{route}: the page title "{_h.unescape(_t.group(1))}" leaves out the industry "{x["industry"]}" '
                       f'(longer than seo.TITLE_MAX = {seo.TITLE_MAX} with it): shorten portfolio.json {s} industry')
+    # Its stills' alt texts are the names of their "Tap to enlarge" links and the viewer reads them out with its count:
+    # one or two sentences (18 Oct verifier: the capture 'shows' lines ran 400-1300 characters), as portfolio.json "alt".
+    for it in x['stills'] + ([{'role': 'laptop', 'alt': x['alts'].get('laptop') or x['laptop'].get('alt') or ''}] if x['laptop'] else []):
+        if len(it['alt'] or '') > ALT_MAX:
+            warnings.append(f'{s} {it["role"]}: alt text of {len(it["alt"])} characters (> {ALT_MAX}) - a screen reader reads it '
+                            'in full as the link name and in the viewer: add a short portfolio.json "alt" override')
     if not x['tile_clips']:
         errors.append(f'{s}: no tile clip prepared (C:/Teseract-media/{s}/tile.mp4 or hero.mp4) - its home tile must play one')
     elif not any('--lt' not in cls and '<template' not in inner and _plays(inner, x['tile_clips']) for cls, inner in mine):

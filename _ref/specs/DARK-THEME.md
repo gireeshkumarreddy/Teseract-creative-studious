@@ -513,3 +513,24 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   line; ~4.5 % off each side, silhouette whole); 520-899 OVERLOAD / puppet captions keep a one-line box so a wrapped
   'PURPOSEFUL TECHNOLOGY' no longer lifts its image; corner-caption lines balanced ('BUILT AROUND / YOUR BUSINESS' at 320).
   OWNER (18 Oct ~21:35): the footer ring keeps AUTOPLAYING - no pause control, no stop after one turn (closes the WCAG 2.2.2 question).
+- DONE 18 Oct (landing-six integration, refresh repair 1, after the verifiers): MAREN HOLT's industry is now 'Book editor &
+  newsletter concept' (the site: a fictional developmental editor with a weekly newsletter; registry 'Editor & newsletter')
+  - with 'Book editor personal-brand concept' its page title ran past seo.TITLE_MAX (56) and fell back to 'Maren Holt —
+  Website | TESERACT' (og:title and JSON-LD too); check.py: a landing page whose page title leaves out its industry = error.
+  PRODUCT & SAAS: Sagewell's hero is drawn at 103.5% about '50% 20%' (service_cards MEDIA 'zoom', as Vantline's), so its
+  site's cream page margin no longer shows as a light strip at the card's foot (stack and home front print); on the home
+  small card Vantline's BACK print has its own framing (MEDIA 'small': the scene under the headline - dusk sky, glass
+  pillar, walker - at 2.3x, a 1280 file asked for by its sizes) instead of headline fragments beside the front print and
+  under its caption. GALLERY: on touch phones (under 600px) a landing page's loop tile carries its pill in the name strip
+  under the frame (name, pill, then Tidings' note), so the whole loop shows; tablets and pointer screens keep it at the
+  frame's foot. Without motion (reduced motion / no JS) the gallery frame takes its columns' full height (the ticker's
+  copies not drawn, room kept under the Idea section's lift): all 19 projects whole at 1920 / 1440 / 834 / 390 / 360 (was
+  10-15). HEADER: without JS the frosted bar is always drawn (scrolled content showed through the logo). Still open: Ines
+  Morrow's loop shows its Reel as the live site draws it (heading and film titles in the background colour) and all six
+  live pages carry the hub's title in their HTML - both fixes belong to landing-concepts (LAUNCH-CHECKLIST 3f).
+  OWNER (18 Oct ~22:05): ALSO HIDE 'Gireesh - a designer's working desk' (gireesh-desk, the green Personal project) from the home
+  gallery (keeps its Work card + page). Gallery = six landing pages + 12 others, same 4 columns / 20 tiles.
+- OWNER (18 Oct ~22:10, going to sleep, laptop on charge all night, 'I'm not going to touch anything'): do EVERYTHING by 07:00
+  on 19 Oct without him - the second push + testing, all the landing-concepts repo fixes + re-captures + media swap + push,
+  and the full SEO / AEO / GEO / technical-SEO pass (keywords, brand-name #1 + suggestions goal, report of what was done),
+  following every earlier instruction. Pushes to GitHub are authorised by this request.
