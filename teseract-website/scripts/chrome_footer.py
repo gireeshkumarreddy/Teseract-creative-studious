@@ -188,12 +188,35 @@ def _socials():
     return ''.join(out)
 
 
+# The footer's short service words -> the What We Create service each one names (its section id: service_cards.slug).
+FOOTER_SERVICE = {'Web Design': 'Website Design', 'Development': 'Website Development', 'E-commerce': 'E-commerce',
+                  'Interactive': 'Interactive & 3D', 'Branding': 'Brand & Digital Identity', 'Product': 'Product & SaaS',
+                  'AI': 'AI & Automation'}
+
+
+def _service_link(ctx, word):
+    """A footer service word as a link to its section on What We Create (plain text when it names no service)."""
+    name = FOOTER_SERVICE.get(word)
+    if not name:
+        return E(word)
+    from sections.service_cards import slug
+    return f'<a class="ft-bar__svc" href="{E(ctx.url("what-we-create", slug(name)))}">{E(word)}</a>'
+
+
+def _copyright():
+    """The copyright line with the full studio name kept on one line (no-break spaces), so a narrow phone (360 px)
+    breaks it as '© 2026 TESERACT Creative Studios.' / 'All rights reserved.' (with text-wrap:balance, 12-footer.css)."""
+    text, full = E(fmt(FOOTER['copyright'])), E(CONFIG.get('brand_full') or '')
+    return text.replace(full, full.replace(' ', ' '), 1) if full else text
+
+
 def _bar(ctx, compact=False):
     current = ctx.route.split('/')[0]
     nav = ''.join(
         f'<li>{_bar_link(ctx.url(route), label, current=(True if route == ctx.route else ("section" if route == "work" and current == "projects" else False)))}</li>' for _key, label, route in NAV)
-    # no-break space before each dot so a wrapped line never starts with a separator
-    services = ' · '.join(FOOTER['services'])
+    # no-break space before each dot so a wrapped line never starts with a separator; each word links to its service's
+    # section on What We Create (owner's SEO request, 18 Oct: descriptive sitewide links, same look - 12-footer.css)
+    services = ' · '.join(_service_link(ctx, word) for word in FOOTER['services'])
     legal = (f'<li>{_bar_link(ctx.url("privacy"), "Privacy policy", current=current == "privacy")}</li>'
              f'<li>{_bar_link(ctx.url("terms"), "Terms of service", current=current == "terms")}</li>')
     brand = '' if compact else (f'<a class="ft-bar__brand" href="{ctx.url("")}" aria-label="{E(BRAND)} home">'
@@ -208,11 +231,11 @@ def _bar(ctx, compact=False):
       <nav class="ft-bar__nav" aria-label="Footer">
         <ul class="ft-bar__links" role="list">{nav}</ul>
       </nav>
-      <p class="ft-bar__services"><span class="sr-only">Services: </span>{E(services)}</p>
       {social}
+      <p class="ft-bar__services"><span class="sr-only">Services: </span>{services}</p>
     </div>
     <div class="ft-bar__meta">
-      <p class="ft-bar__copy">{E(fmt(FOOTER["copyright"]))}</p>
+      <p class="ft-bar__copy">{_copyright()}</p>
       <ul class="ft-bar__links ft-bar__legal" role="list" aria-label="Legal">{legal}</ul>
       <p class="ft-bar__motto">{E(fmt(FOOTER["motto"]))}</p>
     </div>

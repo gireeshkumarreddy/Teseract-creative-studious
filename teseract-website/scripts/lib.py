@@ -5,13 +5,35 @@ here for anything that touches URLs or assets so that:
   * relative links work from file:// as well as any static host (ZIP convention), and
   * only the assets that are actually referenced get copied into dist/.
 """
-import datetime, html, json, pathlib, re
+import datetime, html, json, os, pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / 'public'
 DIST = ROOT / 'dist'
 CONFIG = json.loads((ROOT / 'site.config.json').read_text(encoding='utf-8'))
+# Launch test (owner's SEO request, 18 Oct: launch = set site_url + indexable, checked before it happens): the env var
+# TESERACT_CONFIG_OVERLAY names a JSON file whose keys are merged over site.config.json for this run only, e.g.
+# {"indexable": true, "site_url": "https://www.example-domain.com/"}. build.py refuses to write ROOT/dist with an
+# overlay and check.py refuses to judge it, so the real config and the published build never see the test values.
+OVERLAY = None
+if os.environ.get('TESERACT_CONFIG_OVERLAY'):
+    OVERLAY = pathlib.Path(os.environ['TESERACT_CONFIG_OVERLAY']).resolve()
+    CONFIG.update(json.loads(OVERLAY.read_text(encoding='utf-8')))
 BRAND = CONFIG['brand']
+
+
+def config_problems():
+    """Launch-switch guard (owner's SEO request, 18 Oct): indexable may only be true together with an https site_url
+    (every canonical, og:url / og:image, sitemap and JSON-LD URL is built from it; without it a 'launched' site has
+    none of them, and robots.txt on the github.io sub-path is ignored). build.py stops and check.py fails on these."""
+    out = []
+    site = (CONFIG.get('site_url') or '').strip()
+    if site and not re.match(r'^https://[^/\s]+\.[^/\s]+(/[^\s]*)?$', site):
+        out.append(f'site.config.json site_url "{site}" must be an absolute https:// address (e.g. https://www.your-domain.com)')
+    if CONFIG.get('indexable') and not site:
+        out.append('site.config.json indexable is true while site_url is empty: set your https domain as site_url first '
+                   '(LAUNCH-CHECKLIST.md 2-3)')
+    return out
 YEAR = datetime.date.today().year
 ASSETS = {a['name']: a for a in json.loads((ROOT / 'scripts/asset-manifest.json').read_text(encoding='utf-8'))}
 USED = set()          # paths relative to public/, e.g. 'assets/home-01-1280.webp'
@@ -61,8 +83,15 @@ class Ctx:
         self.base = '../' * depth or './'
 
     def url(self, route, frag=''):
+        """Relative link to a route. Without a site_url: '<base><route>/index.html', so the build also opens from
+        file:// (ZIP convention) and today's preview is unchanged. With a site_url (launch, owner's SEO request 18 Oct):
+        the directory form '<base><route>/' ('./' / '../../' for home) - the same URL as its canonical, sitemap and
+        JSON-LD entry, so no page gets a crawlable '/index.html' twin."""
         route = route.strip('/')
-        path = self.base + (route + '/index.html' if route else 'index.html')
+        if (CONFIG.get('site_url') or '').strip():
+            path = self.base + (route + '/' if route else '')
+        else:
+            path = self.base + (route + '/index.html' if route else 'index.html')
         return path + (('#' + frag) if frag else '')
 
     def asset(self, file):

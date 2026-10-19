@@ -1,8 +1,17 @@
 # TESERACT Creative Studios
 
-> TESERACT is a digital creative studio focused on design, technology and experiences. We create interactive, thoughtful and tailor-made digital experiences for businesses that want to be different.
+> TESERACT Creative Studios (TESERACT) is a digital creative studio focused on design, technology and experiences. We create interactive, thoughtful and tailor-made digital experiences for businesses that want to be different.
 
 From the first idea to the final interaction, we design and build your digital presence around your business, your audience and your vision.
+
+## Key facts
+
+- Name: TESERACT Creative Studios (TESERACT), spelled with one S. Tesseract is a geometric concept associated with a fourth dimension. For the agency, the name represents thinking beyond the obvious, exploring new dimensions of digital experiences, and building work that goes beyond ordinary websites. Not affiliated with other companies or software named Tesseract.
+- Tagline: Build beyond the ordinary.
+- Founder: [Gireesh](who-we-are/index.html#founder) — Founder · Product Designer · Business & Technology
+- Where we work: Remotely, with businesses, founders and teams across India and worldwide.
+- Contact: gireesh.uiux@gmail.com; [contact page](contact/index.html)
+- Profiles: Instagram https://www.instagram.com/itsgireesh.uiux/, LinkedIn https://www.linkedin.com/in/gireesh-kumar-reddy-kolli-/, GitHub https://github.com/gireeshkumarreddy (the founder's own, used by the studio until it has company pages)
 
 ## What we create
 
@@ -41,57 +50,62 @@ With nearly five years of professional experience across aviation, business, tec
 
 ## Frequently asked questions
 
+- **What does TESERACT Creative Studios do?** TESERACT is a digital creative studio focused on design, technology and experiences. We create interactive, thoughtful and tailor-made digital experiences for businesses that want to be different.
+- **Where do you work?** Remotely, with businesses, founders and teams across India and worldwide.
 - **Do I need a perfect brief before we talk?** No. You don't need a perfect brief. You don't need technical knowledge. You don't even need to know exactly what you want yet. Tell us what you have in mind — we'll take it from there.
 - **Do you offer fixed packages?** We don't believe in fixed packages. Every business has different goals, audiences and challenges, so we build what makes sense for you.
 - **What can you build for us?** Website design, website development, e-commerce, interactive & 3D experiences, brand & digital identity, product & SaaS, AI & automation and digital strategy.
+- **Do you build e-commerce websites?** Yes. From discovering a product to completing a purchase, we design every step of the experience: product pages, shopping experiences, cart & checkout, payment integration and order management.
+- **Do you design SaaS products and landing pages?** Yes. We design dashboards, SaaS platforms, web applications, user flows and prototypes, and we build landing pages.
 - **Will my website look like a template?** No. You don't need another template. Every project starts from zero, built around your business, your audience and your vision.
 - **How does a project work?** Understand, define, explore, design, refine, build, test, launch and evolve. We take the time to understand, explore, design, build and refine.
 - **What happens after launch?** Launch is not the end. Businesses change, and your website should be able to change with them. We can continue supporting, improving and evolving your digital experience as your business grows.
 - **How involved will we be?** We communicate, share progress, ask questions, listen to feedback and build together — because the best results happen when the client isn't just watching the process. They're part of it.
+- **What does the name TESERACT mean?** Tesseract is a geometric concept associated with a fourth dimension. For the agency, the name represents thinking beyond the obvious, exploring new dimensions of digital experiences, and building work that goes beyond ordinary websites.
 
 ## Client Work
 
-- [Aivinci Creative Studio](projects/aivinci/index.html): AI creative & technology studio; 2026; Client Project. Tagline: “WE CREATE WHAT’S NEXT.” Live site: https://aivinci.ai/
-- [Geetha Jewellers](projects/geetha-jewellers/index.html): Jewellery; 2026; Client Project. Tagline: “More than Jewellery, It’s a part of your story”. Live site: https://geetha-seven.vercel.app/
-- [AeroSkys](projects/aeroskys/index.html): Travel booking; 2026; Client Project. Tagline: “Book your trip in a few clicks.” Live site: https://aeroskys.vercel.app/
-- [Derlin Haus](projects/derlin-haus/index.html): Menswear e-commerce; 2026; Client Project. Tagline: “WHAT’S INSIDE MATTERS.” Live site: https://derlin-haus.vercel.app/
-- [Mahira Select](projects/mahira-select/index.html): Indian ethnic womenswear; 2026; Client Project. Tagline: “More Than Fashion”. Live site: https://mahira2.netlify.app/
-- [SAN Media Solution](projects/san-media/index.html): Digital marketing agency; 2026; Client Project. Tagline: “BRANDS TODAY. BIGGER TOMORROWS.” Live site: https://www.sanmediasolutions.com/
-- [SIAARA By S&A](projects/siaara/index.html): Handcrafted sarees; 2026; Client Project. Tagline: “SAREES WOVEN WITH CULTURE”. Live site: https://gleeful-belekoy-e52bbe.netlify.app/
-- [Vynk Network](projects/vynk/index.html): Travel eSIM; 2026; Client Project. Tagline: “Global data. No roaming. Total freedom.” Live site: https://vynk-zeta.vercel.app/
-- [LiveCV](projects/livecv/index.html): Resume & career platform; 2026; Client Project. Tagline: “Your career is bigger than a resume.” Live site: https://gireeshkumarreddy.github.io/Livecv/
-- [Hidden Stories](projects/hidden-stories/index.html): Short-stay homes, Hyderabad; 2026; Client Project. Tagline: “Your stay. Your story.” Live site: https://gireeshkumarreddy.github.io/hidden/
-- [Careers at Aeroskys](projects/aeroskys-careers/index.html): Careers portal; 2026; Client Project. Tagline: “Go further. Grow further.” Live site: https://aeroskys-careers.vercel.app/
+- [Aivinci Creative Studio](projects/aivinci/index.html): AI creative & technology studio; 2026; Client Project. A single-page website for Aivinci Creative Studio, an AI creative and technology studio, showing its AI films, creative technology and digital products. Tagline: “WE CREATE WHAT’S NEXT.” Live site: https://aivinci.ai/
+- [Geetha Jewellers](projects/geetha-jewellers/index.html): Jewellery; 2026; Client Project. A one-page website for Geetha Jewellers, a gold and diamond jewellery shop: scroll-animated collections, a store-visit section and gold savings schemes. Tagline: “More than Jewellery, It’s a part of your story”. Live site: https://geetha-seven.vercel.app/
+- [AeroSkys](projects/aeroskys/index.html): Travel booking; 2026; Client Project. A travel booking website for AeroSkys to search and book flights, hotels, holiday packages and buses; a working prototype in which bookings are simulated. Tagline: “Book your trip in a few clicks.” Live site: https://aeroskys.vercel.app/
+- [Derlin Haus](projects/derlin-haus/index.html): Menswear e-commerce; 2026; Client Project. An online menswear shop for Derlin Haus: shirts, T-shirts and trousers, with category pages, search and filters, size selection and a bag with coupons. Tagline: “WHAT’S INSIDE MATTERS.” Live site: https://derlin-haus.vercel.app/
+- [Mahira Select](projects/mahira-select/index.html): Indian ethnic womenswear; 2026; Client Project. An online store for Mahira Select’s Indian ethnic womenswear, from sarees and kurta sets to lehengas, with a cinematic home page, a cart and checkout. Tagline: “More Than Fashion”. Live site: https://mahira2.netlify.app/
+- [SAN Media Solution](projects/san-media/index.html): Digital marketing agency; 2026; Client Project. A website for SAN Media Solution, a digital marketing agency: its services, marketing packages and team, and a work page of reels, films and posters. Tagline: “BRANDS TODAY. BIGGER TOMORROWS.” Live site: https://www.sanmediasolutions.com/
+- [SIAARA By S&A](projects/siaara/index.html): Handcrafted sarees; 2026; Client Project. An online saree boutique for SIAARA By S&A: handcrafted sarees by weave and colour, product pages, a wishlist, a bag and an English and Telugu switch. Tagline: “SAREES WOVEN WITH CULTURE”. Live site: https://gleeful-belekoy-e52bbe.netlify.app/
+- [Vynk Network](projects/vynk/index.html): Travel eSIM; 2026; Client Project. A travel eSIM store for Vynk Network: compare plans by destination and get a QR-code eSIM; in this preview build, accounts, codes and payments are simulated. Tagline: “Global data. No roaming. Total freedom.” Live site: https://vynk-zeta.vercel.app/
+- [LiveCV](projects/livecv/index.html): Resume & career platform; 2026; Client Project. A resume-builder website for LiveCV that turns a resume into one permanent live link, shown with example profiles the site labels illustrative. Tagline: “Your career is bigger than a resume.” Live site: https://gireeshkumarreddy.github.io/Livecv/
+- [Hidden Stories](projects/hidden-stories/index.html): Short-stay homes, Hyderabad; 2026; Client Project. A website for Hidden Stories, eight short-stay homes in Hyderabad: a scroll-driven story around a home-tour film, then search and booking in demo mode. Tagline: “Your stay. Your story.” Live site: https://gireeshkumarreddy.github.io/hidden/
+- [Careers at Aeroskys](projects/aeroskys-careers/index.html): Careers portal; 2026; Client Project. A careers site for Aeroskys, a travel booking company: open roles in three groups, each with its own page, career ladder, hiring process and application. Tagline: “Go further. Grow further.” Live site: https://aeroskys-careers.vercel.app/
 
 ## Concepts & Interactive
 
 Self-initiated concepts and fan projects, not client commissions. Fan pieces are unofficial and not affiliated with the rights holders.
 
-- [Sagewell](projects/sagewell/index.html): AI reasoning SaaS concept; 2026; Concept Project. Tagline: “The model that thinks before it speaks.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/sagewell/
-- [Vantline](projects/vantline/index.html): Decision-intelligence SaaS concept; 2026; Concept Project. Tagline: “Know what changed and what to do about it.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/vantline/
-- [Tidings](projects/tidings/index.html): Chat-commerce SaaS concept; 2026; Concept Project, not affiliated with WhatsApp or Meta. Tagline: “WhatsApp campaigns customers actually want to open”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/tidings/
-- [Emberpost](projects/emberpost/index.html): People-first email SaaS concept; 2026; Concept Project. Tagline: “Email organised around the people behind it.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/emberpost/
-- [Ines Morrow](projects/ines-morrow/index.html): Film editor portfolio concept; 2026; Concept Project. Tagline: “Cuts that keep people watching”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/creative-portfolio/
-- [Maren Holt](projects/maren-holt/index.html): Book editor & newsletter concept; 2026; Concept Project. Tagline: “Notes for better books”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/maren-holt/
-- [ONE PIECE | Luffy](projects/one-piece/index.html): Cinematic fan tribute; 2026; Interactive Concept, unofficial, not affiliated with the rights holders. Tagline: “More than a hat. A promise.” Live site: https://gireeshkumarreddy.github.io/one-piece-/
-- [TĀVRA](projects/tavra/index.html): Sportswear concept; 2026; Concept Project. Tagline: “Women's sportswear drawn from India's textile art.”
-- [VELORA](projects/velora/index.html): Fragrance concept; 2026; Concept Project. Tagline: “The essence of subtle romance”.
-- [AARADHYA](projects/aaradhya/index.html): Saree house concept; 2026; Concept Project. Tagline: “Maa Durga.”
-- [SAANJH](projects/saanjh/index.html): Beverage concept; 2026; Concept Project. Tagline: “Good things. Slowly savoured.”
-- [VYRN](projects/vyrn/index.html): Fashion e-commerce concept; 2026; Concept Project. Tagline: “Modern essentials. Independent expression.”
-- [Vesper](projects/vesper/index.html): Architectural lighting concept; 2026; Concept Project. Tagline: “Objects of light for quiet architecture — calm by day, generous after dark.” Live site: https://wall-lights.vercel.app/
-- [Gireesh](projects/gireesh-portfolio/index.html): Designer portfolio; 2026; Personal project. Tagline: “Thoughtful design. Lasting impact.” Live site: https://gireeshuiux.vercel.app/
-- [THENGA](projects/thenga/index.html): Beverage brand concept; 2026; Concept Project. Tagline: “A taste of Kerala in every sip.”
-- [Gireesh — a designer's working desk](projects/gireesh-desk/index.html): UI/UX portfolio; 2026; Personal project. Tagline: “I turn ‘what if’ into things people love to use.”
-- [Sedile](projects/sedile/index.html): 3D chair showroom concept; 2026; Concept Project. Tagline: “Explore our collection and find the chair that fits your work style.” Live site: https://gireeshkumarreddy.github.io/Sedile/
-- [GIREESH — Artist · Creative · Storyteller](projects/gireesh-cinematic/index.html): Cinematic portfolio; 2026; Personal project. Tagline: “Welcome to my world”.
+- [Sagewell](projects/sagewell/index.html): AI reasoning SaaS concept; 2026; Concept Project. A concept landing page for Sagewell, an invented AI reasoning model for developers and teams, with a prompt composer and a reasoning-trace demo. Tagline: “The model that thinks before it speaks.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/sagewell/
+- [Vantline](projects/vantline/index.html): Decision-intelligence SaaS concept; 2026; Concept Project. A concept landing page for Vantline, an invented decision-intelligence copilot that explains what changed in your numbers, shown with sample data. Tagline: “Know what changed and what to do about it.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/vantline/
+- [Tidings](projects/tidings/index.html): Chat-commerce SaaS concept; 2026; Concept Project, not affiliated with WhatsApp or Meta. A concept landing page for Tidings, an invented chat-commerce platform for small shops and restaurants, with clickable phone chats and a campaign builder. Tagline: “WhatsApp campaigns customers actually want to open”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/tidings/
+- [Emberpost](projects/emberpost/index.html): People-first email SaaS concept; 2026; Concept Project. A concept landing page for Emberpost, an invented people-first email app that files every email under its sender, with a clickable sample inbox. Tagline: “Email organised around the people behind it.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/emberpost/
+- [Ines Morrow](projects/ines-morrow/index.html): Film editor portfolio concept; 2026; Concept Project. A portfolio concept for Ines Morrow, a fictional film and commercial editor, with a scrubbable reel timeline and a before-and-after colour-grade slider. Tagline: “Cuts that keep people watching”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/creative-portfolio/
+- [Maren Holt](projects/maren-holt/index.html): Book editor & newsletter concept; 2026; Concept Project. A concept landing page for Maren Holt, a fictional developmental editor with a weekly newsletter: a keycap headline, sample essays, a reader and search. Tagline: “Notes for better books”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/maren-holt/
+- [ONE PIECE | Luffy](projects/one-piece/index.html): Cinematic fan tribute; 2026; Interactive Concept, unofficial, not affiliated with the rights holders. An unofficial fan tribute to Monkey D. Luffy, told in cinematic, scroll-driven chapters: a fan experiment made for fun and never sold. Tagline: “More than a hat. A promise.” Live site: https://gireeshkumarreddy.github.io/one-piece-/
+- [TĀVRA](projects/tavra/index.html): Sportswear concept; 2026; Concept Project. A concept store for TĀVRA, a women’s sportswear concept built on Indian textile crafts such as bandhani, ikat and ajrakh; checkout and payment are off. Tagline: “Women's sportswear drawn from India's textile art.”
+- [VELORA](projects/velora/index.html): Fragrance concept; 2026; Concept Project. A concept website for VELORA, a fragrance-house concept built around its signature eau de parfum, with an interactive bottle and notes; ordering is not open. Tagline: “The essence of subtle romance”.
+- [AARADHYA](projects/aaradhya/index.html): Saree house concept; 2026; Concept Project. An editorial concept website for AARADHYA, a saree-house concept themed around Maa Durga: a love letter to the saree, to heritage and to the feminine spirit. Tagline: “Maa Durga.”
+- [SAANJH](projects/saanjh/index.html): Beverage concept; 2026; Concept Project. A concept website for SAANJH, a drinks-brand concept of bottled Indian-flavoured blends in three flavours: Kesar Cloud, Elaichi Silk and Gulab Velvet. Tagline: “Good things. Slowly savoured.”
+- [VYRN](projects/vyrn/index.html): Fashion e-commerce concept; 2026; Concept Project. A fashion storefront concept for VYRN, a concept label of modern essentials, with animated editorial sections, a collection and product pages; payments are off. Tagline: “Modern essentials. Independent expression.”
+- [Vesper](projects/vesper/index.html): Architectural lighting concept; 2026; Concept Project. A concept storefront for Vesper, an architectural-lighting brand concept: a shop, four collections and a day/night mode; no real orders are processed. Tagline: “Objects of light for quiet architecture — calm by day, generous after dark.” Live site: https://wall-lights.vercel.app/
+- [Gireesh](projects/gireesh-portfolio/index.html): Designer portfolio; 2026; Personal project. A one-page personal site for Gireesh: a portrait hero, an about statement, the kinds of digital work he offers to build and a meeting request. Tagline: “Thoughtful design. Lasting impact.” Live site: https://gireeshuiux.vercel.app/
+- [THENGA](projects/thenga/index.html): Beverage brand concept; 2026; Concept Project. A one-page brand-concept website for THENGA, a coconut-water concept: a scroll-driven 3D coconut cracks open to reveal the can, then five flavours. Tagline: “A taste of Kerala in every sip.”
+- [Gireesh — a designer's working desk](projects/gireesh-desk/index.html): UI/UX portfolio; 2026; Personal project. A six-page personal UI/UX portfolio for Gireesh, styled as a designer’s desk, with a work board, a process scene and illustrative case studies. Tagline: “I turn ‘what if’ into things people love to use.”
+- [Sedile](projects/sedile/index.html): 3D chair showroom concept; 2026; Concept Project. A concept 3D showroom and demo store for office chairs under the invented brand Sedile, with a Chair Finder, real-time 3D views and a demo checkout. Tagline: “Explore our collection and find the chair that fits your work style.” Live site: https://gireeshkumarreddy.github.io/Sedile/
+- [GIREESH — Artist · Creative · Storyteller](projects/gireesh-cinematic/index.html): Cinematic portfolio; 2026; Personal project. A single-page cinematic personal portfolio for Gireesh, built from WebGL and video scenes: a walk-out opening, a creative universe, a journey through time. Tagline: “Welcome to my world”.
 
 ## Pages
 
-- [Home](index.html): We don't build ordinary websites.
-- [Who we are](who-we-are/index.html): We're a small team with big ideas.
-- [What we create](what-we-create/index.html): Digital experiences built around your business.
-- [Our approach](our-approach/index.html): How an idea becomes an experience.
-- [The work](work/index.html): Explore a selection of work we've created for businesses, brands and digital products.
-- [Client stories](client-stories/index.html): Good work starts with good collaboration.
-- [Contact](contact/index.html): Let's build something worth remembering.
+- [Home](index.html): TESERACT Creative Studios designs and builds interactive, tailor-made websites and digital experiences for businesses across India and worldwide.
+- [Who we are](who-we-are/index.html): TESERACT is a digital creative studio focused on design, technology and experiences, working with businesses, founders and teams that want to be different.
+- [What we create](what-we-create/index.html): Website design & UI/UX, development, landing pages, e-commerce, interactive & 3D, brand identity, product & SaaS, AI & automation and digital strategy.
+- [Our approach](our-approach/index.html): Our website process in nine steps: understand, define, explore, design, refine, build, test, launch and evolve. Great work doesn’t happen in one step.
+- [The work](work/index.html): Our portfolio of client websites, e-commerce stores and self-initiated concepts, including SaaS landing pages, by TESERACT Creative Studios.
+- [Client stories](client-stories/index.html): We believe the best measure of our work is what our clients think after working with us. Good work starts with good collaboration.
+- [Contact](contact/index.html): Have an idea, a new business or a website that needs a complete rethink? Tell us what you have in mind — you don’t need a perfect brief.

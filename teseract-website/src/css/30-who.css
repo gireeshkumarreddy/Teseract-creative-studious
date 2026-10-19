@@ -272,7 +272,9 @@
 .who-b02{width:fit-content;max-width:420px;border:1px solid var(--who-line);background:#050505}
 .who-b02__head{display:flex;align-items:stretch;font-size:13px;line-height:1;letter-spacing:.06em;text-transform:uppercase}
 .who-b02__head>span:first-child{flex:1;padding:6px 8px;background:var(--ink);color:#000}
-.who-b02__n{padding:6px 8px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+/* the '/02' after the label: generated from data-n, so crawlers read the heading as its words (owner's SEO request,
+   18 Oct); empty alt text keeps it out of the accessible name, as the aria-hidden span it replaces */
+.who-b02__head::after{content:attr(data-n);content:attr(data-n) / "";padding:6px 8px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .who-q{font-size:clamp(30px,5cqw,52px);line-height:1.08;letter-spacing:-.035em;color:var(--ink);text-wrap:pretty}
 .font-hn .who-q{letter-spacing:-.025em}
 .who-q__lead{color:var(--pg-grey-lg)}
@@ -448,7 +450,7 @@
   .who-board--w{padding-top:calc(120 * var(--u));padding-bottom:calc(120 * var(--u))}
   .who-b02{grid-column:1;grid-row:1}
   .who-b02__head{font-size:calc(14 * var(--u))}
-  .who-b02__head>span:first-child,.who-b02__n{padding:calc(6 * var(--u)) calc(8 * var(--u))}
+  .who-b02__head>span:first-child,.who-b02__head::after{padding:calc(6 * var(--u)) calc(8 * var(--u))}
   .who-q{grid-column:2/5;grid-row:1;font-size:calc(54 * var(--u));line-height:1.08}
   .who-board--w .fdr-rs{grid-column:2;grid-row:2;margin-top:calc(72 * var(--u))}
   .who-board--w .fdr-rs__a,.who-board--w .fdr-rs__r{font-size:calc(15 * var(--u))}

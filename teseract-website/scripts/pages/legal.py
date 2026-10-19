@@ -11,6 +11,9 @@ from pages.who import page_hero, mark3d, flat_mark, SEAL, DOTS
 EMAIL = CONFIG.get('email') or ''
 PLACEHOLDER = bool(CONFIG.get('email_is_placeholder'))
 ENDPOINT = (CONFIG.get('form_endpoint') or '').strip()
+# True while /terms/ is the 'Coming soon' placeholder below (owner's SEO request, 18 Oct): a launch build gives it
+# robots noindex (chrome.py) and leaves it out of sitemap.xml (build.py). Set to False once the studio's own terms are in.
+TERMS_PLACEHOLDER = True
 
 
 def _email_button(ctx, label='Email us'):

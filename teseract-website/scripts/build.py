@@ -153,7 +153,9 @@ def build(out, clean=False):
     for p in projects.CASES:
         ctx = Ctx(p['route'], 'project')
         body = safe('pages.project', 'render', ctx, p)
-        lib.write(p['route'], safe('chrome', 'document', ctx, p['title'], f"{p['title']} — {p['industry']}. {p['services'] or ''}".strip(), body))
+        # head_extra: the laptop poster's preload (the desktop LCP; owner's SEO request, 18 Oct - Core Web Vitals)
+        lib.write(p['route'], safe('chrome', 'document', ctx, p['title'], f"{p['title']} — {p['industry']}. {p['services'] or ''}".strip(), body,
+                                   head_extra=safe('pages.project', 'preload', ctx, p)))
 
     # 404: rendered at /404/ and copied to /404.html with root-relative base fixed.
     ctx = Ctx('404', 'notfound')
@@ -165,6 +167,15 @@ def build(out, clean=False):
         root404 = root404.replace('<head>', '<head>' + base_tag, 1)
     lib.longpath(out / '404.html').write_text(root404, encoding='utf-8')
 
+    # SEO / GEO files: llms.txt always; sitemap.xml + robots Sitemap line once site_url is configured. Made before
+    # the asset copy, so the stills the sitemap lists are copied into the build.
+    seo = importlib.import_module('seo')
+    (out / 'llms.txt').write_text(seo.llms_txt(), encoding='utf-8')
+    # the sitemap lists the indexable pages only: not the 404, nor /terms/ while it is the 'Coming soon' placeholder
+    # (pages/legal.TERMS_PLACEHOLDER: noindexed at launch too - owner's SEO request, 18 Oct)
+    legal = importlib.import_module('pages.legal')
+    routes = [r for r, *_ in PAGES if not (r == 'terms' and legal.TERMS_PLACEHOLDER)] + [p['route'] for p in projects.CASES]
+    sm = seo.sitemap(routes)
     # Copy only referenced assets (plus fonts, which CSS references).
     for f in ['assets/inter-tight-latin.woff2', 'assets/inter-tight-latin-italic.woff2']:   # single typeface: Inter Tight stands in for Helvetica Neue
         lib.USED.add(f)
@@ -180,13 +191,10 @@ def build(out, clean=False):
         if not dst.exists() or dst.stat().st_size != src.stat().st_size or dst.stat().st_mtime < src.stat().st_mtime:
             shutil.copy2(src, dst)
             copied += 1
-    # SEO / GEO files: llms.txt always; sitemap.xml + robots Sitemap line once site_url is configured.
-    seo = importlib.import_module('seo')
-    (out / 'llms.txt').write_text(seo.llms_txt(), encoding='utf-8')
-    routes = [r for r, *_ in PAGES] + [p['route'] for p in projects.CASES]
-    sm = seo.sitemap(routes)
     if sm:
         (out / 'sitemap.xml').write_text(sm, encoding='utf-8')
+    elif (out / 'sitemap.xml').exists():          # no site_url (any more): no stale sitemap with an old domain
+        (out / 'sitemap.xml').unlink()
     robots = 'User-agent: *\n' + ('Allow: /\n' if CONFIG.get('indexable') else 'Disallow: /\n')
     if sm and CONFIG.get('indexable'):
         robots += f'Sitemap: {seo.SITE}/sitemap.xml\n'
@@ -212,4 +220,10 @@ if __name__ == '__main__':
     out = lib.ROOT / 'dist'
     if '--out' in sys.argv:
         out = pathlib.Path(sys.argv[sys.argv.index('--out') + 1]).resolve()
+    if lib.OVERLAY and out.resolve() == (lib.ROOT / 'dist').resolve():
+        # a launch test (TESERACT_CONFIG_OVERLAY) never writes the published build: give it its own --out folder
+        sys.exit(f'build.py: TESERACT_CONFIG_OVERLAY ({lib.OVERLAY}) is set - build into a scratch folder with --out, never dist/')
+    problems = lib.config_problems()
+    if problems:                    # the launch-switch guard: indexable only with an https site_url
+        sys.exit('build.py: ' + '; '.join(problems))
     sys.exit(build(out, clean='--clean' in sys.argv))

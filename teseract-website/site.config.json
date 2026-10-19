@@ -17,8 +17,15 @@
   },
   "form_endpoint": "",
   "site_url": "",
+  "site_url_note": "LAUNCH SWITCH (owner's SEO request, 18 Oct): your own https domain, e.g. \"https://www.your-domain.com\". It turns on canonical URLs, og:url and absolute share images, directory links, structured-data URLs, breadcrumbs, sitemap.xml and the robots.txt Sitemap line - everything absolute is built from this one value. Set it together with indexable: true (build.py refuses indexable without it). Steps: LAUNCH-CHECKLIST.md 'Launch steps'; docs/SEO.md.",
   "timezone": "",
   "timezone_note": "Optional IANA zone (e.g. \"Europe/London\"). When set, the footer clock shows studio time; empty = the visitor's local time.",
   "indexable": false,
-  "indexable_note": "Kept out of search engines (noindex + robots Disallow) until rights to the portfolio imagery carried over from the ZIP are confirmed. Set to true to allow indexing."
+  "indexable_note": "Kept out of search engines (noindex + robots Disallow) until rights to the portfolio imagery carried over from the ZIP are confirmed. Set to true to allow indexing.",
+  "area_served": ["India", "Worldwide"],
+  "area_served_note": "Where the studio works, for the JSON-LD areaServed (owner, 18 Oct: remote, across India and worldwide - no city, no street address, no phone). A country name becomes a schema.org Country; 'Worldwide' stays text.",
+  "alternate_names": ["TESERACT"],
+  "alternate_names_note": "Other names of the studio for the JSON-LD alternateName (Organization + WebSite). You may add \"TESSERACT Creative Studios\" (the content document's double-S spelling) once you approve it; no case-only variants (\"Teseract Creative Studios\") - search engines ignore case.",
+  "org_profiles": [],
+  "org_profiles_note": "The studio's OWN company profiles (LinkedIn company page, studio Instagram, Behance...) under the exact name \"TESERACT Creative Studios\". While empty, the Organization's sameAs uses the socials above (your personal profiles) as a stop-gap; once filled, only these are used for the company."
 }

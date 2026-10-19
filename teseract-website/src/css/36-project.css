@@ -35,6 +35,16 @@
 .pj-head__services .chips{justify-content:flex-end}
 .pj-head__label{font:500 12px/1.2 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
 .pj-head__chips .chip{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.04);color:var(--ink-2)}
+/* the project's one-sentence summary under the meta line (owner's SEO request, 18 Oct): the site's secondary body copy
+   (as .section-head__sub), spacing and measure only */
+.pj-head__summary{max-width:560px;margin-top:20px;font-size:16px;line-height:1.5;letter-spacing:-.3px;color:var(--ink-2);text-wrap:pretty}
+/* a chip that is a service of What We Create links to its section there (owner's SEO request, 18 Oct): same look and
+   no hover change - the whole chip is the target (::after) and carries the focus ring */
+.pj-head__chips .chip{position:relative}
+.pj-chip-link{color:inherit}
+.pj-chip-link::after{content:"";position:absolute;inset:0;border-radius:10px}
+.pj-chip-link:focus-visible{outline:none}
+.pj-chip-link:focus-visible::after{outline:2px solid var(--red);outline-offset:3px}
 
 /* ---------- Label line above the title (always visible, ink): ink dot = "Client Project", red dot = the concepts
    group ("Interactive Concept" + its small "Unofficial, not affiliated with ..." line, "Concept Project", "Personal project") */
@@ -200,6 +210,7 @@
   .pj-head{padding:24px 0 40px}
   .pj-head__bar{margin-bottom:40px}
   .pj-head__meta{margin-top:16px}
+  .pj-head__summary{margin-top:16px}
   .pj-head__grid{gap:28px}
   .pj-gallery{gap:8px;padding:0 8px}
   .pj-hero{padding-bottom:8px}
@@ -241,6 +252,7 @@
   .pj-next__title{font-size:34px}   /* the H1 stays ~1.3x the next-project H2 */
   .pj-tag{margin-bottom:10px}
   .pj-head__meta{margin-top:12px}
+  .pj-head__summary{margin-top:12px}
   .pj-visit{margin-top:2px}
   .pj-zoom--hero{width:min(100%,calc((100svh - var(--nav-h) - 16px) * 1.6));max-width:none;min-width:0}
   .pj-phone{width:auto;height:calc(100svh - 120px)}

@@ -13,7 +13,9 @@ spread()), by_slug(slug) (a shown project or None). Each project dict:
   'Interactive Concept' / 'Concept Project' / 'Personal project' for the concepts - owner, 14 Oct), note (the small
   secondary line of an Interactive Concept, e.g. 'Unofficial, not affiliated with the brand', else None),
   label_kind ('client' | 'interactive' | 'concept' | 'personal': CSS modifier), tag (= label, the short form for pills),
-  fan (a fan piece on film/TV/anime IP), industry, year, date (= year, for captions),
+  fan (a fan piece on film/TV/anime IP), industry, summary (portfolio.json "summary": one factual sentence from the
+  capture report, owner's SEO request 18 Oct - the project page's line under its meta, its meta description, CreativeWork
+  description and llms.txt row; None when not written), year, date (= year, for captions),
   services (' / ' joined), services_list, url (live site or None), kind ('case'), route ('projects/<slug>'),
   scene (device-scene style or None), device ('monitor' | 'laptop' | None), spill (screen light tint or None),
   scene_still (the still on the Work card's screen), tagline (verbatim or None), order,
@@ -137,6 +139,7 @@ def _build(e, mp):
         'label': label, 'note': note, 'label_kind': LABEL_KIND[label], 'tag': label,
         'fan': bool(e.get('fan')) and group == 'concept',
         'industry': (e.get('industry') or _FALLBACK_INDUSTRY[group]).strip(),
+        'summary': (e.get('summary') or '').strip() or None,
         'year': e.get('year') or YEAR, 'date': e.get('year') or YEAR,
         'services': ' / '.join(services), 'services_list': services,
         'url': e.get('url') or None, 'kind': 'case', 'route': f"projects/{e['slug']}",

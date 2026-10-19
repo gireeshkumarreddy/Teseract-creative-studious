@@ -187,8 +187,8 @@ def _hero(ctx):
              'S1400 736 1536 730 S1800 722 1960 716')
     # "who we are." (Client update 5; image 5 reads "who are we.") - letters rise, the full stop is drawn as image 5's
     # round dot (the site face's period is square). The letter spans are inline-block, so screen readers would spell
-    # them ('w h o w e a r e .', A11Y-04): the visual letters are aria-hidden and the H1 (and the hero region it
-    # labels) is named once by the .sr-only words.
+    # them ('w h o w e a r e .', A11Y-04): the H1 (and the hero region it labels) is named once by its aria-label,
+    # and crawlers read the letters once as the text (19 Oct SEO repair: no second .sr-only copy).
     words = ['who', 'we', 'are']
     letters = []
     k = 0
@@ -220,7 +220,7 @@ def _hero(ctx):
       </div>
       <div class="who-hero__monitor" data-who-monitor><div class="who-hero__tilt" data-who-tilt>{monitor}</div></div>
     </div>
-    <h1 class="who-display" id="page-title" data-who-display><span class="sr-only">{E(' '.join(words).capitalize())}.</span><span class="who-display__txt" aria-hidden="true">{title}</span></h1>
+    <h1 class="who-display" id="page-title" data-who-display aria-label="{E(' '.join(words).capitalize())}."><span class="who-display__txt">{title}</span></h1>
   </div>
 </section>'''
 
@@ -376,11 +376,12 @@ def _why(ctx):
     lines = [l + ',' for l in lines[:-1]] + lines[-1:]
     assert ' '.join([h] + lines) == w['closing'] and len(lines) == 3
     goals = ' '.join(f'<span class="who-close__ln" style="--i:{i}">{T(l)}</span>' for i, l in enumerate(lines))
-    # the H2 IS the inverted bar; column 2 (Gireesh's answer) stays one paragraph
+    # the H2 IS the inverted bar; its '/02' is drawn by 30-who.css from data-n (owner's SEO request, 18 Oct: the heading
+    # text reads 'Why TESERACT exists', not '... exists/02'); column 2 (Gireesh's answer) stays one paragraph
     html = f"""<section class="who-why" id="why" aria-labelledby="why-title">
   <div class="who-board who-board--w" data-who-in>
     {grid(GRID_X, (0,), [(x, 0) for x in GRID_X])}
-    <div class="who-b02" data-reveal><h2 class="who-b02__head" id="why-title"><span>{T(fmt(w['label']))}</span><span class="who-b02__n" aria-hidden="true">/02</span></h2></div>
+    <div class="who-b02" data-reveal><h2 class="who-b02__head" id="why-title" data-n="/02"><span>{T(fmt(w['label']))}</span></h2></div>
     <p class="who-q" data-split><span class="who-q__lead">{T(lead)}</span> {T(mid)}<span class="who-bx who-bx--red" style="--n:0">{T(tail)}</span></p>
     <div class="fdr-rs" data-fdr-rs data-reveal style="--d:120ms">
       <p class="fdr-rs__head" hidden><span class="fdr-rs__hint" id="fdr-rs-hint" aria-hidden="true" data-fine="(click to restore)">(tap to restore)</span>

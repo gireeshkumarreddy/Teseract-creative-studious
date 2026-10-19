@@ -49,14 +49,15 @@ def header(ctx):
 </header>'''
 
 
-def document(ctx, title, description, body, *, footer_cta=True):
+def document(ctx, title, description, body, *, footer_cta=True, head_extra=''):
+    """The page. head_extra: trusted markup for the end of <head> (a project page's poster preload)."""
     import seo
     full_title, description = seo.meta(ctx, title, description)
     b = ctx.base
-    og = ctx.asset('assets/brand/og-image.jpg')
-    page_url = seo.abs_url(ctx.route)
-    if page_url:
-        og = seo.SITE + '/assets/brand/og-image.jpg'
+    # share image (owner's SEO request, 18 Oct): the logo card, or a project page's own Work-card still; absolute once
+    # site_url is set. No canonical / og:url on the not-found page (a canonical on a noindexed soft 404 is a mixed signal).
+    og, og_w, og_h, og_alt = seo.og_image(ctx)
+    page_url = None if ctx.page == 'notfound' else seo.abs_url(ctx.route)
     canonical = (f'<link rel="canonical" href="{E(page_url)}">'
                  f'<meta property="og:url" content="{E(page_url)}">') if page_url else ''
     ld = seo.jsonld(seo.schema(ctx, full_title, description))
@@ -72,19 +73,21 @@ def document(ctx, title, description, body, *, footer_cta=True):
 <meta name="description" content="{E(description)}">
 <meta name="theme-color" content="#000000">
 <meta name="color-scheme" content="dark">
-{'<meta name="robots" content="noindex">' if CONFIG.get('indexable') and ctx.page == 'notfound' else '' if CONFIG.get('indexable') else '<meta name="robots" content="noindex,nofollow">'}
+<meta name="robots" content="{seo.robots(ctx)}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{E(CONFIG['brand_full'])}">
 <meta property="og:locale" content="en_GB">
 <meta property="og:title" content="{E(full_title)}">
 <meta property="og:description" content="{E(description)}">
-<meta property="og:image" content="{og}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="{E(CONFIG['brand_full'])} logo">
+<meta property="og:image" content="{E(og)}">
+<meta property="og:image:width" content="{og_w}">
+<meta property="og:image:height" content="{og_h}">
+<meta property="og:image:alt" content="{E(og_alt)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{E(full_title)}">
 <meta name="twitter:description" content="{E(description)}">
+<meta name="twitter:image" content="{E(og)}">
+<meta name="twitter:image:alt" content="{E(og_alt)}">
 {canonical}
 <link rel="alternate" type="text/plain" href="{b}llms.txt" title="{E(CONFIG['brand_full'])} — summary for AI assistants">
 {ld}
@@ -107,7 +110,7 @@ try{{var c=document.createElement('canvas').getContext('2d'),t='mmmmmmmmmmlliWQ@
 <link rel="preload" href="{b}assets/{'fonts/helvetica-neue-400.woff2' if lib.WEBFONT else 'inter-tight-latin.woff2'}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{b}styles.css?v={lib.ASSET_VERSION.get('styles.css', '1')}">
 <script src="{b}app.js?v={lib.ASSET_VERSION.get('app.js', '1')}" defer></script>
-</head>
+{head_extra}</head>
 <body class="page-{ctx.page}">
 {intro}
 <a class="skip-link" href="#main">Skip to content</a>

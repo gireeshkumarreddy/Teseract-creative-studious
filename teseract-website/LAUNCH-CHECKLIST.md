@@ -9,13 +9,57 @@ python scripts/check.py
 
 Then upload the **contents of `dist/`** to your static host.
 
+## Launch steps (SEO, 18 Oct): in this order
+
+The site is hidden from search engines until step 5 (`noindex` on every page, `robots.txt` `Disallow: /`). Launching
+means setting two values, `site_url` and `indexable`, together. `build.py` refuses `indexable: true` without an https
+`site_url`. How the SEO layer works and which page targets which search terms: `docs/SEO.md`.
+
+1. **Clear the blockers.**
+   - Replace the six sample testimonials (item 3c below). `check.py` fails a launch build while one remains.
+   - Answer items 3b, 3d, 3e and 3f.
+   - Approve, or change, the new SEO copy:
+     - the 5 new home FAQ entries (`scripts/content.py` `FAQ`: what we do, where we work, e-commerce, SaaS and landing pages, what the name means)
+     - the 29 one-sentence project summaries (`scripts/portfolio.json` `"summary"`, shown under each project's title line)
+     - the footer line "© 2026 TESERACT Creative Studios. All rights reserved."
+   - Optionally approve "TESSERACT Creative Studios" as an alternate name (`site.config.json` `alternate_names`).
+2. **Buy the domain and point it at GitHub Pages.** At your registrar, add:
+   - four `A` records on the apex (`@`): `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+   - four `AAAA` records: `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`
+   - a `CNAME` record `www` → `gireeshkumarreddy.github.io`
+3. **Set the domain in GitHub.** Open repo **Settings > Pages > Custom domain**, enter it (e.g. `www.your-domain.com`) and save.
+   - Do **not** add a CNAME file: the site deploys through the Actions workflow (`.github/workflows/pages.yml`), which ignores it, and `check.py` fails on `dist/CNAME` before launch.
+   - Wait for the DNS check and the certificate, then tick **Enforce HTTPS**.
+   - Open `https://<your domain>/` and check that the site loads. The github.io address then redirects to it.
+4. **Switch on the launch in `site.config.json`:**
+   ```json
+   "site_url": "https://www.your-domain.com",
+   "indexable": true
+   ```
+   `site_url` is exactly the address GitHub Pages serves: `https://`, the domain you entered in step 3, no path. If you have them, also fill `org_profiles` with the studio's own company pages.
+5. **Build, check, publish:** `python scripts/build.py --clean`, then `python scripts/check.py` must end with **0 errors**. Then publish (push to `main`; the Pages workflow deploys `dist/`).
+6. **Verify the live site:**
+   - The home page source shows `<link rel="canonical" href="https://<domain>/">` and `<meta name="robots" content="max-image-preview:large, ...">`.
+   - `https://<domain>/robots.txt` reads `Allow: /` plus `Sitemap: https://<domain>/sitemap.xml`.
+   - `https://<domain>/sitemap.xml` lists 37 pages.
+   - The links between pages end in `/` (no `index.html`).
+7. **Tell the search engines.**
+   - In Google Search Console, add a **Domain** property and verify it with the DNS TXT record (no tag or script on the site, so the privacy page stays true).
+   - Submit `sitemap.xml`.
+   - Use URL Inspection to request indexing of `/`, `/who-we-are/`, `/what-we-create/` and `/work/`.
+   - In Bing Webmaster Tools, import the site from Search Console and submit the sitemap. Bing also feeds Copilot, DuckDuckGo and much of ChatGPT search.
+8. **After launch, for the brand name:**
+   - Create company profiles under the exact name "TESERACT Creative Studios" (LinkedIn company page, a studio Instagram, Behance), then add their URLs to `site.config.json` `org_profiles` (and `socials.behance`).
+   - Use the exact full name everywhere people see it: signatures, proposals, invoices, social bios.
+   - Being the first result for "TESERACT Creative Studios" is realistic soon after indexing. Search suggestions follow real searches over time and cannot be forced.
+
 ## Must do before going live
 
 | # | What | Where | Why |
 |---|---|---|---|
 | 1 | ✓ Done (14 Oct): your real email address, `email_is_placeholder` is `false` | `site.config.json` → `email` | Email links and the contact form go to `gireesh.uiux@gmail.com`. Change it there if the address ever changes. |
-| 2 | Set your domain, e.g. `https://teseract.studio` | `site.config.json` → `site_url` | Turns on canonical URLs, absolute Open Graph image, structured-data URLs, breadcrumbs and `sitemap.xml`. |
-| 3 | Check the portfolio is all yours, then set `indexable` to `true` | `site.config.json` → `indexable` | The site is `noindex` + `robots.txt Disallow` until then. The ZIP's ZZStudio projects are being replaced by your own websites (client permission confirmed by you in chat). Before switching indexing on, also clear item 3b. |
+| 2 | Set your domain, e.g. `https://www.your-domain.com`, **together with item 3** (see "Launch steps" above) | `site.config.json` → `site_url` | Turns on canonical URLs, absolute share images, directory-form links, structured-data URLs, breadcrumbs, `sitemap.xml` and the `robots.txt` Sitemap line. Only set it once `https://<domain>/` serves the site. |
+| 3 | Check the portfolio is all yours, then set `indexable` to `true`, together with `site_url` (item 2; `build.py` refuses `indexable` without it) | `site.config.json` → `indexable` | The site is `noindex` + `robots.txt Disallow` until then. The ZIP's ZZStudio projects are being replaced by your own websites (client permission confirmed by you in chat). Before switching indexing on, also clear item 3b. |
 | 3b | Photo licences inside your own sites | VELORA's gallery credits photographers (Denis Gorbuleac, Hassan Ouajbir) | Screenshots of a site show its photos too. Confirm you may use them, or the VELORA stills that show them are swapped out. See `SITE-ISSUES.md` for every site. |
 | 3d | VYRN rights (every VYRN image on the site, plus your home laptop film) | `C:/Teseract-media/vyrn/` and `_supplied/ecommerce-vyrn-categories.png` | **Models' likeness, all VYRN imagery**: ✓ you confirmed (15 Oct) that the model images may be shown. For the record: every VYRN model photo is an AI recreation of reference screenshots made with prompts that keep the models' faces, and the repo does not say where those reference photos come from. Models appear in the VYRN project page's scene and stills (gallery-03, 04, 07, 08 and 10), its Work card, its home hero tile, the footer ring on every page (gallery-03), the next-project tile on SAANJH and your E-commerce frame. **Home film only**: it opens on the **A-COLD-WALL** hero, a real fashion label's name. The hero photo and layout come from another designer's published concept page for that label (the repo's own reference `image2.jpeg`). The Casual look in the categories sequence wears **Nike**-swoosh socks. You chose to keep the film; confirm these before launch, or replace the film. The project page shows no A-COLD-WALL screen and no film (`check.py` enforces this). **Sneakers**: ✓ resolved 15 Oct: you dropped the two screens whose Air Force 1-style sneakers carry a faint swoosh (gallery-05, Knitwear and Bomber; gallery-06, product cards 02 and 06). They are off the site (`portfolio.json` skip, `check.py` OWNER_SKIPS). **®**: the logo reads "VYRN®" in every still, the E-commerce frame and the film. The ® sign is only for a registered trademark. |
 | 3e | Your other new projects (15 Oct) | `scripts/portfolio.json` | THENGA: its credited Kerala photos (Unsplash / CC BY-SA, incl. a real Kathakali performer) are in no still or video on our site. The logo's "®" is only for a registered mark. Gireesh — a designer's working desk: ✓ you confirmed (15 Oct) that "based in France, with roots in India" is true and that the illustrative FORME and SONAR case studies stay. The placeholder contact email shows in none of our media. GIREESH — Artist · Creative · Storyteller: the screens with third-party tool logos (Figma, Claude, ChatGPT …) and its desktop recording are left out, and so is the phone copy of the closing shot (gallery-10, your answer of 15 Oct). Confirm the two portraits on its "Projects" screens are not real private people. Sedile (added 15 Oct as a Concept Project, industry "3D chair showroom concept"): confirm the industry line and its light studio backdrop (white-glass, provisional). Until you answer it is not E-commerce and not in the home hero gallery, and the two stills with the site's kinked mesh-chair frames (gallery-03, 04) are left out. Its designers, prices and brand facts are the site's own fiction (its README); its footer says "Demo storefront — no real orders are processed." |

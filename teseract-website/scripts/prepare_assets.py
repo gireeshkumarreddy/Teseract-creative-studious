@@ -2,9 +2,13 @@
 
     python scripts/prepare_assets.py           # downloads scripts/asset-sources.json into dist/assets + asset-manifest.json
     python scripts/prepare_assets.py --brand   # only the small copies of the 3D brand mark (local, no download)
+    python scripts/prepare_assets.py --logo    # only the 512 px square logo (local, no download)
 
 --brand: public/assets/brand/logo-mark-3d-<w>.webp at BRAND_MARK_WIDTHS from the 515 x 519 master
-(logo-mark-3d.png), for the 20-64 px avatars that lib.img() serves them to (the master stays for the large marks)."""
+(logo-mark-3d.png), for the 20-64 px avatars that lib.img() serves them to (the master stays for the large marks).
+--logo: public/assets/brand/logo-512.png, the flat mark (logo-mark.svg's four triangles) on white, framed like the 180 px
+touch icon - the Organization logo in the JSON-LD (seo.LOGO; owner's SEO request, 18 Oct: a large square for knowledge
+panels)."""
 import concurrent.futures, hashlib, io, json, pathlib, sys, urllib.request
 from PIL import Image, ImageOps
 
@@ -26,6 +30,28 @@ def brand_marks():
         path = BRAND / f'logo-mark-3d-{width}.webp'
         img.resize((width, height), Image.Resampling.LANCZOS).save(path, 'WEBP', quality=88, method=6)
         print('Prepared', path.relative_to(ROOT).as_posix(), f'{width}x{height}', path.stat().st_size, 'bytes', flush=True)
+
+# logo-mark.svg (viewBox 0 0 100 100): its four triangles, drawn like apple-touch-icon-180.png - the mark in #111 on white,
+# centred, 61.7% of the canvas high (111 of 180 px).
+LOGO_TRIANGLES = (((50, 0.73), (92.11, 73.66), (7.89, 73.66)), ((6.14, 24.03), (47.76, 0), (6.14, 55.27)),
+                  ((66.81, 8.41), (93.86, 24.03), (93.86, 72.09)), ((8.38, 75.97), (77.05, 84.38), (50, 100)))
+LOGO_SIZE, LOGO_SHARE, LOGO_INK, SUPER = 512, 111 / 180, (17, 17, 17), 4
+
+
+def brand_logo():
+    """The square logo PNG, drawn at 4x and downscaled (smooth edges)."""
+    from PIL import ImageDraw
+    size = LOGO_SIZE * SUPER
+    scale = LOGO_SHARE * size / 100
+    off = size / 2 - 50 * scale
+    img = Image.new('RGB', (size, size), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    for tri in LOGO_TRIANGLES:
+        draw.polygon([(off + x * scale, off + y * scale) for x, y in tri], fill=LOGO_INK)
+    path = BRAND / 'logo-512.png'
+    img.resize((LOGO_SIZE, LOGO_SIZE), Image.Resampling.LANCZOS).save(path, 'PNG', optimize=True)
+    print('Prepared', path.relative_to(ROOT).as_posix(), f'{LOGO_SIZE}x{LOGO_SIZE}', path.stat().st_size, 'bytes', flush=True)
+
 
 def prepare(item):
     url, name = item['url'], item['name']
@@ -49,6 +75,9 @@ def prepare(item):
 if __name__ == '__main__':
     if '--brand' in sys.argv[1:]:
         brand_marks()
+        sys.exit(0)
+    if '--logo' in sys.argv[1:]:
+        brand_logo()
         sys.exit(0)
     OUT.mkdir(parents=True, exist_ok=True)
     SOURCES = json.loads((ROOT / 'scripts/asset-sources.json').read_text())

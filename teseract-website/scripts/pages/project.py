@@ -2,8 +2,9 @@
 
   head     back link + "Case study NN / NN" (counted within the project's group) · the project's label (Client
            Project / Interactive Concept + its "Unofficial, ..." line / Concept Project / Personal project) ·
-           H1 project name · year · industry · "What we created" chips ·
-           "Visit site" (live URL, new tab) when the site is online
+           H1 project name · year · industry · its one-sentence summary (portfolio.json "summary", from the capture
+           report; owner's SEO request, 18 Oct) · "What we created" chips (a service of What We Create links to its
+           section there) · "Visit site" (live URL, new tab) when the site is online
   hero     the project's device scene (lib.scene: backdrop + drawn monitor/laptop, portfolio.json "scene" /
            "device") playing its laptop recording through lib.video (lazy, poster first, poster only under
            reduced motion), or showing its Work still (a still on the screen opens in the viewer below); a project
@@ -24,6 +25,7 @@ from lib import E, fmt, ICONS, roll, button, chip
 import content
 import projects as P
 from pages.work import tile, lead_mark, caps
+from sections.service_cards import slug
 
 W = content.WORK
 
@@ -46,6 +48,9 @@ PLAIN_SIZES = {
 ZOOM_HINT = 'Tap to enlarge'
 ZOOM_ICON = ('<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" '
              'fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+# The hero recording's poster: the largest copy up to this width (a screen of at most ~800 CSS px); preload() preloads
+# the same file.
+HERO_POSTER_W = 1280
 # Still on the hero scene's screen (projects without a recording): about half the scene's width.
 SCREEN_SIZES = '(min-width:1440px) 700px, (min-width:800px) 50vw, 84vw'
 # Next-project tile: 7/12 of the 1344 px container on desktop, full container width below.
@@ -73,9 +78,23 @@ def _tag(p):
             f'<i aria-hidden="true"></i><span>{E(p["label"])}</span>{note}</p>')
 
 
+SERVICE_NAMES = {s['name'] for s in content.CREATE['services']}
+
+
+def _chip(ctx, name):
+    """A "What we created" chip. A service of What We Create links to its section there (owner's SEO request, 18 Oct:
+    descriptive internal links to the services page, same look - 36-project.css .pj-chip-link)."""
+    if name not in SERVICE_NAMES:
+        return chip(name)
+    return f'<li class="chip"><a class="pj-chip-link" href="{E(ctx.url("what-we-create", slug(name)))}">{E(name)}</a></li>'
+
+
 def head(ctx, p):
     group, idx = _group(p)
-    chips = ''.join(chip(s) for s in p['services_list'])
+    chips = ''.join(_chip(ctx, s) for s in p['services_list'])
+    # one factual sentence about the site (for the owner's review), typographic apostrophes like the rest of the copy
+    summary = (f'<p class="pj-head__summary" data-reveal style="--y:40px;--d:350ms">{E(p["summary"].replace(chr(39), "’"))}</p>'
+               if p.get('summary') else '')
     visit = ''
     if p['url']:
         visit = button(ctx, 'Visit site', p['url'], variant='light', icon_name='arrow-ne', external=True, cls='pj-visit',
@@ -98,6 +117,7 @@ def head(ctx, p):
         {_tag(p)}
         <h1 class="pj-head__title{caps(p['title'])}" id="pj-title" data-reveal style="--y:80px;--d:200ms">{E(lib.name_text(p['title']))}</h1>
         <p class="pj-head__meta" data-reveal style="--y:40px;--d:300ms"><span>{E(p['year'])}</span><span class="pj-head__dot" aria-hidden="true">·</span><span>{E(p['industry'])}</span></p>
+        {summary}
       </div>
       {created}
     </div>
@@ -139,7 +159,7 @@ def hero(ctx, p):
         if p['laptop']:
             # The screen is at most ~800 CSS px wide: the 1280 variant is sharp enough and the 1920 copies of the
             # 30 s owner recordings (15-20 MB) are never fetched.
-            media = lib.video(ctx, p['laptop'], _video_label(p, p['laptop']), cls='scn-media', poster_width=1280, max_width=1280)
+            media = lib.video(ctx, p['laptop'], _video_label(p, p['laptop']), cls='scn-media', poster_width=HERO_POSTER_W, max_width=1280)
             src = p['laptop'].get('source') or {}
             top = max(p['laptop']['variants'], key=lambda v: v['width'])
             aspect = (src.get('width') or top['width']) / (src.get('height') or top['height'])
@@ -266,6 +286,21 @@ def next_block(ctx, p):
     {cta}
   </div>
 </section>'''
+
+
+def preload(ctx, p):
+    """<link rel="preload"> for the hero recording's poster, the desktop LCP that the browser otherwise finds only
+    through the video's poster attribute (owner's SEO request, 18 Oct: Core Web Vitals). The same file as the poster
+    (HERO_POSTER_W), for 768 px and wider only: on phones the poster is not the LCP and loads as before. chrome.document
+    puts it at the end of <head>."""
+    if not (p['scene'] and p['laptop']):
+        return ''
+    posters = sorted(p['laptop'].get('poster') or [], key=lambda x: x['width'])
+    fit = [x for x in posters if x['width'] <= HERO_POSTER_W] or posters[:1]
+    if not fit:
+        return ''
+    return (f'<link rel="preload" as="image" href="{E(ctx.asset(fit[-1]["file"]))}" media="(min-width: 768px)" '
+            'fetchpriority="high">\n')
 
 
 def render(ctx, p):

@@ -18,9 +18,16 @@ the Product & SaaS card instead of LiveCV (one without prepared media yet: a war
 read letter by letter (A11Y-04: an error, SPELLED_NAMES_ERROR); the founder (owner, 15 Oct): every line of
 _ref/specs/founder-content.md verbatim on Who We Are, the founder section directly after the hero, no image of
 him while none is supplied, the old 'Why we started' copy gone, the Person JSON-LD, the home teaser + its link, his
-name as one screen-reader text and the restore toggles' accessible-name spacing.
+name as one screen-reader text and the restore toggles' accessible-name spacing; the SEO / GEO layer (owner's SEO
+request, 18 Oct; docs/SEO.md): the launch switch (indexable only with an https site_url, no CNAME before launch), robots
+(noindex,nofollow + robots.txt Disallow while not indexable), one self canonical = og:url, absolute https share images,
+directory links and sitemap.xml = the indexable pages once site_url is set, absolute URLs only from site_url, unique
+titles and descriptions, no address / telephone / geo in the JSON-LD, the project summaries.
 
     python scripts/check.py [--dist DIR]
+
+A launch test: TESERACT_CONFIG_OVERLAY=<launch.json> python scripts/check.py --dist <its scratch build> (lib.OVERLAY;
+never against dist/). The results go to docs/static-check-results.json for dist/, next to any other --dist folder.
 """
 from html.parser import HTMLParser
 from pathlib import Path
@@ -37,6 +44,11 @@ import lib  # noqa: E402  (longpath: the workspace path can exceed Windows MAX_P
 from sections import service_cards  # noqa: E402  (MEDIA: which owner-supplied images each service card shows)
 from pages import stories  # noqa: E402  (the Client Stories reviews: testimonials(), samples())
 from content import STORIES  # noqa: E402
+
+DEFAULT_DIST = DIST.resolve() == (ROOT / 'dist').resolve()
+if lib.OVERLAY and DEFAULT_DIST:
+    sys.exit(f'check.py: TESERACT_CONFIG_OVERLAY ({lib.OVERLAY}) is set - check its scratch build with --dist, never dist/')
+RESULTS = ROOT / 'docs/static-check-results.json' if DEFAULT_DIST else DIST.parent / f'{DIST.name}.static-check-results.json'
 
 errors, warnings = [], []
 pages = sorted(DIST.rglob('*.html'))
@@ -126,6 +138,14 @@ def esc(text):
     return _h.escape(text, quote=False)
 
 
+def links_to(href, route):
+    """True when an internal href opens a route's page: '<base><route>/index.html' (a build without a site_url, which
+    also opens from file://) or '<base><route>/' (a launch build's directory links, lib.Ctx.url - owner's SEO request,
+    18 Oct). Query and fragment are ignored."""
+    path = href.split('#', 1)[0].split('?', 1)[0]
+    return path.endswith(f'{route}/index.html') or path.endswith(f'{route}/')
+
+
 def own_words(fragment):
     """The text, alt text and aria-labels of an HTML fragment without quoted site text: a capture report may quote a
     client site's own heading (Hidden Stories' 'The concept' chapter); our own wording may not call client work a
@@ -170,6 +190,8 @@ def intro_audit(rel, html):
 # Moved from the concepts group to client work by the owner (14 Oct): no "concept" anywhere on their page or card,
 # not even quoted.
 MOVED_TO_CLIENT = {'livecv'}
+# (19 Oct: no exemption - LiveCV is a client project, owner 14 Oct; its summary says its example profiles are
+# illustrative, the site's own label, without "concept" wording.)
 
 
 class Page(HTMLParser):
@@ -226,8 +248,14 @@ class SpelledNames(HTMLParser):
             return
         a = dict(attrs)
         hidden = a.get('aria-hidden') == 'true' or bool(self.stack and self.stack[-1][1])
+        named = not hidden and (tag in ('h1', 'h2') or a.get('id') in self.ids)
+        if named and a.get('aria-label'):          # an author name replaces the name from content: check that one
+            name = ' '.join(a['aria-label'].split())
+            if re.search(r'(?:^|\s)[^\W_](?:\s[^\W_]){2,}(?=\s|$)', name):
+                self.found.append((tag, a.get('id') or '', name))
+            named, hidden = False, True               # its content is not what assistive tech reads
         self.stack.append((tag, hidden))
-        if not hidden and (tag in ('h1', 'h2') or a.get('id') in self.ids):
+        if named:
             self.open.append([tag, a.get('id') or '', [], len(self.stack)])
 
     def handle_endtag(self, tag):
@@ -295,7 +323,7 @@ for p in pages:
             nb = re.search(r'<section class="pj-next section".*?</section>', html, re.S)
             nb = nb.group(0) if nb else ''
             nh = re.search(r'id="pj-next-title"[^>]*><a href="([^"]+)"', nb)
-            nx = nh and next((c for c in projects.CASES if nh.group(1).rstrip('/').endswith(f"{c['route']}/index.html")), None)
+            nx = nh and next((c for c in projects.CASES if links_to(nh.group(1), c['route'])), None)
             if nx and f'<span class="scn-pill scn-pill--{nx["label_kind"]}"><i></i>{esc(nx["label"])}</span>' not in nb:
                 errors.append(f'{rel}: next-project tile of {nx["slug"]} without its label pill "{nx["label"]}"')
             if nx and nx.get('note') and f'<span class="scn-note">{esc(nx["note"])}</span>' not in nb:
@@ -349,7 +377,7 @@ for p in pages:
         if not tiles and projects.PROJECTS:
             errors.append(f'{rel}: no hero gallery tiles')
         for href, inner in tiles:
-            x = next((c for c in projects.CASES if href.rstrip('/').endswith(f"{c['route']}/index.html")), None)
+            x = next((c for c in projects.CASES if links_to(href, c['route'])), None)
             if not x:
                 continue
             if f'<span class="hero-tile__tag hero-tile__tag--{x["label_kind"]}" aria-hidden="true"><i></i>{esc(x["label"])}</span>' not in inner:
@@ -359,7 +387,7 @@ for p in pages:
         for x in projects.CASES:                 # a portfolio.json "tile_clip" (Aivinci's tiger, the landing pages' loops) plays
             clips = x.get('tile_clips') or []    # on the project's tile (one of its list, the one that suits the slot)
             if any(c is not x.get('hero') for c in clips) and x['slug'] in (projects.DATA.get('home_gallery') or []) and not any(
-                    href.rstrip('/').endswith(f"{x['route']}/index.html") and any(c['variants'][0]['file'] in inner for c in clips)
+                    links_to(href, x['route']) and any(c['variants'][0]['file'] in inner for c in clips)
                     for href, inner in tiles):
                 errors.append(f'{rel}: no hero tile of {x["slug"]} plays its tile clip ({clips[0]["variants"][0]["file"]})')
     if rel == 'client-stories/index.html':       # client reviews, the "Client Deck": a dot (tab) + a card slot per review (pages/stories.py)
@@ -387,7 +415,7 @@ for p in pages:
                 continue
             if t['rating'] and f'aria-label="Rated {t["rating"]:.1f} out of 5"' not in panel:
                 errors.append(f'{rel}: review of {x["slug"]} without its rating {t["rating"]:.1f}')
-            if f'href="../{x["route"]}/index.html"' not in panel or f'<span class="sto-voice__co">{esc(x["title"])}</span>' not in panel:
+            if not re.search(r'href="\.\./' + re.escape(x['route']) + r'/(?:index\.html)?"', panel) or f'<span class="sto-voice__co">{esc(x["title"])}</span>' not in panel:
                 errors.append(f'{rel}: review of {x["slug"]} without the company name or its "View project" link')
             if 'hero-tile__tag--client' not in panel or f'<i></i>{esc(x["label"])}</span>' not in panel:
                 errors.append(f'{rel}: review of {x["slug"]} without the "{x["label"]}" pill on its still')
@@ -402,7 +430,7 @@ for p in pages:
                 errors.append(f'{rel}: meta description quotes a testimonial')
     if rel in ('index.html', 'what-we-create/index.html'):   # service-card captions of projects carry their label
         for href, inner in re.findall(r'<a class="svc-(?:media__card|art)[^"]*" href="([^"]+)"[^>]*>(.*?)</a>', html, re.S):
-            x = next((c for c in projects.CASES if href.rstrip('/').endswith(f"{c['route']}/index.html")), None)
+            x = next((c for c in projects.CASES if links_to(href, c['route'])), None)
             if x and esc(projects.label_text(x, ' · ')) not in inner:
                 errors.append(f'{rel}: service-card caption of {x["slug"]} without its label "{x["label"]}"')
         for n, m in service_cards.MEDIA.items():          # every mapped owner-supplied image is on the page
@@ -413,7 +441,7 @@ for p in pages:
                 if x:                                     # a supplied frame of a project (VYRN): its own link, caption, page
                     for href, inner in re.findall(r'<a class="svc-(?:media__card|art)[^"]*" href="([^"]+)"[^>]*>(.*?)</a>', html, re.S):
                         if f'assets/supplied/{it["supplied"]}-' in inner and not (
-                                href.rstrip('/').endswith(f"{x['route']}/index.html") and esc(projects.label_text(x, ' · ')) in inner):
+                                links_to(href, x['route']) and esc(projects.label_text(x, ' · ')) in inner):
                             errors.append(f'{rel}: service {n}: the supplied "{it["supplied"]}" frame must link to {x["route"]}/ '
                                           f'with its "{x["title"]}" caption (it opens {href})')
         for slug, roles in NOT_ON_CARDS.items():
@@ -425,8 +453,10 @@ for p in pages:
     d = re.search(r'<meta name="description" content="([^"]*)"', html)
     if not t or not (10 <= len(_h.unescape(t.group(1))) <= 65):
         errors.append(f'{rel}: <title> missing or length outside 10-65 ({len(_h.unescape(t.group(1))) if t else 0})')
-    if not d or not (50 <= len(_h.unescape(d.group(1))) <= 165):
-        warnings.append(f'{rel}: meta description length {len(_h.unescape(d.group(1))) if d else 0} (aim 50-165)')
+    if t and len(_h.unescape(t.group(1))) > 60:
+        warnings.append(f'{rel}: <title> of {len(_h.unescape(t.group(1)))} characters (search results show about 60)')
+    if not d or not (70 <= len(_h.unescape(d.group(1))) <= 160):
+        warnings.append(f'{rel}: meta description length {len(_h.unescape(d.group(1))) if d else 0} (aim 70-160)')
     for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
         try:
             json.loads(block)
@@ -444,6 +474,8 @@ for p in pages:
             continue
         if u.path:
             target = (p.parent / unquote(u.path)).resolve()
+            if u.path.endswith('/') or lib.longpath(target).is_dir():   # a directory link (launch builds): its index.html
+                target = target / 'index.html'
             if not lib.longpath(target).exists():
                 errors.append(f'{rel}: missing {ref}')
         elif u.fragment and u.fragment not in page.ids:
@@ -633,8 +665,10 @@ for slug, (group, label) in {**OWNER_ADDED, **{s: ('concept', 'Concept Project')
                       f'"{x["group"]}" / "{x["label"]}"')
     route = f"{x['route']}/index.html"
     page_ld = next((n['mainEntity'] for n in _graph(page_html.get(route, '')) if (n.get('mainEntity') or {}).get('@type') == 'CreativeWork'), {})
-    if page_ld.get('name') != x['title'] or page_ld.get('description') != projects.label_text(x):
-        errors.append(f'{route}: JSON-LD CreativeWork without the name "{x["title"]}" and the label "{projects.label_text(x)}"')
+    if page_ld.get('name') != x['title'] or page_ld.get('description') != seo.work_description(x) \
+            or projects.label_text(x) not in (page_ld.get('description') or ''):
+        errors.append(f'{route}: JSON-LD CreativeWork without the name "{x["title"]}" and the description "{seo.work_description(x)}" '
+                      f'(its summary + the label "{projects.label_text(x)}")')
     if not re.search(r'\[' + re.escape(x['title']) + r'\]\([^)]*' + re.escape(x['route']) + r'[/)]', _llms):
         errors.append(f'llms.txt: no entry for {x["title"]} ({x["route"]}/)')
     if _smap is not None and f"/{x['route']}/</loc>" not in _smap:   # written once site_url is set (seo.sitemap)
@@ -652,7 +686,7 @@ for slug, (group, label) in {**OWNER_ADDED, **{s: ('concept', 'Concept Project')
 # only the ones above (18 Oct: the designer's desk portfolio was taken out of the list while the built page still showed
 # it, and nothing failed); the owner-hidden ones (GALLERY_HIDDEN) never back in the list, and they keep their Work card.
 for x in projects.PROJECTS:
-    if x['slug'] not in (projects.DATA.get('home_gallery') or []) and any(h.rstrip('/').endswith(f"{x['route']}/index.html") for h in _tiles):
+    if x['slug'] not in (projects.DATA.get('home_gallery') or []) and any(links_to(h, x['route']) for h in _tiles):
         errors.append(f'index.html: a home hero tile shows {x["slug"]}, which portfolio.json home_gallery does not list '
                       '(owner default, 15 Oct: his 20 tiles; a stale build? run python scripts/build.py)')
 for s in GALLERY_HIDDEN:
@@ -700,7 +734,7 @@ for s in LANDING_SIX:
     if s not in _gal[:len(LANDING_SIX)]:
         errors.append(f'portfolio.json home_gallery: {s} must lead the gallery with the other landing pages (owner, 17 Oct)')
     route = f"{x['route']}/index.html"
-    mine = [(cls, inner) for cls, href, inner in _items if href.rstrip('/').endswith(route)]
+    mine = [(cls, inner) for cls, href, inner in _items if links_to(href, x['route'])]
     _t = re.search(r'<title>(.*?)</title>', page_html.get(route, ''), re.S)
     if _t and x['industry'] not in _h.unescape(_t.group(1)):
         errors.append(f'{route}: the page title "{_h.unescape(_t.group(1))}" leaves out the industry "{x["industry"]}" '
@@ -721,7 +755,7 @@ for s in LANDING_SIX:
                           'clip - every landing-page tile moves, on phones too (owner, 17 Oct)')
             break
     loops = [c for c in x['tile_clips'] if c['variants'][0]['file'].rsplit('/', 1)[-1].startswith('tile-')]
-    if any(href.rstrip('/').endswith(route) and _plays(inner, loops) and 'hero-tile--loop' not in acls
+    if any(links_to(href, x['route']) and _plays(inner, loops) and 'hero-tile--loop' not in acls
            for acls, href, inner in _tile_cls):
         errors.append(f'index.html: a hero tile of {s} plays its loop without the hero-tile--loop class (owner, 17 Oct: '
                       "the loop shows the site's hero - its labels sit at the frame's foot, clear of the nav and headline)")
@@ -729,7 +763,7 @@ _tiger = projects.by_slug(TIGER[0])
 if _tiger and TIGER[0] in _gal:
     tiger = [c for c in _tiger.get('tile_clips') or () if c['variants'][0]['file'].rsplit('/', 1)[-1].startswith(TIGER[1] + '-')]
     if not tiger or not any('--lt' not in cls and '<template' not in inner and _plays(inner, tiger)
-                            for cls, href, inner in _items if href.rstrip('/').endswith(f"{_tiger['route']}/index.html")):
+                            for cls, href, inner in _items if links_to(href, _tiger['route'])):
         errors.append(f'index.html: Aivinci\'s home hero tile does not play the {TIGER[1]} clip (owner, 17 Oct: keep the tiger moving)')
 # Every project of the gallery is on screen at every width (4 / 3 / 2 columns: own tiles + stand-ins, owner 15 Oct: the
 # phone "has to be exactly the same"), and a project shown twice there (fewer projects than slots, while landing pages
@@ -741,7 +775,7 @@ for n in (4, 3, 2):
            for cls, href in re.findall(r'<li class="hero-col__item([^"]*)"><a class="hero-tile[^"]*" href="([^"]+)"', body)
            if int(c) <= n and ('--lt' not in cls or ('--lt1440' in cls and n < 4) or ('--lt800' in cls and n == 2))]
     for x in _shown_gal:
-        cs = sorted(c for c, href in _at if href.rstrip('/').endswith(f"{x['route']}/index.html"))
+        cs = sorted(c for c, href in _at if links_to(href, x['route']))
         if not cs:
             errors.append(f'index.html: with {n} gallery columns no hero tile shows {x["title"]} (every gallery project at '
                           'every width, owner 15 Oct)')
@@ -779,7 +813,7 @@ for it in _saas:
         warnings.append(f'Product & SaaS card: {it.get("slug")} is not shown yet, so the card shows fewer landing pages')
         continue
     for rel in ('index.html', 'what-we-create/index.html'):
-        if not re.search(r'<a class="svc-[^"]*" href="[^"]*' + re.escape(x['route']) + r'/index\.html"[^>]*>(?:(?!</a>).)*assets/media/'
+        if not re.search(r'<a class="svc-[^"]*" href="[^"]*' + re.escape(x['route']) + r'/(?:index\.html)?"[^>]*>(?:(?!</a>).)*assets/media/'
                          + re.escape(f"{x['slug']}/{it['role']}-"), page_html.get(rel, ''), re.S):
             errors.append(f'{rel}: the Product & SaaS card does not show {x["slug"]} {it["role"]} linked to its page')
 
@@ -877,7 +911,7 @@ else:
     for x in (_f['name'], ' · '.join(_f['roles']), _f['quote'], 'Meet the founder'):
         if _ntext(x) not in _ntext(_tea):
             errors.append(f'index.html #founder-teaser: missing "{x[:60]}"')
-    if not re.search(r'<a\b[^>]*href="[^"]*who-we-are/index\.html#founder"', _tea):
+    if not re.search(r'<a\b[^>]*href="[^"]*who-we-are/(?:index\.html)?#founder"', _tea):
         errors.append('index.html #founder-teaser: no link to who-we-are/index.html#founder')
 # 3. no image of him (nor a placeholder) while no portrait is supplied
 for _rel, _sid in (('who-we-are/index.html', 'founder'), ('index.html', 'founder-teaser')):
@@ -894,8 +928,11 @@ for _rel, _h2 in page_html.items():
         if _old.casefold() in _h2.casefold():
             errors.append(f'{_rel}: still contains the replaced "Why we started" copy ("{_old}")')
 # 5. the brand is TESERACT everywhere the visitor or a crawler reads it
+_alt_ok = [json.dumps(n, ensure_ascii=False) for n in lib.CONFIG.get('alternate_names') or [] if 'TESSERACT' in n]
 for _name, _txt in [(r, h) for r, h in page_html.items()] + [(f, lib.longpath(DIST / f).read_text(encoding='utf-8'))
                                                           for f in ('llms.txt', 'sitemap.xml') if (DIST / f).exists()]:
+    for _a in _alt_ok:                  # site.config.json alternate_names (the owner's sign-off): the JSON-LD only
+        _txt = _txt.replace(_a, '')
     if 'TESSERACT' in _txt:
         errors.append(f'{_name}: spells the brand TESSERACT (the site uses TESERACT)')
 # 6. Who We Are order: hero -> founder -> intro -> why -> philosophy -> how we think -> promise
@@ -982,14 +1019,158 @@ for name in sorted(mapped | set(supplied_rows)):
     if name in mapped and not row.get('alt'):
         errors.append(f'supplied image "{name}" has no alt text in supplied.json')
 
+# ---------------------------------------------------------------- SEO / GEO (owner's SEO request, 18 Oct; docs/SEO.md)
+# Launch = set site_url + indexable. Until then: noindex,nofollow on every page, robots.txt 'Disallow: /' without a
+# Sitemap line, nothing absolute. With a site_url: one self canonical = og:url (none on the not-found page), absolute
+# https share images, directory links only, sitemap.xml = the canonicals of the indexable pages (not the 404, not the
+# placeholder terms) with existing image files; every absolute URL of ours starts with site_url. Always: unique titles
+# and descriptions (the 404 pair excepted), no address / telephone / geo in the JSON-LD (nothing invented), the project
+# summaries (portfolio.json "summary", for the owner's review) shown, short and honest about concepts.
+from pages import legal as _legal  # noqa: E402
+
+SITE = (lib.CONFIG.get('site_url') or '').strip().rstrip('/')
+INDEXABLE = bool(lib.CONFIG.get('indexable'))
+for _problem in lib.config_problems():
+    errors.append(f'LAUNCH SWITCH: {_problem}')
+if not SITE and lib.longpath(DIST / 'CNAME').exists():
+    errors.append('dist/CNAME exists while site_url is empty (owner, 18 Oct: no custom-domain switch before launch; the '
+                  'Pages workflow ignores a CNAME file - the domain is set in the repo Settings > Pages at launch)')
+_robots = lib.longpath(DIST / 'robots.txt').read_text(encoding='utf-8') if (DIST / 'robots.txt').exists() else ''
+_rlines = [ln.strip() for ln in _robots.splitlines()]
+if not INDEXABLE:
+    if 'Disallow: /' not in _rlines or any(ln.lower().startswith('sitemap:') for ln in _rlines):
+        errors.append('robots.txt: while site.config.json indexable is false it must read "Disallow: /" with no Sitemap line')
+elif 'Allow: /' not in _rlines or f'Sitemap: {SITE}/sitemap.xml' not in _rlines:
+    errors.append(f'robots.txt: an indexable build needs "Allow: /" and "Sitemap: {SITE}/sitemap.xml"')
+_OURS = ('@id', 'url', 'item', 'logo', 'image', 'contentUrl')
+
+
+def _walk(node, path=''):
+    """(key path, key, value) of every value in a JSON-LD graph."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            yield path + '/' + k, k, v
+            yield from _walk(v, path + '/' + k)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _walk(v, path)
+
+
+def _head_values(html, pattern):
+    return [_h.unescape(v) for v in re.findall(pattern, html.split('</head>', 1)[0])]
+
+
+_titles, _descs, _canonicals = {}, {}, {}
+for rel, html in page_html.items():
+    notfound = rel in ('404.html', '404/index.html')
+    route = '' if rel == 'index.html' else rel[:-len('/index.html')] if rel.endswith('/index.html') else None
+    placeholder = rel == 'terms/index.html' and _legal.TERMS_PLACEHOLDER
+    robots = _head_values(html, r'<meta name="robots" content="([^"]*)"')
+    canon = _head_values(html, r'<link rel="canonical" href="([^"]*)"')
+    og_url = _head_values(html, r'<meta property="og:url" content="([^"]*)"')
+    og_img = _head_values(html, r'<meta property="og:image" content="([^"]*)"')
+    t = re.search(r'<title>(.*?)</title>', html, re.S)
+    d = re.search(r'<meta name="description" content="([^"]*)"', html)
+    if t:
+        _titles.setdefault(_h.unescape(t.group(1)), []).append(rel)
+    if d:
+        _descs.setdefault(_h.unescape(d.group(1)), []).append(rel)
+    if not INDEXABLE:
+        if robots != ['noindex,nofollow']:
+            errors.append(f'{rel}: robots {robots} - every page is noindex,nofollow while site.config.json indexable is false')
+    elif notfound or placeholder:
+        if len(robots) != 1 or 'noindex' not in robots[0]:
+            errors.append(f'{rel}: robots {robots} - the not-found page and the placeholder terms stay noindex at launch')
+    elif len(robots) != 1 or 'noindex' in robots[0] or 'nofollow' in robots[0]:
+        errors.append(f'{rel}: robots {robots} - an indexable page must not carry noindex / nofollow')
+    if not SITE:
+        if canon or og_url:
+            errors.append(f'{rel}: canonical / og:url without a site_url (absolute URLs come only from site_url)')
+        if any(v.startswith(('http:', 'https:', '//')) for v in og_img):
+            errors.append(f'{rel}: absolute og:image {og_img} without a site_url')
+    else:
+        want = None if notfound else seo.abs_url(route or '')
+        if notfound:
+            if canon or og_url:
+                errors.append(f'{rel}: the not-found page carries a canonical / og:url')
+        elif canon != [want] or og_url != [want]:
+            errors.append(f'{rel}: needs exactly one self canonical and og:url = {want} (has {canon} / {og_url})')
+        elif not placeholder:                         # (noindexed placeholder terms: kept out of the sitemap)
+            _canonicals[rel] = want
+        if len(og_img) != 1 or not og_img[0].startswith(SITE + '/') or not og_img[0].startswith('https://'):
+            errors.append(f'{rel}: og:image {og_img} must be one absolute https URL on {SITE}')
+        elif not lib.longpath(DIST / unquote(og_img[0][len(SITE) + 1:])).exists():
+            errors.append(f'{rel}: og:image {og_img[0]} is not in the build')
+        stale = sorted({h for h in re.findall(r'\shref="([^"#?]*?)(?:[#?][^"]*)?"', html)
+                        if not re.match(r'^[a-z][a-z0-9+.-]*:|^//', h, re.I) and h.endswith('index.html')})
+        if stale:
+            errors.append(f'{rel}: {len(stale)} internal link(s) end in index.html in a build with a site_url ({stale[:3]}): '
+                          'launch builds link the directory form (lib.Ctx.url)')
+    for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
+        try:
+            graph = json.loads(block.replace('<\\/', '</'))
+        except ValueError:
+            continue                                  # reported above
+        for kpath, k, v in _walk(graph):
+            if k in ('address', 'telephone', 'geo', 'faxNumber', 'streetAddress', 'postalCode'):
+                errors.append(f'{rel}: JSON-LD carries "{k}" ({kpath}) - no address, phone or geo (owner, 18 Oct: remote, '
+                              'nothing invented)')
+            if k in _OURS and isinstance(v, str) and re.match(r'^(https?:)?//', v) and not (SITE and v.startswith(SITE + '/')):
+                errors.append(f'{rel}: JSON-LD {kpath} = {v} - absolute URLs of ours come only from site_url')
+            if k == '@id' and not SITE:
+                errors.append(f'{rel}: JSON-LD @id ({kpath}) without a site_url')
+for what, seen in (('title', _titles), ('meta description', _descs)):
+    for text, rels in seen.items():
+        if len(rels) > 1 and set(rels) != {'404.html', '404/index.html'}:
+            errors.append(f'{what} "{text[:60]}" is used by {len(rels)} pages ({", ".join(rels[:4])}) - each page needs its own')
+_llms_links = re.findall(r'\]\(([^)\s]+)\)', _llms)
+if SITE and any(not u.startswith(SITE + '/') for u in _llms_links):
+    errors.append(f'llms.txt: links outside {SITE}/ ({[u for u in _llms_links if not u.startswith(SITE + "/")][:3]})')
+if not SITE and any(re.match(r'^(https?:)?//', u) for u in _llms_links):
+    errors.append('llms.txt: absolute links to our own pages without a site_url')
+if SITE:
+    if _smap is None:
+        errors.append('sitemap.xml missing although site_url is set')
+    else:
+        _locs = [_h.unescape(u) for u in re.findall(r'<loc>([^<]*)</loc>', _smap)]
+        if sorted(_locs) != sorted(set(_canonicals.values())) or len(_locs) != len(set(_locs)):
+            errors.append(f'sitemap.xml: {len(_locs)} <loc> do not match the {len(set(_canonicals.values()))} indexable pages\' '
+                          f'canonicals (missing {sorted(set(_canonicals.values()) - set(_locs))[:3]}, extra '
+                          f'{sorted(set(_locs) - set(_canonicals.values()))[:3]})')
+        for u in (_h.unescape(u) for u in re.findall(r'<image:loc>([^<]*)</image:loc>', _smap)):
+            if not u.startswith(SITE + '/') or not lib.longpath(DIST / unquote(u[len(SITE) + 1:])).exists():
+                errors.append(f'sitemap.xml: image {u} is not a file of this build on {SITE}')
+elif _smap is not None:
+    errors.append('sitemap.xml exists while site_url is empty (a stale file? build with --clean)')
+for x in projects.PROJECTS:                      # the project summaries (portfolio.json "summary", owner's review)
+    _sm = (x.get('summary') or '').strip()
+    _pg = page_html.get(f"{x['route']}/index.html", '')
+    if not _sm:
+        warnings.append(f"{x['slug']}: no portfolio.json \"summary\" (the project page's one-sentence description)")
+        continue
+    if len(_sm) > 160:
+        errors.append(f"{x['slug']}: summary of {len(_sm)} characters (at most 160)")
+    if x['group'] == 'concept' and not re.search(r'concept|fictional|invented|unofficial|personal|demo', _sm, re.I):
+        errors.append(f"{x['slug']}: a concept-group summary must say what it is (concept / fictional / invented / "
+                      'unofficial / personal / demo)')
+    if x['group'] == 'client' and re.search(r'concept', _sm, re.I):
+        errors.append(f"{x['slug']}: a client project's summary uses \"concept\" wording (owner: client work is never "
+                      'worded as a concept)')
+    _pd = re.search(r'<meta name="description" content="([^"]*)"', _pg)
+    if _pd and lib.BRAND not in _h.unescape(_pd.group(1)):     # 19 Oct: never read as the client's / brand's own page
+        errors.append(f"{x['route']}/index.html: the meta description does not say the work is by {lib.BRAND} "
+                      '(seo.PROJECT_DESC)')
+    if f'<p class="pj-head__summary"' not in _pg or esc(_sm.replace("'", '’')) not in _pg:
+        errors.append(f"{x['route']}/index.html: the summary is not shown under the project's meta line")
+
 report_file = lib.build_report_path(DIST)
 report = json.loads(report_file.read_text(encoding='utf-8')) if report_file.exists() else {}
 for f in report.get('failures', []):
     errors.append(f"build failure: {f['module']} {f['func']}")
 
 summary = {'routes': len(expected), 'html_files': len(pages), 'errors': errors, 'warnings': warnings}
-(ROOT / 'docs').mkdir(exist_ok=True)
-(ROOT / 'docs/static-check-results.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
+RESULTS.parent.mkdir(exist_ok=True)
+RESULTS.write_text(json.dumps(summary, indent=2), encoding='utf-8')
 print(json.dumps(summary, indent=2))
 if errors:
     raise SystemExit(1)

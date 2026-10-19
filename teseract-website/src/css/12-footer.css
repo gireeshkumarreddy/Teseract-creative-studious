@@ -138,9 +138,13 @@
 .ft-bar__link[aria-current]::before{content:"";width:5px;height:5px;margin-right:6px;border-radius:50%;background:var(--red-dot)}
 .ft-bar__link[aria-disabled=true]:hover{background:rgba(255,255,255,0);color:var(--ink-2)}
 .ft-bar__services{grid-area:services;justify-self:center;font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong);text-align:center}
+/* each service word links to its section on What We Create (owner's SEO request, 18 Oct): same text, colour and no hover
+   change; the focus ring only */
+.ft-bar__svc{color:inherit;text-decoration:none}
+.ft-bar__svc:focus-visible{outline-offset:2px;border-radius:4px}
 .ft-bar__social{grid-area:social;justify-self:end;align-self:start;justify-content:flex-end}  /* on the first row, level with the links */
 .ft-bar__meta{display:grid;grid-template-columns:auto auto 1fr;align-items:center;column-gap:16px;row-gap:8px;padding-top:16px;border-top:1px solid var(--line-2)}
-.ft-bar__copy{font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong)}
+.ft-bar__copy{font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong);text-wrap:balance}  /* 360 px: two even lines, no lone 'reserved.' */
 .ft-bar__legal{justify-content:flex-start;gap:4px}
 .ft-bar__legal .ft-bar__link{font-size:13px;color:var(--muted-strong)}
 .ft-bar__legal .ft-bar__link:hover,.ft-bar__legal .ft-bar__link:focus-visible,.ft-bar__legal .ft-bar__link[aria-current]{color:var(--ink)}

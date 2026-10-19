@@ -318,7 +318,9 @@ FOOTER = {
     'line': 'Digital experiences, built around you.',
     'services': ['Web Design', 'Development', 'E-commerce', 'Interactive', 'Branding', 'Product', 'AI'],
     'socials': ['Instagram', 'LinkedIn', 'GitHub', 'Email'],
-    'copyright': '© {year} {brand}. All rights reserved.',
+    # owner's SEO request (18 Oct; for the owner's review): the full name, as in the logo's own lockup, so every page
+    # names 'TESERACT Creative Studios' once (the content document reads '© [YEAR] TESSERACT.')
+    'copyright': '© {year} {brand} Creative Studios. All rights reserved.',
     'motto': 'BUILT DIFFERENT. BUILT FOR YOU.',
 }
 
@@ -330,15 +332,32 @@ BRAND = {
     'idea': "We don't simply make websites look different. We think differently about how a digital experience can work, feel and communicate.",
 }
 
+# Where the studio works (owner's answer, 18 Oct: remote, India-wide - no city, no address) with the WHO hero's
+# 'businesses, founders and teams': the FAQ answer below and the llms.txt key facts (seo.llms_txt).
+WHERE_WE_WORK = 'Remotely, with businesses, founders and teams across India and worldwide.'
+
 # ---------------------------------------------------------------- FAQ (reference layout)
-# Every answer is assembled from sentences in the content document; no new claims.
+# Every answer is assembled from sentences in the content document; no new claims. Five entries were added for the
+# owner's SEO request (18 Oct; for the owner's review, built only from existing copy + his answer on where the studio
+# works): what the studio does (WHO hero line 1 + HOME hero lead), where it works, e-commerce (CREATE E-commerce body +
+# tags), SaaS and landing pages (CREATE Product & SaaS tags + the 'Landing Pages' tag) and what the name means
+# (BRAND['meaning'] verbatim). home_faq.py renders them, seo.py makes them the FAQPage JSON-LD and llms.txt FAQ.
 FAQ = [
+    ('What does {brand} Creative Studios do?',
+     '{brand} is a digital creative studio focused on design, technology and experiences. We create interactive, '
+     'thoughtful and tailor-made digital experiences for businesses that want to be different.'),
+    ('Where do you work?', WHERE_WE_WORK),
     ('Do I need a perfect brief before we talk?',
      "No. You don't need a perfect brief. You don't need technical knowledge. You don't even need to know exactly what you want yet. Tell us what you have in mind — we'll take it from there."),
     ('Do you offer fixed packages?',
      "We don't believe in fixed packages. Every business has different goals, audiences and challenges, so we build what makes sense for you."),
     ('What can you build for us?',
      'Website design, website development, e-commerce, interactive & 3D experiences, brand & digital identity, product & SaaS, AI & automation and digital strategy.'),
+    ('Do you build e-commerce websites?',
+     'Yes. From discovering a product to completing a purchase, we design every step of the experience: product pages, '
+     'shopping experiences, cart & checkout, payment integration and order management.'),
+    ('Do you design SaaS products and landing pages?',
+     'Yes. We design dashboards, SaaS platforms, web applications, user flows and prototypes, and we build landing pages.'),
     ('Will my website look like a template?',
      "No. You don't need another template. Every project starts from zero, built around your business, your audience and your vision."),
     ('How does a project work?',
@@ -347,4 +366,5 @@ FAQ = [
      'Launch is not the end. Businesses change, and your website should be able to change with them. We can continue supporting, improving and evolving your digital experience as your business grows.'),
     ('How involved will we be?',
      "We communicate, share progress, ask questions, listen to feedback and build together — because the best results happen when the client isn't just watching the process. They're part of it."),
+    ('What does the name {brand} mean?', BRAND['meaning']),
 ]
