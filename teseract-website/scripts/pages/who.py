@@ -188,7 +188,8 @@ def _hero(ctx):
     # "who we are." (Client update 5; image 5 reads "who are we.") - letters rise, the full stop is drawn as image 5's
     # round dot (the site face's period is square). The letter spans are inline-block, so screen readers would spell
     # them ('w h o w e a r e .', A11Y-04): the H1 (and the hero region it labels) is named once by its aria-label,
-    # and crawlers read the letters once as the text (19 Oct SEO repair: no second .sr-only copy).
+    # and crawlers read the letters once as the text (19 Oct SEO repair: no second .sr-only copy). The letters stay
+    # aria-hidden, so reading by content (virtual cursor, character / word navigation) cannot reach them one by one.
     words = ['who', 'we', 'are']
     letters = []
     k = 0
@@ -220,7 +221,7 @@ def _hero(ctx):
       </div>
       <div class="who-hero__monitor" data-who-monitor><div class="who-hero__tilt" data-who-tilt>{monitor}</div></div>
     </div>
-    <h1 class="who-display" id="page-title" data-who-display aria-label="{E(' '.join(words).capitalize())}."><span class="who-display__txt">{title}</span></h1>
+    <h1 class="who-display" id="page-title" data-who-display aria-label="{E(' '.join(words).capitalize())}."><span class="who-display__txt" aria-hidden="true">{title}</span></h1>
   </div>
 </section>'''
 

@@ -534,3 +534,25 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   on 19 Oct without him - the second push + testing, all the landing-concepts repo fixes + re-captures + media swap + push,
   and the full SEO / AEO / GEO / technical-SEO pass (keywords, brand-name #1 + suggestions goal, report of what was done),
   following every earlier instruction. Pushes to GitHub are authorised by this request.
+- DONE 20 Oct (mobile fixes finished + Maren Holt media): MAREN HOLT re-captured 19-20 Oct from the fixed live site
+  (landing-concepts 0396985: the caret ends the keycap headline, the About statement fully lit with its label and MH
+  avatar, the phone ring's lower cards fade out clear of the facts): gallery-01, 07, 08, 09, tile, hero, laptop (02-06
+  unchanged); prepare_media.py (no --prune; only maren-holt's bytes changed) -> its project page (scene clip, stills,
+  phone band), home gallery tile, Work card and next-project tiles; portfolio.json alts of gallery-07 / 09 rewritten to
+  the new frames, capture-report.json reconciled. All six landing pages now carry their 19 Oct fixes (LAUNCH-CHECKLIST
+  3f: Tidings' illustrated avatars and Ines Morrow's readable Reel answered). MOBILE GROUP 7: all 11 items hold on the
+  current build; the 19 Oct SEO repair had left the Who We Are H1's letters readable one by one by content (A11Y-04
+  regression): the letters' wrapper is aria-hidden again inside the aria-labelled H1 (who.py; still one visible copy, no
+  .sr-only duplicate, so crawlers read "Who we are." once). GROUP 8 measured at 360 / 390 / 430 / 844x390 touch, 1440
+  hover, reduced motion and no JS: text column 284 px at 360 (VIS-06; the criterion's "~250 px" was wording, the design
+  stays), the Tap Here sticker 0 px over every caption at every width (the Product & SaaS low-right one 5 px above its
+  caption at 360), 6 AI pills, .is-live -> rest after 4.8 s -> live again, 12px labels, keyboard sticker with its 2px ring.
+  Integration pass (no source change): build.py 39 routes, check.py 0 errors (one warning: the 6 sample testimonials);
+  qa.cjs on all 39 routes at 1440 / 834 / 390: 117 checks, 0 problems, and 0 with reduced motion (one
+  ERR_INSUFFICIENT_RESOURCES on home at 834 while free RAM was ~400 MB, gone in 4 re-runs); font-check Inter Tight only;
+  no JS 0 hidden on 12 routes; phone (390@3, touch) and 1440 slices of the 10 main pages + maren-holt, sagewell,
+  ines-morrow, sedile, vyrn, aivinci looked at: nothing broken by the combination. LAUNCH-CHECKLIST: footer ring = owner
+  decision (18 Oct). The shared lock folder (scratchpad/locks) had vanished and was recreated. Still open: the owner's
+  questions (defaults 2-4, Sedile 6 / 9, micro-labels 11), the six live pages' hub title, Maren Holt's book-spines photo,
+  the Unsplash hotlinks, landscape phones (the 800-1199 layout) without the approach tagline / phone circuit rail, the
+  desktop approach wire dots looping, a ~0.003 font-swap shift on What We Create's first uncached load, a real iPhone.

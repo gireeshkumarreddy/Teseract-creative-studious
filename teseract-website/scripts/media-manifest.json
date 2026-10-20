@@ -14331,19 +14331,19 @@
        "file": "assets/media/maren-holt/laptop-640.mp4",
        "width": 640,
        "height": 400,
-       "bytes": 1011190
+       "bytes": 1008377
       },
       {
        "file": "assets/media/maren-holt/laptop-1280.mp4",
        "width": 1280,
        "height": 800,
-       "bytes": 4197435
+       "bytes": 4135458
       },
       {
        "file": "assets/media/maren-holt/laptop-1920.mp4",
        "width": 1920,
        "height": 1200,
-       "bytes": 12448043
+       "bytes": 12720299
       }
      ],
      "poster": [
@@ -14376,7 +14376,7 @@
       "has_audio": false,
       "duration": 16.0
      },
-     "alt": "Desktop scroll (1440 x 900 CSS px, rendered 1920 x 1200) through the whole page, 0 to 8127 px, 16 s. It holds about 1.5 s on the finished hero (keycap headline, newsletter field, featured tray), then the essay ring turns into view and fills the screen at about 3.6 s (the cards keep drifting round the circle and speed up with the scroll), the essay list with its filters at about 5 s and the eight essay cards after it, Services with the open Manuscript assessment item at about 7.7 s; at about 8.4 s the page re-tints to near-black for 'Four things every strong draft gets right.' (about 9 s) and back to light for the Workshops ('Small rooms, real pages, practical change.', format chips, three workshops and the 'Request a workshop' form) at about 10.4 s. The About statement lights up word by word at about 12-12.3 s, the contact card ('Tell me about your draft.') passes at about 13 s and the clip ends with a 1.5 s hold on the footer: 'Notes for [white keycap] better books', the MH brand with 'Maren Holt is a fictional editor created for this portfolio concept. Essays are sample content.', the On this page / Elsewhere links and 'Concept project for a design portfolio. Photography: Unsplash. Type: Plus Jakarta Sans & Newsreader.'",
+     "alt": "Desktop scroll (1440 x 900 CSS px, rendered 1920 x 1200) through the whole page, 0 to 8127 px, 16 s. It holds about 1.5 s on the finished hero (keycap headline with the rest caret blinking right after the pink keycap, newsletter field, featured tray), then the essay ring turns into view and fills the screen at about 3.6 s (the cards keep drifting round the circle and speed up with the scroll), the essay list with its filters at about 5 s and the eight essay cards after it, Services with the open Manuscript assessment item at about 7.7 s; at about 8.4 s the page re-tints to near-black for 'Four things every strong draft gets right.' (about 9 s) and back to light for the Workshops ('Small rooms, real pages, practical change.', format chips, three workshops and the 'Request a workshop' form) at about 10.4 s. The About statement lights up word by word at about 11.7-12.1 s and is fully lit while its 'About' label and the MH avatar are still in view, the contact card ('Tell me about your draft.') passes at about 13 s and the clip ends with a 1.5 s hold on the footer: 'Notes for [white keycap] better books', the MH brand with 'Maren Holt is a fictional editor created for this portfolio concept. Essays are sample content.', the On this page / Elsewhere links and 'Concept project for a design portfolio. Photography: Unsplash. Type: Plus Jakarta Sans & Newsreader.'",
      "frame": "video"
     },
     "hero": {
@@ -14386,13 +14386,13 @@
        "file": "assets/media/maren-holt/hero-480.mp4",
        "width": 480,
        "height": 600,
-       "bytes": 275391
+       "bytes": 275045
       },
       {
        "file": "assets/media/maren-holt/hero-640.mp4",
        "width": 640,
        "height": 800,
-       "bytes": 484799
+       "bytes": 471311
       }
      ],
      "poster": [
@@ -14420,7 +14420,7 @@
       "has_audio": false,
       "duration": 7.5
      },
-     "alt": "Phone loop (390 x 844 CSS px, rendered 780 x 1688), 7.5 s. It holds the phone hero for 2.6 s (headline over four lines with both keycaps, the blinking rest caret, the intro, the email field with its blinking '_' placeholder cursor and 'Get the notes', the top of the featured tray), glides 2.2 s (0 to 900 px) past the featured tray, and holds about 2.2 s on the second section: three cards of the essay ring drifting round over 'Short reads for the long work of a book.', 'Browse all essays' and the three facts. The last 0.5 s crossfades back into the first hero frame, so the clip loops seamlessly.",
+     "alt": "Phone loop (390 x 844 CSS px, rendered 780 x 1688), 7.5 s. It holds the phone hero for 2.6 s (headline over four lines with both keycaps and the rest caret blinking right after the pink keycap, the intro, the email field with its blinking '_' placeholder cursor and 'Get the notes', the top of the featured tray), glides 2.2 s (0 to 900 px) past the featured tray, and holds about 2.2 s on the second section: three cards of the essay ring drifting round (the orange typewriter, the studio microphone at the top, the book spines cut by the right edge) over 'Short reads for the long work of a book.', 'Browse all essays' and the three facts, with the lower ring cards faded out below the facts. The last 0.5 s crossfades back into the first hero frame, so the clip loops seamlessly.",
      "frame": "video"
     },
     "tile": {
@@ -14430,25 +14430,25 @@
        "file": "assets/media/maren-holt/tile-480.mp4",
        "width": 480,
        "height": 270,
-       "bytes": 162413
+       "bytes": 158726
       },
       {
        "file": "assets/media/maren-holt/tile-640.mp4",
        "width": 640,
        "height": 360,
-       "bytes": 269200
+       "bytes": 265919
       },
       {
        "file": "assets/media/maren-holt/tile-1280.mp4",
        "width": 1280,
        "height": 720,
-       "bytes": 892485
+       "bytes": 856217
       },
       {
        "file": "assets/media/maren-holt/tile-1920.mp4",
        "width": 1920,
        "height": 1080,
-       "bytes": 1860034
+       "bytes": 1791460
       }
      ],
      "poster": [
@@ -14487,7 +14487,7 @@
       "has_audio": false,
       "duration": 7.5
      },
-     "alt": "16:9 loop for the home gallery tile (1600 x 900 CSS px viewport, rendered 1920 x 1080), 7.5 s. It holds the desktop hero for 2.6 s (the keycap headline with its blinking rest caret, the intro, the 'your@email' field and 'Get the notes', 'From the notebook' and the three featured cards), glides 2.2 s (0 to 1078 px) past the featured tray's titles, and holds about 2.2 s on the second section: the essay ring drifting slowly round over 'Short reads for the long work of a book.', 'Browse all essays' and the three facts. The last 0.5 s crossfades back into the clip's first hero frame, so the clip loops seamlessly.",
+     "alt": "16:9 loop for the home gallery tile (1600 x 900 CSS px viewport, rendered 1920 x 1080), 7.5 s. It holds the desktop hero for 2.6 s (the keycap headline with its rest caret blinking right after the pink keycap, the intro, the 'your@email' field and 'Get the notes', 'From the notebook' and the three featured cards), glides 2.2 s (0 to 1078 px) past the featured tray's titles, and holds about 2.2 s on the second section: the essay ring drifting slowly round over 'Short reads for the long work of a book.', 'Browse all essays' and the three facts. The last 0.5 s crossfades back into the clip's first hero frame, so the clip loops seamlessly.",
      "frame": "video"
     },
     "gallery-01": {
@@ -14497,38 +14497,38 @@
        "file": "assets/media/maren-holt/gallery-01-480.webp",
        "width": 480,
        "height": 300,
-       "bytes": 12568,
+       "bytes": 12592,
        "thumb": true
       },
       {
        "file": "assets/media/maren-holt/gallery-01-640.webp",
        "width": 640,
        "height": 400,
-       "bytes": 18978
+       "bytes": 18976
       },
       {
        "file": "assets/media/maren-holt/gallery-01-1280.webp",
        "width": 1280,
        "height": 800,
-       "bytes": 51008
+       "bytes": 50234
       },
       {
        "file": "assets/media/maren-holt/gallery-01-1440.webp",
        "width": 1440,
        "height": 900,
-       "bytes": 58982
+       "bytes": 59218
       },
       {
        "file": "assets/media/maren-holt/gallery-01-1920.webp",
        "width": 1920,
        "height": 1200,
-       "bytes": 85784
+       "bytes": 85708
       },
       {
        "file": "assets/media/maren-holt/gallery-01-2560.webp",
        "width": 2560,
        "height": 1600,
-       "bytes": 125464
+       "bytes": 125544
       }
      ],
      "source": {
@@ -14537,7 +14537,7 @@
       "codec": "png",
       "file": "maren-holt/gallery-01.png"
      },
-     "alt": "Maren Holt hero at 1440 px, in its framed page: a light grey frame around the off-white page with thin vertical guide lines. The nav has the warm-grey 'MH' monogram and 'Maren Holt', a white pill with Essays, Services, Workshops, About and Contact, a search icon and 'Sign in'. Under the label 'Editing notes, every Sunday' (book glyph) the headline reads 'Turn your [white 3D keycap with a pen glyph] manuscript into / a book readers recommend [pink 3D keycap with a bookmark glyph]', with 'readers recommend' in a slate-to-violet-to-pink gradient. Below: 'I’m a developmental editor. I help first-time and returning authors shape stronger books — and I write down what I learn along the way.', an email field showing its 'your@email' placeholder and a dark 'Get the notes' button. At the bottom, 'From the notebook' with 'All essays →' and the featured tray: 'Three passes / a revision method' over a studio microphone photo, a row of worn cloth book spines and two figures silhouetted against a sunset over the sea.",
+     "alt": "Maren Holt hero at 1440 px, in its framed page: a light grey frame around the off-white page with thin vertical guide lines. The nav has the warm-grey 'MH' monogram and 'Maren Holt', a white pill with Essays, Services, Workshops, About and Contact, a search icon and 'Sign in'. Under the label 'Editing notes, every Sunday' (book glyph) the headline reads 'Turn your [white 3D keycap with a pen glyph] manuscript into / a book readers recommend [pink 3D keycap with a bookmark glyph]', with 'readers recommend' in a slate-to-violet-to-pink gradient and the typewriter's thin rest caret right after the pink keycap, at the end of the headline. Below: 'I’m a developmental editor. I help first-time and returning authors shape stronger books — and I write down what I learn along the way.', an email field showing its 'your@email_' placeholder and a dark 'Get the notes' button. At the bottom, 'From the notebook' with 'All essays →' and the featured tray: 'Three passes / a revision method' over a studio microphone photo, a row of worn cloth book spines and two figures silhouetted against a sunset over the sea.",
      "frame": "desktop"
     },
     "gallery-02": {
@@ -14797,38 +14797,38 @@
        "file": "assets/media/maren-holt/gallery-07-480.webp",
        "width": 480,
        "height": 300,
-       "bytes": 17188,
+       "bytes": 16304,
        "thumb": true
       },
       {
        "file": "assets/media/maren-holt/gallery-07-640.webp",
        "width": 640,
        "height": 400,
-       "bytes": 25604
+       "bytes": 23676
       },
       {
        "file": "assets/media/maren-holt/gallery-07-1280.webp",
        "width": 1280,
        "height": 800,
-       "bytes": 57998
+       "bytes": 53122
       },
       {
        "file": "assets/media/maren-holt/gallery-07-1440.webp",
        "width": 1440,
        "height": 900,
-       "bytes": 64938
+       "bytes": 59844
       },
       {
        "file": "assets/media/maren-holt/gallery-07-1920.webp",
        "width": 1920,
        "height": 1200,
-       "bytes": 86180
+       "bytes": 77616
       },
       {
        "file": "assets/media/maren-holt/gallery-07-2560.webp",
        "width": 2560,
        "height": 1600,
-       "bytes": 114758
+       "bytes": 106204
       }
      ],
      "source": {
@@ -14837,7 +14837,7 @@
       "codec": "png",
       "file": "maren-holt/gallery-07.png"
      },
-     "alt": "About: the scroll-filled statement fully lit, 'Fourteen years editing fiction and narrative non-fiction from a small studio in Bristol — helping good drafts become the books they were meant to be.' ('fiction' and 'narrative non-fiction' in italic serif); then 'A NOTE ON MAREN' – 'Maren Holt is a fictional editor created for this portfolio concept. The studio, the fourteen years and every essay on this page are invented sample content.' with 'Get the Sunday notes →' and 'Browse the essays'. The top of the white contact card enters at the bottom ('Contact', 'I’m interested in', the chips 'Manuscript assessment' (selected) and 'Developmental edit', and the first line of 'Tell me about your draft.' cut by the frame). The 'About' label and the large MH avatar have just gone under the frosted nav (a faint blur at the top right); 'About' is active in the nav.",
+     "alt": "About, after a preload scroll: the 'About' label (book glyph) at the top left and the large 'MH' avatar at the top right, both clear of the frosted nav, above the fully lit statement 'Fourteen years editing fiction and narrative non-fiction from a small studio in Bristol — helping good drafts become the books they were meant to be.' ('fiction' and 'narrative non-fiction' in italic serif); then a hairline and 'A NOTE ON MAREN' – 'Maren Holt is a fictional editor created for this portfolio concept. The studio, the fourteen years and every essay on this page are invented sample content.' with a dark 'Get the Sunday notes →' and a white 'Browse the essays' button. 'About' is active in the nav (violet dot); the contact card is still below the frame.",
      "frame": "desktop"
     },
     "gallery-08": {
@@ -14847,20 +14847,20 @@
        "file": "assets/media/maren-holt/gallery-08-480.webp",
        "width": 480,
        "height": 1039,
-       "bytes": 39060,
+       "bytes": 39044,
        "thumb": true
       },
       {
        "file": "assets/media/maren-holt/gallery-08-640.webp",
        "width": 640,
        "height": 1385,
-       "bytes": 55636
+       "bytes": 55774
       },
       {
        "file": "assets/media/maren-holt/gallery-08-1170.webp",
        "width": 1170,
        "height": 2532,
-       "bytes": 115490
+       "bytes": 115634
       }
      ],
      "source": {
@@ -14869,7 +14869,7 @@
       "codec": "png",
       "file": "maren-holt/gallery-08.png"
      },
-     "alt": "Phone hero at 390 px: 'MH' monogram and 'Maren Holt', a search icon and a round menu button; 'Editing notes, every Sunday'; the headline over four lines, 'Turn your [white pen keycap] / manuscript into a book / readers / recommend [pink bookmark keycap]' with the gradient on 'readers recommend'; the intro sentence; a full-width email field ('your@email') and a full-width 'Get the notes' button; 'From the notebook' with 'All essays →' and the start of the sideways-scrolling featured tray ('Three passes / a revision method' on the microphone photo, the edge of the book-spines card).",
+     "alt": "Phone hero at 390 px: 'MH' monogram and 'Maren Holt', a search icon and a round menu button; 'Editing notes, every Sunday'; the headline over four lines, 'Turn your [white pen keycap] / manuscript into a book / readers / recommend [pink bookmark keycap]' with the gradient on 'readers recommend' and the thin rest caret right after the pink keycap; the intro sentence; a full-width email field ('your@email_') and a full-width 'Get the notes' button; 'From the notebook' with 'All essays →' and the start of the sideways-scrolling featured tray ('Three passes / a revision method' on the microphone photo, the edge of the book-spines card).",
      "frame": "phone"
     },
     "gallery-09": {
@@ -14879,20 +14879,20 @@
        "file": "assets/media/maren-holt/gallery-09-480.webp",
        "width": 480,
        "height": 1039,
-       "bytes": 40120,
+       "bytes": 38684,
        "thumb": true
       },
       {
        "file": "assets/media/maren-holt/gallery-09-640.webp",
        "width": 640,
        "height": 1385,
-       "bytes": 57154
+       "bytes": 54298
       },
       {
        "file": "assets/media/maren-holt/gallery-09-1170.webp",
        "width": 1170,
        "height": 2532,
-       "bytes": 109416
+       "bytes": 102454
       }
      ],
      "source": {
@@ -14901,7 +14901,7 @@
       "codec": "png",
       "file": "maren-holt/gallery-09.png"
      },
-     "alt": "Phone essay ring: three cards show on the smaller ring (the book spines on the left, the upright sunset silhouette at the top, the orange typewriter on the right; the side cards run off the screen edges by design), over 'From the Sunday notes', 'Short reads for the / long work of a book.', 'Pick one from the ring — each essay takes about two minutes and fixes one thing.', 'Browse all essays →' and the three facts 'Eight essays', 'Four themes', 'Two-minute reads' with their sub-lines. The edges of the next two ring cards show at the bottom corners.",
+     "alt": "Phone essay ring: three cards show on the smaller ring (the sunset silhouette on the left, the upright orange typewriter at the top, the studio microphone on the right; the side cards run off the screen edges by design), over 'From the Sunday notes', 'Short reads for the / long work of a book.', 'Pick one from the ring — each essay takes about two minutes and fixes one thing.', 'Browse all essays →' and the three facts 'Eight essays', 'Four themes', 'Two-minute reads' with their sub-lines, all clear of the ring. The next two ring cards fade out at the bottom corners, below the facts; the lower edge of the featured tray shows faintly through the frosted header.",
      "frame": "phone"
     }
    },
