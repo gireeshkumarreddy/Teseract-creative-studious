@@ -189,3 +189,19 @@
   .ct-before__title{font-size:22px}
   .ct-done__actions .btn{flex:1 1 100%}
 }
+/* narrow phones (360): the eight chips as an even 2-column grid - four pairs, as they fall at 390 - each filling its
+   cell; a long label (Website Development, Brand & Digital Identity) wraps to two balanced lines inside the same 44 px
+   chip, so the tick a selection adds never re-flows the rows; the tick keeps its full 16 px (the label wraps instead) */
+@media (max-width:379.98px){
+  .ct-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ct-chip>span{flex:1 1 auto;min-width:0;justify-content:center;height:auto;min-height:44px;padding:4px 8px;line-height:18px;
+    white-space:normal;text-align:center;text-wrap:balance}
+  .ct-chip__tick{flex:none}
+}
+/* the site chat's hand-off (35-contact.js): "Filled in from your chat ..." above the form, with Clear */
+.ct-prefill{display:flex;align-items:center;gap:12px;margin:0 0 20px;padding:8px 8px 8px 14px;border-radius:14px;border:1px solid var(--line-3);
+  background:rgba(255,255,255,.03);font-size:14px;line-height:1.4;color:var(--ink-2)}
+.ct-prefill[hidden]{display:none}
+.ct-prefill span{flex:1}
+.ct-prefill button{flex:none;min-height:44px;padding:0 14px;border-radius:22px;border:1px solid var(--line-3);background:none;color:var(--ink);font-size:14px}
+.ct-prefill button:hover{background:rgba(255,255,255,.08)}

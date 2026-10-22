@@ -83,10 +83,11 @@
        start that entrance over (a 'down' column shows a clone in its lead's place as soon as it runs), so each clone
        joins its original's timeline, or skips to the end once the original has finished. */
     const syncLeads = () => frame.querySelectorAll('[data-ticker-list]').forEach(list => {
+      const imgs = [...list.querySelectorAll(':scope > [data-clone] .hero-tile__media--lead img')].filter(img => !img.dataset.leadSync && img.getAnimations);
+      if (!imgs.length) return;                    // (getAnimations brings the styles up to date: only for new clones)
       const lead = list.querySelector(':scope > :not([data-clone]) .hero-tile__media--lead img');
       const own = lead && lead.getAnimations ? lead.getAnimations() : [];
-      list.querySelectorAll(':scope > [data-clone] .hero-tile__media--lead img').forEach(img => {
-        if (img.dataset.leadSync || !img.getAnimations) return;
+      imgs.forEach(img => {
         img.dataset.leadSync = '1';
         img.getAnimations().forEach(a => {
           const o = own.find(x => x.animationName === a.animationName);
@@ -94,12 +95,15 @@
         });
       });
     });
-    syncLeads();                                   // tickers() (02-core.js) has made the first clones already
+    syncLeads();                                   // (the tickers make their first clones after the first paint: below)
     // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed. A clone of the first
     // tile drops the margin standIns() may have given that tile (the loop's start only).
     const unshift = () => frame.querySelectorAll('[data-ticker-list] > [data-clone][style]').forEach(c => { c.style.marginTop = ''; });
+    // (the leads in the frame, before its paint: getAnimations lays out the styles, the frame's own work there)
+    let leadRaf = 0;
+    const syncSoon = () => { if (!leadRaf) leadRaf = requestAnimationFrame(() => { leadRaf = 0; syncLeads(); }); };
     if ('MutationObserver' in window) {
-      const mo = new MutationObserver(() => { unshift(); syncLeads(); if (revealed) openAll(); });
+      const mo = new MutationObserver(() => { unshift(); syncSoon(); if (revealed) openAll(); });
       frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     }
 
@@ -185,15 +189,18 @@
   }
 
   /* Stand-ins (home_hero._columns): where a screen hides a column, its projects' tiles are repeated in the columns
-     still shown, so every project is on every screen. With motion they sit out the first layout (20-hero.css), and
-     a pass at the page's start, then idle moments, let them in (the clips first: owner, 17 Oct, the landing pages and
-     the tiger move on phones too), each only while none of its places in the column (the tile and the ticker's copies
-     of it, which share its .is-on) is on screen, and the column's ticker takes the longer loop from where it is. For a
-     visitor at the top of the page (the gallery below the fold, or the top of its first tiles on screen) that is all of
-     them at the start (18 Oct: they waited for load and the ticker's first rebuild, and a visitor who had scrolled to
-     the gallery by then found it on screen, where each one waited for its place to leave it, up to ~40 s on a phone;
-     that is still so with the gallery on screen at the start - a restored scroll). Stand-ins this screen does not
-     show (another width, a hidden column) are let in at once: the ticker's own rebuild on resize picks them up. */
+     still shown, so every project is on every screen. With motion they sit out the first layout (20-hero.css) and come
+     in (.is-on; the clips first: owner, 17 Oct, the landing pages and the tiger move on phones too) without moving a
+     tile that is on screen (18 Oct). Just before the tickers are first measured and copied (02-core.js
+     TS.beforeTickers: after the first paint, in one layout), each one whose place in its column is below the visible
+     part - at the top of the page every one, the gallery below the fold or only the top of its first tiles on screen -
+     comes in, so the ticker loops the full column from its start. The rest (the gallery on screen at the start: a
+     restored scroll, a tablet's first row) wait for the loop (TS.afterTickers), then idle moments let each one in only
+     while none of its places in the column (the tile and the ticker's copies of it, which share its .is-on) is on
+     screen, and the column's ticker takes the longer loop from where it is. (18 Oct: they waited for load and a ticker
+     rebuild, up to ~40 s on a phone for a visitor who had reached the gallery by then; 21 Oct: the pass at the page's
+     start ran inside app.js's first task, one layout per stand-in.) Stand-ins this screen does not show (another width,
+     a hidden column) are let in at once: the ticker's own rebuild on resize picks them up. */
   /* A stand-in's image waits in <noscript> (home_hero._item) until its tile is let in, so neither it nor the ticker's
      copies of it download anything before; one let in before load waits for load (or for the gallery to come on
      screen first), so it never competes with the page's first images. Then they load at once (eager, as the ticker's
@@ -217,6 +224,7 @@
       .sort((a, b) => clip(b) - clip(a));             // the clips first (a stable sort: DOM order within each)
     if (!left.length) return;
     const narrow = { lt1440: matchMedia('(max-width: 1439.98px)'), lt800: matchMedia('(max-width: 799.98px)') };
+    const shownAt = li => narrow[li.classList.contains('hero-col__item--lt800') ? 'lt800' : 'lt1440'].matches && !!li.closest('[data-ticker]').offsetParent;
     const parse = kf => parseFloat(String(kf.transform).replace(/[^-\d.]+/g, ' ').trim().split(' ').pop());
     // px kept clear around the visible part: a frame of the ticker's drift (under 1px; mid-scroll nothing comes in). 18 Oct:
     // was 24, which on a 412-430px phone at the top of the page held back column 1's second tile, a few px below the fold.
@@ -246,19 +254,12 @@
     let scrolled = 0;
     const onScroll = () => { scrolled = performance.now(); };
     addEventListener('scroll', onScroll, { passive: true });
-    // The ticker rebuilds each column once just after it starts (02-core.js, its ResizeObserver's first call), which
-    // restarts the loop from its start (and copies the list as it is then). On screen, what comes in before that keeps
-    // the view where it is in the loop, so the restart lands on it: only below the visible part (a down column: the
-    // copy it draws above the loop's start takes it too, and the ticker's offset, not a margin, makes up for it).
-    const t0 = performance.now(), rebuilt = new Set();
-    const mo = 'MutationObserver' in window ? new MutationObserver(recs => recs.forEach(r => rebuilt.add(r.target))) : null;
-    if (mo) frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     // an idle moment, or 600ms on (18 Oct: was 2s - while the page loads a phone has few idle moments, and the visitor may
     // reach the gallery meanwhile); a call on the timeout lets one stand-in in
     const idle = fn => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 600 }) : setTimeout(fn, 120));
     // Lets li in if none of its places is on screen (true), re-timing its column's loop; false: try again later. What
-    // comes in above the visible part is offset by a negative margin on the list's first tile (above it too; before the
-    // first rebuild by the ticker's offset), so no tile on screen moves, in the layout either (no layout shift).
+    // comes in above the visible part is offset by a negative margin on the list's first tile, so no tile on screen
+    // moves, in the layout either (no layout shift).
     const tryIn = li => {
       const list = li.parentElement, col = list.closest('[data-ticker]');
       const t = (TS.tickers || []).find(x => x.el === col), anim = t && t.anim, fx = anim && anim.effect;
@@ -269,7 +270,6 @@
       const r = col.getBoundingClientRect(), off = first.getBoundingClientRect().top - r.top;   // the list as drawn
       const top = Math.max(0, -r.top), bottom = Math.min(r.height, innerHeight - r.top);
       const seen = bottom > top, a = top - off - MARGIN, b = bottom - off + MARGIN;   // the visible part, in list space
-      const pending = seen && !rebuilt.has(list) && performance.now() - t0 < 4000;   // the first rebuild still to come
       let next = li.nextElementSibling;              // the stand-in comes in where its next shown tile is now
       while (next && !next.offsetParent) next = next.nextElementSibling;
       if (!next || next.hasAttribute('data-clone')) return false;
@@ -277,27 +277,25 @@
       for (let k = 0; k * n < kids.length; k++) places.push(k * len + at);   // the tile, then each copy of it
       if (seen && places.some(p => p > a && p < b)) return false;
       const above = seen ? places.filter(p => p <= a).length : 0;
-      if (pending && above !== (to > from ? 1 : 0)) return false;
       letIn(li);
       const gap = parseFloat(getComputedStyle(list).rowGap) || 0, last = kids[n - 1];
       const loop = last.offsetTop + last.offsetHeight - first.offsetTop + gap;   // as the ticker measures it
-      if (above && !pending) first.style.marginTop = `${(parseFloat(first.style.marginTop) || 0) - above * (li.offsetHeight + gap)}px`;
-      const T = from + (to - from) * (((anim.currentTime || 0) % dur) / dur)   // the ticker's offset: kept
-        - (pending ? above * (li.offsetHeight + gap) : 0);
+      if (above) first.style.marginTop = `${(parseFloat(first.style.marginTop) || 0) - above * (li.offsetHeight + gap)}px`;
+      const T = from + (to - from) * (((anim.currentTime || 0) % dur) / dur);   // the ticker's offset: kept
       const f2 = to > from ? -loop : 0, t2 = to > from ? 0 : -loop;
       const d2 = loop / (parseFloat(col.dataset.speed) || 25) * 1000;
       fx.setKeyframes([{ transform: `translateY(${f2}px)` }, { transform: `translateY(${t2}px)` }]);
       fx.updateTiming({ duration: d2 });
       anim.currentTime = Math.min(d2 - 1, Math.max(0, (T - f2) / (t2 - f2) * d2));
+      if (t.adopt) t.adopt();                        // the ticker keeps this loop: no rebuild for it
       return true;
     };
     // As many stand-ins per idle moment as it holds (each: its tile and the ticker's copies of it, well under a long
-    // task on a slow phone), at least one.
+    // task on a slow phone), at least one. Stand-ins not shown now (a resize) come in at once, without downloads.
     const step = deadline => {
+      const shown = left.map(shownAt);               // the reads, then the writes
       for (let i = left.length - 1; i >= 0; i--) {
-        const li = left[i];
-        const shown = narrow[li.classList.contains('hero-col__item--lt800') ? 'lt800' : 'lt1440'].matches && li.closest('[data-ticker]').offsetParent;
-        if (li.classList.contains('is-on') || !shown) { letIn(li, !!shown); left.splice(i, 1); }
+        if (left[i].classList.contains('is-on') || !shown[i]) { letIn(left[i], shown[i]); left.splice(i, 1); }
       }
       let moved = false;
       while (left.length && performance.now() - scrolled > 250) {   // mid-scroll the visible part is a moving target
@@ -307,14 +305,30 @@
         moved = true;
         if (!deadline || deadline.timeRemaining() < 8) break;
       }
-      if (!left.length) { removeEventListener('scroll', onScroll); if (mo) mo.disconnect(); }
+      if (!left.length) removeEventListener('scroll', onScroll);
       else if (moved) idle(step);
       else setTimeout(() => idle(step), 400);        // all on screen for now: the columns move on
     };
-    // The first pass at once, at the page's start (18 Oct: an idle moment can come only after load, when the visitor may
-    // be at the gallery): at the top of the page - the gallery below the fold, or only the top of its first tiles on
-    // screen - that lets all of them in; idle moments do the rest (a restored scroll, a scroll before the start).
-    step({ timeRemaining: () => Infinity });
+    // Before the tickers' first measure: the reads (which ones this screen shows, each column's visible part, each
+    // place), then the writes. A place below the visible part, or in a column off screen, moves nothing on screen.
+    TS.beforeTickers(() => {
+      const vh = innerHeight;
+      const plan = left.map(li => {
+        if (!shownAt(li)) return 'hidden';
+        const c = li.closest('[data-ticker]').getBoundingClientRect();
+        const top = Math.max(0, c.top), bottom = Math.min(vh, c.bottom);
+        if (bottom <= top) return 'in';
+        let next = li.nextElementSibling;
+        while (next && !next.offsetParent) next = next.nextElementSibling;
+        return next && next.getBoundingClientRect().top >= bottom + MARGIN ? 'in' : '';
+      });
+      for (let i = left.length - 1; i >= 0; i--) if (plan[i]) { letIn(left[i], plan[i] === 'in'); left.splice(i, 1); }
+    });
+    TS.afterTickers(() => {
+      if (!left.length) { removeEventListener('scroll', onScroll); return; }
+      const t0 = performance.now();
+      step({ timeRemaining: () => 40 - (performance.now() - t0) });   // a short task (4x CPU), then idle moments
+    });
   }
 
   TS.ready(() => {

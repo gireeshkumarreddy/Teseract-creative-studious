@@ -202,5 +202,48 @@
         busy(false);
       }
     });
+
+    /* ---------- the site chat's hand-off (src/chat/30-ui.js): the visitor's brief from sessionStorage 'ts-cc-prefill'
+       (read once, ignored after 30 min) or sent in place on this page ('ts:cc-prefill'). Fills empty fields only, shows
+       the note with Clear (which empties and unticks just what it filled), then focus moves to the name. The ?service=
+       pre-selection above still works when storage is blocked; the mailto / form_endpoint flow is unchanged. */
+    const note = card.querySelector('[data-cc-prefill]');
+    let filled = [];
+    const prefill = d => {
+      if (!d || d.v !== 1 || !(Date.now() - d.at <= 30 * 60e3)) return;
+      filled = [];
+      const set = (el, v, ev) => { el.value = v; el.dispatchEvent(new Event(ev)); filled.push(el); };
+      const sel = form.querySelector('#ct-build'), idea = form.querySelector('#ct-idea');
+      if (sel && !sel.value && [...sel.options].some(o => o.value && o.value === d.build)) set(sel, d.build, 'change');
+      (d.help || []).forEach(v => {
+        const c = [...form.querySelectorAll('input[name="help"]')].find(x => x.value === v);
+        if (c && !c.checked) { c.checked = true; filled.push(c); }
+      });
+      if (budget && !budget.value.trim() && d.budget) set(budget, String(d.budget).slice(0, 120), 'input');
+      if (idea && !idea.value.trim() && d.idea) set(idea, String(d.idea).slice(0, 2000), 'input');
+      if (!filled.length) return;
+      if (note) { note.querySelector('span').textContent = note.dataset.text; note.hidden = false; }
+      // focus the name; again after load (a #project-form arrival's fragment scroll moves focus back to the page)
+      const name = form.querySelector('#ct-name'), go = () => { if (name && document.activeElement !== name) name.focus({ preventScroll: true }); };
+      go();
+      if (document.readyState !== 'complete') addEventListener('load', () => setTimeout(go, 0), { once: true });
+    };
+    if (note) note.querySelector('button').addEventListener('click', () => {
+      filled.forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else { el.value = ''; el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input')); }
+      });
+      filled = [];
+      note.hidden = true;
+    });
+    try {
+      const raw = sessionStorage.getItem('ts-cc-prefill');
+      sessionStorage.removeItem('ts-cc-prefill');
+      if (raw) prefill(JSON.parse(raw));
+    } catch (e) { /* storage blocked or a malformed entry */ }
+    document.addEventListener('ts:cc-prefill', e => {
+      try { sessionStorage.removeItem('ts-cc-prefill'); } catch (x) { /* blocked */ }
+      prefill(e.detail);
+    });
   });
 })();

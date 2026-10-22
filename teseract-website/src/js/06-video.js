@@ -8,8 +8,9 @@
      the hero copy never start a download. Their DPR counts up to 2.75: a 3x phone at 430 px or in landscape takes
      the 640 rung, one at 390 px keeps the 480 (drawn at most ~1.09x, 3 / 2.75).
    - data-poster (lib.video lazy posters, JSON like data-srcs: the hero tiles, whose columns are display:none at
-     some widths): the poster for the element's width x DPR is set only once the element is rendered (on register,
-     after a ticker rebuild, on resize), as browsers fetch a poster attribute even for a hidden element.
+     some widths): the poster for the element's width x DPR is set only once the element is rendered (in the frame
+     after it is registered - one pass for all of them -, after a ticker rebuild, on resize), as browsers fetch a
+     poster attribute even for a hidden element.
    - Plays while at least 25% visible; pauses off-screen and whenever the tab is hidden.
    - Held (never plays) inside [inert] (inactive Idea slides) or [data-video-hold] (motion paused).
    - Reduced motion or Save-Data: never loads or autoplays - the poster stays.
@@ -69,10 +70,32 @@
     if (near) near.unobserve(v);
   }
 
-  function poster(v) {
-    if (v.getAttribute('poster') || !v.dataset.poster || !v.getClientRects().length) return;
+  // read: the lazy poster v needs now (rendered, no poster yet), or ''
+  function posterFor(v) {
+    if (v.getAttribute('poster') || !v.dataset.poster || !v.getClientRects().length) return '';
     const ps = list(v.dataset.poster);
-    if (ps.length) v.poster = pick(ps, need(v)).src;
+    return ps.length ? pick(ps, need(v)).src : '';
+  }
+  function poster(v) {
+    const src = posterFor(v);
+    if (src) v.poster = src;
+  }
+  // Every registered video's poster in one frame: all the reads, then the writes; then the eager clips' sources.
+  // (Set per video as each one was registered, each write made the next read lay the page out again: on the home page
+  // ~20 clips with their ticker copies, ~0.3 s at 4x CPU in app.js's first task.) A frame callback runs before that
+  // frame's paint.
+  let posterRaf = 0;
+  const eager = new Set();
+  function posters() {
+    if (posterRaf) return;
+    posterRaf = requestAnimationFrame(() => {
+      posterRaf = 0;
+      const set = [];
+      live.forEach(v => { const src = v.isConnected && posterFor(v); if (src) set.push([v, src]); });
+      set.forEach(([v, src]) => { v.poster = src; });
+      eager.forEach(v => { const st = state.get(v); if (st && v.isConnected && !quiet()) load(v, st); });
+      eager.clear();
+    });
   }
 
   // A refused play() (not an AbortError: a pause() or a new src interrupted it) keeps the poster; the control
@@ -154,9 +177,9 @@
   }
 
   function sharpen() {
+    posters();                                             // a column shown at the new width gets its posters
     live.forEach(v => {
       if (!v.isConnected) { drop(v); return; }
-      poster(v);                                           // a column shown at the new width gets its posters
       const st = state.get(v);
       if (!st || !st.cur || st.failed) return;
       const px = need(v);
@@ -209,10 +232,9 @@
     v.muted = true;
     v.addEventListener('error', () => { st.failed = true; paint(v); }, { once: true });   // missing/unsupported file: poster stays
     v.addEventListener('playing', () => { if (st.blocked) { st.blocked = false; paint(v); } });
-    poster(v);
     if (!st.cur && !tile(v)) near.observe(v);
     seen.observe(v);
-    if (v.hasAttribute('data-video-eager') && !quiet()) load(v, st);
+    if (v.hasAttribute('data-video-eager') && !quiet()) eager.add(v);    // its src in the posters' frame (posters())
     addControl(v, st);
     if (saveData() && !reducedMQ.matches) block(v, st);    // Save-Data: nothing loads until the visitor asks for it
   }
@@ -223,7 +245,7 @@
     if (!found.length) return;
     if (!boot()) { found.forEach(poster); return; }        // very old browsers: the posters only
     found.forEach(register);
-    live.forEach(poster);                                  // a ticker rebuilt at a new width: its originals are rendered now
+    posters();                                             // theirs, and a rebuilt ticker's originals rendered at a new width
   };
 
   TS.preloadVideo = v => {

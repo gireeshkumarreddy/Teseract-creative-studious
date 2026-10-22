@@ -470,7 +470,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     els.filter(isImage).forEach(el => io.observe(el));
     const held = els.filter(el => !isImage(el));
     TS.afterIntro(() => held.forEach(el => { if (pending.has(el)) io.observe(el); }));
-    TS.observeReveal = el => { pending.add(el); if (isImage(el)) io.observe(el); else TS.afterIntro(() => io.observe(el)); };
+    // (TS.observeReveal, for elements made later - ticker clones: below, with the end-of-page check it re-arms.)
     // Keyboard users can tab into a section before it has scrolled into reveal range: reveal the
     // focused element's [data-reveal]/[data-split]/.reveal-image ancestors at once so focus rings never sit on faded controls.
     document.addEventListener('focusin', e => {
@@ -483,24 +483,44 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       }
     });
     // Elements in the last few % of the page can never cross the shrunken root margin: once the page
-    // is scrolled to (or cannot scroll past) its end, reveal whatever is on screen.
-    let ticking = false;
+    // is scrolled to (or cannot scroll past) its end, reveal whatever is on screen. Checked in a frame, reading before
+    // anything is written (at load time it ran inside app.js's first task and laid the whole page out there: ~1.3 s at
+    // 4x CPU on a phone), against the page height a ResizeObserver keeps (scrollHeight in every scroll frame), never
+    // at the top of a page taller than two screens, only while the footer (the page's end) is on screen (so not before
+    // its observer first reports: at load the check read the layout in the first frame of every page), and the scroll
+    // listener goes once nothing waits.
+    let ticking = false, listening = false, pageH = 0, nearEnd = false;
     const atEnd = () => {
       ticking = false;
       if (TS.intro.held()) return;
-      if (scrollY + innerHeight < document.documentElement.scrollHeight - 4) return;
-      pending.forEach(el => {
-        const r = el.getBoundingClientRect();
-        if (r.top < innerHeight && r.bottom > 0) { el.classList.add('is-in'); io.unobserve(el); pending.delete(el); }
-      });
+      pending.forEach(el => { if (el.classList.contains('is-in')) { io.unobserve(el); pending.delete(el); } });   // opened meanwhile (the hero gallery opens its own)
+      if (!pending.size) { listen(false); return; }
+      const y = scrollY, vh = innerHeight, h = pageH || root.scrollHeight;
+      if ((!y && h > 2 * vh) || y + vh < h - 4) return;
+      const shown = [...pending].filter(el => { const r = el.getBoundingClientRect(); return r.top < vh && r.bottom > 0; });
+      shown.forEach(el => { el.classList.add('is-in'); io.unobserve(el); pending.delete(el); });
+      if (!pending.size) listen(false);
     };
-    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(atEnd); } }, { passive: true });
-    addEventListener('load', atEnd);
-    setTimeout(atEnd, 300);
-    TS.afterIntro(atEnd);
+    const request = () => { if (!ticking && nearEnd) { ticking = true; requestAnimationFrame(atEnd); } };
+    const end = document.getElementById('footer') || document.body.lastElementChild;
+    if (end) new IntersectionObserver(([e]) => { nearEnd = e.isIntersecting; request(); }).observe(end);
+    else nearEnd = true;
+    const listen = on => {
+      if (on === listening) return;
+      listening = on;
+      if (on) addEventListener('scroll', request, { passive: true }); else removeEventListener('scroll', request);
+    };
+    TS.observeReveal = el => { pending.add(el); listen(true); if (isImage(el)) io.observe(el); else TS.afterIntro(() => io.observe(el)); };
+    if ('ResizeObserver' in window) new ResizeObserver(() => { pageH = root.scrollHeight; }).observe(root);   // read after layout: free
+    listen(true);
+    addEventListener('load', request);
+    setTimeout(request, 300);
+    TS.afterIntro(request);
   }
 
-  /* ---------- Letter rolls on nav links and buttons (ZIP: 520ms per char, 12ms stagger) */
+  /* ---------- Letter rolls on nav links and buttons (ZIP: 520ms per char, 12ms stagger). After the first paint (the home
+     page's ~1,500 letters were made and laid out in app.js's first task); until then a hover or focus rolls the whole
+     line (02-components.css: .roll without .has-chars). */
   function letterRolls() {
     if (!TS.motion()) return;
     document.querySelectorAll('.btn .roll, .nav-link .roll, [data-letter-roll] .roll').forEach(roll => {
@@ -518,8 +538,24 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 
   /* ---------- Tickers (reference Framer Ticker: WAAPI translate loop, pause off-screen, hover slow-down)
      <div data-ticker data-direction="left|right|up|down" data-speed="25" data-hover="0.8">
-       <ul data-ticker-list> <li>…</li> … </ul></div> */
+       <ul data-ticker-list> <li>…</li> … </ul></div>
+     The first build comes after the first paint (a frame, then a task): TS.beforeTickers(fn) runs fn first (the hero's
+     stand-ins come in there, 20-hero.js), then every ticker is measured (one layout). A ticker on screen gets its loop
+     at once, in that task, with the clones the loop shows first (steps(), below); the rest of its copies and the
+     tickers off screen follow a few clones at a time, in short tasks, and TS.afterTickers(fn) runs fn once every ticker
+     is built. (Built inside app.js's first task, each ticker's measure laid out what the one before
+     had just cloned: the home page on a phone, 4x CPU, ~1 s in one task. 21 Oct: all of it in short tasks, a frame
+     after the stand-ins, kept a tablet's gallery on screen at load still for 1.2-2 s after the first paint at 4x CPU.)
+     A resize, the images of a ticker once they have all loaded, or a late web font rebuild it only if its measure
+     changed (it used to rebuild every ticker once just after the start). */
+  const prep = [], built = [];
+  let tickersBuilt = false;
+  const runAll = fns => fns.splice(0).forEach(fn => { try { fn(); } catch (e) { setTimeout(() => { throw e; }); } });
+  TS.beforeTickers = fn => { if (tickersBuilt) fn(); else prep.push(fn); };
+  TS.afterTickers = fn => { if (tickersBuilt) fn(); else built.push(fn); };
+  TS.afterPaint = fn => requestAnimationFrame(() => setTimeout(fn, 0));
   function tickers() {
+    const all = [];
     document.querySelectorAll('[data-ticker]').forEach(t => {
       const list = t.querySelector('[data-ticker-list]');
       if (!list) return;
@@ -529,54 +565,99 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       const speed = parseFloat(t.dataset.speed) || 25;
       const hover = parseFloat(t.dataset.hover) || 1;
       const items = [...list.children];
-      let anim = null, visible = false, hovering = false, lastSize = 0;
-      const build = () => {
-        list.querySelectorAll('[data-clone]').forEach(c => c.remove());
-        if (!t.offsetParent || !(vertical ? t.clientHeight : t.clientWidth)) { if (anim) { anim.cancel(); anim = null; } return; } // hidden (e.g. a column off at this breakpoint): no clones, no downloads
-        const gap = parseFloat(getComputedStyle(list)[vertical ? 'rowGap' : 'columnGap']) || 0;
-        const first = items[0], last = items[items.length - 1];
-        const start = vertical ? first.offsetTop : first.offsetLeft;
-        const end = vertical ? last.offsetTop + last.offsetHeight : last.offsetLeft + last.offsetWidth;
-        const setLen = end - start + gap;
+      let anim = null, visible = false, hovering = false, made = false, missed = false, last = null;
+      // read: null while hidden (e.g. a column off at this breakpoint); starts: where each item begins in the strip
+      const measure = () => {
         const size = vertical ? t.clientHeight : t.clientWidth;
-        if (setLen <= gap) return;
-        const copies = Math.max(1, Math.ceil(size / setLen) + 1);
-        for (let c = 0; c < copies; c++) items.forEach(it => {
-          const cl = it.cloneNode(true);
-          cl.setAttribute('aria-hidden', 'true'); cl.setAttribute('data-clone', '');
-          cl.querySelectorAll('a,button,[tabindex]').forEach(x => x.setAttribute('tabindex', '-1'));
-          cl.querySelectorAll('img').forEach(im => im.setAttribute('loading', 'eager'));
-          list.appendChild(cl);
-          if (TS.observeVideos && cl.querySelector('[data-video]')) TS.observeVideos(cl);   // client video tiles (06-video.js)
-          // clones are created after reveals() ran: hand their reveal targets to the observer
-          [cl, ...cl.querySelectorAll('.reveal-image, [data-reveal]')].forEach(el => {
-            if (!el.matches || !el.matches('.reveal-image, [data-reveal]') || el.classList.contains('is-in')) return;
-            if (TS.observeReveal) TS.observeReveal(el); else el.classList.add('is-in');
-          });
+        if (!t.offsetParent || !size) return null;
+        const gap = parseFloat(getComputedStyle(list)[vertical ? 'rowGap' : 'columnGap']) || 0;
+        const first = items[0], end = items[items.length - 1];
+        const a = vertical ? first.offsetTop : first.offsetLeft;
+        const b = vertical ? end.offsetTop + end.offsetHeight : end.offsetLeft + end.offsetWidth;
+        let at = 0;                                  // (an item this screen hides takes no room)
+        const starts = items.map(it => (it.offsetParent ? (at = (vertical ? it.offsetTop : it.offsetLeft) - a) : at));
+        return { gap, size, setLen: b - a + gap, side: vertical ? list.scrollWidth : list.scrollHeight, starts };
+      };
+      const moved = (m, o) => ['size', 'setLen', 'side'].some(k => Math.abs(m[k] - o[k]) >= 2);
+      const copy = part => part.forEach(it => {
+        const cl = it.cloneNode(true);
+        cl.setAttribute('aria-hidden', 'true'); cl.setAttribute('data-clone', '');
+        cl.querySelectorAll('a,button,[tabindex]').forEach(x => x.setAttribute('tabindex', '-1'));
+        cl.querySelectorAll('img').forEach(im => im.setAttribute('loading', 'eager'));
+        list.appendChild(cl);
+        if (TS.observeVideos && cl.querySelector('[data-video]')) TS.observeVideos(cl);   // client video tiles (06-video.js)
+        // clones are created after reveals() ran: hand their reveal targets to the observer
+        [cl, ...cl.querySelectorAll('.reveal-image, [data-reveal]')].forEach(el => {
+          if (!el.matches || !el.matches('.reveal-image, [data-reveal]') || el.classList.contains('is-in')) return;
+          if (TS.observeReveal) TS.observeReveal(el); else el.classList.add('is-in');
         });
-        if (anim) anim.cancel();
-        if (TS.reduced()) return;
-        const prop = vertical ? 'translateY' : 'translateX';
-        const from = forward ? -setLen : 0, to = forward ? 0 : -setLen;
-        anim = list.animate([{ transform: `${prop}(${from}px)` }, { transform: `${prop}(${to}px)` }],
-          { duration: setLen / speed * 1000, iterations: Infinity, easing: 'linear' });
-        anim.playbackRate = hovering ? hover : 1;
-        if (!visible) anim.pause();
+      });
+      // write, as steps: the clones and the loop, for a measure. The loop only ever shows the strip and one ticker length
+      // past it (it runs over [0, setLen + size]). Moving forward (down / right) it starts at that far end: the clones
+      // that reach into it come first, with the loop (lead). Moving back it starts on the strip and reaches them only
+      // after (setLen - size) / speed: the loop comes first. The rest of the copies follow, three tiles a step.
+      const steps = m => {
+        last = m;
+        const lead = [() => list.querySelectorAll('[data-clone]').forEach(c => c.remove())], rest = [];
+        if (!m) { lead.push(() => { if (anim) { anim.cancel(); anim = null; } }); return { lead, rest }; }   // hidden: no clones, no downloads
+        const { gap, size, setLen, starts } = m;
+        if (setLen <= gap) return { lead, rest };
+        const need = Math.ceil(size / setLen), cut = size - (need - 1) * setLen;   // cut: px of the last needed copy shown
+        const seq = [];
+        for (let c = 0; c <= need; c++) seq.push(...items);
+        const early = forward || (setLen - size) / speed < 3 ? (need - 1) * items.length + starts.filter(s => s < cut + 2).length : 0;
+        if (early) lead.push(() => copy(seq.slice(0, early)));
+        for (let i = early; i < seq.length; i += 3) { const part = seq.slice(i, i + 3); rest.push(() => copy(part)); }
+        lead.push(() => {
+          if (anim) anim.cancel();
+          if (TS.reduced()) return;
+          const prop = vertical ? 'translateY' : 'translateX';
+          const from = forward ? -setLen : 0, to = forward ? 0 : -setLen;
+          anim = list.animate([{ transform: `${prop}(${from}px)` }, { transform: `${prop}(${to}px)` }],
+            { duration: setLen / speed * 1000, iterations: Infinity, easing: 'linear' });
+          anim.playbackRate = hovering ? hover : 1;
+          if (!visible) anim.pause();
+        });
+        return { lead, rest };
       };
       const rebuild = () => {
-        const s = vertical ? t.clientHeight + list.scrollWidth : t.clientWidth + list.scrollHeight;
-        if (Math.abs(s - lastSize) < 2 && anim) return;
-        lastSize = s; build();
+        if (!made) { missed = true; return; }        // the first build is under way: checked again once it is done
+        const m = measure();
+        if (m && last ? !moved(m, last) : !m === !last) return;
+        const s = steps(m);
+        s.lead.concat(s.rest).forEach(f => f());
       };
       new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (anim) visible ? anim.play() : anim.pause(); }).observe(t);
       if (hover !== 1) {
         t.addEventListener('pointerenter', () => { hovering = true; if (anim) anim.updatePlaybackRate ? anim.updatePlaybackRate(hover) : (anim.playbackRate = hover); });
         t.addEventListener('pointerleave', () => { hovering = false; if (anim) anim.updatePlaybackRate ? anim.updatePlaybackRate(1) : (anim.playbackRate = 1); });
       }
-      let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(rebuild, 120); }).observe(t);
-      items.forEach(it => it.querySelectorAll('img').forEach(im => { if (!im.complete) im.addEventListener('load', () => { clearTimeout(rt); rt = setTimeout(rebuild, 120); }, { once: true }); }));
-      build();
-      TS.tickers = (TS.tickers || []).concat({ el: t, get anim() { return anim; } });
+      let rt;
+      const later = () => { clearTimeout(rt); rt = setTimeout(rebuild, 120); };
+      new ResizeObserver(later).observe(t);
+      const loading = items.flatMap(it => [...it.querySelectorAll('img')]).filter(im => !im.complete);
+      if (loading.length) Promise.all(loading.map(im => new Promise(done => { im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true }); }))).then(later);
+      all.push({ el: t, measure, steps, later, done: () => { made = true; if (missed) later(); } });
+      // adopt(): the loop was re-timed from outside (a stand-in let in, 20-hero.js): the list as it is now counts as built
+      TS.tickers = (TS.tickers || []).concat({ el: t, get anim() { return anim; }, adopt() { if (made && last) last = measure() || last; } });
+    });
+    TS.afterPaint(() => {
+      runAll(prep);
+      const vh = innerHeight;                        // the reads (one layout), then the writes
+      const plan = all.map(k => { const m = k.measure(), r = k.el.getBoundingClientRect(); return { k, s: k.steps(m), on: !!m && r.bottom > 0 && r.top < vh }; });
+      plan.forEach(p => { if (p.on) runAll(p.s.lead); });   // the loops on screen start now
+      const queue = plan.flatMap(p => (p.on ? [] : p.s.lead).concat(p.s.rest, p.k.done));
+      const run = () => {                            // short tasks: steps until ~20 ms are used
+        const t0 = performance.now();
+        while (queue.length && performance.now() - t0 < 20) runAll([queue.shift()]);
+        if (queue.length) { setTimeout(run, 0); return; }
+        tickersBuilt = true;
+        runAll(prep);                                // (any added meanwhile)
+        runAll(built);
+        // a late web font resizes a text strip (read here: document.fonts laid the page out in app.js's first task)
+        if (all.length && document.fonts && document.fonts.ready) document.fonts.ready.then(() => all.forEach(k => k.later()));
+      };
+      setTimeout(run, 0);
     });
   }
 
@@ -587,7 +668,15 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
      on viewport re-entry or rebuilds it), every CSS animation inside it (.is-still, 02-components.css) and its
      client videos ([data-video-hold], 06-video.js); a 'ts:motion' event (detail.still) lets section scripts stop
      their own timers, and TS.motionStill(el) tells whether el sits in a paused scope. Play resumes only what is on
-     screen (the ticker runtime starts the rest as it comes into view). */
+     screen (the ticker runtime starts the rest as it comes into view).
+     Autoplay refused (iOS Low Power Mode, a browser's no-autoplay setting: 06-video.js fires 'ts:videoblocked') while
+     the scope moves: until the visitor's first tap on the control it offers its Play state ("Play motion") without
+     pausing anything, and that tap plays the scope's clips that are on screen or were refused, inside the tap (a
+     gesture may; TS.playVideo). After a tap the control only follows the motion ("Pause motion" while the tickers move,
+     so its next tap always pauses: 21 Oct, a clip refused as a column brought it in turned it back to Play, and a
+     visitor trying to stop the gallery needed two or three taps); a clip refused then plays at the visitor's next tap,
+     key press or click anywhere in the scope, and Play after a pause plays it too. Not under Save-Data: there the clips
+     keep their posters (owner, 17 Oct). */
   TS.motionStill = el => !!(el && el.closest && el.closest('[data-motion-scope].is-still'));
   TS.motionToggle = btn => {
     const scope = btn && btn.closest('[data-motion-scope]');
@@ -597,20 +686,26 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const label = btn.querySelector('[data-motion-label]');
     const words = { pause: label ? label.textContent : 'Pause motion', play: btn.dataset.playLabel || 'Play motion' };
     const held = new Set();                        // script animations this control paused (resumed on Play)
+    const refused = new Set();                     // clips whose autoplay was refused (until they play)
     const scopeTickers = () => (TS.tickers || []).filter(t => scope.contains(t.el));
     const scripted = () => (scope.getAnimations ? scope.getAnimations({ subtree: true }) : [])
       .filter(a => a.constructor === Animation);  // WAAPI only: CSS animations follow animation-play-state (.is-still)
     const onScreen = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width > 0; };
-    let still = false;
+    let still = false, offer = false, tapped = false;   // offer: Play shown for refused clips, nothing paused (until a tap)
+    const paint = () => {
+      const play = still || offer;
+      btn.classList.toggle('is-still', play);
+      if (label) label.textContent = play ? words.play : words.pause;
+    };
     const hold = () => {
       if (!still) return;
       scripted().forEach(a => { if (a.playState === 'running') { a.pause(); held.add(a); } });
     };
     const set = on => {
       still = on;
+      offer = false;
       scope.classList.toggle('is-still', on);
-      btn.classList.toggle('is-still', on);
-      if (label) label.textContent = on ? words.play : words.pause;
+      paint();
       if (scope.querySelector('[data-video]')) {    // client video tiles pause with the rest of the scope
         scope.toggleAttribute('data-video-hold', on);
         if (TS.syncVideos) TS.syncVideos(scope);
@@ -624,8 +719,38 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       }
       scope.dispatchEvent(new CustomEvent('ts:motion', { detail: { still: on } }));
     };
+    // a clip shown in its (clipping) ticker column, or on screen
+    const showing = v => {
+      const r = v.getBoundingClientRect(), c = (v.closest('[data-ticker]') || v).getBoundingClientRect();
+      return r.width > 0 && r.bottom > Math.max(0, c.top) && r.top < Math.min(innerHeight, c.bottom);
+    };
+    const playClips = shown => {                   // the refused clips (and with shown, every clip showing)
+      const clips = [...scope.querySelectorAll('[data-video]')].filter(v => refused.has(v) || (shown && showing(v)));
+      refused.clear();
+      clips.forEach(v => TS.playVideo(v).then(ok => { if (ok && TS.syncVideos) TS.syncVideos(v); }));   // (one off screen pauses again)
+    };
     btn.hidden = false;
-    btn.addEventListener('click', () => set(!still));
+    btn.addEventListener('click', () => {
+      tapped = true;
+      const play = offer || (still && refused.size);
+      set(play ? false : !still);
+      if (play && TS.playVideo) playClips(true);
+    });
+    if (scope.querySelector('[data-video]')) {
+      const saveData = () => !!(navigator.connection && navigator.connection.saveData);
+      scope.addEventListener('ts:videoblocked', e => {
+        if (saveData()) return;
+        refused.add(e.target);
+        if (!still && !offer && !tapped) { offer = true; paint(); }
+      });
+      scope.addEventListener('playing', e => {
+        refused.delete(e.target);
+        if (offer && !refused.size) { offer = false; paint(); }   // all played (a gesture elsewhere in the scope)
+      }, true);
+      // any other gesture in the scope (the control's own taps decide for themselves) plays the refused clips while it moves
+      const retry = e => { if (refused.size && !still && TS.playVideo && !btn.contains(e.target)) playClips(false); };
+      ['touchend', 'click', 'keydown'].forEach(type => scope.addEventListener(type, retry, { capture: true, passive: true }));
+    }
     // the ticker runtime resumes an animation when it re-enters the viewport (its observer may run after this one,
     // so wait a frame) and replaces it when it rebuilds the clones: pause it again while still
     if ('IntersectionObserver' in window) {
@@ -669,11 +794,13 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   function headerTone() {
     const header = document.querySelector('[data-header]');
     if (header) {
-      // frosted bar behind the logo/menu button once the page has scrolled
+      // frosted bar behind the logo/menu button once the page has scrolled (first set in a frame: read at load time,
+      // scrollY laid the page out inside app.js's first task)
       let raf = 0;
       const sync = () => { raf = 0; header.classList.toggle('is-scrolled', scrollY > 8); };
-      addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(sync); }, { passive: true });
-      sync();
+      const request = () => { if (!raf) raf = requestAnimationFrame(sync); };
+      addEventListener('scroll', request, { passive: true });
+      request();
     }
     const darks = document.querySelectorAll('[data-nav-dark]');
     if (!header || !darks.length) return;
@@ -686,7 +813,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   }
 
   TS.ready(() => {
-    smoothScroll(); anchors(); reveals(); letterRolls(); tickers(); pageTransitions(); disabledLinks(); headerTone();
+    // (letter rolls after the tickers' first task: their ~1,500 letters would make its reads lay them out)
+    smoothScroll(); anchors(); reveals(); tickers(); TS.afterPaint(letterRolls); pageTransitions(); disabledLinks(); headerTone();
     document.querySelectorAll('[data-motion-toggle]').forEach(TS.motionToggle);   // after tickers(): TS.tickers is filled
     root.classList.add('is-ready');
   });
@@ -754,8 +882,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
      the hero copy never start a download. Their DPR counts up to 2.75: a 3x phone at 430 px or in landscape takes
      the 640 rung, one at 390 px keeps the 480 (drawn at most ~1.09x, 3 / 2.75).
    - data-poster (lib.video lazy posters, JSON like data-srcs: the hero tiles, whose columns are display:none at
-     some widths): the poster for the element's width x DPR is set only once the element is rendered (on register,
-     after a ticker rebuild, on resize), as browsers fetch a poster attribute even for a hidden element.
+     some widths): the poster for the element's width x DPR is set only once the element is rendered (in the frame
+     after it is registered - one pass for all of them -, after a ticker rebuild, on resize), as browsers fetch a
+     poster attribute even for a hidden element.
    - Plays while at least 25% visible; pauses off-screen and whenever the tab is hidden.
    - Held (never plays) inside [inert] (inactive Idea slides) or [data-video-hold] (motion paused).
    - Reduced motion or Save-Data: never loads or autoplays - the poster stays.
@@ -815,10 +944,32 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     if (near) near.unobserve(v);
   }
 
-  function poster(v) {
-    if (v.getAttribute('poster') || !v.dataset.poster || !v.getClientRects().length) return;
+  // read: the lazy poster v needs now (rendered, no poster yet), or ''
+  function posterFor(v) {
+    if (v.getAttribute('poster') || !v.dataset.poster || !v.getClientRects().length) return '';
     const ps = list(v.dataset.poster);
-    if (ps.length) v.poster = pick(ps, need(v)).src;
+    return ps.length ? pick(ps, need(v)).src : '';
+  }
+  function poster(v) {
+    const src = posterFor(v);
+    if (src) v.poster = src;
+  }
+  // Every registered video's poster in one frame: all the reads, then the writes; then the eager clips' sources.
+  // (Set per video as each one was registered, each write made the next read lay the page out again: on the home page
+  // ~20 clips with their ticker copies, ~0.3 s at 4x CPU in app.js's first task.) A frame callback runs before that
+  // frame's paint.
+  let posterRaf = 0;
+  const eager = new Set();
+  function posters() {
+    if (posterRaf) return;
+    posterRaf = requestAnimationFrame(() => {
+      posterRaf = 0;
+      const set = [];
+      live.forEach(v => { const src = v.isConnected && posterFor(v); if (src) set.push([v, src]); });
+      set.forEach(([v, src]) => { v.poster = src; });
+      eager.forEach(v => { const st = state.get(v); if (st && v.isConnected && !quiet()) load(v, st); });
+      eager.clear();
+    });
   }
 
   // A refused play() (not an AbortError: a pause() or a new src interrupted it) keeps the poster; the control
@@ -900,9 +1051,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   }
 
   function sharpen() {
+    posters();                                             // a column shown at the new width gets its posters
     live.forEach(v => {
       if (!v.isConnected) { drop(v); return; }
-      poster(v);                                           // a column shown at the new width gets its posters
       const st = state.get(v);
       if (!st || !st.cur || st.failed) return;
       const px = need(v);
@@ -955,10 +1106,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     v.muted = true;
     v.addEventListener('error', () => { st.failed = true; paint(v); }, { once: true });   // missing/unsupported file: poster stays
     v.addEventListener('playing', () => { if (st.blocked) { st.blocked = false; paint(v); } });
-    poster(v);
     if (!st.cur && !tile(v)) near.observe(v);
     seen.observe(v);
-    if (v.hasAttribute('data-video-eager') && !quiet()) load(v, st);
+    if (v.hasAttribute('data-video-eager') && !quiet()) eager.add(v);    // its src in the posters' frame (posters())
     addControl(v, st);
     if (saveData() && !reducedMQ.matches) block(v, st);    // Save-Data: nothing loads until the visitor asks for it
   }
@@ -969,7 +1119,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     if (!found.length) return;
     if (!boot()) { found.forEach(poster); return; }        // very old browsers: the posters only
     found.forEach(register);
-    live.forEach(poster);                                  // a ticker rebuilt at a new width: its originals are rendered now
+    posters();                                             // theirs, and a rebuilt ticker's originals rendered at a new width
   };
 
   TS.preloadVideo = v => {
@@ -1488,10 +1638,11 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
        start that entrance over (a 'down' column shows a clone in its lead's place as soon as it runs), so each clone
        joins its original's timeline, or skips to the end once the original has finished. */
     const syncLeads = () => frame.querySelectorAll('[data-ticker-list]').forEach(list => {
+      const imgs = [...list.querySelectorAll(':scope > [data-clone] .hero-tile__media--lead img')].filter(img => !img.dataset.leadSync && img.getAnimations);
+      if (!imgs.length) return;                    // (getAnimations brings the styles up to date: only for new clones)
       const lead = list.querySelector(':scope > :not([data-clone]) .hero-tile__media--lead img');
       const own = lead && lead.getAnimations ? lead.getAnimations() : [];
-      list.querySelectorAll(':scope > [data-clone] .hero-tile__media--lead img').forEach(img => {
-        if (img.dataset.leadSync || !img.getAnimations) return;
+      imgs.forEach(img => {
         img.dataset.leadSync = '1';
         img.getAnimations().forEach(a => {
           const o = own.find(x => x.animationName === a.animationName);
@@ -1499,12 +1650,15 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         });
       });
     });
-    syncLeads();                                   // tickers() (02-core.js) has made the first clones already
+    syncLeads();                                   // (the tickers make their first clones after the first paint: below)
     // Ticker rebuilds (resize / late image load) re-clone the items; open new clones once revealed. A clone of the first
     // tile drops the margin standIns() may have given that tile (the loop's start only).
     const unshift = () => frame.querySelectorAll('[data-ticker-list] > [data-clone][style]').forEach(c => { c.style.marginTop = ''; });
+    // (the leads in the frame, before its paint: getAnimations lays out the styles, the frame's own work there)
+    let leadRaf = 0;
+    const syncSoon = () => { if (!leadRaf) leadRaf = requestAnimationFrame(() => { leadRaf = 0; syncLeads(); }); };
     if ('MutationObserver' in window) {
-      const mo = new MutationObserver(() => { unshift(); syncLeads(); if (revealed) openAll(); });
+      const mo = new MutationObserver(() => { unshift(); syncSoon(); if (revealed) openAll(); });
       frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     }
 
@@ -1590,15 +1744,18 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   }
 
   /* Stand-ins (home_hero._columns): where a screen hides a column, its projects' tiles are repeated in the columns
-     still shown, so every project is on every screen. With motion they sit out the first layout (20-hero.css), and
-     a pass at the page's start, then idle moments, let them in (the clips first: owner, 17 Oct, the landing pages and
-     the tiger move on phones too), each only while none of its places in the column (the tile and the ticker's copies
-     of it, which share its .is-on) is on screen, and the column's ticker takes the longer loop from where it is. For a
-     visitor at the top of the page (the gallery below the fold, or the top of its first tiles on screen) that is all of
-     them at the start (18 Oct: they waited for load and the ticker's first rebuild, and a visitor who had scrolled to
-     the gallery by then found it on screen, where each one waited for its place to leave it, up to ~40 s on a phone;
-     that is still so with the gallery on screen at the start - a restored scroll). Stand-ins this screen does not
-     show (another width, a hidden column) are let in at once: the ticker's own rebuild on resize picks them up. */
+     still shown, so every project is on every screen. With motion they sit out the first layout (20-hero.css) and come
+     in (.is-on; the clips first: owner, 17 Oct, the landing pages and the tiger move on phones too) without moving a
+     tile that is on screen (18 Oct). Just before the tickers are first measured and copied (02-core.js
+     TS.beforeTickers: after the first paint, in one layout), each one whose place in its column is below the visible
+     part - at the top of the page every one, the gallery below the fold or only the top of its first tiles on screen -
+     comes in, so the ticker loops the full column from its start. The rest (the gallery on screen at the start: a
+     restored scroll, a tablet's first row) wait for the loop (TS.afterTickers), then idle moments let each one in only
+     while none of its places in the column (the tile and the ticker's copies of it, which share its .is-on) is on
+     screen, and the column's ticker takes the longer loop from where it is. (18 Oct: they waited for load and a ticker
+     rebuild, up to ~40 s on a phone for a visitor who had reached the gallery by then; 21 Oct: the pass at the page's
+     start ran inside app.js's first task, one layout per stand-in.) Stand-ins this screen does not show (another width,
+     a hidden column) are let in at once: the ticker's own rebuild on resize picks them up. */
   /* A stand-in's image waits in <noscript> (home_hero._item) until its tile is let in, so neither it nor the ticker's
      copies of it download anything before; one let in before load waits for load (or for the gallery to come on
      screen first), so it never competes with the page's first images. Then they load at once (eager, as the ticker's
@@ -1622,6 +1779,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       .sort((a, b) => clip(b) - clip(a));             // the clips first (a stable sort: DOM order within each)
     if (!left.length) return;
     const narrow = { lt1440: matchMedia('(max-width: 1439.98px)'), lt800: matchMedia('(max-width: 799.98px)') };
+    const shownAt = li => narrow[li.classList.contains('hero-col__item--lt800') ? 'lt800' : 'lt1440'].matches && !!li.closest('[data-ticker]').offsetParent;
     const parse = kf => parseFloat(String(kf.transform).replace(/[^-\d.]+/g, ' ').trim().split(' ').pop());
     // px kept clear around the visible part: a frame of the ticker's drift (under 1px; mid-scroll nothing comes in). 18 Oct:
     // was 24, which on a 412-430px phone at the top of the page held back column 1's second tile, a few px below the fold.
@@ -1651,19 +1809,12 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     let scrolled = 0;
     const onScroll = () => { scrolled = performance.now(); };
     addEventListener('scroll', onScroll, { passive: true });
-    // The ticker rebuilds each column once just after it starts (02-core.js, its ResizeObserver's first call), which
-    // restarts the loop from its start (and copies the list as it is then). On screen, what comes in before that keeps
-    // the view where it is in the loop, so the restart lands on it: only below the visible part (a down column: the
-    // copy it draws above the loop's start takes it too, and the ticker's offset, not a margin, makes up for it).
-    const t0 = performance.now(), rebuilt = new Set();
-    const mo = 'MutationObserver' in window ? new MutationObserver(recs => recs.forEach(r => rebuilt.add(r.target))) : null;
-    if (mo) frame.querySelectorAll('[data-ticker-list]').forEach(list => mo.observe(list, { childList: true }));
     // an idle moment, or 600ms on (18 Oct: was 2s - while the page loads a phone has few idle moments, and the visitor may
     // reach the gallery meanwhile); a call on the timeout lets one stand-in in
     const idle = fn => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 600 }) : setTimeout(fn, 120));
     // Lets li in if none of its places is on screen (true), re-timing its column's loop; false: try again later. What
-    // comes in above the visible part is offset by a negative margin on the list's first tile (above it too; before the
-    // first rebuild by the ticker's offset), so no tile on screen moves, in the layout either (no layout shift).
+    // comes in above the visible part is offset by a negative margin on the list's first tile, so no tile on screen
+    // moves, in the layout either (no layout shift).
     const tryIn = li => {
       const list = li.parentElement, col = list.closest('[data-ticker]');
       const t = (TS.tickers || []).find(x => x.el === col), anim = t && t.anim, fx = anim && anim.effect;
@@ -1674,7 +1825,6 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       const r = col.getBoundingClientRect(), off = first.getBoundingClientRect().top - r.top;   // the list as drawn
       const top = Math.max(0, -r.top), bottom = Math.min(r.height, innerHeight - r.top);
       const seen = bottom > top, a = top - off - MARGIN, b = bottom - off + MARGIN;   // the visible part, in list space
-      const pending = seen && !rebuilt.has(list) && performance.now() - t0 < 4000;   // the first rebuild still to come
       let next = li.nextElementSibling;              // the stand-in comes in where its next shown tile is now
       while (next && !next.offsetParent) next = next.nextElementSibling;
       if (!next || next.hasAttribute('data-clone')) return false;
@@ -1682,27 +1832,25 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       for (let k = 0; k * n < kids.length; k++) places.push(k * len + at);   // the tile, then each copy of it
       if (seen && places.some(p => p > a && p < b)) return false;
       const above = seen ? places.filter(p => p <= a).length : 0;
-      if (pending && above !== (to > from ? 1 : 0)) return false;
       letIn(li);
       const gap = parseFloat(getComputedStyle(list).rowGap) || 0, last = kids[n - 1];
       const loop = last.offsetTop + last.offsetHeight - first.offsetTop + gap;   // as the ticker measures it
-      if (above && !pending) first.style.marginTop = `${(parseFloat(first.style.marginTop) || 0) - above * (li.offsetHeight + gap)}px`;
-      const T = from + (to - from) * (((anim.currentTime || 0) % dur) / dur)   // the ticker's offset: kept
-        - (pending ? above * (li.offsetHeight + gap) : 0);
+      if (above) first.style.marginTop = `${(parseFloat(first.style.marginTop) || 0) - above * (li.offsetHeight + gap)}px`;
+      const T = from + (to - from) * (((anim.currentTime || 0) % dur) / dur);   // the ticker's offset: kept
       const f2 = to > from ? -loop : 0, t2 = to > from ? 0 : -loop;
       const d2 = loop / (parseFloat(col.dataset.speed) || 25) * 1000;
       fx.setKeyframes([{ transform: `translateY(${f2}px)` }, { transform: `translateY(${t2}px)` }]);
       fx.updateTiming({ duration: d2 });
       anim.currentTime = Math.min(d2 - 1, Math.max(0, (T - f2) / (t2 - f2) * d2));
+      if (t.adopt) t.adopt();                        // the ticker keeps this loop: no rebuild for it
       return true;
     };
     // As many stand-ins per idle moment as it holds (each: its tile and the ticker's copies of it, well under a long
-    // task on a slow phone), at least one.
+    // task on a slow phone), at least one. Stand-ins not shown now (a resize) come in at once, without downloads.
     const step = deadline => {
+      const shown = left.map(shownAt);               // the reads, then the writes
       for (let i = left.length - 1; i >= 0; i--) {
-        const li = left[i];
-        const shown = narrow[li.classList.contains('hero-col__item--lt800') ? 'lt800' : 'lt1440'].matches && li.closest('[data-ticker]').offsetParent;
-        if (li.classList.contains('is-on') || !shown) { letIn(li, !!shown); left.splice(i, 1); }
+        if (left[i].classList.contains('is-on') || !shown[i]) { letIn(left[i], shown[i]); left.splice(i, 1); }
       }
       let moved = false;
       while (left.length && performance.now() - scrolled > 250) {   // mid-scroll the visible part is a moving target
@@ -1712,14 +1860,30 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         moved = true;
         if (!deadline || deadline.timeRemaining() < 8) break;
       }
-      if (!left.length) { removeEventListener('scroll', onScroll); if (mo) mo.disconnect(); }
+      if (!left.length) removeEventListener('scroll', onScroll);
       else if (moved) idle(step);
       else setTimeout(() => idle(step), 400);        // all on screen for now: the columns move on
     };
-    // The first pass at once, at the page's start (18 Oct: an idle moment can come only after load, when the visitor may
-    // be at the gallery): at the top of the page - the gallery below the fold, or only the top of its first tiles on
-    // screen - that lets all of them in; idle moments do the rest (a restored scroll, a scroll before the start).
-    step({ timeRemaining: () => Infinity });
+    // Before the tickers' first measure: the reads (which ones this screen shows, each column's visible part, each
+    // place), then the writes. A place below the visible part, or in a column off screen, moves nothing on screen.
+    TS.beforeTickers(() => {
+      const vh = innerHeight;
+      const plan = left.map(li => {
+        if (!shownAt(li)) return 'hidden';
+        const c = li.closest('[data-ticker]').getBoundingClientRect();
+        const top = Math.max(0, c.top), bottom = Math.min(vh, c.bottom);
+        if (bottom <= top) return 'in';
+        let next = li.nextElementSibling;
+        while (next && !next.offsetParent) next = next.nextElementSibling;
+        return next && next.getBoundingClientRect().top >= bottom + MARGIN ? 'in' : '';
+      });
+      for (let i = left.length - 1; i >= 0; i--) if (plan[i]) { letIn(left[i], plan[i] === 'in'); left.splice(i, 1); }
+    });
+    TS.afterTickers(() => {
+      if (!left.length) { removeEventListener('scroll', onScroll); return; }
+      const t0 = performance.now();
+      step({ timeRemaining: () => 40 - (performance.now() - t0) });   // a short task (4x CPU), then idle moments
+    });
   }
 
   TS.ready(() => {
@@ -2127,6 +2291,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     block.classList.add('is-ink');
 
     let raf = 0, last = -1, listening = false;
+    // in a frame: the reads, then the one write (called at load time it laid out the page inside app.js's first task)
     const update = () => {
       raf = 0;
       const r = block.getBoundingClientRect();
@@ -2145,7 +2310,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       }, { rootMargin: '20% 0px 20% 0px' }).observe(block);
     } else addEventListener('scroll', request, { passive: true });
     addEventListener('resize', request);
-    update();
+    request();
   }
 
   const easeOut = t => (t >= 1 ? 1 : 1 - Math.pow(1 - t, 3));   // cubic: the digits visibly tick, then settle
@@ -2583,33 +2748,37 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     sec.querySelectorAll('[data-agc-in], [data-agc-fig], [data-agc-pt], [data-agc-scene]').forEach(el => io.observe(el));
   }
 
+  /* Its frames read no layout: the figure's place on the page comes from the observer's entry (its box, plus the
+     scroll position then) and moves by the scroll since, read in the scroll event (before any frame callback of the
+     page has written); the frame callback only writes --dr. (It measured the figure in its frame, often right after
+     another section's write there, laying the page out a second time per frame.) */
   function drift(fig) {
     if (!fig) return;
-    let target = 0, cur = null, raf = 0;
-    const measure = () => {
-      const r = fig.getBoundingClientRect();
-      const vh = innerHeight || root.clientHeight;
-      const p = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);   // +1 entering below … −1 leaving above
+    let target = 0, cur = null, raf = 0, y = 0, vh = 0, top = 0, h = 0;   // top: the figure's top on the page
+    const aim = () => {
+      const p = (top - y + h / 2 - vh / 2) / (vh / 2 + h / 2);   // +1 entering below … −1 leaving above
       target = Math.max(-1, Math.min(1, p));
     };
     const tick = () => {
       raf = 0;
-      measure();
       cur = cur == null ? target : cur + (target - cur) * 0.12;            // eased: the figure floats, never jerks
       if (Math.abs(target - cur) < 0.0005) cur = target;
       fig.style.setProperty('--dr', cur.toFixed(4));
       if (cur !== target) raf = requestAnimationFrame(tick);
     };
     const request = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    const onScroll = () => { y = scrollY; aim(); request(); };
+    const place = (r, sy) => { y = sy; vh = innerHeight || root.clientHeight; top = r.top + sy; h = r.height; aim(); };
     let listening = false;
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !listening) addEventListener('scroll', request, { passive: true });
-      if (!e.isIntersecting && listening) removeEventListener('scroll', request);
+      place(e.boundingClientRect, scrollY);
+      if (e.isIntersecting && !listening) addEventListener('scroll', onScroll, { passive: true });
+      if (!e.isIntersecting && listening) removeEventListener('scroll', onScroll);
       listening = e.isIntersecting;
       fig.classList.toggle('is-drifting', listening);
       request();
     }, { rootMargin: '10% 0px 10% 0px' }).observe(fig);
-    addEventListener('resize', request, { passive: true });
+    addEventListener('resize', () => { place(fig.getBoundingClientRect(), scrollY); request(); }, { passive: true });
   }
 
   /* Keyboard: Tab can land on the closing CTA before its fade-up has played (the browser scrolls it into view,
@@ -4307,6 +4476,49 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         busy(false);
       }
     });
+
+    /* ---------- the site chat's hand-off (src/chat/30-ui.js): the visitor's brief from sessionStorage 'ts-cc-prefill'
+       (read once, ignored after 30 min) or sent in place on this page ('ts:cc-prefill'). Fills empty fields only, shows
+       the note with Clear (which empties and unticks just what it filled), then focus moves to the name. The ?service=
+       pre-selection above still works when storage is blocked; the mailto / form_endpoint flow is unchanged. */
+    const note = card.querySelector('[data-cc-prefill]');
+    let filled = [];
+    const prefill = d => {
+      if (!d || d.v !== 1 || !(Date.now() - d.at <= 30 * 60e3)) return;
+      filled = [];
+      const set = (el, v, ev) => { el.value = v; el.dispatchEvent(new Event(ev)); filled.push(el); };
+      const sel = form.querySelector('#ct-build'), idea = form.querySelector('#ct-idea');
+      if (sel && !sel.value && [...sel.options].some(o => o.value && o.value === d.build)) set(sel, d.build, 'change');
+      (d.help || []).forEach(v => {
+        const c = [...form.querySelectorAll('input[name="help"]')].find(x => x.value === v);
+        if (c && !c.checked) { c.checked = true; filled.push(c); }
+      });
+      if (budget && !budget.value.trim() && d.budget) set(budget, String(d.budget).slice(0, 120), 'input');
+      if (idea && !idea.value.trim() && d.idea) set(idea, String(d.idea).slice(0, 2000), 'input');
+      if (!filled.length) return;
+      if (note) { note.querySelector('span').textContent = note.dataset.text; note.hidden = false; }
+      // focus the name; again after load (a #project-form arrival's fragment scroll moves focus back to the page)
+      const name = form.querySelector('#ct-name'), go = () => { if (name && document.activeElement !== name) name.focus({ preventScroll: true }); };
+      go();
+      if (document.readyState !== 'complete') addEventListener('load', () => setTimeout(go, 0), { once: true });
+    };
+    if (note) note.querySelector('button').addEventListener('click', () => {
+      filled.forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else { el.value = ''; el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input')); }
+      });
+      filled = [];
+      note.hidden = true;
+    });
+    try {
+      const raw = sessionStorage.getItem('ts-cc-prefill');
+      sessionStorage.removeItem('ts-cc-prefill');
+      if (raw) prefill(JSON.parse(raw));
+    } catch (e) { /* storage blocked or a malformed entry */ }
+    document.addEventListener('ts:cc-prefill', e => {
+      try { sessionStorage.removeItem('ts-cc-prefill'); } catch (x) { /* blocked */ }
+      prefill(e.detail);
+    });
   });
 })();
 
@@ -4742,4 +4954,275 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 
     return { open: show };
   }
+})();
+
+/* ---- 40-chat.js ---- */
+/* Ask TESERACT launcher (owner, 21 Oct; markup chrome.chat_dock, look 40-chat.css). At load: one query and the
+   launcher's listeners. After paint: the button semantics. At idle after load: the corner obstacles, the greeting,
+   the field watch, the living launcher. The chat (assets/chat/) loads on the first hover / focus / touch or with the
+   greeting; without it (or in 4 s) the launcher stays a link to the contact form.
+   Living (owner, 21 Oct 23:20, "moving here and there ... he should touch it"): while the visitor is not scrolling, the
+   mark visits a free spot on the screen edge (a hit test per hop: never on or within 12 px of a control or a headline)
+   and comes back, looks at the page, now and then says a line (CHAT 'say'). Home on scroll, menu, dialog, hidden tab;
+   calm after a minute or once the chat is opened, then one short visit a page. Reduced motion: still, "Ask" shown. */
+(() => {
+  const dock = document.querySelector('[data-cc]');
+  if (!dock) return;
+  const TS = window.TS || {}, root = document.documentElement, d = dock.dataset, cl = dock.classList, now = () => performance.now();
+  const btn = dock.querySelector('[data-cc-launch]'), hi = dock.querySelector('.cc-hello');
+  const ss = (k, v) => { try { return v == null ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch (e) { return null; } };
+  const saying = () => hi && !hi.hidden && hi.classList.contains('is-say');
+  let p = null, opened = false, tuck = false, away = false, t0 = 0, tIn = 0, turns = 0, ft = 0, ht = 0, sw = 0, x0 = 0, home = () => {};
+  const load = () => p || (p = new Promise((ok, no) => {
+    const l = document.createElement('link'), s = document.createElement('script');
+    l.rel = 'stylesheet'; l.href = d.ccCss; s.src = d.ccJs; s.async = true;
+    s.onload = () => (window.TSChat ? ok(window.TSChat) : no()); s.onerror = no;
+    document.head.append(l, s);
+  }));
+  const open = (q, e) => {
+    if (!window.HTMLDialogElement || !HTMLDialogElement.prototype.showModal) return;
+    if (e) e.preventDefault();
+    opened = true; fold(1); home();
+    cl.add('is-wait');
+    Promise.race([load(), new Promise((r, no) => setTimeout(no, 4000))])
+      .then(c => c.open({ q, from: btn }), () => location.assign(btn.href))
+      .finally(() => cl.remove('is-wait'));
+  };
+  // fold the bubble; gone = dismissed (or the chat opened): the dot goes, and no more lines in this tab
+  const fold = gone => {
+    if (gone) { cl.remove('has-dot'); ss('ts-cc-hush', '1'); }
+    clearTimeout(ht);
+    if (!hi || hi.hidden) return;
+    hi.classList.add('is-off'); btn.removeAttribute('aria-describedby');
+    clearTimeout(ft); ft = setTimeout(() => { hi.hidden = true; }, 200);
+  };
+  const pop = (line, say, ms, side) => {   // show the bubble (the greeting, or a line), folding by itself unless hovered / focused
+    hi.querySelector('p').textContent = line; cl.toggle('is-side', !!side);
+    hi.classList.toggle('is-say', say); hi.classList.remove('is-off'); hi.classList.add('is-on'); clearTimeout(ft); hi.hidden = false;
+    cl.add('has-dot'); btn.setAttribute('aria-describedby', 'cc-hello');
+    clearTimeout(ht); ht = setTimeout(function f() { if (hi.matches(':hover,:focus-within')) ht = setTimeout(f, 2e3); else fold(); }, ms);
+  };
+  ['pointerenter', 'focus', 'touchstart'].forEach(t => btn.addEventListener(t, () => load().catch(() => {}), { passive: true, once: true }));
+  btn.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') dock.style.setProperty('--t', `${--turns * 120}deg`); });
+  btn.addEventListener('click', e => open(null, e));
+  btn.addEventListener('keydown', e => {
+    if (e.key === ' ') { e.preventDefault(); btn.click(); }
+    if (e.key === 'Escape') fold(1);
+  });
+  if (hi) {   // a chip asks it; the X or a swipe right dismisses; a tap anywhere else on the bubble opens the chat
+    hi.addEventListener('pointerdown', e => { x0 = e.clientX; sw = 0; });
+    hi.addEventListener('pointerup', e => { if (e.clientX - x0 > 60) { sw = 1; fold(1); } });
+    hi.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (sw) return;
+      if (b && b.dataset.ccQ) open(b.dataset.ccQ, e); else if (b) fold(1); else open(null, e);
+    });
+  }
+  const END = { 'cc-br': 'is-breath', 'cc-sm': 'is-shim', 'cc-in': 'is-arrive', 'cc-fd': 'is-fade', 'cc-ld': 'is-land', 'cc-bob': 'is-bob', 'cc-ring': 'is-ring' };
+  dock.addEventListener('animationend', e => {   // (staggered shards: the last one, b, ends theirs)
+    const k = END[e.animationName], c = e.target.classList;
+    if (k && !(c.contains('cc-sh') && !c.contains('cc-sh--b'))) cl.remove(k);
+  });
+  TS.afterPaint = TS.afterPaint || (fn => requestAnimationFrame(() => setTimeout(fn, 0)));
+  TS.afterPaint(() => {
+    const resume = !!ss('ts-cc');
+    btn.setAttribute('role', 'button'); btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-controls', 'cc-dialog');
+    btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', resume ? d.ccL2 : d.ccL1);
+    if (resume) dock.querySelector('.cc-pill').textContent = d.ccP2;
+  });
+  // arrival: the full one in the first page of a tab, a fade on the next ones
+  const arrive = () => {
+    const first = !ss('ts-cc-seen');
+    ss('ts-cc-seen', '1');
+    setTimeout(() => { tIn = now(); cl.add('is-in', first ? 'is-arrive' : 'is-fade'); }, first ? 600 : 0);
+  };
+  if (TS.afterIntro) TS.afterIntro(() => (root.classList.contains('ts-intro') ? document.addEventListener('ts:intro-end', arrive, { once: true }) : arrive()));
+  else arrive();
+
+  const idle = () => {
+    t0 = now();
+    const R = matchMedia('(prefers-reduced-motion: reduce)'), still = () => R.matches || !root.classList.contains('motion');
+    const shut = () => (tuck && !away) || root.matches('.is-locked,.cc-field,.ts-intro,.cc-open');
+    const ok = () => !opened && !shut();
+    const cue = c => { if (!shut() && !still()) cl.add(c); };   // breath, shimmer, ring, landing, hop
+    // corner obstacles (IntersectionObserver only): A = the launcher's corner (its resting box + 12 px), B = the 68 px
+    // above it. A pause control in A lifts the launcher 60 px; anything else in A (or in B while lifted) tucks it away.
+    // (Not while it has wandered off, is-away: its spot was hit-tested.)
+    const LIFT = '.motion-toggle:not([hidden])', AVOID = '.btn,.ct-submit,.ct-quick,.ct-input,.ct-chip,.ft-bar a,.ft-bar__motto,.pj-visit,[data-cc-avoid]';
+    const inA = new Set(), inB = new Set(), inC = new Set();   // C: where the greeting would sit
+    let ios = [], back = 0, rt = 0, G = null;
+    const pin = () => { dock.inert = tuck && !away; };
+    const untuck = () => { tuck = false; cl.remove('is-tuck'); pin(); };
+    const sync = () => {
+      const lift = [...inA].some(x => x.matches(LIFT)), t = [...inA].some(x => !x.matches(LIFT)) || (lift && [...inB].some(x => !inA.has(x)));
+      cl.toggle('is-lift', lift && !t);
+      clearTimeout(back);
+      if (t) { tuck = true; cl.add('is-tuck'); pin(); }
+      else if (tuck) back = setTimeout(untuck, 400);
+    };
+    dock.addEventListener('cc:closed', untuck);   // the chat closed: focus returns to the launcher, so it shows
+    const watch = () => {
+      ios.forEach(o => o.disconnect()); inA.clear(); inB.clear(); inC.clear();
+      const W = innerWidth, H = innerHeight, cs = getComputedStyle(dock), n = btn.offsetWidth + 12;
+      const a = Math.round(parseFloat(cs.bottom) + n), w = Math.round(parseFloat(cs.right) + n);
+      const els = [...document.querySelectorAll(LIFT + ',' + AVOID)].filter(x => !x.closest('.menu,[data-intro],[data-cc],[aria-hidden="true"],dialog'));
+      ios = [[inA, `-${H - a}px 0px 0px -${W - w}px`], [inB, `-${H - a - 68}px 0px -${a}px -${W - w}px`],
+        [inC, `-${Math.max(0, H - a - 250)}px 0px -${a - 12}px -${Math.max(0, W - 330)}px`]].map(([set, m]) => {
+        const o = new IntersectionObserver(es => { es.forEach(x => (x.isIntersecting ? set.add(x.target) : set.delete(x.target))); sync(); }, { rootMargin: m });
+        els.forEach(x => o.observe(x));
+        return o;
+      });
+    };
+    watch();
+    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { G = null; V.clear(); home(1); watch(); }, 150); });
+    // a text field outside the chat has focus: the launcher steps aside (phones: the keyboard is up)
+    const field = x => x && x.matches && x.matches('input,textarea,select,[contenteditable]') && !x.closest('dialog,[data-cc]');
+    document.addEventListener('focusin', e => root.classList.toggle('cc-field', field(e.target)));
+    document.addEventListener('focusout', () => setTimeout(() => root.classList.toggle('cc-field', field(document.activeElement)), 0));
+
+    // ---- living: wander (hop) every 7-10 s, a line (speak) 20-30 s apart (4 a page), calm (rest) after
+    const talk = !!(hi && d.ccSay), lines = (d.ccSay || '').split('|'), l0 = hi ? hi.querySelector('p').textContent : '';
+    const BAD = 'a[href],button,input,select,textarea,summary,label,iframe,video[controls],[role=button],[role=link],[role=slider],[tabindex]:not([tabindex="-1"]),[contenteditable],header,nav,.ft-bar,[data-cc-avoid]';
+    let wx = 0, wy = 0, wt = 0, tk = 0, mt = 0, prev = 0, act = 0, lastS = 0, lastB = 0, gap = 5e3, says = 0, n = 0;
+    let hover = false, calm = false, hopped = false, short = !!(ss('ts-cc-calm') || ss('ts-cc'));
+    // reads and hit tests run just after a frame has painted, on its clean layout (never forcing one)
+    const clean = f => requestAnimationFrame(() => setTimeout(() => { if (!document.hidden) f(); }, 0));
+    const geo = () => {   // one read per hop: the home spot's centre, the launcher's size, the viewport
+      const cs = getComputedStyle(dock), s = btn.offsetWidth, W = root.clientWidth, H = innerHeight, r = parseFloat(cs.right);
+      return (G = { s, W, H, l: parseFloat(cs.marginLeft) || r, hx: W - r - s / 2, hy: H - parseFloat(cs.bottom) - s / 2,
+        ph: W < 800 || matchMedia('(pointer:coarse)').matches });
+    };
+    // spots (centres): bottom left, part-way up the right edge (desktop: and the left edge), below the header
+    const spots = g => {
+      const L = g.l + g.s / 2, out = [[L, g.hy]];
+      (g.ph ? [.8, .66, .52, .38] : [.7, .52, .36]).forEach(k => {
+        const y = Math.max(120 + g.s / 2, g.H * k);
+        if (g.hy - y > g.s) { out.push([g.hx, y]); if (!g.ph) out.push([L, y]); }
+      });
+      return out;
+    };
+    // hit test of kx x ky points, centre first, two a task (one costs 1-3 ms, 4-10 on a phone): done(2) = a control, a
+    // headline (h1/h2, 28 px type) or text with a link, done(1) = text, done(0) = clear. A scroll meanwhile = 2. The
+    // verdicts hold for this scroll position (V, cleared on scroll) for 30 s, so a still page is tested once.
+    const V = new Map();
+    const probe = (ax, ay, bx, by, kx, ky, cb) => {
+      let t = 0;
+      const P = [], mx = (ax + bx) / 2, my = (ay + by) / 2, s0 = lastS, key = [ax, ay, bx, by, kx].map(Math.round).join(), v = V.get(key);
+      const done = r => { if (s0 === lastS) V.set(key, [r, now()]); cb(r); };
+      if (v && now() - v[1] < 3e4) return cb(v[0], 1);
+      if (ax < 0 || ay < 96 || bx > G.W || by > G.H) return done(2);   // (and clear of the header band)
+      for (let i = 0; i < kx * ky; i++) P.push([ax + (bx - ax) * (i % kx) / (kx - 1), ay + (by - ay) * Math.floor(i / kx) / (ky - 1)]);
+      P.sort((a, b) => Math.hypot(a[0] - mx, a[1] - my) - Math.hypot(b[0] - mx, b[1] - my));
+      const next = () => {
+        for (let k = 0; k < 2 && P.length; k++) {
+          const [x, y] = P.shift(), st = document.elementsFromPoint(x, y).filter(e => !dock.contains(e)), b = st[0] && st[0].closest('p,li,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dd,dt,td');
+          if (s0 !== lastS || st.some(e => e.matches(BAD)) || (st[0] && parseFloat(getComputedStyle(st[0]).fontSize) >= 28)) return done(2);
+          if (b) { if (b.matches('h1,h2') || b.querySelector('a[href],button')) return done(2); t = 1; }
+        }
+        if (P.length) setTimeout(next, 0); else done(s0 !== lastS ? 2 : t);
+      };
+      next();
+    };
+    // glide (transform only) to a spot, c = null: home. The mark turns a third on the way, then looks at the page centre.
+    const go = (c, ms, say) => {
+      const g = G || geo(), x = c ? Math.round(c[0] - g.hx) : 0, y = c ? Math.round(c[1] - g.hy) : 0, at = c || [g.hx, g.hy];
+      if (x === wx && y === wy) return;
+      const dur = ms || Math.round(Math.min(1300, 600 + Math.hypot(x - wx, y - wy) * .8)), lx = g.W / 2 - at[0], ly = g.H / 2 - at[1], m = Math.hypot(lx, ly) || 1;
+      wx = x; wy = y; away = !!(x || y);
+      [['--gd', dur + 'ms'], ['--wx', x + 'px'], ['--wy', y + 'px'], ['--lx', (lx / m).toFixed(2)], ['--ly', (ly / m).toFixed(2)], ['--w', (wt -= 120) + 'deg']]
+        .forEach(([k, v]) => dock.style.setProperty(k, v));
+      cl.toggle('is-away', away); cl.toggle('is-l', at[0] < g.W / 2); cl.add('is-move'); pin();
+      clearTimeout(mt); mt = setTimeout(() => { cl.remove('is-move'); if (ms !== 1) cue('is-land'); if (say) clean(speak); }, dur);
+    };
+    home = fast => { if (away) { if (saying()) fold(); go(null, fast ? 1 : 450); } };
+    const hop = done => {   // out to a free spot (2 newly tested at most; done(true)), or a small hop where it is
+      const g = geo(), all = spots(g);
+      let alt = null, i = 0, f = 0;
+      for (let k = all.length; k > 1; k--) { const j = Math.floor(Math.random() * k); [all[k - 1], all[j]] = [all[j], all[k - 1]]; }
+      const end = c => { if (c && free()) go(c, 0, 1); else if (!c) cue('is-bob'); done(!!c); };
+      const next = () => {
+        const c = all[i++];
+        if (!c || f > 1) return end(alt);
+        probe(c[0] - g.s / 2 - 12, c[1] - g.s / 2 - 12, c[0] + g.s / 2 + 12, c[1] + g.s / 2 + 12, 3, 3, (r, old) => {
+          if (!old) f++;
+          if (!r) return end(c);
+          if (r === 1 && !alt) alt = c;
+          next();
+        });
+      };
+      next();
+    };
+    const speak = () => {   // until the chat has been opened or a bubble dismissed in this tab
+      if (!talk || still() || opened || ss('ts-cc') || ss('ts-cc-hush') || says > 3 || !hi.hidden || shut() || hover || now() - lastB < gap) return;
+      // above the launcher, or else beside it (towards the page); never over a control or a headline
+      const g = G || geo(), s = g.s, l = cl.contains('is-l'), cx = g.hx + wx, cy = g.hy + wy - (cl.contains('is-lift') && !away ? 60 : 0);
+      const w = Math.min(270, g.W - 32), ax = l ? cx - s / 2 : cx + s / 2 - w, by = cy - s / 2 - 10;
+      const ws = Math.min(270, l ? g.W - cx - s / 2 - 26 : cx - s / 2 - 26), sx = l ? cx + s / 2 + 10 : cx - s / 2 - 10 - ws, w0 = wx + ',' + wy;
+      const say = side => {
+        if (w0 !== wx + ',' + wy || !hi.hidden || shut() || hover) return;   // (it moved, or something else showed meanwhile)
+        const i = +ss('ts-cc-say') || 0;
+        ss('ts-cc-say', String(i + 1)); says++; lastB = now(); gap = 2e4 + Math.random() * 1e4;
+        dock.style.setProperty('--bw', (side ? ws : w) + 'px');
+        pop(lines[i % lines.length], true, 7e3, side); cue('is-ring');
+      };
+      const beside = r => (r < 2 ? say(0) : ws >= 200 && probe(sx, cy - 46, sx + ws, cy + 46, 4, 3, q => q < 2 && say(1)));
+      if (!away && [...inC].some(x => !x.matches(LIFT))) beside(2); else probe(ax, by - 92, ax + w, by, 4, 3, beside);
+    };
+    const later = (f, ms) => { clearTimeout(tk); tk = setTimeout(f, ms); };
+    const settle = () => { calm = true; if (hopped) ss('ts-cc-calm', '1'); home(still()); later(rest, 9e3 + Math.random() * 6e3); };
+    const rest = () => {   // calm: a breath or a shimmer every 14-22 s, and a line when one is due
+      if (document.hidden) return;
+      if (root.matches('.is-locked,.cc-open')) home(1);
+      else if (!still()) { cue(++n % 2 ? 'is-breath' : 'is-shim'); clean(speak); }
+      later(rest, 14e3 + Math.random() * 8e3);
+    };
+    const free = () => !document.hidden && !opened && cl.contains('is-in') && now() - tIn > 3500 && now() - lastS > 2500 && !hover
+      && document.activeElement !== btn && hi.hidden && !cl.contains('is-wait') && !root.matches('.is-locked,.cc-open,.cc-field');
+    const step = () => {
+      if (document.hidden) return;
+      const t = now();
+      if (!talk || still() || opened) return settle();
+      if (root.matches('.is-locked,.cc-open,.cc-field')) { home(1); return later(step, 1500); }
+      if (!free()) return later(step, 1200);
+      if (prev) act += t - prev;
+      prev = t;
+      if (away) { go(null, 0, 1); return short || act > 6e4 ? settle() : later(step, 7e3 + Math.random() * 3e3); }   // a visit, then home
+      if (short ? hopped : act > 6e4) return settle();
+      hopped = true;
+      clean(() => hop(out => later(step, out ? 5e3 + Math.random() * 1500 : 7e3 + Math.random() * 3e3)));
+    };
+    // the menu / a dialog / a field (html classes): home at once
+    new MutationObserver(() => { if (away && root.matches('.is-locked,.cc-open,.cc-field')) home(1); }).observe(root, { attributes: true, attributeFilter: ['class'] });
+    addEventListener('scroll', () => { lastS = now(); V.clear(); if (away) home(); else if (saying()) fold(); }, { passive: true });
+    ['pointerdown', 'keydown'].forEach(t => addEventListener(t, () => { lastS = now(); }, { passive: true, capture: true }));
+    dock.addEventListener('pointerenter', () => { hover = true; });
+    dock.addEventListener('pointerleave', () => { hover = false; });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { clearTimeout(tk); prev = 0; home(1); } else later(calm ? rest : step, 1500); });
+    later(step, 1200);
+
+    // the greeting: once per tab, 8 s of visible time after the intro or 40% down the page, never in the first 3 s
+    if (!hi || ss('ts-cc-hello')) return;
+    let left = 8e3, at = 0, tm = 0, pS = -1;
+    const show = () => clean(greet), greet = () => {
+      if (ss('ts-cc-hello')) return;
+      if (!ok() || !hi.hidden || [...inC].some(x => !x.matches(LIFT)) || now() - t0 < 3e3 || now() - lastB < 12e3) { tm = setTimeout(show, 2e3); return; }   // never over a button
+      const g = G || geo(), y = g.hy - g.s / 2 - (cl.contains('is-lift') ? 70 : 10), w = Math.min(300, g.W - 32);
+      if (now() - lastS < 1e3 || pS === lastS) { tm = setTimeout(show, 2e3); return; }
+      probe(g.hx + g.s / 2 - w, y - 150, g.hx + g.s / 2, y, 5, 3, r => {   // nor a link or a headline (tested again after a scroll)
+        if (r > 1 || !ok() || !hi.hidden) { if (r > 1) pS = lastS; tm = setTimeout(show, 2e3); return; }
+        if (away) { home(); tm = setTimeout(show, 1e3); return; }   // (it shows from the launcher's corner)
+        ss('ts-cc-hello', '1'); lastB = now(); gap = 2e4 + Math.random() * 1e4;
+        pop(l0, false, 12e3); cue('is-breath');
+        const c = navigator.connection;
+        if (!(c && (c.saveData || /2g/.test(c.effectiveType || '')))) (window.requestIdleCallback || setTimeout)(() => load().catch(() => {}));
+      });
+    };
+    const run = () => { at = now(); tm = setTimeout(show, left); };
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { clearTimeout(tm); left -= now() - at; } else run(); });
+    if (!document.hidden) run();
+    const kids = document.querySelector('main') ? document.querySelector('main').children : [];
+    const mark = kids[Math.floor(kids.length * .4)];
+    if (mark) { const o = new IntersectionObserver(es => { if (es[0].isIntersecting) { o.disconnect(); show(); } }); o.observe(mark); }
+  };
+  addEventListener('load', () => (window.requestIdleCallback || setTimeout)(idle, { timeout: 3000 }), { once: true });
 })();

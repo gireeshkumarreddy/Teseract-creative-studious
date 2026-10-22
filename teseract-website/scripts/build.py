@@ -9,6 +9,7 @@ Each page is assembled from section renderers; a failing renderer is reported an
 replaced by a visible error block instead of aborting the whole build.
 """
 import importlib, json, os, pathlib, shutil, sys, traceback
+from urllib.parse import urlsplit
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import lib  # noqa: E402
@@ -69,14 +70,47 @@ def minify_css(css):
     return css.replace(';}', '}').strip() + '\n'
 
 
-def concat(src_dir, out_file, header):
+def concat(src_dir, out_file, header, pattern='*.*'):
     parts = [header]
-    for f in sorted(src_dir.glob('*.*')):
+    for f in sorted(src_dir.glob(pattern)):
         parts.append(f'\n/* ---- {f.name} ---- */\n' + f.read_text(encoding='utf-8'))
     text = ''.join(parts)
     if out_file.suffix == '.css' and '--no-minify' not in sys.argv:
         text = f'/*! {BRAND} styles — generated from src/css (edit the partials). */\n' + minify_css(text)
+    if out_file.suffix == '.js' and out_file.parent.name == 'chat' and '--no-minify' not in sys.argv:
+        text = header + strip_js(text[len(header):])
     out_file.write_text(text, encoding='utf-8')
+
+
+def strip_js(js):
+    """The lazy chat bundle only (assets/chat/chat.js; app.js is left as written): drops whole-line // comments, block
+    comments that start a line, indentation and blank lines. Never touches the inside of a line, so strings and regular
+    expressions are safe; the chat sources keep no multi-line template literals (check.py)."""
+    import re
+    js = re.sub(r'^[ \t]*/\*.*?\*/[ \t]*\n', '', js, flags=re.S | re.M)
+    return '\n'.join(ln.strip() for ln in js.splitlines() if ln.strip() and not ln.strip().startswith('//')) + '\n'
+
+
+def chat_bundle(out, hdr):
+    """'Ask {brand}' (owner, 21 Oct): assets/chat/chat.js (src/chat/*.js, with content.CHAT and the logo's four shards
+    in front as window.__CC), assets/chat/chat.css (src/chat/*.css, minified) and the knowledge base assets/chat-kb.json
+    (scripts/chat_kb.py). Loaded only when a visitor opens the chat (src/js/40-chat.js). Skipped when chat.enabled is
+    false; the files of an earlier build are then removed."""
+    chat_kb = importlib.import_module('chat_kb')
+    folder = out / 'assets/chat'
+    if not (CONFIG.get('chat') or {}).get('enabled'):
+        shutil.rmtree(lib.longpath(folder), ignore_errors=True)
+        kbf = lib.longpath(out / chat_kb.KB_FILE)
+        if kbf.exists():
+            kbf.unlink()
+        return
+    folder.mkdir(parents=True, exist_ok=True)
+    concat(lib.ROOT / 'src/chat', folder / 'chat.js', hdr, '*.js')
+    cc = json.dumps({'copy': chat_kb.copy(), 'mark': chat_kb.mark()}, ensure_ascii=False, separators=(',', ':'))
+    js = (folder / 'chat.js').read_text(encoding='utf-8')
+    (folder / 'chat.js').write_text(js.replace(hdr, hdr + f'window.__CC={cc};\n', 1), encoding='utf-8')
+    concat(lib.ROOT / 'src/chat', folder / 'chat.css', f'/* {BRAND} chat — generated from src/chat. */\n', '*.css')
+    chat_kb.build(out)
 
 
 # Each page: route, page key, <title>, description, list of (module, func) section renderers.
@@ -129,6 +163,7 @@ def build(out, clean=False):
     out.mkdir(parents=True, exist_ok=True)
     concat(lib.ROOT / 'src/css', out / 'styles.css', f'/* {BRAND} — generated from src/css. Edit the partials, not this file. */\n')
     concat(lib.ROOT / 'src/js', out / 'app.js', f'/* {BRAND} — generated from src/js. Edit the partials, not this file. */\n')
+    chat_bundle(out, f'/* {BRAND} chat — generated from src/chat. Edit the partials, not this file. */\n')
     webfonts = licensed_webfonts()
     if webfonts:   # licensed Helvetica Neue files present: use them on every device (declared last, so they win)
         with open(lib.longpath(out / 'styles.css'), 'a', encoding='utf-8') as fh:
@@ -137,7 +172,8 @@ def build(out, clean=False):
     # so browsers never combine new HTML with a stale cached stylesheet or script.
     import hashlib
     lib.ASSET_VERSION = {name: hashlib.sha1(lib.longpath(out / name).read_bytes()).hexdigest()[:10]
-                         for name in ('styles.css', 'app.js')}
+                         for name in ('styles.css', 'app.js', 'assets/chat/chat.js', 'assets/chat/chat.css', 'assets/chat-kb.json')
+                         if lib.longpath(out / name).exists()}
     chrome = importlib.import_module('chrome')
 
     def page(route, key, title, desc, sections, extra=None):
@@ -196,6 +232,9 @@ def build(out, clean=False):
     elif (out / 'sitemap.xml').exists():          # no site_url (any more): no stale sitemap with an old domain
         (out / 'sitemap.xml').unlink()
     robots = 'User-agent: *\n' + ('Allow: /\n' if CONFIG.get('indexable') else 'Disallow: /\n')
+    if CONFIG.get('indexable') and (CONFIG.get('chat') or {}).get('enabled'):
+        # the chat's code and knowledge base (prices included) are not pages: kept out of search (LAUNCH-CHECKLIST 'Chat')
+        robots += f"Disallow: {urlsplit(seo.SITE).path.rstrip('/')}/assets/chat\n"
     if sm and CONFIG.get('indexable'):
         robots += f'Sitemap: {seo.SITE}/sitemap.xml\n'
     (out / 'robots.txt').write_text(robots, encoding='utf-8')

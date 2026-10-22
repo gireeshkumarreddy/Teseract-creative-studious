@@ -49,6 +49,59 @@ def header(ctx):
 </header>'''
 
 
+def chat_dock(ctx):
+    """The 'Ask {brand}' launcher (owner, 21 Oct): bottom right on every page. Without JS it is a link to the contact
+    form; src/js/40-chat.js turns it into the chat button and loads the chat (assets/chat/, built by build.py from
+    src/chat/) on demand. The greeting bubble (content.CHAT 'hello') and the living launcher's lines (CHAT 'say', owner
+    21 Oct 23:20: it wanders and talks) are left out on contact, the 404 and the legal pages. 'ask_label' shows under the
+    mark only under reduced motion. Nothing when site.config.json chat.enabled is false."""
+    chat = CONFIG.get('chat') or {}
+    if not chat.get('enabled'):
+        return ''
+    import chat_kb
+    from content import CHAT
+    from lib import ASSET_VERSION as V
+    b = ctx.base
+    proj = ''
+    if ctx.page == 'project':
+        proj = ctx.route.split('/', 1)[1]
+    sh = chat_kb.mark()
+    shards = ''.join(
+        f'<span class="cc-sh cc-sh--{k}" style="--o:{s["o"]}{"" if k == "c" else ";--nx:" + s["n"].split(",")[0] + ";--ny:" + s["n"].split(",")[1]}">'
+        f'<svg viewBox="0 0 100 100" focusable="false"><path d="{s["d"]}"/></svg></span>' for k, s in sh.items())
+    hello = say = ''
+    key = {'home': 'home', 'stories': 'stories', 'create': 'create', 'approach': 'approach', 'who': 'who', 'work': 'work',
+           'project': 'project'}.get(ctx.page)
+    if key:
+        title = ''
+        if proj:
+            import projects
+            p = projects.by_slug(proj)
+            title = p['title'] if p else ''
+        line = fmt(CHAT['hello'][key]).replace('{project}', title)
+        q1, q2 = CHAT['hello_chips']
+        hello = (f'<div class="cc-hello" id="cc-hello" hidden><p>{E(line)}</p>'
+                 f'<button type="button" data-cc-q="price.website">{E(q1)}</button><button type="button" data-cc-q="ask">{E(q2)}</button>'
+                 f'<button type="button" class="cc-hello__x" aria-label="{E(CHAT["hello_dismiss"])}">{ICONS["close"]}</button></div>')
+        say = f' data-cc-say="{E("|".join(fmt(x) for x in CHAT["say"]))}"'   # the living launcher's lines (40-chat.js)
+    email = '' if CONFIG.get('email_is_placeholder') else (CONFIG.get('email') or '')
+    for f in chat_kb.AVATARS:
+        lib.USED.add(f)
+    data = (f'data-cc data-cc-base="{b}" data-cc-index="{"0" if (CONFIG.get("site_url") or "").strip() else "1"}" '
+            f'data-cc-page="{E(ctx.page)}" data-cc-project="{E(proj)}" data-cc-email="{E(email)}" '
+            f'data-cc-js="{b}assets/chat/chat.js?v={V.get("assets/chat/chat.js", "1")}" '
+            f'data-cc-css="{b}assets/chat/chat.css?v={V.get("assets/chat/chat.css", "1")}" '
+            f'data-cc-kb="{b}{chat_kb.KB_FILE}?v={V.get(chat_kb.KB_FILE, "1")}" '
+            f'data-cc-ava="{b}{chat_kb.AVATARS[0]}" data-cc-ava2="{b}{chat_kb.AVATARS[1]}" '
+            f'data-cc-l1="{E(fmt(CHAT["launcher_label"]))}" data-cc-l2="{E(fmt(CHAT["launcher_label_resume"]))}" '
+            f'data-cc-p2="{E(fmt(CHAT["pill_resume"]))}"{say}')
+    return (f'<div class="cc" {data}><a class="cc-launch" href="{ctx.url("contact", "project-form")}" '
+            f'aria-label="{E(fmt(CHAT["launcher_nojs"]))}" data-cc-launch><span class="cc-mark" aria-hidden="true">{shards}</span>'
+            f'<span class="cc-ask" aria-hidden="true">{E(CHAT["ask_label"])}</span>'
+            f'<span class="cc-pill" aria-hidden="true">{E(fmt(CHAT["pill"]))}</span><i class="cc-dot" aria-hidden="true"></i></a>'
+            f'{hello}</div>')
+
+
 def document(ctx, title, description, body, *, footer_cta=True, head_extra=''):
     """The page. head_extra: trusted markup for the end of <head> (a project page's poster preload)."""
     import seo
@@ -120,6 +173,7 @@ try{{var c=document.createElement('canvas').getContext('2d'),t='mmmmmmmmmmlliWQ@
 {body}
 </main>
 {footer}
+{_safe('chrome', 'chat_dock', ctx)}
 <div class="page-shade" aria-hidden="true"></div>
 </body>
 </html>

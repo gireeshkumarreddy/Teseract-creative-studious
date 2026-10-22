@@ -165,6 +165,16 @@ def _before(ctx):
     </aside>'''
 
 
+def _prefill_note():
+    """Status line for the site chat's hand-off (src/js/35-contact.js fills it in and shows it: content.CHAT
+    'prefill_note' + Clear). Only while the chat is on (site.config.json chat.enabled)."""
+    if not (CONFIG.get('chat') or {}).get('enabled'):
+        return ''
+    from content import CHAT
+    return (f'<p class="ct-prefill" role="status" data-cc-prefill data-text="{E(fmt(CHAT["prefill_note"]))}" hidden>'
+            f'<span></span><button type="button">{E(CHAT["prefill_clear"])}</button></p>')
+
+
 def _hero(ctx):
     h = CONTACT['hero']
     asks = ''.join(f'<li class="ct-ask" data-reveal style="--y:24px;--d:{380 + i * 70}ms">{E(q)}</li>'
@@ -192,6 +202,7 @@ def render(ctx):
             <h2 class="ct-card__title" id="ct-form-title">{E(PRIMARY_CTA)}</h2>
             <p class="ct-card__req">Fields marked <span class="ct-req">*</span> are required</p>
           </header>
+          {_prefill_note()}
           {_form(ctx)}
           {_done()}
         </div>

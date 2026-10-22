@@ -1,0 +1,86 @@
+/* Ask TESERACT launcher + greeting (40-chat.js; the chat window: src/chat/40-chat.css, loaded with the chat). The mark
+   is the logo's four shards (chrome_intro._mark): --u = 1% of it, --nx/--ny a shard's outward normal. The unread dot is
+   the one red. Hidden under the intro, the menu, a focused text field elsewhere, and in print. Living (owner, 21 Oct
+   23:20): --wx/--wy = how far it wandered from its corner (transform only), --gd = that glide's length, --w = its turns
+   on the way, --lx/--ly = where it looks (towards the page centre). */
+.cc{position:fixed;z-index:100;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  margin-left:max(16px,env(safe-area-inset-left,0px));   /* no effect here (anchored right): 40-chat.js reads it for the left spots */
+  --s:56px;--m:24px;--u:calc(var(--m) / 100);--t:0deg;--w:0deg;
+  transform:translate(var(--wx,0px),var(--wy,0px));transition:transform var(--gd,.32s) var(--ease),opacity .2s}
+.cc.is-lift:not(.is-away){transform:translateY(-60px)}
+.cc.is-move{will-change:transform}
+.cc-launch{position:relative;display:grid;place-items:center;width:var(--s);height:var(--s);border-radius:50%;color:var(--ink);
+  background:linear-gradient(#141414,#0d0d0d);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 24px -8px rgba(0,0,0,.9);
+  -webkit-tap-highlight-color:transparent;transition:scale .24s var(--spring-soft),opacity .24s var(--spring-soft),border-color .3s,background-color .3s}
+.cc-launch::before{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid rgba(244,244,242,.42);opacity:0;pointer-events:none}
+.cc-launch:active{scale:.94;transition-duration:.1s}
+.cc-mark,.cc-mk{position:relative;display:block;width:var(--m);height:var(--m);rotate:var(--t);transition:rotate .7s var(--ease)}
+.cc-mark{rotate:calc(var(--t) + var(--w));translate:calc(var(--lx,0) * 6 * var(--u)) calc(var(--ly,0) * 6 * var(--u));transition:rotate .7s var(--ease),translate .6s var(--ease)}
+.cc.is-move .cc-mark{transition-duration:var(--gd),.6s}
+.cc-sh{position:absolute;inset:0;transform-origin:var(--o);transition:translate .45s var(--ease-lock)}
+.cc-sh--c{translate:calc(var(--lx,0) * 6 * var(--u)) calc(var(--ly,0) * 6 * var(--u))}
+.cc.is-move .cc-sh:not(.cc-sh--c){translate:calc(var(--nx) * 9 * var(--u)) calc(var(--ny) * 9 * var(--u));transition-duration:.3s}
+.cc-sh svg{display:block;width:100%;height:100%;fill:currentColor}
+.cc-ask{display:none}
+.cc-pill{position:absolute;right:calc(100% + 10px);top:50%;padding:8px 14px;border-radius:57px;white-space:nowrap;font-size:14px;line-height:1.2;
+  background:rgba(20,20,20,.78);border:1px solid var(--line);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  opacity:0;translate:8px -50%;pointer-events:none;transition:opacity .22s var(--ease),translate .22s var(--ease)}
+.cc.is-l .cc-pill{right:auto;left:calc(100% + 10px);translate:-8px -50%}
+.cc-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--red-dot);scale:0;transition:scale .4s var(--spring)}
+.cc.has-dot .cc-dot{scale:1}
+@media (hover:hover) and (pointer:fine){
+  .cc-launch:hover,.cc-launch:focus-visible{border-color:var(--line-3)}
+  .cc-launch:hover .cc-mark,.cc-launch:focus-visible .cc-mark{rotate:calc(var(--t) + var(--w) - 120deg)}
+  .cc-launch:hover .cc-pill,.cc-launch:focus-visible .cc-pill{opacity:1;translate:0 -50%}
+}
+.cc.is-tuck:not(.is-away) .cc-launch{scale:.8;opacity:0;pointer-events:none;transition-duration:.16s}
+.js .cc:not(.is-in){opacity:0;visibility:hidden;animation:cc-safe 0s 8s forwards}
+html.ts-intro .cc,html.is-locked:not(.cc-open) .cc,html.cc-field .cc{opacity:0;visibility:hidden}
+.cc.is-arrive .cc-launch{animation:cc-up .32s var(--spring-soft) both}
+.cc.is-arrive .cc-sh{animation:cc-in .52s var(--spring) both}
+.cc.is-arrive .cc-sh--c{animation-name:cc-c}
+.cc-sh--l{animation-delay:70ms}.cc-sh--r{animation-delay:.14s}.cc-sh--b{animation-delay:.21s}
+.cc.is-fade .cc-launch{animation:cc-fd .2s both}
+.cc.is-breath .cc-sh{animation:cc-br 1.2s ease-in-out}
+.cc.is-shim .cc-sh{animation:cc-sm .8s ease-in-out}
+.cc.is-wait .cc-sh{animation:cc-ty .9s ease-in-out infinite}
+.cc.is-land .cc-launch{animation:cc-ld .5s var(--spring)}
+.cc.is-bob .cc-launch{animation:cc-bob .8s var(--ease)}
+.cc.is-ring .cc-launch::before{animation:cc-ring 1.6s var(--ease) 2}
+.cc-hello{position:absolute;right:0;bottom:calc(var(--s) + 10px);width:min(300px,calc(100vw - 32px));padding:14px 12px 12px 16px;
+  border-radius:20px 20px 8px 20px;background:var(--surface-2);border:1px solid var(--line);box-shadow:0 24px 48px -20px rgba(0,0,0,.9);
+  font-size:15px;line-height:1.4;transform-origin:100% 100%;transition:opacity .2s,scale .2s;cursor:pointer;touch-action:pan-y}
+.cc.is-l .cc-hello{right:auto;left:0;border-radius:20px 20px 20px 8px;transform-origin:0 100%}
+.cc-hello p{margin:0 28px 10px 0}
+.cc-hello button{min-height:44px;margin:0 6px 0 0;padding:0 14px;border-radius:22px;background:#1c1c1c;border:1px solid var(--line-3);color:var(--ink);font-size:14px}
+.cc-hello button:hover{background:#262626}
+.cc-hello .cc-hello__x{position:absolute;top:2px;right:2px;width:44px;height:44px;min-height:0;margin:0;padding:8px;border:0;background:none}
+.cc-hello__x svg{width:12px;height:12px}
+.cc-hello.is-say{width:max-content;max-width:var(--bw,min(270px,calc(100vw - 32px)));padding:11px 40px 11px 16px}
+.cc.is-side .cc-hello{bottom:auto;top:50%;right:calc(100% + 10px);translate:0 -50%;transform-origin:100% 50%;border-radius:20px 8px 20px 20px}
+.cc.is-side.is-l .cc-hello{right:auto;left:calc(100% + 10px);transform-origin:0 50%;border-radius:8px 20px 20px 20px}
+.cc-hello.is-say p{margin:0}
+.cc-hello.is-say button:not(.cc-hello__x){display:none}
+.cc-hello.is-say .cc-hello__x{top:50%;right:0;translate:0 -50%}
+.cc-hello.is-on{animation:cc-pop .32s var(--spring) both}
+.cc-hello.is-off{opacity:0;scale:.96}
+@keyframes cc-safe{to{opacity:1;visibility:visible}}
+@keyframes cc-up{from{opacity:0;transform:translateY(12px)}}
+@keyframes cc-fd{from{opacity:0}}
+@keyframes cc-pop{from{opacity:0;scale:.9}}
+@keyframes cc-in{from{opacity:0;transform:translate(calc(var(--nx) * 14 * var(--u)),calc(var(--ny) * 14 * var(--u))) rotate(18deg)}}
+@keyframes cc-c{from{opacity:0;transform:scale(.7)}}
+@keyframes cc-br{50%{opacity:.85;transform:translate(calc(var(--nx) * 1.5 * var(--u)),calc(var(--ny) * 1.5 * var(--u)))}}
+@keyframes cc-sm{50%{opacity:.3}}
+@keyframes cc-ty{50%{opacity:.4;transform:translate(calc(var(--nx) * 3 * var(--u)),calc(var(--ny) * 3 * var(--u)))}}
+@keyframes cc-ld{from{scale:1.08 .9}}
+@keyframes cc-bob{35%{translate:0 -10px}65%{translate:0 0;scale:1.05 .94}}
+@keyframes cc-ring{from{opacity:.6;scale:1}to{opacity:0;scale:1.75}}
+@media (min-width:800px){.cc{right:max(24px,env(safe-area-inset-right,0px));bottom:max(24px,env(safe-area-inset-bottom,0px));margin-left:max(24px,env(safe-area-inset-left,0px))}}
+/* reduced motion: still, with a visible "Ask" under the mark (40-chat.js does not wander, pulse or speak) */
+@media (prefers-reduced-motion:reduce){.cc,.cc *{animation:none!important;transition-duration:.12s!important}.cc-mark{rotate:0deg!important;translate:none}
+  .cc.is-lift{transition:none}.cc{--m:20px}.cc-launch{align-content:center;gap:3px}.cc-ask{display:block;font-size:11px;line-height:1;letter-spacing:.02em}}
+html:not(.motion) .cc *{animation:none!important}
+@media (forced-colors:active){.cc-launch{border:1px solid ButtonBorder}.cc-sh svg{fill:CanvasText}}
+html.cc-open .cursor-pill{opacity:0}
+@media print{.cc{display:none}}

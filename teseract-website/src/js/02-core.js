@@ -110,7 +110,7 @@
     els.filter(isImage).forEach(el => io.observe(el));
     const held = els.filter(el => !isImage(el));
     TS.afterIntro(() => held.forEach(el => { if (pending.has(el)) io.observe(el); }));
-    TS.observeReveal = el => { pending.add(el); if (isImage(el)) io.observe(el); else TS.afterIntro(() => io.observe(el)); };
+    // (TS.observeReveal, for elements made later - ticker clones: below, with the end-of-page check it re-arms.)
     // Keyboard users can tab into a section before it has scrolled into reveal range: reveal the
     // focused element's [data-reveal]/[data-split]/.reveal-image ancestors at once so focus rings never sit on faded controls.
     document.addEventListener('focusin', e => {
@@ -123,24 +123,44 @@
       }
     });
     // Elements in the last few % of the page can never cross the shrunken root margin: once the page
-    // is scrolled to (or cannot scroll past) its end, reveal whatever is on screen.
-    let ticking = false;
+    // is scrolled to (or cannot scroll past) its end, reveal whatever is on screen. Checked in a frame, reading before
+    // anything is written (at load time it ran inside app.js's first task and laid the whole page out there: ~1.3 s at
+    // 4x CPU on a phone), against the page height a ResizeObserver keeps (scrollHeight in every scroll frame), never
+    // at the top of a page taller than two screens, only while the footer (the page's end) is on screen (so not before
+    // its observer first reports: at load the check read the layout in the first frame of every page), and the scroll
+    // listener goes once nothing waits.
+    let ticking = false, listening = false, pageH = 0, nearEnd = false;
     const atEnd = () => {
       ticking = false;
       if (TS.intro.held()) return;
-      if (scrollY + innerHeight < document.documentElement.scrollHeight - 4) return;
-      pending.forEach(el => {
-        const r = el.getBoundingClientRect();
-        if (r.top < innerHeight && r.bottom > 0) { el.classList.add('is-in'); io.unobserve(el); pending.delete(el); }
-      });
+      pending.forEach(el => { if (el.classList.contains('is-in')) { io.unobserve(el); pending.delete(el); } });   // opened meanwhile (the hero gallery opens its own)
+      if (!pending.size) { listen(false); return; }
+      const y = scrollY, vh = innerHeight, h = pageH || root.scrollHeight;
+      if ((!y && h > 2 * vh) || y + vh < h - 4) return;
+      const shown = [...pending].filter(el => { const r = el.getBoundingClientRect(); return r.top < vh && r.bottom > 0; });
+      shown.forEach(el => { el.classList.add('is-in'); io.unobserve(el); pending.delete(el); });
+      if (!pending.size) listen(false);
     };
-    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(atEnd); } }, { passive: true });
-    addEventListener('load', atEnd);
-    setTimeout(atEnd, 300);
-    TS.afterIntro(atEnd);
+    const request = () => { if (!ticking && nearEnd) { ticking = true; requestAnimationFrame(atEnd); } };
+    const end = document.getElementById('footer') || document.body.lastElementChild;
+    if (end) new IntersectionObserver(([e]) => { nearEnd = e.isIntersecting; request(); }).observe(end);
+    else nearEnd = true;
+    const listen = on => {
+      if (on === listening) return;
+      listening = on;
+      if (on) addEventListener('scroll', request, { passive: true }); else removeEventListener('scroll', request);
+    };
+    TS.observeReveal = el => { pending.add(el); listen(true); if (isImage(el)) io.observe(el); else TS.afterIntro(() => io.observe(el)); };
+    if ('ResizeObserver' in window) new ResizeObserver(() => { pageH = root.scrollHeight; }).observe(root);   // read after layout: free
+    listen(true);
+    addEventListener('load', request);
+    setTimeout(request, 300);
+    TS.afterIntro(request);
   }
 
-  /* ---------- Letter rolls on nav links and buttons (ZIP: 520ms per char, 12ms stagger) */
+  /* ---------- Letter rolls on nav links and buttons (ZIP: 520ms per char, 12ms stagger). After the first paint (the home
+     page's ~1,500 letters were made and laid out in app.js's first task); until then a hover or focus rolls the whole
+     line (02-components.css: .roll without .has-chars). */
   function letterRolls() {
     if (!TS.motion()) return;
     document.querySelectorAll('.btn .roll, .nav-link .roll, [data-letter-roll] .roll').forEach(roll => {
@@ -158,8 +178,24 @@
 
   /* ---------- Tickers (reference Framer Ticker: WAAPI translate loop, pause off-screen, hover slow-down)
      <div data-ticker data-direction="left|right|up|down" data-speed="25" data-hover="0.8">
-       <ul data-ticker-list> <li>…</li> … </ul></div> */
+       <ul data-ticker-list> <li>…</li> … </ul></div>
+     The first build comes after the first paint (a frame, then a task): TS.beforeTickers(fn) runs fn first (the hero's
+     stand-ins come in there, 20-hero.js), then every ticker is measured (one layout). A ticker on screen gets its loop
+     at once, in that task, with the clones the loop shows first (steps(), below); the rest of its copies and the
+     tickers off screen follow a few clones at a time, in short tasks, and TS.afterTickers(fn) runs fn once every ticker
+     is built. (Built inside app.js's first task, each ticker's measure laid out what the one before
+     had just cloned: the home page on a phone, 4x CPU, ~1 s in one task. 21 Oct: all of it in short tasks, a frame
+     after the stand-ins, kept a tablet's gallery on screen at load still for 1.2-2 s after the first paint at 4x CPU.)
+     A resize, the images of a ticker once they have all loaded, or a late web font rebuild it only if its measure
+     changed (it used to rebuild every ticker once just after the start). */
+  const prep = [], built = [];
+  let tickersBuilt = false;
+  const runAll = fns => fns.splice(0).forEach(fn => { try { fn(); } catch (e) { setTimeout(() => { throw e; }); } });
+  TS.beforeTickers = fn => { if (tickersBuilt) fn(); else prep.push(fn); };
+  TS.afterTickers = fn => { if (tickersBuilt) fn(); else built.push(fn); };
+  TS.afterPaint = fn => requestAnimationFrame(() => setTimeout(fn, 0));
   function tickers() {
+    const all = [];
     document.querySelectorAll('[data-ticker]').forEach(t => {
       const list = t.querySelector('[data-ticker-list]');
       if (!list) return;
@@ -169,54 +205,99 @@
       const speed = parseFloat(t.dataset.speed) || 25;
       const hover = parseFloat(t.dataset.hover) || 1;
       const items = [...list.children];
-      let anim = null, visible = false, hovering = false, lastSize = 0;
-      const build = () => {
-        list.querySelectorAll('[data-clone]').forEach(c => c.remove());
-        if (!t.offsetParent || !(vertical ? t.clientHeight : t.clientWidth)) { if (anim) { anim.cancel(); anim = null; } return; } // hidden (e.g. a column off at this breakpoint): no clones, no downloads
-        const gap = parseFloat(getComputedStyle(list)[vertical ? 'rowGap' : 'columnGap']) || 0;
-        const first = items[0], last = items[items.length - 1];
-        const start = vertical ? first.offsetTop : first.offsetLeft;
-        const end = vertical ? last.offsetTop + last.offsetHeight : last.offsetLeft + last.offsetWidth;
-        const setLen = end - start + gap;
+      let anim = null, visible = false, hovering = false, made = false, missed = false, last = null;
+      // read: null while hidden (e.g. a column off at this breakpoint); starts: where each item begins in the strip
+      const measure = () => {
         const size = vertical ? t.clientHeight : t.clientWidth;
-        if (setLen <= gap) return;
-        const copies = Math.max(1, Math.ceil(size / setLen) + 1);
-        for (let c = 0; c < copies; c++) items.forEach(it => {
-          const cl = it.cloneNode(true);
-          cl.setAttribute('aria-hidden', 'true'); cl.setAttribute('data-clone', '');
-          cl.querySelectorAll('a,button,[tabindex]').forEach(x => x.setAttribute('tabindex', '-1'));
-          cl.querySelectorAll('img').forEach(im => im.setAttribute('loading', 'eager'));
-          list.appendChild(cl);
-          if (TS.observeVideos && cl.querySelector('[data-video]')) TS.observeVideos(cl);   // client video tiles (06-video.js)
-          // clones are created after reveals() ran: hand their reveal targets to the observer
-          [cl, ...cl.querySelectorAll('.reveal-image, [data-reveal]')].forEach(el => {
-            if (!el.matches || !el.matches('.reveal-image, [data-reveal]') || el.classList.contains('is-in')) return;
-            if (TS.observeReveal) TS.observeReveal(el); else el.classList.add('is-in');
-          });
+        if (!t.offsetParent || !size) return null;
+        const gap = parseFloat(getComputedStyle(list)[vertical ? 'rowGap' : 'columnGap']) || 0;
+        const first = items[0], end = items[items.length - 1];
+        const a = vertical ? first.offsetTop : first.offsetLeft;
+        const b = vertical ? end.offsetTop + end.offsetHeight : end.offsetLeft + end.offsetWidth;
+        let at = 0;                                  // (an item this screen hides takes no room)
+        const starts = items.map(it => (it.offsetParent ? (at = (vertical ? it.offsetTop : it.offsetLeft) - a) : at));
+        return { gap, size, setLen: b - a + gap, side: vertical ? list.scrollWidth : list.scrollHeight, starts };
+      };
+      const moved = (m, o) => ['size', 'setLen', 'side'].some(k => Math.abs(m[k] - o[k]) >= 2);
+      const copy = part => part.forEach(it => {
+        const cl = it.cloneNode(true);
+        cl.setAttribute('aria-hidden', 'true'); cl.setAttribute('data-clone', '');
+        cl.querySelectorAll('a,button,[tabindex]').forEach(x => x.setAttribute('tabindex', '-1'));
+        cl.querySelectorAll('img').forEach(im => im.setAttribute('loading', 'eager'));
+        list.appendChild(cl);
+        if (TS.observeVideos && cl.querySelector('[data-video]')) TS.observeVideos(cl);   // client video tiles (06-video.js)
+        // clones are created after reveals() ran: hand their reveal targets to the observer
+        [cl, ...cl.querySelectorAll('.reveal-image, [data-reveal]')].forEach(el => {
+          if (!el.matches || !el.matches('.reveal-image, [data-reveal]') || el.classList.contains('is-in')) return;
+          if (TS.observeReveal) TS.observeReveal(el); else el.classList.add('is-in');
         });
-        if (anim) anim.cancel();
-        if (TS.reduced()) return;
-        const prop = vertical ? 'translateY' : 'translateX';
-        const from = forward ? -setLen : 0, to = forward ? 0 : -setLen;
-        anim = list.animate([{ transform: `${prop}(${from}px)` }, { transform: `${prop}(${to}px)` }],
-          { duration: setLen / speed * 1000, iterations: Infinity, easing: 'linear' });
-        anim.playbackRate = hovering ? hover : 1;
-        if (!visible) anim.pause();
+      });
+      // write, as steps: the clones and the loop, for a measure. The loop only ever shows the strip and one ticker length
+      // past it (it runs over [0, setLen + size]). Moving forward (down / right) it starts at that far end: the clones
+      // that reach into it come first, with the loop (lead). Moving back it starts on the strip and reaches them only
+      // after (setLen - size) / speed: the loop comes first. The rest of the copies follow, three tiles a step.
+      const steps = m => {
+        last = m;
+        const lead = [() => list.querySelectorAll('[data-clone]').forEach(c => c.remove())], rest = [];
+        if (!m) { lead.push(() => { if (anim) { anim.cancel(); anim = null; } }); return { lead, rest }; }   // hidden: no clones, no downloads
+        const { gap, size, setLen, starts } = m;
+        if (setLen <= gap) return { lead, rest };
+        const need = Math.ceil(size / setLen), cut = size - (need - 1) * setLen;   // cut: px of the last needed copy shown
+        const seq = [];
+        for (let c = 0; c <= need; c++) seq.push(...items);
+        const early = forward || (setLen - size) / speed < 3 ? (need - 1) * items.length + starts.filter(s => s < cut + 2).length : 0;
+        if (early) lead.push(() => copy(seq.slice(0, early)));
+        for (let i = early; i < seq.length; i += 3) { const part = seq.slice(i, i + 3); rest.push(() => copy(part)); }
+        lead.push(() => {
+          if (anim) anim.cancel();
+          if (TS.reduced()) return;
+          const prop = vertical ? 'translateY' : 'translateX';
+          const from = forward ? -setLen : 0, to = forward ? 0 : -setLen;
+          anim = list.animate([{ transform: `${prop}(${from}px)` }, { transform: `${prop}(${to}px)` }],
+            { duration: setLen / speed * 1000, iterations: Infinity, easing: 'linear' });
+          anim.playbackRate = hovering ? hover : 1;
+          if (!visible) anim.pause();
+        });
+        return { lead, rest };
       };
       const rebuild = () => {
-        const s = vertical ? t.clientHeight + list.scrollWidth : t.clientWidth + list.scrollHeight;
-        if (Math.abs(s - lastSize) < 2 && anim) return;
-        lastSize = s; build();
+        if (!made) { missed = true; return; }        // the first build is under way: checked again once it is done
+        const m = measure();
+        if (m && last ? !moved(m, last) : !m === !last) return;
+        const s = steps(m);
+        s.lead.concat(s.rest).forEach(f => f());
       };
       new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (anim) visible ? anim.play() : anim.pause(); }).observe(t);
       if (hover !== 1) {
         t.addEventListener('pointerenter', () => { hovering = true; if (anim) anim.updatePlaybackRate ? anim.updatePlaybackRate(hover) : (anim.playbackRate = hover); });
         t.addEventListener('pointerleave', () => { hovering = false; if (anim) anim.updatePlaybackRate ? anim.updatePlaybackRate(1) : (anim.playbackRate = 1); });
       }
-      let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(rebuild, 120); }).observe(t);
-      items.forEach(it => it.querySelectorAll('img').forEach(im => { if (!im.complete) im.addEventListener('load', () => { clearTimeout(rt); rt = setTimeout(rebuild, 120); }, { once: true }); }));
-      build();
-      TS.tickers = (TS.tickers || []).concat({ el: t, get anim() { return anim; } });
+      let rt;
+      const later = () => { clearTimeout(rt); rt = setTimeout(rebuild, 120); };
+      new ResizeObserver(later).observe(t);
+      const loading = items.flatMap(it => [...it.querySelectorAll('img')]).filter(im => !im.complete);
+      if (loading.length) Promise.all(loading.map(im => new Promise(done => { im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true }); }))).then(later);
+      all.push({ el: t, measure, steps, later, done: () => { made = true; if (missed) later(); } });
+      // adopt(): the loop was re-timed from outside (a stand-in let in, 20-hero.js): the list as it is now counts as built
+      TS.tickers = (TS.tickers || []).concat({ el: t, get anim() { return anim; }, adopt() { if (made && last) last = measure() || last; } });
+    });
+    TS.afterPaint(() => {
+      runAll(prep);
+      const vh = innerHeight;                        // the reads (one layout), then the writes
+      const plan = all.map(k => { const m = k.measure(), r = k.el.getBoundingClientRect(); return { k, s: k.steps(m), on: !!m && r.bottom > 0 && r.top < vh }; });
+      plan.forEach(p => { if (p.on) runAll(p.s.lead); });   // the loops on screen start now
+      const queue = plan.flatMap(p => (p.on ? [] : p.s.lead).concat(p.s.rest, p.k.done));
+      const run = () => {                            // short tasks: steps until ~20 ms are used
+        const t0 = performance.now();
+        while (queue.length && performance.now() - t0 < 20) runAll([queue.shift()]);
+        if (queue.length) { setTimeout(run, 0); return; }
+        tickersBuilt = true;
+        runAll(prep);                                // (any added meanwhile)
+        runAll(built);
+        // a late web font resizes a text strip (read here: document.fonts laid the page out in app.js's first task)
+        if (all.length && document.fonts && document.fonts.ready) document.fonts.ready.then(() => all.forEach(k => k.later()));
+      };
+      setTimeout(run, 0);
     });
   }
 
@@ -227,7 +308,15 @@
      on viewport re-entry or rebuilds it), every CSS animation inside it (.is-still, 02-components.css) and its
      client videos ([data-video-hold], 06-video.js); a 'ts:motion' event (detail.still) lets section scripts stop
      their own timers, and TS.motionStill(el) tells whether el sits in a paused scope. Play resumes only what is on
-     screen (the ticker runtime starts the rest as it comes into view). */
+     screen (the ticker runtime starts the rest as it comes into view).
+     Autoplay refused (iOS Low Power Mode, a browser's no-autoplay setting: 06-video.js fires 'ts:videoblocked') while
+     the scope moves: until the visitor's first tap on the control it offers its Play state ("Play motion") without
+     pausing anything, and that tap plays the scope's clips that are on screen or were refused, inside the tap (a
+     gesture may; TS.playVideo). After a tap the control only follows the motion ("Pause motion" while the tickers move,
+     so its next tap always pauses: 21 Oct, a clip refused as a column brought it in turned it back to Play, and a
+     visitor trying to stop the gallery needed two or three taps); a clip refused then plays at the visitor's next tap,
+     key press or click anywhere in the scope, and Play after a pause plays it too. Not under Save-Data: there the clips
+     keep their posters (owner, 17 Oct). */
   TS.motionStill = el => !!(el && el.closest && el.closest('[data-motion-scope].is-still'));
   TS.motionToggle = btn => {
     const scope = btn && btn.closest('[data-motion-scope]');
@@ -237,20 +326,26 @@
     const label = btn.querySelector('[data-motion-label]');
     const words = { pause: label ? label.textContent : 'Pause motion', play: btn.dataset.playLabel || 'Play motion' };
     const held = new Set();                        // script animations this control paused (resumed on Play)
+    const refused = new Set();                     // clips whose autoplay was refused (until they play)
     const scopeTickers = () => (TS.tickers || []).filter(t => scope.contains(t.el));
     const scripted = () => (scope.getAnimations ? scope.getAnimations({ subtree: true }) : [])
       .filter(a => a.constructor === Animation);  // WAAPI only: CSS animations follow animation-play-state (.is-still)
     const onScreen = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width > 0; };
-    let still = false;
+    let still = false, offer = false, tapped = false;   // offer: Play shown for refused clips, nothing paused (until a tap)
+    const paint = () => {
+      const play = still || offer;
+      btn.classList.toggle('is-still', play);
+      if (label) label.textContent = play ? words.play : words.pause;
+    };
     const hold = () => {
       if (!still) return;
       scripted().forEach(a => { if (a.playState === 'running') { a.pause(); held.add(a); } });
     };
     const set = on => {
       still = on;
+      offer = false;
       scope.classList.toggle('is-still', on);
-      btn.classList.toggle('is-still', on);
-      if (label) label.textContent = on ? words.play : words.pause;
+      paint();
       if (scope.querySelector('[data-video]')) {    // client video tiles pause with the rest of the scope
         scope.toggleAttribute('data-video-hold', on);
         if (TS.syncVideos) TS.syncVideos(scope);
@@ -264,8 +359,38 @@
       }
       scope.dispatchEvent(new CustomEvent('ts:motion', { detail: { still: on } }));
     };
+    // a clip shown in its (clipping) ticker column, or on screen
+    const showing = v => {
+      const r = v.getBoundingClientRect(), c = (v.closest('[data-ticker]') || v).getBoundingClientRect();
+      return r.width > 0 && r.bottom > Math.max(0, c.top) && r.top < Math.min(innerHeight, c.bottom);
+    };
+    const playClips = shown => {                   // the refused clips (and with shown, every clip showing)
+      const clips = [...scope.querySelectorAll('[data-video]')].filter(v => refused.has(v) || (shown && showing(v)));
+      refused.clear();
+      clips.forEach(v => TS.playVideo(v).then(ok => { if (ok && TS.syncVideos) TS.syncVideos(v); }));   // (one off screen pauses again)
+    };
     btn.hidden = false;
-    btn.addEventListener('click', () => set(!still));
+    btn.addEventListener('click', () => {
+      tapped = true;
+      const play = offer || (still && refused.size);
+      set(play ? false : !still);
+      if (play && TS.playVideo) playClips(true);
+    });
+    if (scope.querySelector('[data-video]')) {
+      const saveData = () => !!(navigator.connection && navigator.connection.saveData);
+      scope.addEventListener('ts:videoblocked', e => {
+        if (saveData()) return;
+        refused.add(e.target);
+        if (!still && !offer && !tapped) { offer = true; paint(); }
+      });
+      scope.addEventListener('playing', e => {
+        refused.delete(e.target);
+        if (offer && !refused.size) { offer = false; paint(); }   // all played (a gesture elsewhere in the scope)
+      }, true);
+      // any other gesture in the scope (the control's own taps decide for themselves) plays the refused clips while it moves
+      const retry = e => { if (refused.size && !still && TS.playVideo && !btn.contains(e.target)) playClips(false); };
+      ['touchend', 'click', 'keydown'].forEach(type => scope.addEventListener(type, retry, { capture: true, passive: true }));
+    }
     // the ticker runtime resumes an animation when it re-enters the viewport (its observer may run after this one,
     // so wait a frame) and replaces it when it rebuilds the clones: pause it again while still
     if ('IntersectionObserver' in window) {
@@ -309,11 +434,13 @@
   function headerTone() {
     const header = document.querySelector('[data-header]');
     if (header) {
-      // frosted bar behind the logo/menu button once the page has scrolled
+      // frosted bar behind the logo/menu button once the page has scrolled (first set in a frame: read at load time,
+      // scrollY laid the page out inside app.js's first task)
       let raf = 0;
       const sync = () => { raf = 0; header.classList.toggle('is-scrolled', scrollY > 8); };
-      addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(sync); }, { passive: true });
-      sync();
+      const request = () => { if (!raf) raf = requestAnimationFrame(sync); };
+      addEventListener('scroll', request, { passive: true });
+      request();
     }
     const darks = document.querySelectorAll('[data-nav-dark]');
     if (!header || !darks.length) return;
@@ -326,7 +453,8 @@
   }
 
   TS.ready(() => {
-    smoothScroll(); anchors(); reveals(); letterRolls(); tickers(); pageTransitions(); disabledLinks(); headerTone();
+    // (letter rolls after the tickers' first task: their ~1,500 letters would make its reads lay them out)
+    smoothScroll(); anchors(); reveals(); tickers(); TS.afterPaint(letterRolls); pageTransitions(); disabledLinks(); headerTone();
     document.querySelectorAll('[data-motion-toggle]').forEach(TS.motionToggle);   // after tickers(): TS.tickers is filled
     root.classList.add('is-ready');
   });

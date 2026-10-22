@@ -55,6 +55,12 @@ def privacy(ctx):
          '<p>To make page transitions smooth, the website briefly notes in your browser&rsquo;s session storage that '
          'you followed a link. It contains no personal information, never leaves your device and is cleared when you '
          'close the tab.</p>'),
+    ]
+    if (CONFIG.get('chat') or {}).get('enabled'):   # the 'Ask {brand}' chat (owner, 21 Oct; wording for the owner's review)
+        blocks.append(('The chat',
+                       '<p>The chat on this website runs in your browser. Your conversation stays in that browser tab and '
+                       'is not sent anywhere unless you choose to send it through the contact form.</p>'))
+    blocks += [
         ('Third parties',
          '<p>Fonts, images and scripts are served from this website itself, so browsing it doesn&rsquo;t send requests to '
          'third-party services. Links to other websites, such as the live sites of projects we have worked on, open '

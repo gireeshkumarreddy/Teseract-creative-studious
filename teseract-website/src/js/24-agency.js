@@ -106,33 +106,37 @@
     sec.querySelectorAll('[data-agc-in], [data-agc-fig], [data-agc-pt], [data-agc-scene]').forEach(el => io.observe(el));
   }
 
+  /* Its frames read no layout: the figure's place on the page comes from the observer's entry (its box, plus the
+     scroll position then) and moves by the scroll since, read in the scroll event (before any frame callback of the
+     page has written); the frame callback only writes --dr. (It measured the figure in its frame, often right after
+     another section's write there, laying the page out a second time per frame.) */
   function drift(fig) {
     if (!fig) return;
-    let target = 0, cur = null, raf = 0;
-    const measure = () => {
-      const r = fig.getBoundingClientRect();
-      const vh = innerHeight || root.clientHeight;
-      const p = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);   // +1 entering below … −1 leaving above
+    let target = 0, cur = null, raf = 0, y = 0, vh = 0, top = 0, h = 0;   // top: the figure's top on the page
+    const aim = () => {
+      const p = (top - y + h / 2 - vh / 2) / (vh / 2 + h / 2);   // +1 entering below … −1 leaving above
       target = Math.max(-1, Math.min(1, p));
     };
     const tick = () => {
       raf = 0;
-      measure();
       cur = cur == null ? target : cur + (target - cur) * 0.12;            // eased: the figure floats, never jerks
       if (Math.abs(target - cur) < 0.0005) cur = target;
       fig.style.setProperty('--dr', cur.toFixed(4));
       if (cur !== target) raf = requestAnimationFrame(tick);
     };
     const request = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    const onScroll = () => { y = scrollY; aim(); request(); };
+    const place = (r, sy) => { y = sy; vh = innerHeight || root.clientHeight; top = r.top + sy; h = r.height; aim(); };
     let listening = false;
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !listening) addEventListener('scroll', request, { passive: true });
-      if (!e.isIntersecting && listening) removeEventListener('scroll', request);
+      place(e.boundingClientRect, scrollY);
+      if (e.isIntersecting && !listening) addEventListener('scroll', onScroll, { passive: true });
+      if (!e.isIntersecting && listening) removeEventListener('scroll', onScroll);
       listening = e.isIntersecting;
       fig.classList.toggle('is-drifting', listening);
       request();
     }, { rootMargin: '10% 0px 10% 0px' }).observe(fig);
-    addEventListener('resize', request, { passive: true });
+    addEventListener('resize', () => { place(fig.getBoundingClientRect(), scrollY); request(); }, { passive: true });
   }
 
   /* Keyboard: Tab can land on the closing CTA before its fade-up has played (the browser scrolls it into view,

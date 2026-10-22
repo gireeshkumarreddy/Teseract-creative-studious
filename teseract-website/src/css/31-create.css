@@ -84,6 +84,21 @@
   .create-cta__title{font-size:32px}
   .create-list .svc-info__title{font-size:28px}
 }
+/* Phones held sideways (landscape, at most 520 px tall; from 656 px wide, as 36-project.css): the hero tightens -
+   44 px H1 (~1.3x the 34 px CTA H2, as on desktop), shorter gaps, the sub-copy as one paragraph - so the pill, H1,
+   sub-copy and the service index sit in the first view under the header. The italic phrase takes its own line (the
+   desktop two-line lockup): at 44 px the one-line H1 (~808 px) sits on the edge of 860-904 px screens, so its line
+   count would flip on the font swap and push everything below it down. */
+@media (orientation:landscape) and (max-height:520px) and (min-width:656px){
+  .create-hero{padding:12px 0 48px}
+  .create-hero__inner{gap:16px;padding-block:0}
+  .create-hero__title{font-size:44px;line-height:1}
+  .create-hero__title em{display:block}
+  .create-hero__sub{font-size:16px}
+  .create-hero__line{display:inline}
+  .create-index{margin-top:0}
+  .create-cta__title{font-size:34px}
+}
 /* touch layouts at any width (tablet portrait included): 44px tap targets for the service index */
 @media (pointer:coarse){
   .create-index__link{height:44px;border-radius:14px}

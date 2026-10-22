@@ -1163,6 +1163,325 @@ for x in projects.PROJECTS:                      # the project summaries (portfo
     if f'<p class="pj-head__summary"' not in _pg or esc(_sm.replace("'", '’')) not in _pg:
         errors.append(f"{x['route']}/index.html: the summary is not shown under the project's meta line")
 
+# ---------------------------------------------------------------- the site chat 'Ask {brand}' (owner request, 21 Oct)
+# site.config.json chat block, the two prices and their conversions, the knowledge base (traceable to the site's own
+# copy, nothing excluded), the chat's own copy (no '!', no emoji, no hype, no amounts), the code (one fetch: the
+# knowledge base; no HTML injection, no storage but sessionStorage, nothing sent), sizes, the launcher on every route,
+# the SEO files price-free, the typography layer untouched. Build spec section 14; scripts/chat_kb.py, src/chat/.
+import datetime as _dt  # noqa: E402
+import chat_kb as _ckb  # noqa: E402
+from content import CHAT as _CHAT  # noqa: E402
+import content as _content  # noqa: E402
+
+_LAUNCH = INDEXABLE or bool(SITE)
+_chat = lib.CONFIG.get('chat')
+# Size budgets (bytes). The build spec aimed at 4 / 4 / 48 / 14 / 40 KB. Measured 21 Oct: the stub and its CSS carry the
+# corner obstacles, the greeting and the arrival (parse < 1 ms; their first task is one query and the listeners), and the
+# lazy chat.js carries content.CHAT (13 KB) - these are the ceilings now (owner's review: LAUNCH-CHECKLIST 'Chat').
+# 21 Oct 23:20, the living launcher (wander, lines, calm): the stub 20 KB and its CSS 8 KB. app.js is a deferred script
+# (parsed off the main thread) and all of it runs at idle after load; its first task is unchanged.
+CHAT_MAX = {'src/js/40-chat.js': 20 * 1024, 'src/css/40-chat.css': 8 * 1024, 'assets/chat/chat.js': 96 * 1024,
+            'assets/chat/chat.css': 14 * 1024, 'assets/chat-kb.json': 48 * 1024}
+CHAT_BANNED = re.compile(r"guarantee(d)?|cheapest|lowest|world-class|unbeatable|number one|#1|for free|free of charge|"
+                         r"best (price|rate|deal|agency|studio)|within \d+ (days|weeks)", re.I)
+CHAT_EMOJI = re.compile('[☀-➿️\U0001F000-\U0001FAFF]')
+CUR_AMOUNT = re.compile(r'(?:₹|€|£|\$|\bRs\.?|\bINR|\bEUR|\bGBP|\bUSD|\bAED|\bCAD|\bAUD|\bSGD)\s?\d[\d,.]*'
+                        r'|\b\d[\d,.]*\s?(?:k\b|lakhs?\b|lacs?\b|crores?\b|rupees\b|euros?\b|pounds\b|dollars\b|dirhams\b|'
+                        r'INR\b|EUR\b|GBP\b|USD\b|AED\b|CAD\b|AUD\b|SGD\b)')
+
+
+def _walk_text(v):
+    if isinstance(v, str):
+        return [v]
+    if isinstance(v, (list, tuple)):
+        return [t for x in v for t in _walk_text(x)]
+    if isinstance(v, dict):
+        return [t for x in v.values() for t in _walk_text(x)]
+    return []
+
+
+def _src(path):
+    """A knowledge-base source path ('FAQ.3.1', 'CREATE.services.2.tags', 'WHO.think.items.*.0') -> its value."""
+    parts = path.split('.')
+
+    def get(o, rest):
+        if not rest:
+            return o
+        k = rest[0]
+        if k == '*':
+            return [get(x, rest[1:]) for x in o]
+        return get(o[int(k)] if isinstance(o, (list, tuple)) else o[k], rest[1:])
+    return get(getattr(_content, parts[0]), parts[1:])
+
+
+def _traced(text, source):
+    """text is the source (formatted), one sentence of it, or one of its list items."""
+    for s in ([source] if isinstance(source, str) else _walk_text(source)):
+        s = lib.fmt(s)
+        if text == s or text in re.split(r'(?<=[.?])\s+', s):
+            return True
+    return False
+
+
+def _flag(cond, msg):
+    if cond:
+        (errors if _LAUNCH else warnings).append(msg)
+
+
+def chat_checks():
+    if not isinstance(_chat, dict):
+        errors.append('site.config.json: the "chat" block is missing (owner, 21 Oct)')
+        return
+    P = _chat.get('pricing') or {}
+    if not isinstance(_chat.get('enabled'), bool):
+        errors.append('chat.enabled must be true or false')
+    bu = _chat.get('booking_url', '')
+    if not isinstance(bu, str) or (bu and not bu.startswith('https://')):
+        errors.append('chat.booking_url must be empty or an https:// address')
+    if P.get('base_currency') != 'INR':
+        errors.append('chat.pricing.base_currency must be INR (the owner sets the prices in rupees)')
+    prices = [k for k in P if k.endswith('_from')]
+    if sorted(prices) != ['ecommerce_from', 'website_from']:
+        errors.append(f'chat.pricing: the only prices are website_from and ecommerce_from (found {prices})')
+    for k in ('website_from', 'ecommerce_from'):
+        if not isinstance(P.get(k), int) or isinstance(P.get(k), bool) or P.get(k) <= 0:
+            errors.append(f'chat.pricing.{k} must be a positive whole number of rupees')
+    rates = P.get('rates') or {}
+    if sorted(rates) != sorted(['EUR', 'GBP', 'USD', 'AED', 'CAD', 'AUD', 'SGD']) or not all(
+            isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0 for v in rates.values()):
+        errors.append(f'chat.pricing.rates must be exactly EUR GBP USD AED CAD AUD SGD, each > 0 (INR per unit): {rates}')
+    try:
+        when = _dt.date.fromisoformat(P.get('rates_date') or '')
+        if when > _dt.date.today():
+            errors.append(f'chat.pricing.rates_date {when} is in the future')
+        elif (_dt.date.today() - when).days > 90:
+            warnings.append(f'chat.pricing.rates_date {when} is over 90 days old: check the exchange rates')
+    except ValueError:
+        errors.append('chat.pricing.rates_date must be an ISO date (YYYY-MM-DD)')
+    if P.get('round_to') not in (1, 5, 10, 50, 100):
+        errors.append('chat.pricing.round_to must be 1, 5, 10, 50 or 100')
+    for block, where in ((_chat, 'chat'), (P, 'chat.pricing')):
+        for k in block:
+            if not k.endswith('_note') and k != 'pricing' and not str(block.get(k + '_note') or '').strip():
+                errors.append(f'{where}.{k} has no {k}_note (every chat setting says what it does)')
+    _flag(not P.get('rates_confirmed'), 'chat.pricing.rates_confirmed is false: the owner has not confirmed the exchange '
+          'rates (LAUNCH-CHECKLIST "Chat")')
+    _flag(_CHAT.get('owner_review'), "content.CHAT owner_review is True: the chat copy waits for the owner's approval "
+          '(LAUNCH-CHECKLIST "Chat")')
+    # the chat's own copy: no '!', no emoji, no hype, digits only in the visitor's answer chips and placeholders
+    for k, v in _CHAT.items():
+        if k in ('owner_review', 'faq_aliases', 'project_aliases', 'industry_lexicon'):
+            continue
+        for t in _walk_text(v):
+            if '!' in t or CHAT_EMOJI.search(t):
+                errors.append(f'content.CHAT {k}: "!" or an emoji in "{t[:60]}"')
+            if CHAT_BANNED.search(t):
+                errors.append(f'content.CHAT {k}: banned wording "{CHAT_BANNED.search(t).group(0)}" in "{t[:60]}"')
+            if k != 'choices' and re.search(r'\d', re.sub(r'\{\w+\}|\b3D\b', '', t)):
+                errors.append(f'content.CHAT {k}: digits outside the answer chips ("{t[:60]}") - prices come from the config')
+    for k in ('hello', 'say', 'ask_label', 'welcome', 'p0', 'factors_web', 'chips', 'choices', 'idea_template', 'brief_rows'):
+        if k not in _CHAT:
+            errors.append(f'content.CHAT has no "{k}"')
+    enabled = bool(_chat.get('enabled'))
+    files = {k: lib.longpath(DIST / k) for k in ('assets/chat/chat.js', 'assets/chat/chat.css', _ckb.KB_FILE)}
+    docks = {rel: html.count('<div class="cc" data-cc ') for rel, html in page_html.items()}
+    if not enabled:
+        if any(f.exists() for f in files.values()) or any(docks.values()):
+            errors.append('chat.enabled is false but the build still has the launcher or the chat files (build with --clean)')
+        return
+    for k, f in files.items():
+        if not f.exists():
+            errors.append(f'{k} missing (build.py chat_bundle)')
+            return
+    for k, mx in CHAT_MAX.items():
+        n = (lib.longpath(ROOT / k) if k.startswith('src/') else files[k]).stat().st_size
+        if n > mx:
+            errors.append(f'{k}: {n} bytes, over its {mx // 1024} KB budget')
+    js = files['assets/chat/chat.js'].read_text(encoding='utf-8')
+    css = files['assets/chat/chat.css'].read_text(encoding='utf-8')
+    raw = files[_ckb.KB_FILE].read_text(encoding='utf-8')
+    try:
+        kb = json.loads(raw)
+    except ValueError as ex:
+        errors.append(f'{_ckb.KB_FILE} does not parse ({ex})')
+        return
+    if kb.get('v') != 1:
+        errors.append(f'{_ckb.KB_FILE}: v must be 1')
+    if kb['pricing']['amounts'] != _ckb.amounts(P):
+        errors.append(f'{_ckb.KB_FILE}: pricing.amounts {kb["pricing"]["amounts"]} differ from the config '
+                      f'(round half up: {_ckb.amounts(P)})')
+    if kb['pricing']['w'] != P.get('website_from') or kb['pricing']['e'] != P.get('ecommerce_from'):
+        errors.append(f'{_ckb.KB_FILE}: the starting prices differ from site.config.json chat.pricing')
+    # amounts: only the config-derived set, anywhere (knowledge base, chat code, chat copy)
+    ok = {f'{kb["pricing"]["cur"][c]["sym"]}{v:,}' for c, a in kb['pricing']['amounts'].items() for v in a.values()}
+    # (not the intents' phrases: what visitors may type, never shown; not regex backreferences such as '$1' in the code)
+    shown_kb = {k: v for k, v in kb.items() if k not in ('pricing', 'regions', 'intents')}
+    shown_kb['intents'] = [{k: v for k, v in it.items() if k not in ('ph', 'k')} for it in kb['intents']]
+    for where, text in (('kb', ' '.join(_walk_text(shown_kb))), ('chat.js', re.sub(r'\$[1-9]\b', '', js)),
+                        ('content.CHAT', ' '.join(_walk_text(_ckb.copy())))):
+        for m in CUR_AMOUNT.finditer(text):
+            if m.group(0).strip() not in ok:
+                errors.append(f'{where}: an amount next to a currency ("{m.group(0)}") - the chat shows only chat.pricing')
+    # code rules
+    if re.search(r'https?://', js):
+        errors.append("assets/chat/chat.js has an http(s):// literal (the chat requests nothing but this website's files)")
+    if len(re.findall(r'\bfetch\(', js)) != 1 or not re.search(r'fetch\(D\.ccKb\b', js):
+        errors.append('assets/chat/chat.js: exactly one fetch(, of the knowledge base (data-cc-kb)')
+    for bad in ('.innerHTML', 'insertAdjacentHTML', 'eval(', 'new Function', 'document.write', 'localStorage',
+                'document.cookie', 'sendBeacon', 'XMLHttpRequest', 'WebSocket', 'import('):
+        if bad in js:
+            errors.append(f'assets/chat/chat.js uses {bad}')
+    for f in sorted((ROOT / 'src/chat').glob('*.js')):
+        for i, ln in enumerate(f.read_text(encoding='utf-8').splitlines(), 1):
+            if ln.count('`') % 2:
+                errors.append(f'src/chat/{f.name}:{i}: a template literal across lines (build.py strip_js keeps lines whole)')
+    stub = (ROOT / 'src/js/40-chat.js').read_text(encoding='utf-8')
+    for bad in ('fetch(', '.innerHTML', 'localStorage', 'document.cookie', 'XMLHttpRequest'):
+        if bad in stub:
+            errors.append(f'src/js/40-chat.js uses {bad}')
+    for name, text in (('chat.css', css), ('40-chat.css', (ROOT / 'src/css/40-chat.css').read_text(encoding='utf-8'))):
+        if re.search(r'font-(weight|family)\s*:', text):
+            errors.append(f'{name} sets a font weight or family (the typography layer, 95-typography.css, decides)')
+    # traceability: every text block of the knowledge base is the site's own copy
+    for i, f in enumerate(kb['faq']):
+        q, a = _content.FAQ[i]
+        if f['q'] != lib.fmt(q) or f['a'] != lib.fmt(a):
+            errors.append(f'{_ckb.KB_FILE}: faq {i} is not FAQ.{i} verbatim')
+    for i, s in enumerate(kb['services']):
+        c = _content.CREATE['services'][i]
+        if (s['name'], s['body'], s['tags'], s['title']) != (c['name'], lib.fmt(c['body']), c['tags'], lib.fmt(c['title'])):
+            errors.append(f'{_ckb.KB_FILE}: service {s["id"]} is not CREATE.services.{i} verbatim')
+    for i, s in enumerate(kb['process']['steps']):
+        c = _content.APPROACH['steps'][i]
+        if (s['name'], s['sub'], s.get('body', ''), s.get('list', [])) != (c['name'], c['sub'], c.get('body', ''), c.get('list', [])):
+            errors.append(f'{_ckb.KB_FILE}: process step {i + 1} is not APPROACH.steps.{i} verbatim')
+    fd = kb['founder']
+    if fd['name'] != 'Gireesh' or fd['body'] != _WHO['founder']['body'] or fd['quote'] != _WHO['founder']['quote']:
+        errors.append(f'{_ckb.KB_FILE}: the founder is not WHO.founder verbatim (name "Gireesh")')
+    shown = {p['slug']: p for p in projects.PROJECTS}
+    for p in kb['projects']:
+        x = shown.get(p['s'])
+        if not x or p['s'] in projects.EXCLUDED:
+            errors.append(f'{_ckb.KB_FILE}: project {p["s"]} is not shown on the Work page')
+            continue
+        if p['t'] != x['title'] or p['i'] != x['industry'] or p.get('sum') != x.get('summary') or p['k'] != x['label_kind']:
+            errors.append(f'{_ckb.KB_FILE}: project {p["s"]} differs from portfolio.json / the media manifest')
+        if not lib.longpath(DIST / (kb['media'] + p['th'])).exists():
+            errors.append(f'{_ckb.KB_FILE}: project {p["s"]} still {p["th"]} is not in the build')
+    links, ids = [], {}
+
+    def page_ids(r):
+        rel = (r + '/index.html') if r else 'index.html'
+        if rel not in ids:
+            ids[rel] = set(re.findall(r'\sid="([^"]+)"', page_html[rel])) if rel in page_html else None
+        return ids[rel]
+    for it in kb['intents']:
+        if not it.get('ph'):
+            errors.append(f'{_ckb.KB_FILE}: intent {it["id"]} has no phrase')
+        for c in it.get('c', []):
+            if c not in kb['chips'] or c not in _CHAT['chips']:
+                errors.append(f'{_ckb.KB_FILE}: intent {it["id"]} chip "{c}" has no label / target')
+        for b in it.get('b', []):
+            if b['t'] in ('p', 'list'):
+                try:
+                    src = _src(b['src'])
+                except (AttributeError, KeyError, IndexError, ValueError, TypeError):
+                    errors.append(f'{_ckb.KB_FILE}: {it["id"]}: source {b["src"]} does not resolve')
+                    continue
+                for t in ([b['text']] if b['t'] == 'p' else b['items']):
+                    if not _traced(t, src):
+                        errors.append(f'{_ckb.KB_FILE}: {it["id"]}: "{t[:50]}" is not the text of {b["src"]}')
+            if b['t'] == 'c' and b['k'] not in _CHAT:
+                errors.append(f'{_ckb.KB_FILE}: {it["id"]}: content.CHAT has no "{b["k"]}"')
+            if b['t'] == 'from':
+                links.append((it['id'], b['url']))
+    intent_ids = {it['id'] for it in kb['intents']}
+    for k, t in kb['chips'].items():
+        if k not in _CHAT['chips']:
+            errors.append(f'{_ckb.KB_FILE}: chip "{k}" has no label in content.CHAT chips')
+        if isinstance(t, dict):
+            links.append(('chip ' + k, t))
+        elif t not in intent_ids and t not in _ckb.ACTIONS:
+            errors.append(f'{_ckb.KB_FILE}: chip "{k}" -> {t}: no such intent or flow action')
+    links += [('faq', kb['faq_url']), ('founder', kb['founder']['url']), ('contact', kb['contact']['form'])]
+    links += [('service ' + s['id'], {'r': 'what-we-create', 'f': s['id']}) for s in kb['services']]
+    links += [('step', {'r': 'our-approach', 'f': f'ap-step-{i + 1}'}) for i in range(len(kb['process']['steps']))]
+    links += [('project ' + p['s'], {'r': 'work', 'f': 'wk-t-' + p['s']}) for p in kb['projects']]
+    links += [('project page ' + p['s'], {'r': 'projects/' + p['s'], 'f': ''}) for p in kb['projects']]
+    for who, u in links:
+        have = page_ids(u['r'])
+        if have is None:
+            errors.append(f'{_ckb.KB_FILE}: {who} links to /{u["r"]}/, which is not a page of this build')
+        elif u.get('f') and u['f'] not in have:
+            errors.append(f'{_ckb.KB_FILE}: {who} links to /{u["r"]}/#{u["f"]}, which does not exist')
+    # exclusions
+    kbtext = ' '.join(_walk_text(kb))
+    for t in STORIES['testimonials']:
+        if t.get('sample') and t['quote'][:40] in kbtext:
+            errors.append(f'{_ckb.KB_FILE}: carries a sample testimonial ({t["project"]})')
+    for n, _label in _content.HOME['numbers']['items']:
+        if re.search(r'(?<![\w])' + re.escape(n) + r'(?![\w])', kbtext):
+            errors.append(f'{_ckb.KB_FILE}: carries the Our Numbers figure "{n}"')
+    if lib.CONFIG.get('email_is_placeholder') and lib.CONFIG.get('email', '') in kbtext:
+        errors.append(f'{_ckb.KB_FILE}: carries the placeholder email')
+    if '_note"' in raw:
+        errors.append(f'{_ckb.KB_FILE}: carries a *_note field of the config')
+    for name, text in (('kb', raw), ('chat.js', js), ('chat.css', css)):
+        if re.search(r'kolli|kumar\s+reddy', re.sub(r'https?://\S+', '', text), re.I):
+            errors.append(f"{name}: the founder's full name (the site names him \"Gireesh\" only)")
+    # the launcher: once on every route, a link to the form, the files it loads, the greeting where it belongs
+    hello = {'home': 'home', 'stories': 'stories', 'create': 'create', 'approach': 'approach', 'who': 'who', 'work': 'work',
+             'project': 'project'}
+    for rel, html in page_html.items():
+        if docks.get(rel) != 1:
+            errors.append(f'{rel}: {docks.get(rel)} chat launcher(s) (want exactly one [data-cc])')
+            continue
+        i = html.index('<div class="cc" data-cc ')
+        dk_html = html[i:html.index('<div class="page-shade"', i)]
+        a = re.search(r'<a class="cc-launch" href="([^"]+)" aria-label="([^"]+)"', dk_html)
+        if not a or not links_to(a.group(1).split('#')[0], 'contact') or not a.group(1).endswith('#project-form'):
+            errors.append(f'{rel}: the chat launcher must link to contact#project-form with an aria-label')
+        for k, name in (('js', 'assets/chat/chat.js'), ('css', 'assets/chat/chat.css'), ('kb', _ckb.KB_FILE)):
+            m = re.search(rf'data-cc-{k}="([^"?]+)\?v=([0-9a-f]+)"', dk_html)
+            want = hashlib.sha1(files[name].read_bytes()).hexdigest()[:10]
+            if not m or m.group(2) != want or not lib.longpath(((DIST / rel).parent / m.group(1)).resolve()).exists():
+                errors.append(f'{rel}: data-cc-{k} must load {name}?v={want}')
+        page = re.search(r'<body class="page-([\w-]+)"', html)
+        page = page.group(1) if page else ''
+        bubble = re.search(r'<div class="cc-hello" id="cc-hello" hidden><p>(.*?)</p>', dk_html)
+        if page in hello:
+            line = lib.fmt(_CHAT['hello'][hello[page]])
+            if page == 'project':
+                x = next((c for c in projects.CASES if f"{c['route']}/index.html" == rel), None)
+                line = line.replace('{project}', x['title'] if x else '')
+            if not bubble or _h.unescape(bubble.group(1)) != line:
+                errors.append(f'{rel}: the chat greeting is not content.CHAT hello "{hello[page]}"')
+        elif bubble:
+            errors.append(f'{rel}: no chat greeting on the {page or "this"} page (contact, 404, privacy, terms)')
+        # the living launcher's lines: content.CHAT 'say', on the greeting's pages only
+        say = re.search(r'data-cc-say="([^"]*)"', dk_html)
+        want_say = '|'.join(lib.fmt(x) for x in _CHAT.get('say', []))
+        if page in hello and (not say or _h.unescape(say.group(1)) != want_say or any('|' in lib.fmt(x) for x in _CHAT.get('say', []))):
+            errors.append(f'{rel}: the launcher lines (data-cc-say) are not content.CHAT say')
+        elif page not in hello and say:
+            errors.append(f'{rel}: no launcher lines on the {page or "this"} page (contact, 404, privacy, terms)')
+        if re.search(r'kolli|kumar\s+reddy', re.sub(r'<[^>]+>', ' ', dk_html), re.I):
+            errors.append(f"{rel}: the launcher shows the founder's full name")
+    # SEO files stay price-free (the prices live in the chat only)
+    seo_text = _llms + ' ' + ' '.join(b for h in page_html.values()
+                                      for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', h, re.S))
+    # (the services' OfferCatalog of the SEO work stays: its Offers carry no price)
+    if CUR_AMOUNT.search(seo_text) or re.search(r'"(price|lowPrice|highPrice|priceCurrency|priceSpecification)"|priceRange|"AggregateOffer"', seo_text):
+        errors.append('llms.txt / JSON-LD carry a price or a priceRange (prices are only in the chat)')
+    if INDEXABLE and f"Disallow: {urlsplit(SITE).path.rstrip('/')}/assets/chat" not in _rlines:
+        errors.append('robots.txt: a launch build must disallow /assets/chat (the chat code and knowledge base are not pages)')
+
+
+TYPO_SHA1 = '6f2d00f1c798c572bdedbecbefbbf73350e2d2ab'
+if hashlib.sha1((ROOT / 'src/css/95-typography.css').read_bytes()).hexdigest() != TYPO_SHA1:
+    errors.append('src/css/95-typography.css changed (owner: one typography layer, never edited)')
+chat_checks()
+
 report_file = lib.build_report_path(DIST)
 report = json.loads(report_file.read_text(encoding='utf-8')) if report_file.exists() else {}
 for f in report.get('failures', []):

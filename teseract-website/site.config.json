@@ -27,5 +27,27 @@
   "alternate_names": ["TESERACT"],
   "alternate_names_note": "Other names of the studio for the JSON-LD alternateName (Organization + WebSite). You may add \"TESSERACT Creative Studios\" (the content document's double-S spelling) once you approve it; no case-only variants (\"Teseract Creative Studios\") - search engines ignore case.",
   "org_profiles": [],
-  "org_profiles_note": "The studio's OWN company profiles (LinkedIn company page, studio Instagram, Behance...) under the exact name \"TESERACT Creative Studios\". While empty, the Organization's sameAs uses the socials above (your personal profiles) as a stop-gap; once filled, only these are used for the company."
+  "org_profiles_note": "The studio's OWN company profiles (LinkedIn company page, studio Instagram, Behance...) under the exact name \"TESERACT Creative Studios\". While empty, the Organization's sameAs uses the socials above (your personal profiles) as a stop-gap; once filled, only these are used for the company.",
+  "chat": {
+    "enabled": true,
+    "enabled_note": "Owner, 21 Oct: the 'Ask TESERACT' chat on every page (launcher bottom right). false removes the launcher, chat files and knowledge base from the build.",
+    "booking_url": "",
+    "booking_url_note": "Optional https booking page (Calendly / Cal.com / Google appointments). Empty: 'Book a call' opens the contact form with the chat brief filled in. Opened only on the visitor's tap, in a new tab.",
+    "pricing": {
+      "base_currency": "INR",
+      "base_currency_note": "Prices are set in Indian rupees; other currencies are converted from these with the rates below.",
+      "website_from": 35000,
+      "website_from_note": "Owner, 21 Oct: a standard website (a landing page / one-page site counts as a website - owner to confirm) STARTS FROM INR 35,000; pages, features and interactions, content and copy, design detail and integrations change it. The only website price the chat may show, always after 'the final price depends on scope'.",
+      "ecommerce_from": 50000,
+      "ecommerce_from_note": "Owner, 21 Oct: an e-commerce website STARTS FROM INR 50,000; products, categories, payments and checkout, shipping and features change it. The only e-commerce price the chat may show.",
+      "rates": {"EUR": 100, "GBP": 115, "USD": 88, "AED": 24, "CAD": 63, "AUD": 57, "SGD": 67},
+      "rates_note": "INR per 1 unit. APPROXIMATE static rates proposed 21 Oct for the owner to confirm; nothing is looked up live. Shown as 'about ...', rounded to round_to, with the rupee price alongside.",
+      "rates_date": "2026-10-21",
+      "rates_date_note": "When the rates were set; the chat says 'approximate rate (October 2026)'. check.py warns 90 days after it.",
+      "rates_confirmed": false,
+      "rates_confirmed_note": "Set true once the owner has checked the rates. False = check.py warning now, error in a launch build (indexable or site_url set).",
+      "round_to": 10,
+      "round_to_note": "Converted prices are rounded half-up to this step (35,000 / 115 = 304.3 -> about £300)."
+    }
+  }
 }

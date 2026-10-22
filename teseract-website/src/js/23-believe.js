@@ -31,6 +31,7 @@
     block.classList.add('is-ink');
 
     let raf = 0, last = -1, listening = false;
+    // in a frame: the reads, then the one write (called at load time it laid out the page inside app.js's first task)
     const update = () => {
       raf = 0;
       const r = block.getBoundingClientRect();
@@ -49,7 +50,7 @@
       }, { rootMargin: '20% 0px 20% 0px' }).observe(block);
     } else addEventListener('scroll', request, { passive: true });
     addEventListener('resize', request);
-    update();
+    request();
   }
 
   const easeOut = t => (t >= 1 ? 1 : 1 - Math.pow(1 - t, 3));   // cubic: the digits visibly tick, then settle
