@@ -556,3 +556,45 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   questions (defaults 2-4, Sedile 6 / 9, micro-labels 11), the six live pages' hub title, Maren Holt's book-spines photo,
   the Unsplash hotlinks, landscape phones (the 800-1199 layout) without the approach tagline / phone circuit rail, the
   desktop approach wire dots looping, a ~0.003 font-swap shift on What We Create's first uncached load, a real iPhone.
+- DONE 24 Oct (site chatbot fixes): every finding the 22 Oct review confirmed is fixed (TP-01..17, PUX-1..6, A11Y-1..6,
+  PERF-1, PRIV-1; TP-18, PUX-7 and PERF-2 were refuted). Currency from the device only: a word in a message ("us",
+  "Indian", "French", "London") never switches it - a typed place only offers a "Prices in <currency>" chip; "show prices
+  in euros" / "in dollars" and the switcher still change it; paying or invoicing in a currency gets "not covered". Prices
+  stay the config's two (from Rs 35,000 / 50,000, converted "about"). An app, AI, brand, 3D or strategy question that says
+  "business" no longer gets the website price; counts, years, product prices and quoted prices are no budget; a budget is
+  compared in the visitor's own currency; the intake reads bare answers ("8", "five", "1000", "50k", "1 lakh", "about 50
+  products") and never restarts; "Ask Gireesh" carries the question into the form; FAQ "Where do you work?" for
+  "based in / clients in / internationally"; project prices add "Gireesh can scope it with you" + Book a call; 3D before
+  brand; launch day, only person, success rate, marketing, free consultation, guarantee answered right; the search skips
+  generic words; "Gireesh's designer portfolio", "ONE PIECE (Luffy)", "AI creative ..." in sentences; the "Got it" echo
+  for stores; hotel -> AeroSkys + Hidden Stories; Vynk compares with the e-commerce start; the Send button is called
+  "Send" again (a duplicate CHAT 'send' key). Launcher: tucks over every CTA, the stories' Next client, the Create taps and
+  video Play controls (0 of 25 points covered at 360 / 390), takes no taps while tucked, stays in the Tab order (the
+  keyboard reaches it at the page's end; focused it shows in a clear gap), never parks or talks over text (on the 390
+  home first screen it now hops in place), and the X / Esc / the page's Pause motion keep it still for the visit (WCAG
+  2.2.2). Screen readers hear every card; focus never falls to the page (chips, the bubble X, the contact Clear). Chat
+  sheet: the brief strip no longer hides the newest chips, the store answer comes in two turns (price on screen), 44 px
+  From links and strip. One steady compositor layer: 0 long tasks after load on home, Aivinci and Derlin Haus (390@3, 4x
+  CPU; was 4-6). check.py now bans beacons, protocol-relative URLs and off-site CSS url() in the chat; the lazy chat.js
+  ceiling is 104 KB (99 KB, 33 KB gzip). Files: src/chat/10-engine.js, 20-flow.js, 30-ui.js, 40-chat.css,
+  src/js/40-chat.js, src/css/40-chat.css, src/js/35-contact.js, scripts/chat_kb.py, content.py (CHAT), chrome.py,
+  check.py, LAUNCH-CHECKLIST 3h (11)(12), _tools/chat-corpus.json (+24 lines), chat-live.cjs. build 39 routes, check.py 0
+  errors, qa.cjs all 39 routes x 1440/834/390 normal + reduced 0 problems, chat-test 211/212, chat-qa 0, font-check
+  Inter Tight only, no-JS 14/14. Open: the owner's 3h answers (rates, prices, copy, the home-screen hop), a real iPhone.
+- OWNER (25 Oct): the white/black scroll (22 Oct, like elokeglobal.com) must work on EVERY page, and every page STARTS BLACK
+  (after the logo intro), then white, then black, alternating as you scroll - this replaces the 22 Oct 'white base' start.
+- DONE 25 Oct (site chatbot, re-verify repairs): a price said back is never a budget ("35k is the starting price
+  right?", "is 35k the price for 10 pages", "is Rs 35,000 the minimum?", "what does 50k get me", "our revenue is 5
+  crore"); the budget question takes any amount, years included ("AED 2080", "2000"), and "fifty thousand"; "I can pay
+  40,000 rupees for a website" is a budget, "can I pay in euros" stays "not covered"; a website / landing page / store asked
+  with ads, marketing or copywriting gets the website answer (+ "Ask Gireesh"), ads alone still "not covered"; "are you in
+  the UK" -> "Where do you work?"; on a device whose region is unknown a typed country switches the currency (SPEC), a
+  known region still only offers the chip (owner: 3h(12)). Chat sheet: a long answer (the store) shows from its start with
+  a "More below" button to the price and the next question (new CHAT 'more_below'); screen readers hear the whole answer
+  once; the From link no longer overlaps "View project" or the project cards. Launcher: the greeting folds on scroll (it sat
+  over a link), a pause toggle the 60 px lift doesn't clear tucks it, a focused launcher is never invisible (it shows in a
+  clear gap while tucked, also after scrolling), taken spots are not re-tested every hop and its cues animate transform
+  only (fewer long tasks on the phone home). Owner decision still open (3h): the phone home first screen (360 / 390 / 430)
+  has no clear spot, so there it only hops in place; 844 x 390 home glides without lines. Files: src/chat/10-engine.js,
+  20-flow.js, 30-ui.js, 40-chat.css, src/js/40-chat.js, src/css/40-chat.css, content.py (CHAT more_below),
+  LAUNCH-CHECKLIST 3h (12), _tools/chat-corpus.json (+14 lines, 226).

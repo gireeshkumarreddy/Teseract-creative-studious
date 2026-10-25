@@ -1,15 +1,16 @@
 /* TESERACT chat — generated from src/chat. Edit the partials, not this file. */
-window.__CC={"copy":{"name":"Ask TESERACT","launcher_label":"Ask TESERACT, opens the chat","launcher_label_resume":"Ask TESERACT, continue the chat","launcher_nojs":"Contact TESERACT","pill":"Ask TESERACT","pill_resume":"Continue the chat","title":"TESERACT","status":"Studio assistant · answers from this website","placeholder":"Ask about prices, our work, the process...","input_label":"Your message","send":"Here's what I'll put in the form:","close":"Close the chat","restart":"Start over","restart_ask":"Start over? This clears the chat and your brief.","privacy_line":"Your chat stays in this browser tab. Nothing is sent unless you send it.","from":"From: {page}","kb_fail":"I can't load my notes right now. You can reach Gireesh at {email} or through the contact form.","you":"You","options":"Options:","brief_title":"Your brief","change":"change","copy":"Copy","copied":"Copied.","new_tab":"(opens in a new tab)","hello":{"home":"Planning a website? I can tell you what it starts from and how we work.","stories":"Planning a website? I can tell you what it starts from and how we work.","create":"Not sure which service you need? I can help you work it out.","approach":"Questions about how a project runs? Ask me.","who":"Want to know about Gireesh or how we work? Ask me.","work":"Like what you see? Ask me about any project, or what a site like it starts from.","project":"Like {project}? I can tell you what a site like it starts from."},"hello_chips":["What does a website cost?","Ask a question"],"hello_dismiss":"Dismiss","say":["Hi, I'm the TESERACT assistant. Ask me anything about the studio.","Planning a website? Ask me about prices.","Curious what we build? Ask me.","Selling online? Ask me about online stores.","Want to know how a project runs? Ask me.","I answer from this website. Anything else goes to Gireesh."],"ask_label":"Ask","welcome":["Hi. I'm the TESERACT assistant, and I answer from what's on this website.","For anything I can't answer, I'll put you in touch with Gireesh, the person behind TESERACT. What can I help you with?"],"welcome_project":"You're looking at {project}: {industry}, {label_phrase}.","label_phrase":{"client":"a client project","concept":"a concept project","interactive":"an interactive concept","personal":"a personal project"},"welcome_contact":"Your brief is in the form below. Add your name and email, then press Start the conversation.","chips":{"prices":"Prices","create":"What we create","process":"Our process","work":"See our work","founder":"Who is Gireesh?","book":"Book a call","like":"A site like this","ask_gireesh":"Ask Gireesh","something_else":"Something else","that_helps":"That helps","pass":"Pass it to Gireesh","show_email":"Show me the email","keep":"Keep chatting","back_start":"Back to start","back_brief":"Back to my brief","send_brief":"Send my brief","ask_else":"Ask something else","quote":"Get a quote","other_prices":"Other prices","more_work":"More work","see_project":"See {project}","cost_site":"What does a website cost?","cost_store":"What does a store cost?","story":"Read his story","why":"Why TESERACT exists","talk":"Talk to Gireesh","involved":"How involved will we be?","after_launch":"What happens after launch?","how_long":"How long does it take?","see_create":"See it on What We Create","change_cur":"Change currency","open_form":"Open the form with my brief","open_form_short":"Open the form","copy_brief":"Copy my brief","email_instead":"Email it instead","pick_time":"Pick a time","by_form":"Send it by form instead","done":"Done","stories_link":"Client Stories","view":"View project"},"choices":{"type":["A website","A landing page","An online store","A product or app","Not sure yet"],"pages":["One page","2 to 5","6 to 10","More than 10","Not sure"],"needs":["Motion and interactions","3D","A CMS to edit it yourself","Forms or booking","Other integrations","Help with content and copy","None of these"],"time":["Within a month","1 to 3 months","3 to 6 months","Flexible"],"budget":["Not sure yet","Let's discuss","Skip"],"region":["India","UK","Europe","US","UAE","Canada","Australia","Singapore","Somewhere else"],"products":["Under 20","20 to 100","100 to 500","More than 500","Not sure"],"categories":["1 to 3","4 to 10","More than 10","Not sure"],"store":["Online payments","Shipping and delivery","Coupons and offers","Sizes or variants","Order management","Editing products yourself","Not sure yet"],"service":["Product & SaaS","AI & Automation","Interactive & 3D","Brand & Digital Identity","Digital Strategy"],"filters":["Client work","Online stores","SaaS concepts","Concepts","Everything"],"restart":["Start over","Keep chatting"],"dollars":["US$","CA$","A$","S$"]},"p0":["Good question to ask early.","So the final price depends on the scope, mainly:"],"factors_web":["How many pages you need","Features and interactions, like motion or 3D","Content and copy","How detailed the design is","Integrations, like a CMS, forms or payments"],"p0_ask":"What are you planning?","price_label_w":"Websites start from","price_label_e":"E-commerce websites start from","about":"about","price_sub_inr":"The final price depends on your scope.","price_sub_cur":"Converted from {X_inr} at an approximate rate ({rates_month}). The final price depends on your scope.","price_sub_unknown":"I couldn't tell your region from this device, so this is in rupees, with US dollars alongside.","cur_note":"I've shown {cur_name} based on this device's region settings. You can change it any time.","cur_note_near":"I've shown euros, the closest currency I can show for your region. You can change it any time.","w_after":"That's a starting point, not a quote. A few quick questions, so Gireesh can tell you where yours would land.","q_pages":"Roughly how many pages?","q_needs":"Anything special it needs? Choose any, then Done.","q_time":"And when would you like it live?","q_budget":"Do you have a budget in mind? It helps Gireesh suggest the right scope. Type an amount, or choose one of these.","q_region":"Where are you based? I'll show prices in your currency.","e_intro":"Online stores take more to design and build, because every step has to work.","included_label":"Our e-commerce service includes","included_work":"E-commerce in our work:","e_after":"Where it lands depends on the number of products and categories, payments and checkout, shipping, and the features you need.","q_products":"How many products will you start with?","q_categories":"And roughly how many categories?","q_store":"What should the store handle? Choose any, then Done.","s_intro":"We also design products and SaaS, AI and automation, interactive and 3D experiences, brand identity and digital strategy. These are priced on scope alone, so there isn't a starting price I can honestly give you.","q_service":"Which is closest?","service_includes":"It can include","s_close":"Gireesh can scope it with you and send a quote.","n_scale":"For a sense of scale, websites start from {W} and online stores from {E}. The final price always depends on the scope.","q_idea":"In a sentence or two, what would you like it to do?","echo":"Got it: {parts}.","budget_low":"Thanks for being upfront. {Xs} start from {X}, so that's below where we usually begin. Gireesh can tell you honestly what's possible, so it's still worth a conversation.","budget_low_w":"Websites","budget_low_e":"Online stores","budget_ok":"Thanks, that's a good starting point for a conversation. The exact quote depends on the scope.","budget_s":"Thanks, I'll add that to your brief.","summary":"Thanks. Here's your brief so far:","next_step":"The best next step is a short call, or send us this brief and Gireesh will come back to you with a quote.","brief_rows":{"type":"Looking for","service":"Service","pages":"Pages","products":"Products","categories":"Categories","needs":"Needs","timeline":"Timeline","budget":"Budget","cur":"Prices shown in","similar":"Similar to","idea":"Your idea","questions":"Your questions"},"type_names":{"W":"A website","L":"A landing page","E":"An online store","S":"A product or app","N":"Not sure yet"},"strip_names":{"W":"Website","L":"Landing page","E":"Online store","S":"Product or app","N":"Not sure yet"},"echo_words":{"pages":"pages","products":"products","categories":"categories","about":"about","live":"live","budget":"budget"},"pp_client":"I can't share what a client paid, and every project is priced on its own scope. {project} ({industry}) is a client project, so a site like it would start from {X}, depending on {factors}.","pp_factors_w":"pages, features and content","pp_factors_e":"products, categories, checkout and features","pp_concept":"{project} is one of our concept projects, so there's no client price behind it. A site like it would start from {W}, or {E} if it needs to sell online.","pp_concept_e":"{project} is one of our concept projects, so there's no client price behind it. A store like it would start from {E}.","pp_personal":"{project} is one of Gireesh's personal projects, so there's no client price behind it. A site like it would start from {W}.","pp_saas":"{project} is a concept project. Product & SaaS work is priced on scope, so there's no starting price I can give you for the product. A marketing website like it starts from {W}.","included_in_start":"The starting price isn't a fixed package. What's included is shaped around your project, and your quote will set out what it covers.","discount":"Prices follow the scope, so the best way to fit a budget is to shape the scope around it. Add your budget to your brief, and Gireesh will tell you what's possible.","free":"Every project is priced on its scope. Websites start from {W} and online stores from {E}.","timeline":"It depends on the scope, so I'd rather not guess. Every project goes through the same nine steps, from Understand to Evolve, and Gireesh will give you a timeline with your quote.","maintenance":"What that costs isn't listed on this website, so Gireesh can tell you directly.","cur_switched":"Done. Prices now show in {cur_name}.","cur_country":"Showing prices in {cur_name} for {country}.","cur_unsupported":"I can show prices in rupees, euros, pounds, US dollars, UAE dirhams, and Canadian, Australian and Singapore dollars. I've kept {cur_name}.","cur_which":"Which dollars?","work_count":"There are {n_client} client projects and {n_other} concept and personal projects on this website.","no_industry":"There isn't a {word} project on this site yet.","no_industry_any":"There isn't a project like that on this site yet.","contact":"The quickest way to reach Gireesh is the contact form, or email {email}.","phone":"There's no phone number on this website. The quickest way to reach Gireesh is the contact form or email.","seo":"SEO isn't listed as a separate service on this website. Digital Strategy covers Website Strategy, Content Structure and Conversion Strategy. For SEO itself, Gireesh can tell you more.","logo":"Logo design isn't listed on its own. Brand & Digital Identity covers Typography, Colour Systems, Visual Direction, Digital Identity, Design Systems and Brand Guidelines.","bot":"I'm an automated assistant that answers from this website. I'm not Gireesh, but anything I can't answer can go to him.","chat_privacy":"Nothing you type here leaves this browser tab unless you send the contact form.","personal":"No need to share contact details here. You'll add them on the contact form when you're ready.","hi":"Hello. What can I help you with?","thanks":"You're welcome. Anything else?","bye":"Thanks for stopping by. Your chat stays in this tab if you come back.","off_topic":"I'm here for questions about the studio and its work. What can I help you with?","else":"Of course. What would you like to know?","clients_count":"The Work page shows {n_client} client projects, from {first} to {another}.","maybe":"Did you mean one of these?","search":"This is the closest I found on the site:","miss1":"I'm not sure I've understood, and I only answer from what's on this website, so I'd rather not guess. Could you put it another way, or pick one of these?","miss2":"This one is best answered by Gireesh himself. I can add your question to the contact form, and you send it when you're ready.","nodata":"That isn't covered on this website, so I don't want to guess. Gireesh can answer it directly.","book":"Happy to set that up. Send your brief through the contact form and say when suits you for a call. Gireesh will come back to you to arrange it.","book_url":"Here's where you can pick a time with Gireesh. I've put your brief together, so you can paste it into the booking notes.","send_after":"Add your name and email on the next page, check everything, and press Start the conversation. Nothing is sent until you do.","or_write":"Or write to {email}","email_subject":"Project brief from the website chat","prefill_note":"Filled in from your chat. Add your name and email, check the details, and send.","prefill_clear":"Clear","idea_template":{"head":"Hi Gireesh, here's my brief from the chat on your website.","type":"Looking for: {v}","service":"Service: {v}","pages":"Pages: {v}","products":"Products: {v}","categories":"Categories: {v}","needs":"Needs: {v}","timeline":"Timeline: {v}","budget":"Budget: {v}","cur":"Prices seen in: {v}","similar":"Similar to: {v}","questions":"My questions: {v}","idea":"My idea: {v}"}},"mark":{"c":{"d":"M50 0.73 L92.11 73.66 L7.89 73.66Z","o":"50.00% 49.35%","n":"0,-1"},"l":{"d":"M6.14 24.03 L47.76 0 L6.14 55.27Z","o":"20.01% 26.43%","n":"-.786,-.618"},"r":{"d":"M66.81 8.41 L93.86 24.03 L93.86 72.09Z","o":"84.84% 34.84%","n":".917,-.399"},"b":{"d":"M8.38 75.97 L77.05 84.38 L50 100Z","o":"45.14% 86.78%","n":"-.131,.991"}}};
+window.__CC={"copy":{"name":"Ask TESERACT","launcher_label":"Ask TESERACT, opens the chat","launcher_label_resume":"Ask TESERACT, continue the chat","launcher_nojs":"Contact TESERACT","pill":"Ask TESERACT","pill_resume":"Continue the chat","title":"TESERACT","status":"Studio assistant · answers from this website","placeholder":"Ask about prices, our work, the process...","input_label":"Your message","send":"Send","close":"Close the chat","restart":"Start over","restart_ask":"Start over? This clears the chat and your brief.","privacy_line":"Your chat stays in this browser tab. Nothing is sent unless you send it.","from":"From: {page}","kb_fail":"I can't load my notes right now. You can reach Gireesh at {email} or through the contact form.","you":"You","options":"Options:","more_below":"More below","brief_title":"Your brief","change":"change","copy":"Copy","copied":"Copied.","new_tab":"(opens in a new tab)","hello":{"home":"Planning a website? I can tell you what it starts from and how we work.","stories":"Planning a website? I can tell you what it starts from and how we work.","create":"Not sure which service you need? I can help you work it out.","approach":"Questions about how a project runs? Ask me.","who":"Want to know about Gireesh or how we work? Ask me.","work":"Like what you see? Ask me about any project, or what a site like it starts from.","project":"Like {project}? I can tell you what a site like it starts from."},"hello_chips":["What does a website cost?","Ask a question"],"hello_dismiss":"Dismiss","say":["Hi, I'm the TESERACT assistant. Ask me anything about the studio.","Planning a website? Ask me about prices.","Curious what we build? Ask me.","Selling online? Ask me about online stores.","Want to know how a project runs? Ask me.","I answer from this website. Anything else goes to Gireesh."],"ask_label":"Ask","welcome":["Hi. I'm the TESERACT assistant, and I answer from what's on this website.","For anything I can't answer, I'll put you in touch with Gireesh, the person behind TESERACT. What can I help you with?"],"welcome_project":"You're looking at {project}: {industry}, {label_phrase}.","welcome_self":"You're looking at {project}, one of his personal projects.","label_phrase":{"client":"a client project","concept":"a concept project","interactive":"an interactive concept","personal":"a personal project"},"welcome_contact":"Your brief is in the form below. Add your name and email, then press Start the conversation.","chips":{"prices":"Prices","create":"What we create","process":"Our process","work":"See our work","founder":"Who is Gireesh?","book":"Book a call","like":"A site like this","ask_gireesh":"Ask Gireesh","something_else":"Something else","that_helps":"That helps","pass":"Pass it to Gireesh","show_email":"Show me the email","keep":"Keep chatting","back_start":"Back to start","show_cur":"Prices in {cur_name}","back_brief":"Back to my brief","send_brief":"Send my brief","ask_else":"Ask something else","quote":"Get a quote","other_prices":"Other prices","more_work":"More work","see_project":"See {project}","cost_site":"What does a website cost?","cost_store":"What does a store cost?","story":"Read his story","why":"Why TESERACT exists","talk":"Talk to Gireesh","involved":"How involved will we be?","after_launch":"What happens after launch?","how_long":"How long does it take?","see_create":"See it on What We Create","change_cur":"Change currency","open_form":"Open the form with my brief","open_form_short":"Open the form","copy_brief":"Copy my brief","email_instead":"Email it instead","pick_time":"Pick a time","by_form":"Send it by form instead","done":"Done","stories_link":"Client Stories","view":"View project"},"choices":{"type":["A website","A landing page","An online store","A product or app","Not sure yet"],"pages":["One page","2 to 5","6 to 10","More than 10","Not sure"],"needs":["Motion and interactions","3D","A CMS to edit it yourself","Forms or booking","Other integrations","Help with content and copy","None of these"],"time":["Within a month","1 to 3 months","3 to 6 months","Flexible"],"budget":["Not sure yet","Let's discuss","Skip"],"region":["India","UK","Europe","US","UAE","Canada","Australia","Singapore","Somewhere else"],"products":["Under 20","20 to 100","100 to 500","More than 500","Not sure"],"categories":["1 to 3","4 to 10","More than 10","Not sure"],"store":["Online payments","Shipping and delivery","Coupons and offers","Sizes or variants","Order management","Editing products yourself","Not sure yet"],"service":["Product & SaaS","AI & Automation","Interactive & 3D","Brand & Digital Identity","Digital Strategy"],"filters":["Client work","Online stores","SaaS concepts","Concepts","Everything"],"restart":["Start over","Keep chatting"],"dollars":["US$","CA$","A$","S$"]},"p0":["Good question to ask early.","So the final price depends on the scope, mainly:"],"factors_web":["How many pages you need","Features and interactions, like motion or 3D","Content and copy","How detailed the design is","Integrations, like a CMS, forms or payments"],"p0_ask":"What are you planning?","price_label_w":"Websites start from","price_label_e":"E-commerce websites start from","about":"about","price_sub_inr":"The final price depends on your scope.","price_sub_cur":"Converted from {X_inr} at an approximate rate ({rates_month}). The final price depends on your scope.","price_sub_unknown":"I couldn't tell your region from this device, so this is in rupees, with US dollars alongside.","cur_note":"I've shown {cur_name} based on this device's region settings. You can change it any time.","cur_note_near":"I've shown euros, the closest currency I can show for your region. You can change it any time.","w_after":"That's a starting point, not a quote. A few quick questions, so Gireesh can tell you where yours would land.","q_pages":"Roughly how many pages?","q_needs":"Anything special it needs? Choose any, then Done.","q_time":"And when would you like it live?","q_budget":"Do you have a budget in mind? It helps Gireesh suggest the right scope. Type an amount, or choose one of these.","q_region":"Where are you based? I'll show prices in your currency.","e_intro":"Online stores take more to design and build, because every step has to work.","included_label":"Our e-commerce service includes","included_work":"E-commerce in our work:","e_after":"Where it lands depends on the number of products and categories, payments and checkout, shipping, and the features you need.","q_products":"How many products will you start with?","q_categories":"And roughly how many categories?","q_store":"What should the store handle? Choose any, then Done.","s_intro":"We also design products and SaaS, AI and automation, interactive and 3D experiences, brand identity and digital strategy. These are priced on scope alone, so there isn't a starting price I can honestly give you.","q_service":"Which is closest?","service_includes":"It can include","s_close":"Gireesh can scope it with you and send a quote.","n_scale":"For a sense of scale, websites start from {W} and online stores from {E}. The final price always depends on the scope.","q_idea":"In a sentence or two, what would you like it to do?","echo":"Got it: {parts}.","budget_low":"Thanks for being upfront. {Xs} start from {X}, so that's below where we usually begin. Gireesh can tell you honestly what's possible, so it's still worth a conversation.","budget_low_w":"Websites","budget_low_e":"Online stores","budget_ok":"Thanks, that's a good starting point for a conversation. The exact quote depends on the scope.","budget_s":"Thanks, I'll add that to your brief.","summary":"Thanks. Here's your brief so far:","next_step":"The best next step is a short call, or send us this brief and Gireesh will come back to you with a quote.","brief_rows":{"type":"Looking for","service":"Service","pages":"Pages","products":"Products","categories":"Categories","needs":"Needs","timeline":"Timeline","budget":"Budget","cur":"Prices shown in","similar":"Similar to","idea":"Your idea","questions":"Your questions"},"type_names":{"W":"A website","L":"A landing page","E":"An online store","S":"A product or app","N":"Not sure yet"},"strip_names":{"W":"Website","L":"Landing page","E":"Online store","S":"Product or app","N":"Not sure yet"},"echo_words":{"pages":"pages","products":"products","categories":"categories","about":"about","live":"live","budget":"budget"},"pp_client":"I can't share what a client paid, and every project is priced on its own scope. {project} ({industry}) is a client project, so a site like it would start from {X}, depending on {factors}.","pp_factors_w":"pages, features and content","pp_factors_e":"products, categories, checkout and features","pp_concept":"{project} is one of our concept projects, so there's no client price behind it. A site like it would start from {W}, or {E} if it needs to sell online.","pp_concept_e":"{project} is one of our concept projects, so there's no client price behind it. A store like it would start from {E}.","pp_personal":"{project} is one of Gireesh's personal projects, so there's no client price behind it. A site like it would start from {W}.","pp_personal_self":"{project} is one of his personal projects, so there's no client price behind it. A site like it would start from {W}.","pp_saas":"{project} is a concept project. Product & SaaS work is priced on scope, so there's no starting price I can give you for the product. A marketing website like it starts from {W}.","included_in_start":"The starting price isn't a fixed package. What's included is shaped around your project, and your quote will set out what it covers.","discount":"Prices follow the scope, so the best way to fit a budget is to shape the scope around it. Add your budget to your brief, and Gireesh will tell you what's possible.","free":"Every project is priced on its scope. Websites start from {W} and online stores from {E}.","timeline":"It depends on the scope, so I'd rather not guess. Every project goes through the same nine steps, from Understand to Evolve, and Gireesh will give you a timeline with your quote.","maintenance":"What that costs isn't listed on this website, so Gireesh can tell you directly.","cur_switched":"Done. Prices now show in {cur_name}.","cur_country":"Showing prices in {cur_name} for {country}.","cur_offer":"Prices follow this device's region settings, so they're still in {cur_now}. You can see them in {cur_name} instead.","cur_unsupported":"I can show prices in rupees, euros, pounds, US dollars, UAE dirhams, and Canadian, Australian and Singapore dollars. I've kept {cur_name}.","cur_which":"Which dollars?","work_count":"There are {n_client} client projects and {n_other} concept and personal projects on this website.","no_industry":"There isn't a {word} project on this site yet.","no_industry_any":"There isn't a project like that on this site yet.","contact":"The quickest way to reach Gireesh is the contact form, or email {email}.","phone":"There's no phone number on this website. The quickest way to reach Gireesh is the contact form or email.","seo":"SEO isn't listed as a separate service on this website. Digital Strategy covers Website Strategy, Content Structure and Conversion Strategy. For SEO itself, Gireesh can tell you more.","logo":"Logo design isn't listed on its own. Brand & Digital Identity covers Typography, Colour Systems, Visual Direction, Digital Identity, Design Systems and Brand Guidelines.","bot":"I'm an automated assistant that answers from this website. I'm not Gireesh, but anything I can't answer can go to him.","chat_privacy":"Nothing you type here leaves this browser tab unless you send the contact form.","personal":"No need to share contact details here. You'll add them on the contact form when you're ready.","hi":"Hello. What can I help you with?","thanks":"You're welcome. Anything else?","bye":"Thanks for stopping by. Your chat stays in this tab if you come back.","off_topic":"I'm here for questions about the studio and its work. What can I help you with?","else":"Of course. What would you like to know?","clients_count":"The Work page shows {n_client} client projects, from {first} to {another}.","maybe":"Did you mean one of these?","search":"This is the closest I found on the site:","miss1":"I'm not sure I've understood, and I only answer from what's on this website, so I'd rather not guess. Could you put it another way, or pick one of these?","miss2":"This one is best answered by Gireesh himself. I can add your question to the contact form, and you send it when you're ready.","nodata":"That isn't covered on this website, so I don't want to guess. Gireesh can answer it directly.","book":"Happy to set that up. Send your brief through the contact form and say when suits you for a call. Gireesh will come back to you to arrange it.","book_url":"Here's where you can pick a time with Gireesh. I've put your brief together, so you can paste it into the booking notes.","send_lead":"Here's what I'll put in the form:","send_after":"Add your name and email on the next page, check everything, and press Start the conversation. Nothing is sent until you do.","or_write":"Or write to {email}","email_subject":"Project brief from the website chat","prefill_note":"Filled in from your chat. Add your name and email, check the details, and send.","prefill_clear":"Clear","idea_template":{"head":"Hi Gireesh, here's my brief from the chat on your website.","type":"Looking for: {v}","service":"Service: {v}","pages":"Pages: {v}","products":"Products: {v}","categories":"Categories: {v}","needs":"Needs: {v}","timeline":"Timeline: {v}","budget":"Budget: {v}","cur":"Prices seen in: {v}","similar":"Similar to: {v}","questions":"My questions: {v}","idea":"My idea: {v}"}},"mark":{"c":{"d":"M50 0.73 L92.11 73.66 L7.89 73.66Z","o":"50.00% 49.35%","n":"0,-1"},"l":{"d":"M6.14 24.03 L47.76 0 L6.14 55.27Z","o":"20.01% 26.43%","n":"-.786,-.618"},"r":{"d":"M66.81 8.41 L93.86 24.03 L93.86 72.09Z","o":"84.84% 34.84%","n":".917,-.399"},"b":{"d":"M8.38 75.97 L77.05 84.38 L50 100Z","o":"45.14% 86.78%","n":"-.131,.991"}}};
 (() => {
 'use strict';
 const G = globalThis;
 const STOP = new Set(('a an the is are am was were be been being i me my mine we us you your yours it its this that these those of to in on for with at by from and or so if can could would will shall should may might please pls plz there here what which how any some about just also like want wanted need get got have has had tell let know kindly ok okay yeah yes really very much bit sir madam bro then than our ours their them they he she his her as into up every look im ive id dont lets').split(' '));
 const SYN = {cost:'price',charge:'price',charg:'price',fee:'price',rate:'price',pricing:'price',quote:'price',quotation:'price',estimate:'price',estimat:'price',how_much:'price',costing:'price',kitna:'price',kitne:'price',kitni:'price',keemat:'price',kimat:'price',daam:'price',dam:'price',kharcha:'price',entha:'price',enta:'price',enti:'price',evlo:'price',evvalavu:'price',evvalo:'price',lagega:'price',lagta:'price',paisa:'price',tariff:'price',prise:'price',pirce:'price',
-site:'website',webpage:'website',web:'website',websit:'website',webiste:'website',wesite:'website',websiet:'website',homepage:'website',store:'ecommerce',shop:'ecommerce',shopping:'ecommerce',dukaan:'ecommerce',dukan:'ecommerce',eshop:'ecommerce',estore:'ecommerce',commerce:'ecommerce',ecomerce:'ecommerce',
+site:'website',webpage:'website',web:'website',websit:'website',webiste:'website',wesite:'website',websiet:'website',homepage:'website',amazon:'ecommerce',flipkart:'ecommerce',myntra:'ecommerce',etsy:'ecommerce',meesho:'ecommerce',store:'ecommerce',shop:'ecommerce',shopping:'ecommerce',dukaan:'ecommerce',dukan:'ecommerce',eshop:'ecommerce',estore:'ecommerce',commerce:'ecommerce',ecomerce:'ecommerce',
 application:'app',webapp:'app',software:'saas',platform:'saas',owner:'founder',ceo:'founder',boss:'founder',cofounder:'founder',does:'do',did:'do',doing:'do',example:'work',sample:'work',showcase:'work',staff:'team',employee:'team',chatbot:'ai',artificial:'ai',automate:'automation',automated:'automation',mail:'email',gmail:'email',telephone:'phone',mobile:'phone',whatsapp:'phone',animation:'motion',animated:'motion',animate:'motion',branding:'brand',stage:'step',phase:'step',meeting:'call',meet:'call',appointment:'call',schedule:'call',zoom:'call',
 thank:'thanks',thx:'thanks',ty:'thanks',hello:'hi',hey:'hi',namaste:'hi',hii:'hi',helo:'hi',goodbye:'bye',located:'based',location:'based',situated:'based',jewelry:'jewellery',jeweller:'jewellery',jewellers:'jewellery',jewelers:'jewellery',sari:'saree',perfume:'fragrance',drink:'beverage',cv:'resume',job:'jobs',hiring:'jobs',vacancy:'jobs',internship:'jobs',career:'careers',
 timeline:'time',duration:'time',turnaround:'time',deadline:'time',week:'time',month:'time',day:'time',how_long:'time',cheaper:'discount',cheapest:'discount',lowest:'discount',negotiate:'discount',bargain:'discount',deal:'discount',reduce:'discount',lower:'discount',concession:'discount',invoice:'gst',tax:'gst',billing:'gst',wordpress:'stack',react:'stack',webflow:'stack',framer:'stack',nextjs:'stack',technology:'stack',tech:'stack',framework:'stack',wix:'template',squarespace:'template',theme:'template',templat:'template',host:'hosting',server:'hosting',emi:'installment',instalment:'installment',advance:'installment',upfront:'installment',deposit:'installment',maintain:'maintenance',maintenanc:'maintenance',amc:'maintenance',upkeep:'maintenance',office:'address',visit:'address',tesseract:'teseract',teserract:'teseract',includ:'include',contain:'include',cover:'include',seo:'seo'};
-const CONCEPTS = {PRICE:'price pay paid expensive afford affordable invest investment cheap spend',BUDGET:'budget spend afford',ECOM:'ecommerce sell cart checkout shopify woocommerce catalogue catalog inventory sku',SITE:'website landing portfolio page blog business corporate cms one_pager',SAAS:'saas app dashboard mvp product tool crm portal',AI:'ai automation gpt llm agent',THREE_D:'3d motion interactive webgl',BRAND:'brand logo identity typography guideline',STRAT:'strategy seo research positioning',TIME:'time fast quick quickly asap urgent urgently finish deliver delivery',CALL:'call book talk discuss speak consult consultation',CONTACT:'contact email reach phone number social instagram linkedin github',WORK:'work portfolio case client built made',DISCOUNT:'discount less',INCLUDE:'include'};
+const CONCEPTS = {PRICE:'price pay paid expensive afford affordable invest investment cheap spend',BUDGET:'budget spend afford',ECOM:'ecommerce sell cart checkout shopify woocommerce catalogue catalog inventory sku',SITE:'website landing portfolio page blog cms one_pager',SAAS:'saas app dashboard mvp tool crm portal',AI:'ai automation gpt llm agent',THREE_D:'3d motion interactive webgl',BRAND:'brand logo identity typography guideline',STRAT:'strategy seo research positioning',TIME:'time fast quick quickly asap urgent urgently finish deliver delivery',CALL:'call book talk discuss speak consult consultation',CONTACT:'contact email reach phone number social instagram linkedin github',WORK:'work portfolio case client built made',DISCOUNT:'discount less',INCLUDE:'include'};
+const NUMW = {one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,fifteen:15,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90};
 const NUM = {one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fifteen:15,twenty:20,single:1};
 const MONTHS = 'january february march april may june july august september october november december'.split(' ');
 const norm = s => {
@@ -17,12 +18,14 @@ s = ' ' + String(s || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036
 s = s.replace(/(\d),(?=\d)/g, '$1')
 .replace(/us\$|\busd\b/g, ' _usd ').replace(/ca\$|\bcad\b/g, ' _cad ').replace(/a\$|\baud\b/g, ' _aud ').replace(/s\$|\bsgd\b/g, ' _sgd ')
 .replace(/₹|\brs\.?(?=[\s\d])|\binr\b|\brupees?\b|\brupaye\b/g, ' _inr ').replace(/€|\beur\b|\beuros?\b/g, ' _eur ')
-.replace(/£|\bgbp\b|\bpounds?\b|\bquid\b/g, ' _gbp ').replace(/\baed\b|\bdirhams?\b/g, ' _aed ').replace(/\$|\bdollars?\b|\bbucks\b/g, ' _dol ')
-.replace(/(\d+(?:\.\d+)?)\s*(k|thousand|lakhs?|lacs?|l|cr|crores?)\b/g, (m, n, u) => ' ' + Math.round(+n * (u[0] === 'k' || u[0] === 't' ? 1e3 : u[0] === 'c' ? 1e7 : 1e5)) + ' ')
+.replace(/£|\bgbp\b|\bpounds?\b|\bquid\b/g, ' _gbp ').replace(/\baed\b|\baed(?=\d)|\bdirhams?\b/g, ' _aed ').replace(/\$|\bdollars?\b|\bbucks\b/g, ' _dol ')
+.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)\s+(?=(?:thousand|lakhs?|lacs?|crores?)\b)/g, (m, w) => NUMW[w] + ' ')
+.replace(/(\d+(?:\.\d+)?)\s*(k|thousand|lakhs?|lacs?|l|cr|crores?)\b/g, (m, n, u) => ' ' + Math.round(+n * (u[0] === 'k' || u[0] === 't' ? 1e3 : u[0] === 'c' ? 1e7 : 1e5)) + ' _k ')   // (_k: said as money)
 .replace(/n't\b/g, ' not').replace(/'re\b/g, ' are').replace(/'m\b/g, ' am').replace(/'ve\b/g, ' have').replace(/'ll\b/g, ' will').replace(/'d\b/g, ' would').replace(/'s\b/g, '')
 .replace(/\be[\s-]?commerce\b|\becom\b|\bonline (?:store|shop|business)s?\b|\bweb ?shops?\b|\be-?shops?\b/g, ' ecommerce ')
 .replace(/\bone[\s-]pager\b|\bsingle[\s-]page\b/g, ' one_pager ').replace(/\b3[\s-]?d\b|\bthree[\s-]?d\b/g, ' 3d ')
 .replace(/\bhow (much|long|many)\b/g, 'how_$1').replace(/\babu dhabi\b/g, 'abu_dhabi').replace(/\bsouth africa\b/g, 'south_africa')
+.replace(/\bnew york\b/g, 'new_york').replace(/\bunited (states|kingdom|arab emirates)\b/g, 'united_$1')
 .replace(/(\d+)\s*%/g, '$1 percent ').replace(/[^a-z0-9_\s]/g, ' ');
 return s.replace(/\s+/g, ' ').trim();
 };
@@ -30,7 +33,7 @@ const stem = w => w.length > 5 && w.endsWith('ing') ? w.slice(0, -3) : w.length 
 : w.length > 4 && w.endsWith('ies') ? w.slice(0, -3) + 'y' : w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w;
 const canon = w => SYN[w] || (w = stem(w), SYN[w] || w);
 const words = s => norm(s).split(' ').filter(Boolean);
-const tokens = s => words(s).filter(w => !STOP.has(w)).map(canon);
+const tokens = s => words(s).filter(w => !STOP.has(w) && w !== '_k').map(canon);
 const CON = {};
 Object.keys(CONCEPTS).forEach(k => CONCEPTS[k].split(' ').forEach(w => (CON[canon(w)] = CON[canon(w)] || []).push(k)));
 const concepts = toks => { const c = new Set(); toks.forEach(t => (CON[t] || []).forEach(k => c.add(k))); return c; };
@@ -116,15 +119,19 @@ const PAGES = ['One page', '2 to 5', '6 to 10', 'More than 10'];
 const PRODUCTS = ['Under 20', '20 to 100', '100 to 500', 'More than 500'];
 const CATS = ['1 to 3', '4 to 10', 'More than 10'];
 const num = w => /^\d+$/.test(w) ? +w : NUM[w];
-const slots = (raw, s, kb, active) => {
+const CU = '_(?:inr|eur|gbp|usd|aed|cad|aud|sgd|dol)', CURW = new RegExp('^' + CU + '$');
+const GETQ = new RegExp('\\bwhat (?:do|does|would|will|can|could) (?:(?:i|we|one|it) |(?:' + CU + ' )?\\d+ (?:_k )?(?:' + CU + ' )?)(?:get|include|cover|buy)\\b');
+const QUOTED = /^(?:(?:is|was|as) )?(?:the|your|ur|a) (?:(?:starting|start|minimum|min|base|lowest|usual|standard) )?(?:price|cost|rate|fee|charge|minimum|starting)\b/;
+const NOUN = /^(percent|off|each|per|pages?|products?|items?|skus?|categories|category|collections?|weeks?|months?|days?|hours?|years?|yrs?|screens?|employees?|staff|people|persons?|users?|members?|stores?|shops?|outlets?|branches?|locations?|cities|countries|customers?|clients?|followers?|visitors?|orders?|students?|rooms?|beds?|units?|pieces?|times|sq|sqft|km|kg)$/;
+const slots = (raw, s, kb, active, want) => {
 const o = {};
 if (/[^\s@]+@[^\s@]+\.[a-z]{2,}/i.test(raw) || (raw.replace(/\D/g, '').length >= 10 && /\+?\d[\d\s().-]{8,}\d/.test(raw))) { o.personal = 1; return o; }
 let m = /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty|single)\s*(?:to|or)?\s*(\d+)?\s*(?:pages?|screens?)\b/.exec(s);
 if (m && num(m[1])) { const n = Math.max(num(m[1]), +(m[2] || 0)); o.pages = bucket(n, [1, 5, 10], PAGES); o.pagesN = n; }
 else if (/\blanding\b|\bone_pager\b/.test(s)) { o.pages = 'One page'; o.pagesN = 1; }
-m = /\b(\d+)\s*(?:to\s*\d+\s*)?(?:products?|items?|skus?)\b/.exec(s);
-if (m) { o.productsN = +m[1]; o.products = bucket(+m[1], [19, 100, 500], PRODUCTS); }
-else if (/\b(?:a few|few|some) (?:products|items)\b/.test(s)) o.products = PRODUCTS[0];
+m = /\b(\d+)\s*(?:_k\s*)?(?:to\s*\d+\s*(?:_k\s*)?)?(?:products?|items?|skus?)\b/.exec(s);
+if (m) { o.productsN = +m[1]; o.products = bucket(o.productsN, [19, 100, 500], PRODUCTS); }
+else if (/\b(?:a few|few|some|a handful of) (?:products|items)\b/.test(s)) o.products = PRODUCTS[0];
 else if (/\bhundreds? of (?:products|items)\b/.test(s)) o.products = PRODUCTS[2];
 else if (/\bthousands? of (?:products|items)\b/.test(s)) o.products = PRODUCTS[3];
 m = /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s*(?:categories|category|collections?)\b/.exec(s);
@@ -138,24 +145,64 @@ o.timeText = `in ${m[1]} ${m[2]}`;
 else if (/\bnext month\b/.test(s)) o.timeline = 'Next month';
 else if (/\bthis year\b/.test(s)) o.timeline = 'This year';
 else if (/\b(flexible|no rush|no hurry|whenever)\b/.test(s)) o.timeline = 'Flexible';
-const ws = s.split(' ');
+const ws = s.split(' '), money = /\b(budget|budgets|spend|spending|afford)\b/.test(s);
+let best = null;
+if ((GETQ.test(s) || /\b(fixed|final|exact|confirm|correct|true)\b/.test(s)) && !money) return o;
 for (let i = 0; i < ws.length; i++) {
-if (!/^\d+$/.test(ws[i]) || /^(percent|off|pages?|products?|items?|categories|weeks?|months?|days?|screens?|years?)$/.test(ws[i + 1] || '')) continue;
-const n = +ws[i], cur = [ws[i - 1], ws[i + 1]].find(w => /^_(inr|eur|gbp|usd|aed|cad|aud|sgd|dol)$/.test(w || ''));
-const near = /\b(budget|spend|have|around|about|upto|up to|max|maximum|under|below|within|for|only|just|pay|afford)\b/.test(s);
-if ((cur || (near && (n >= 100 || /\d{3}/.test(ws[i])))) && n >= 50) {
+if (!/^\d+$/.test(ws[i])) continue;
+const n = +ws[i], k = ws[i + 1] === '_k', j = i + (k ? 2 : 1);
+let cur = [ws[i - 1], ws[j]].find(w => CURW.test(w || '')), at = cur && cur === ws[j] ? j + 1 : j;
+const before = ws.slice(Math.max(0, i - 3), i).join(' ');
+if (/^(in|to|into)$/.test(ws[at] || '') && CURW.test(ws[at + 1] || '')) {
+if (cur || /\b(what|whats|how_much|convert|converted|conversion)\b/.test(before)) continue;
+cur = ws[at + 1]; at += 2;
+}
+const after = ws[at] || '';
+if (NOUN.test(after) || (QUOTED.test(ws.slice(at, at + 5).join(' ')) && !/\b(budget|spend|afford)\b/.test(before))) continue;
+if (/\b(sell|sells|selling|sold|priced|mrp|worth|price|prices|cost|costs|charge|charges|quote|quoted|told|said|rate|rates|revenue|turnover|sales|profit|income|salary|valuation|funding|raised|loan)\b/.test(before) && !/\b(budget|spend|afford)\b/.test(before)) continue;
+if (!cur && !k && n >= 1900 && n <= 2100 && want !== 'budget' && !/\b(budget|spend|afford|upto|up to|max|maximum)\b/.test(before)) continue;
+const near = /\b(budget|budgets|spend|spending|afford|upto|up to|max|maximum|within|under|below|than)\b/.test(before);
+const weak = /\b(around|about|approx|approximately|roughly|only|just)\b/.test(before) && n >= 1000;
+if (n < 50 || !(cur || k || near || weak || money || want === 'budget')) continue;
 let code = cur ? cur.slice(1).toUpperCase() : active;
 if (code === 'DOL') code = ['USD', 'CAD', 'AUD', 'SGD'].includes(active) ? active : 'USD';
 const rate = code === 'INR' ? 1 : kb.pricing.rates[code];
-if (rate) o.budget = { amount: n, cur: code, inr: Math.round(n * rate / 1000) * 1000 || n * rate };
-break;
+if (rate && (!best || (want === 'budget' && n > best.amount))) best = { amount: n, cur: code, inr: Math.round(n * rate / 1000) * 1000 || n * rate };
+if (best && want !== 'budget') break;
 }
-}
+if (best) o.budget = best;
 return o;
 };
+const stepSlot = (step, raw, kb, active) => {
+const s = norm(raw), sl = slots(raw, s, kb, active, step), ws = s.split(' ').filter(Boolean);
+if (sl.personal) return null;
+const cash = /\b(budget|spend|afford|price|cost)\b/.test(s), ns = ws.map((w, i) => (cash || CURW.test(ws[i - 1] || '') || CURW.test(ws[i + 1] || '') || ws[i + 1] === '_k' ? null : num(w)));
+const short = ws.length <= 6, cn = ns.filter(x => x != null && x > 0), n = cn.length ? Math.max(...cn) : 0;
+const few = /\b(a few|few|some|handful|couple)\b/.test(s);
+if (step === 'pages' && (sl.pages || (short && (n || few)))) return sl.pages ? { pages: sl.pages, pagesN: sl.pagesN } : n ? { pages: bucket(n, [1, 5, 10], PAGES), pagesN: n } : { pages: PAGES[1] };
+if (step === 'products') {
+if (sl.products) return { products: sl.products, productsN: sl.productsN };
+if (short && /\bhundreds\b/.test(s)) return { products: PRODUCTS[2] };
+if (short && /\bthousands\b/.test(s)) return { products: PRODUCTS[3] };
+if (short && (n || few)) return n ? { products: bucket(n, [19, 100, 500], PRODUCTS), productsN: n } : { products: PRODUCTS[0] };
+}
+if (step === 'categories' && (sl.categories || (short && (n || few)))) return { categories: sl.categories || (n ? bucket(n, [3, 10], CATS) : CATS[0]) };
+if (step === 'time') {
+if (sl.timeline) return { timeline: sl.timeline, timeText: sl.timeText };
+const t = short && /^(?:about |around |maybe )?(\d+|a|one|two|three|four|five|six|eight|twelve) (weeks?|months?)$/.exec(s);
+if (t) { const x = slots('', `in ${t[1]} ${t[2]}`, kb, active); return { timeline: x.timeline, timeText: x.timeText }; }
+}
+if (step === 'budget' && sl.budget) return { budget: sl.budget };
+return null;
+};
+const CONV = new RegExp('\\b\\d+ (?:_k )?' + CU + ' (?:in|to|into) ' + CU + '|\\b' + CU + ' \\d+ (?:_k )?(?:in|to|into) ' + CU
++ '|\\b(?:what|whats|how_much|convert)(?: is| are| would be)? \\d+ (?:_k )?(?:in|to|into) ' + CU);
 const analyze = (kb, raw) => {
-const P = prep(kb), s = norm(raw), ws = s.split(' ').filter(Boolean), toks = ws.filter(w => !STOP.has(w)).map(canon);
-const c = concepts(toks), ent = {};
+const P = prep(kb), s = norm(raw), ws = s.split(' ').filter(Boolean);
+const cs = s.replace(/\b(\d+|many|several|our|physical|retail) (stores|shops)\b/g, '$1 outlets');
+const toks = ws.filter(w => !STOP.has(w) && w !== '_k').map(canon);
+const c = concepts(cs === s ? toks : cs.split(' ').filter(w => w && !STOP.has(w) && w !== '_k').map(canon)), ent = {};
+if (/\b(digital|saas|software|tech) products?\b|\bproducts? (design|designs|app|apps|platform|team)\b/.test(s)) c.add('SAAS');
 for (const n of P.names) {
 const k = n.w.length;
 for (let i = 0; i + k <= ws.length; i++) {
@@ -168,13 +215,19 @@ for (const w of ws) {
 if (P.place[w]) { ent.place = P.place[w]; break; }
 if (P.other.has(w)) { ent.place = ['?', w]; break; }
 }
-const cm = /\b_(inr|eur|gbp|usd|aed|cad|aud|sgd|dol)\b/.exec(s);
-if (cm) ent.cur = cm[1].toUpperCase();
+const cm = /\b(?:in|into|to) _(inr|eur|gbp|usd|aed|cad|aud|sgd|dol)\b/.exec(s) || /\b_(inr|eur|gbp|usd|aed|cad|aud|sgd|dol)\b/.exec(s);
+if (cm) {
+ent.cur = cm[1].toUpperCase();
+if (/^(?:in|into|to) /.test(cm[0]) || /\b(show|change|switch|convert|display|see|use)\b/.test(s)
+|| ws.every(w => CURW.test(w) || STOP.has(w) || /^(price|prices|currency|please|pls)$/.test(w))) ent.ask = 1;
+if (CONV.test(s)) ent.conv = 1;
+}
 if (/\b(yen|yuan|ruble|roubles?|francs?|kronas?|kroner|zloty|riyals?|naira|reais|pesos?)\b/.test(s)) ent.cur = '?';
 const ind = Object.keys(kb.lex.industry).find(w => new RegExp(`\\b${w}s?\\b`).test(s) || toks.includes(canon(w)));
 if (ind) ent.industry = ind;
 return { raw, s, ws, toks, c, ent };
 };
+const weigh = toks => { const w = {}; toks.forEach(t => (CON[t] || []).forEach(k => (w[k] = (w[k] || 0) + 1))); return w; };
 const score = (kb, a) => {
 const P = prep(kb), idf = t => P.idf[t] || 2;
 const q = [...new Set(a.toks)];
@@ -195,6 +248,8 @@ return { id: x.id, fam: x.fam, v: Math.max(0, Math.min(1, v)) };
 });
 return out.sort((p, r) => r.v - p.v);
 };
+const WEB = /\b(website|websites|site|sites|web|webpage|webpages|landing|homepage|one_pager|blog|portfolio)\b/;
+const AMT = new RegExp('\\b\\d+ (?:_k )?' + CU + '|' + CU + ' \\d');   // (an amount with its currency)
 const gate = (kb, a, prev) => {
 const s = a.s, has = w => a.toks.includes(w), c = a.c, ent = a.ent;
 if (a.sl && a.sl.personal) return 'meta.personal';
@@ -202,6 +257,8 @@ if (/\b(full|last|sur) ?name\b|\bsurname\b/.test(s)) return 'nodata.fullname';
 const inject = /\b(ignore|disregard|forget|override)\b.*\b(rules?|instructions?|prompt)\b|\bsystem prompt\b|\bjailbreak\b|\bpretend\b|\bapi ?keys?\b|\bpasswords?\b|\btokens?\b|\bscript\b|\b(reply|respond|answer|write) (in|only in|using) (capitals|caps|uppercase|upper case|all caps)\b|\bsay (it|that)\b|\brepeat after\b|\bdeveloper mode\b/.test(s);
 const disc = has('discount') || /\b(\d+ percent|for less|less money|best price|lowest price|cheap|special price|do it for|for just|for only|reduce the price)\b/.test(s);
 if (inject) return disc ? 'price.discount' : 'meta.off_topic';
+if ((ent.cur || /\bcurrenc/.test(s)) && /\b(pay|paid|paying|payment|payments|invoice|invoices|invoiced|invoicing|bill|billed|billing|accept|accepted|transfer|wire)\b|\bcharges? (me |us )?in\b/.test(s)
+&& !/\bhow_much\b|\b(price|prices|cost|costs|quote)\b/.test(s) && !(a.sl && a.sl.budget) && !AMT.test(s)) return 'nodata.payment';
 if (has('hosting')) return 'nodata.hosting';
 if (has('domain')) return 'nodata.domain';
 if (has('installment') || /\bpayment (terms|methods?|options?|plan|schedule)\b|\bhow (do|can|should) i pay\b|\bpay in (parts|instalments|installments)\b|\bmilestones?\b/.test(s)) return 'nodata.payment';
@@ -211,11 +268,24 @@ if (has('stack') || ((/\bshopify\b|\bwoocommerce\b/.test(s)) && !c.has('PRICE'))
 if (has('address')) return 'nodata.address';
 if ((has('jobs') || (has('careers') && !ent.project && !c.has('SITE') && !/\b(built|build|made)\b/.test(s)))) return 'nodata.jobs';
 if (has('maintenance')) return c.has('PRICE') || has('maintenance') && /\bcharges?\b|\bplan\b/.test(s) ? 'price.maintenance' : 'faq.9';
+if (/\b(you|your|teseract|studio|gireesh)\b/.test(s) && !c.has('PRICE') && (/\b(based|located|situated|internationally|international|abroad|overseas|remote|remotely|worldwide|globally)\b/.test(s)
+|| ((ent.place || /\boutside\b/.test(s)) && /\b(work|working|clients?|customers?|serve|available|deliver)\b/.test(s))
+|| (ent.place && /\b(are|is) (you|your studio|the studio|teseract|gireesh) (in|from)\b/.test(s)))) return 'faq.1';   // ("are you in the uk")
+const mkt = /\b(social media|digital|performance|influencer|email|content) marketing\b(?! (agency|agencies|company|companies|firm|business|website|site))|\b(google|facebook|instagram|meta|paid) ads\b|\bads? campaigns?\b|\badvertising\b|\bppc\b|\bcopywriting\b|\b(write|writing|writes) (the |my |our )?(content|copy|text|blogs?)\b|\bcontent writing\b/.test(s);
+if ((/\bguarantee/.test(s) && !c.has('TIME')) || /\b(success|conversion|bounce|interest) rates?\b/.test(s)) return 'nodata.other';
+if (mkt) { if (!c.has('PRICE') && !((c.has('SITE') || c.has('ECOM') || WEB.test(s)) && /\b(build|builds|design|make|create|develop|need|want|looking)\b/.test(s))) return 'nodata.other'; a.also = 1; }
+if (/\bfree\b/.test(s) && /\b(consultation|consult|call|meeting|discovery|session|quote|estimate|first call)\b/.test(s)) return 'nodata.consult';
+if (/\blaunch day\b|\bday of (the )?launch\b|\bon launch\b/.test(s)) return 'process.step.8';
+if (/\b(only|one|single) (person|man|guy|designer|developer|member)\b|\bsolo\b|\balone\b|\bby (yourself|himself)\b|\b(just|only) (you|him|gireesh)\b|\bone man\b|\bfreelancers?\b/.test(s)) return 'about.team';
 if (disc) return 'price.discount';
 if (/\bfree\b/.test(s) && !/\bfeel free\b|\bfree time\b|\bfreedom\b/.test(s)) return 'price.free';
-if (c.has('INCLUDE') && (c.has('PRICE') || /\b\d{4,}\b|\bstart(ing)? price\b/.test(s))) return c.has('ECOM') ? 'price.ecommerce' : 'price.included';
+if (ent.conv) return 'price.currency';
+const get = GETQ.test(s);
+if ((c.has('INCLUDE') || get) && (c.has('PRICE') || /\b\d{4,}\b|\bstart(ing)?\b/.test(s))) return c.has('ECOM') ? 'price.ecommerce' : 'price.included';
 if (c.has('INCLUDE') && c.has('ECOM')) return 'svc.e-commerce';
 if (c.has('TIME') && !c.has('PRICE') && !ent.project) return 'time.timeline';
+if (ent.project && (c.has('PRICE') || c.has('BUDGET')) && !(a.sl && a.sl.budget)) return 'price.project';
+if (!(a.sl && a.sl.budget) && (AMT.test(s) || /\b\d+ _k\b/.test(s)) && /\b(minimum|starting|start|lowest|least)\b/.test(s)) return c.has('ECOM') ? 'price.ecommerce' : c.has('SITE') ? 'price.website' : 'price.general';
 if (a.sl && a.sl.budget && !c.has('INCLUDE') && !(c.has('PRICE') && (c.has('SITE') || c.has('ECOM')))) return 'price.budget';
 if (c.has('BUDGET') && !c.has('PRICE')) return 'price.discount';
 const rest = a.ws.filter(t => !STOP.has(t) && !/^_/.test(t) && !(kb._p.place[t] || kb._p.other.has(t)) && !/^(based|base|live|living|from|located|price|prices|currency|show|change|switch|country|convert|see|display|please|company|business|firm|startup|agency|team|do|us|we)$/.test(t));
@@ -223,8 +293,10 @@ if ((ent.cur || ent.place) && !rest.length) return 'price.currency';
 if (c.has('PRICE')) {
 if (ent.project || (prev && prev.ent && prev.ent.project && a.toks.length <= 5 &&/\b(that|it|this|one|same)\b/.test(s))) return 'price.project';
 if (c.has('ECOM')) return 'price.ecommerce';
+const web = WEB.test(s) || (a.sl && a.sl.pages), special = c.has('SAAS') || c.has('AI') || c.has('BRAND') || c.has('THREE_D') || c.has('STRAT');
+if (special && !web) return 'price.product';
 if (c.has('SITE') || (a.sl && a.sl.pages)) return 'price.website';
-if (c.has('SAAS') || c.has('AI') || c.has('BRAND') || c.has('THREE_D') || c.has('STRAT')) return 'price.product';
+if (special) return 'price.product';
 return 'price.general';
 }
 if (ent.project) return 'project.' + ent.project;
@@ -232,9 +304,11 @@ if (has('gireesh') && a.toks.every(t => /^(gireesh|who|founder|tell|about|person
 const other = concepts(a.toks.filter(t => t !== canon(ent.industry || '')));
 if (ent.industry && (other.has('WORK') || other.has('SITE') || other.has('ECOM') || /\b(any|have|done|experience|worked|build|built|example)\b/.test(s))) return 'work.industry';
 if (c.has('CALL') && /\b(book|call|schedule|talk|speak)\b/.test(a.ws.join(' ').replace(/\bcall\b/g, 'call')) && !/\bcan i call you\b/.test(s)) return 'contact.book';
+if ((c.has('SITE') || c.has('ECOM')) && a.sl && (a.sl.pagesN > 1 || a.sl.products || a.sl.timeline || a.sl.budget)
+&& /\b(i|we|my|our)\b/.test(s) && /\b(need|needs|want|wants|looking|planning|plan|would like|require)\b/.test(s) && !/^(do|can|could|will|would) you\b/.test(s)) return 'contact.start';
 return null;
 };
-const match = (kb, raw, prev, active) => {
+const match = (kb, raw, prev, active, step) => {
 const a = analyze(kb, raw);
 a.sl = slots(raw, a.s, kb, active || 'INR');
 let id = gate(kb, a, prev);
@@ -242,7 +316,7 @@ if (id) return { kind: 'answer', id, a, v: 1 };
 const th = kb.th, list = score(kb, a);
 const more = /^(and|what about|how about|also|plus|or|same for)\b/.test(a.s);
 const kind = prev && prev.c ? prev.c.filter(k => /^(PRICE|BUDGET|TIME)$/.test(k)) : [];
-if (kind.length && (more ? a.toks.length <= 6 : a.toks.length <= 2 && list[0].v < th.answer)) {
+if (kind.length && (more ? a.toks.length <= 6 : !step && a.toks.length <= 2 && list[0].v < th.answer)) {
 const b = Object.assign({}, a, { c: new Set([...a.c, ...kind]), ent: Object.assign({}, prev.ent || {}, a.ent) });
 id = gate(kb, b, prev);
 if (id) return { kind: 'answer', id, a: b, v: .6 };
@@ -262,29 +336,30 @@ kb.services.forEach(v => { push(v.title, kb.nav['what-we-create'], { r: 'what-we
 kb.process.steps.forEach((v, i) => [v.sub, v.body, v.end].forEach(t => push(t, kb.nav['our-approach'], { r: 'our-approach', f: 'ap-step-' + (i + 1) })));
 kb.founder.body.forEach(t => push(t, kb.nav['who-we-are'], kb.founder.url));
 kb.intents.forEach(it => (it.b || []).forEach(b => { if (b.t === 'p') { const f = (it.b.find(x => x.t === 'from') || {}); push(b.text, f.page, f.url); } }));
-kb.projects.forEach(p => push(p.sum, p.t, { r: 'projects/' + p.s, f: '' }));
+kb.projects.forEach(p => { const n = out.length; push(p.sum, p.t, { r: 'projects/' + p.s, f: '' }); out.slice(n).forEach(x => (x.p = 1)); });
 const df = {};
 out.forEach(x => new Set(x.toks).forEach(t => (df[t] = (df[t] || 0) + 1)));
 const avg = out.reduce((n, x) => n + x.toks.length, 0) / (out.length || 1);
 return (kb._s = { out, df, avg, N: out.length });
 };
+const GEN = new Set('website page project make build built create design develop work want need first new good like help business company digital experience studio teseract thing'.split(' ').map(canon));
 const search = (kb, a) => {
-const S = sentences(kb), q = [...new Set(a.toks)].filter(t => S.df[t]);
-if (q.length < 2) return [];
+const S = sentences(kb), q = [...new Set(a.toks)].filter(t => S.df[t]), work = !!(a.ent.project || a.ent.industry || a.c.has('WORK'));
+if (q.filter(t => !GEN.has(t)).length < 2) return [];
 const res = S.out.map(x => {
 let v = 0, n = 0;
 q.forEach(t => {
 const f = x.toks.filter(u => u === t).length;
 if (!f) return;
-n++;
+if (!GEN.has(t)) n++;
 v += Math.log(1 + (S.N - S.df[t] + .5) / (S.df[t] + .5)) * f * 2.2 / (f + 1.2 * (.25 + .75 * x.toks.length / S.avg));
 });
 return { x, v, n };
-}).filter(r => r.n >= 2 && r.v >= kb.th.search).sort((p, r) => r.v - p.v);
+}).filter(r => r.n >= 2 && r.v >= kb.th.search && (work || !r.x.p)).sort((p, r) => r.v - p.v);
 const seen = new Set();
 return res.filter(r => !seen.has(r.x.text) && seen.add(r.x.text)).slice(0, 2).map(r => r.x);
 };
-G.TSChatEngine = { norm, tokens, canon, stem, dl, credit, prep, analyze, slots, score, gate, match, search, detectCurrency, money, moneySr, group, PAGES, PRODUCTS, CATS };
+G.TSChatEngine = { norm, tokens, canon, stem, dl, credit, prep, analyze, slots, stepSlot, weigh, score, gate, match, search, detectCurrency, money, moneySr, group, PAGES, PRODUCTS, CATS };
 })();
 (() => {
 'use strict';
@@ -343,10 +418,10 @@ if (path === 'W' || path === 'L') {
 if (direct) lead.push(P(C.p0[1]), { t: 'list', items: C.factors_web, src: 'chat:factors_web' });
 return next(priceTurn('w', lead).concat(st.bq ? budgetReply() : [], [P(C.w_after)]));
 }
-if (path === 'E') {
+if (path === 'E') {   // two turns (24 Oct): what the service includes, then the price and the first question
 const s = kb().services.find(v => v.id === 'e-commerce');
-return next(priceTurn('e', lead.concat([P(C.e_intro), P(s.body, s.src + '.body'), { t: 'included' }]))
-.concat(st.bq ? budgetReply() : [], [P(C.e_after)]));
+return [{ b: lead.concat([P(C.e_intro), P(s.body, s.src + '.body'), { t: 'included' }]), c: [] }]
+.concat(next(priceTurn('e', []).concat(st.bq ? budgetReply() : [], [P(C.e_after)])));
 }
 if (path === 'S') {
 const svc = a && guessService(a);
@@ -360,8 +435,13 @@ return next(kb().create.cta.map(t => P(t, 'CREATE.cta.lines')).concat([P(C.n_sca
 const SVC = { 'Product & SaaS': 'product-saas', 'AI & Automation': 'ai-automation', 'Interactive & 3D': 'interactive-3d',
 'Brand & Digital Identity': 'brand-digital-identity', 'Digital Strategy': 'digital-strategy' };
 const serviceId = name => SVC[name];
-const guessService = a => a.c.has('AI') ? 'AI & Automation' : a.c.has('BRAND') ? 'Brand & Digital Identity' : a.c.has('THREE_D') ? 'Interactive & 3D'
-: a.c.has('STRAT') ? 'Digital Strategy' : a.c.has('SAAS') ? 'Product & SaaS' : null;
+const GUESS = [['THREE_D', 'Interactive & 3D'], ['AI', 'AI & Automation'], ['SAAS', 'Product & SaaS'], ['BRAND', 'Brand & Digital Identity'], ['STRAT', 'Digital Strategy']];
+const guessService = a => {
+const w = EN.weigh(a.toks || []);
+a.c.forEach(k => { if (!w[k]) w[k] = .5; });   // (a concept found by phrase: "digital product")
+const best = GUESS.reduce((b, g) => ((w[g[0]] || 0) > (w[b[0]] || 0) ? g : b), GUESS[0]);
+return w[best[0]] ? best[1] : null;
+};
 const take = (sl, a) => {
 const b = st.brief, parts = [];
 if (sl.pages && (!b.pages || sl.pagesN > 1)) { b.pages = sl.pages; b.pagesN = sl.pagesN; parts.push(sl.pagesN > 1 ? `about ${sl.pagesN} pages` : sl.pages.toLowerCase()); }
@@ -385,8 +465,8 @@ const b = st.brief, bu = b.budget;
 st.bq = 0;
 if (!bu || bu.text || bu.skip) return [];
 if (st.path === 'S') return [P(C.budget_s)];
-const e = st.path === 'E', start = e ? kb().pricing.e : kb().pricing.w;
-if (bu.inr < start) return [P(fill(C.budget_low, { Xs: e ? C.budget_low_e : C.budget_low_w, X: e ? '{E}' : '{W}' }))];
+const e = st.path === 'E', A = kb().pricing.amounts, k = e ? 'e' : 'w';
+if (A[bu.cur] ? bu.amount < A[bu.cur][k] : bu.inr < A.INR[k]) return [P(fill(C.budget_low, { Xs: e ? C.budget_low_e : C.budget_low_w, X: e ? '{E}' : '{W}' }))];
 return [P(C.budget_ok)];
 };
 const H = {
@@ -418,14 +498,18 @@ c: kb().services.map(s => ({ l: s.name, a: { i: 'svc.' + s.id } })) }],
 'about.founder': () => [{ b: [{ t: 'founder' }], c: [{ l: C.chips.story, a: { u: { r: 'who-we-are', f: 'founder' } } }].concat(chips(['why', 'talk'])) }],
 'about.clients_count': () => {
 const cl = kb().projects.filter(p => p.k === 'client');
-return [{ b: [P(fill(C.clients_count, { n_client: cl.length, first: cl[0].i.toLowerCase(), another: cl[cl.length - 1].i.toLowerCase() })), from('work', 'projects')], c: chips(['work']) }];
+return [{ b: [P(fill(C.clients_count, { n_client: cl.length, first: low(cl[0].i), another: low(cl[cl.length - 1].i) })), from('work', 'projects')], c: chips(['work']) }];
 },
 'contact.how': () => [{ b: [P(fill(C.contact, { email: kb().contact.email })), { t: 'email' }, { t: 'socials' }], c: chips(['book']) }],
 'contact.phone': () => [{ b: [P(C.phone), { t: 'email' }], c: chips(['book']) }],
 'contact.socials': () => [{ b: [{ t: 'socials' }], c: chips(['book', 'show_email']) }],
 'contact.email': () => [{ b: [{ t: 'email' }], c: chips(['book']) }],
 'contact.book': () => handoff('book'),
-'contact.start': () => st.brief.type ? next() : H['price.general'](),
+'contact.start': (a) => {
+if (st.brief.type) { if (a && a.sl) take(a.sl, a); return next(); }
+const t = a && a.c && a.c.size ? (a.c.has('ECOM') ? 'E' : /landing|one_pager/.test(a.s) ? 'L' : a.c.has('SITE') ? 'W' : null) : null;
+return t ? enter(t, false, a) : H['price.general']();
+},
 'meta.hi': () => [{ b: [P(C.hi)], c: welcomeChips() }],
 'meta.thanks': () => [{ b: [P(C.thanks)], c: welcomeChips().slice(0, 4) }],
 'meta.bye': () => [{ b: [P(C.bye)], c: [] }],
@@ -436,16 +520,22 @@ return [{ b: [P(fill(C.clients_count, { n_client: cl.length, first: cl[0].i.toLo
 'meta.personal': () => [{ b: [P(C.personal)], c: [] }],
 'meta.off_topic': () => [{ b: [P(C.off_topic)], c: welcomeChips(), g: 'tilt' }],
 'nodata.address': () => [{ b: [{ t: 'faq', i: 1 }, P(C.nodata)], c: chips(['ask_gireesh', 'book']), g: 'tilt' }],
+'nodata.payment': (a) => [{ b: [P(C.nodata)], c: chips(a && a.ent && a.ent.cur ? ['ask_gireesh', 'change_cur', 'prices'] : ['ask_gireesh', 'prices', 'back_start']), g: 'tilt' }],
+'nodata.consult': () => [{ b: [P(C.nodata)], c: chips(['ask_gireesh', 'book']), g: 'tilt' }],
 };
 const nodata = () => [{ b: [P(C.nodata)], c: chips(['ask_gireesh', 'prices', 'back_start']), g: 'tilt' }];
+const low = t => String(t).split(' ').map(w => (/[A-Z].*[A-Z]/.test(w) ? w : w.toLowerCase())).join(' ');
+const self = p => p.k === 'personal' && kb().founder && new RegExp('^' + kb().founder.name + '\\b', 'i').test(p.t);
+const pname = p => (self(p) ? `${kb().founder.name}'s ${low(p.i)}` : p.t.replace(/\s*\|\s*(.+)$/, ' ($1)'));
 const projectPrice = p => {
 if (!p) return H['price.general']();
 st.pent = { project: p.s };
+const n = pname(p), shop = p.e || p.st;
 let t;
-if (p.k === 'client') t = fill(C.pp_client, { project: p.t, industry: p.i, X: p.e ? '{E}' : '{W}', factors: p.e ? C.pp_factors_e : C.pp_factors_w });
-else if (p.k === 'personal') t = fill(C.pp_personal, { project: p.t });
-else t = fill(p.sa ? C.pp_saas : p.e ? C.pp_concept_e : C.pp_concept, { project: p.t });
-return [{ b: [P(t)], c: [{ l: C.chips.like, a: { x: '@like', p: p.s } }, { l: fill(C.chips.see_project, { project: p.t }), a: { u: { r: 'projects/' + p.s, f: '' } } }].concat(chips(['other_prices'])) }];
+if (p.k === 'client') t = fill(C.pp_client, { project: n, industry: low(p.i), X: shop ? '{E}' : '{W}', factors: shop ? C.pp_factors_e : C.pp_factors_w });
+else if (p.k === 'personal') t = fill(self(p) ? C.pp_personal_self : C.pp_personal, { project: n });
+else t = fill(p.sa ? C.pp_saas : p.e ? C.pp_concept_e : C.pp_concept, { project: n });
+return [{ b: [P(t), P(C.s_close)], c: [{ l: C.chips.like, a: { x: '@like', p: p.s } }, { l: fill(C.chips.see_project, { project: n }), a: { u: { r: 'projects/' + p.s, f: '' } } }].concat(chips(['book', 'other_prices'])) }];
 };
 const FILTERS = { client: p => p.k === 'client', ecommerce: p => p.e, saas: p => p.sa, concept: p => p.k !== 'client', personal: p => p.k === 'personal', all: () => true };
 const work = (f, intro) => {
@@ -474,10 +564,18 @@ const now = env.cur().code;
 if (['USD', 'CAD', 'AUD', 'SGD'].includes(now)) cur = now;
 else return [{ b: [P(C.cur_which)], c: C.choices.dollars.map((l, i) => ({ l, a: { cur: ['USD', 'CAD', 'AUD', 'SGD'][i] } })) }];
 }
+if (country) {
+const c = env.cur();
+if (c.unknown) { env.setCur(cur); st.brief.regionDone = 1; }
+if (c.unknown || (cur === c.code && !c.unknown)) return [{ b: [P(fill(C.cur_country, { cur_name: name(cur), country }))], c: [] }].concat(back);
+const t = [{ b: [P(fill(C.cur_offer, { cur_now: name(c.code), cur_name: name(cur) }))], c: [] }].concat(back);
+t[t.length - 1].c = (t[t.length - 1].c || []).concat(offer(cur));   // (only the last turn keeps its chips)
+return t;
+}
 env.setCur(cur);
-const t = country ? fill(C.cur_country, { cur_name: name(cur), country }) : fill(C.cur_switched, { cur_name: name(cur) });
-return [{ b: [P(t)], c: [] }].concat(back);
+return [{ b: [P(fill(C.cur_switched, { cur_name: name(cur) }))], c: [] }].concat(back);
 };
+const offer = code => ({ l: fill(C.chips.show_cur, { cur_name: kb().pricing.cur[code].name }), a: { cur: code } });
 const curChips = () => CURS.map(c => ({ l: (kb().pricing.cur[c].sym.trim() === c ? c : kb().pricing.cur[c].sym.trim() + ' ' + c), a: { cur: c }, pressed: env.cur().code === c && !env.cur().unknown }));
 const handoff = mode => {
 const has = Object.keys(st.brief).some(k => !/^(needs|store|questions)$/.test(k) && st.brief[k]) || st.brief.questions.length;
@@ -485,7 +583,7 @@ const card = has ? [{ t: 'brief' }] : [];
 const url = kb().contact.booking_url;
 if (mode === 'book' && url) return [{ b: [P(C.book_url)].concat(card, [{ t: 'handoff', mode: 'url' }]), c: [] }];
 if (mode === 'book') return [{ b: [P(C.book)].concat(card, [{ t: 'handoff', mode: 'book' }]), c: [] }];
-return [{ b: [P(C.send)].concat(card, [P(C.send_after), { t: 'handoff', mode: 'send' }]), c: [] }];
+return [{ b: (has ? [P(C.send_lead)] : []).concat(card, [P(C.send_after), { t: 'handoff', mode: 'send' }]), c: [] }];
 };
 const answer = (id, a) => {
 if (H[id]) return H[id](a);
@@ -526,68 +624,90 @@ return next();
 };
 const stepTyped = (text, m) => {
 const step = st.step, opts = step === 'type' ? C.choices.type : C.choices[step] || [];
-const n = EN.norm(text);
-const i = opts.findIndex(o => EN.norm(o) === n || (n.length > 3 && EN.norm(o).startsWith(n)));
+const n = EN.norm(text), r = step === 'region' ? n.replace(/^(i am |im |we are |based |i live |we live )?(in |from )?(the )?/, '') : n;
+const i = opts.findIndex(o => EN.norm(o) === r || (r.length > 3 && EN.norm(o).startsWith(r)));
 if (i >= 0 && !MULTI[step]) return stepAnswer(step, step === 'type' ? 'WLESN'[i] : opts[i]);
-const own = { W: 'price.website', L: 'price.website', E: 'price.ecommerce', S: 'price.product' }[st.path];
-if (m.kind === 'answer' && m.id !== own && !/^price\.(budget|currency)$/.test(m.id) && !(step === 'type' && /^(price\.|svc\.|faq\.[56]$)/.test(m.id))
-&& !(MULTI[step] && /^svc\./.test(m.id))) return null;
+const path = { W: 'price.website', L: 'price.website', E: 'price.ecommerce', S: 'price.product' }[st.path];
+const other = m.kind === 'answer' && m.id !== path && !/^price\.(budget|currency)$/.test(m.id);
 const sl = m.a.sl || {};
 if (step === 'type') {
+if (other && !/^(price\.|svc\.|faq\.[56]$)/.test(m.id)) return null;
 const c = m.a.c;
 const t = c.has('ECOM') ? 'E' : /landing|one_pager/.test(m.a.s) ? 'L' : c.has('SITE') ? 'W' : (c.has('SAAS') || c.has('AI') || c.has('BRAND') || c.has('THREE_D')) ? 'S' : /not sure|no idea|dont know|do not know/.test(n) ? 'N' : null;
 if (t) { const parts = take(sl, m.a); return [{ b: echo(parts, null), c: [] }].filter(x => x.b.length).concat(enter(t, false, m.a)); }
+return null;
 }
 if (step === 'idea' && !sl.personal) return stepAnswer('idea', text.trim());
 if (MULTI[step]) {
 const picked = opts.filter(o => { const w = EN.tokens(o).filter(x => x.length > 2); return w.some(x => m.a.toks.includes(x)); });
 if (picked.length) { st.brief[MULTI[step]] = picked; st.brief[step + 'Done'] = 1; return next(); }
 }
-const parts = take(sl, m.a);
-if (parts.length && (sl.pages || sl.products || sl.categories || sl.timeline || sl.budget)) {
-if (step === 'budget' && sl.budget) return [{ b: echo(parts).concat(budgetReply()), c: [] }].concat(next()).filter(t => t.b.length || t.c.length);
-return [{ b: echo(parts).concat(sl.budget ? budgetReply() : []), c: [] }].filter(t => t.b.length).concat(next());
+if (!(other && /^price\.(website|ecommerce|product|project)$/.test(m.id) && m.a.c.has('PRICE'))) {
+const own = EN.stepSlot(step, text, kb(), env.cur().code), x = Object.assign({}, sl, own || {});
+if (own || x.pages || x.products || x.categories || x.timeline || x.budget) {
+const parts = take(x, m.a);
+if (x.budget) return [{ b: echo(parts).concat(budgetReply()), c: [] }].concat(next()).filter(t => t.b.length || t.c.length);
+return [{ b: echo(parts), c: [] }].filter(t => t.b.length).concat(next());
 }
+}
+if (m.kind === 'answer' && m.id === 'price.general' && /^[WLE]$/.test(st.path || '')) return enter(st.path, false);
+if (other && !(MULTI[step] && /^svc\./.test(m.id))) return null;
 if (step === 'budget' && /not sure|no idea/.test(n)) return stepAnswer('budget', C.choices.budget[0]);
 if (step === 'region' && m.a.ent.place) return stepAnswer('region', Object.keys(REGION).find(k => REGION[k] === m.a.ent.place[0]) || 'else');
+if (m.kind === 'miss' || m.kind === 'search') { const t = ask(step); t.b = [P(C.miss1)].concat(t.b); return [t]; }
 return null;
 };
+const ASK = /^(ask_gireesh|pass)$/;
 const input = (x) => {
 if (x.chip) return { user: x.chip.l, turns: chipTurns(x.chip) };
 const text = String(x.text || '').slice(0, 500);
-const m = EN.match(kb(), text, st.prev, env.cur().code);
-if (m.kind === 'answer' && /^price\./.test(m.id) && m.a.ent.cur === 'DOL' && !/^(USD|CAD|AUD|SGD)$/.test(env.cur().code)) m.id = 'price.currency';
+const m = EN.match(kb(), text, st.prev, env.cur().code, st.step);
+const e = m.a.ent, cur = env.cur();
+if (m.kind === 'answer' && /^price\./.test(m.id) && e.cur === 'DOL' && e.ask && !/^(USD|CAD|AUD|SGD)$/.test(cur.code)) m.id = 'price.currency';
 let turns = null;
 if (st.step && m.a.sl && !m.a.sl.personal) turns = stepTyped(text, m);
 if (!turns) {
 if (m.kind === 'answer') {
 st.misses = 0;
-const lead = [];
-if (m.id !== 'price.currency' && (m.a.ent.cur && m.a.ent.cur !== '?' && m.a.ent.cur !== 'DOL' || m.a.ent.place && m.a.ent.place[0] !== '?')) {
-const cur = m.a.ent.cur || m.a.ent.place[0];
-if (cur !== env.cur().code || env.cur().unknown) { env.setCur(cur); lead.push(P(m.a.ent.place ? fill(C.cur_country, { cur_name: kb().pricing.cur[cur].name, country: m.a.ent.place[1] }) : fill(C.cur_switched, { cur_name: kb().pricing.cur[cur].name }))); }
+const lead = [], ok = c => c && c !== '?' && c !== 'DOL';
+let offerCur = null;
+if (m.id !== 'price.currency' && !/^nodata\./.test(m.id)) {   // ("can I pay in euros": not a display request)
+if (ok(e.cur) && e.ask) {
+if (e.cur !== cur.code || cur.unknown) { env.setCur(e.cur); lead.push(P(fill(C.cur_switched, { cur_name: kb().pricing.cur[e.cur].name }))); }
+} else if (cur.unknown && e.place && ok(e.place[0]) && m.id !== 'faq.1') {   // (not "do you work in the UK")
+env.setCur(e.place[0]); st.brief.regionDone = 1;
+lead.push(P(fill(C.cur_country, { cur_name: kb().pricing.cur[e.place[0]].name, country: e.place[1] })));
+} else {
+const c = ok(e.cur) ? e.cur : e.place && ok(e.place[0]) ? e.place[0] : null;
+if (c && (c !== cur.code || cur.unknown)) offerCur = c;
 }
-const typeWord = /^price\.(website|ecommerce)$/.test(m.id) && ((m.a.sl.pages && 1) + (m.a.sl.products ? 1 : 0) + (m.a.sl.timeline ? 1 : 0) + (m.a.sl.budget ? 1 : 0)) >= 1
-? (m.id === 'price.ecommerce' ? 'an online store' : 'a website') : null;
+}
+const sl = m.a.sl;
+const said = /^price\.(website|ecommerce|budget)$|^contact\.start$/.test(m.id) && ((sl.pages ? 1 : 0) + (sl.products ? 1 : 0) + (sl.timeline ? 1 : 0) + (sl.budget ? 1 : 0)) >= 1;
 turns = answer(m.id, m.a);
+const typeWord = said ? { E: 'an online store', W: 'a website', L: 'a landing page' }[st.path] : null;   // (said back: "Got it: ...")
 if (typeWord) {
 const parts = [];
-const sl = m.a.sl, b = st.brief;
+const b = st.brief;
 if (sl.pagesN > 1) parts.push(`about ${sl.pagesN} pages`);
 if (sl.productsN) parts.push(`about ${sl.productsN} products`);
 if (sl.timeline) parts.push('live ' + (sl.timeText || sl.timeline.toLowerCase()));
 if (sl.budget) { b.budget = sl.budget; st.bq = 1; parts.push('budget {B}'); }
-const e = echo(parts, typeWord);
-if (e.length) turns[0].b = e.concat(turns[0].b);
+const ec = echo(parts, typeWord);
+if (ec.length) turns[0].b = ec.concat(turns[0].b);
 }
 if (lead.length) turns[0].b = lead.concat(turns[0].b);
+const last = turns[turns.length - 1];
+if (offerCur && last && !last.multi && !(last.c || []).some(c => c.a && c.a.cur)) last.c = (last.c || []).slice(0, 7).concat(offer(offerCur));
 if (st.step && !/^price\.|^contact\.book|^meta\.restart/.test(m.id) && turns.length === 1 && !turns[0].c.some(c => c.a.k === 'back_brief')) turns[0].c = turns[0].c.slice(0, 5).concat(chip('back_brief'));
+if (m.a.also && !st.step && last && !last.multi && !(last.c || []).some(c => c.a && ASK.test(c.a.k || ''))) last.c = (last.c || []).slice(0, 7).concat(chip('ask_gireesh'));
+if (m.a.also || turns.some(t => (t.c || []).some(c => c.a && ASK.test(c.a.k || '')))) st.q0 = text;
 st.prev = { c: [...m.a.c], ent: Object.assign({}, m.a.ent, st.pent || {}) };
 st.pent = null;
 } else if (m.kind === 'maybe') {
 st.q0 = text;
 const ids = m.ids.filter((v, i, l) => l.indexOf(v) === i).slice(0, 3);
-turns = [{ b: [P(C.maybe)], c: ids.map(id => ({ l: label(id), a: { i: id } })).concat(chip('something_else')) }];
+turns = [{ b: [P(C.maybe)], c: ids.map(id => ({ l: label(id), a: { i: id } })).concat(chip(st.step ? 'back_brief' : 'something_else')) }];
 } else if (m.kind === 'search') {
 st.q0 = text;
 turns = [{ b: [P(C.search)].concat(...m.hits.map(h => [{ t: 'quote', text: h.text }, { t: 'from', page: h.page, url: h.url }])), c: chips(['that_helps', 'ask_gireesh']) }];
@@ -611,8 +731,8 @@ if (a.re) return [ask(a.re)];
 if (a.i) return answer(a.i, EN.analyze(kb(), ''));
 if (a.x === '@like' || a.k === 'like') {
 const p = proj(a.p || (st.prev && st.prev.ent && st.prev.ent.project) || env.project);
-if (p) st.brief.similar = p.t;
-return enter(p && p.e ? 'E' : 'W', true);
+if (p) st.brief.similar = pname(p);
+return enter(p && (p.e || p.st) ? 'E' : 'W', true);
 }
 const k = a.k, t = kb().chips[k];
 if (k === 'keep' || k === 'ask_else' || k === 'something_else') return [{ b: [P(C.else)], c: welcomeChips() }];
@@ -675,7 +795,7 @@ return { v: 1, at: Date.now(), build, help, budget: budget.slice(0, 120), idea: 
 const welcome = () => {
 const b = [P(C.welcome[0])];
 const p = env.project && proj(env.project);
-if (p) b.push(P(fill(C.welcome_project, { project: p.t, industry: p.i, label_phrase: C.label_phrase[p.k] })));
+if (p) b.push(P(self(p) ? fill(C.welcome_self, { project: pname(p) }) : fill(C.welcome_project, { project: pname(p), industry: p.i, label_phrase: C.label_phrase[p.k] })));
 b.push(P(C.welcome[1]));
 return [{ b, c: welcomeChips() }];
 };
@@ -729,7 +849,7 @@ svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'
 p.setAttribute('d', d); svg.appendChild(p);
 return svg;
 };
-const I = { close: 'M6 6l12 12M18 6 6 18', send: 'M5 12h13M13 6l6 6-6 6', restart: 'M5 12a7 7 0 1 0 2.1-5M5 4v4h4', check: 'm6 12.5 4 4 8-9' };
+const I = { close: 'M6 6l12 12M18 6 6 18', send: 'M5 12h13M13 6l6 6-6 6', restart: 'M5 12a7 7 0 1 0 2.1-5M5 4v4h4', check: 'm6 12.5 4 4 8-9', down: 'M12 5v13M6 12l6 6 6-6' };
 let kb = null, kbP = null;
 const loadKb = () => kbP || (kbP = fetch(D.ccKb, { credentials: 'same-origin', cache: 'force-cache' })
 .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
@@ -760,7 +880,7 @@ return { W: one('w'), E: one('e'), W_inr: m(A.INR.w, 'INR'), E_inr: m(A.INR.e, '
 email: kb.contact.email, rates_month: kb.pricing.month };
 };
 const T = t => kb ? fill(t, prices()) : t;
-let dlg, panel, log, live, input, sendBtn, title, ava, stripBtn, briefBox, opener = null, pushed = false, open = false, busy = false;
+let dlg, panel, log, live, input, sendBtn, title, ava, stripBtn, briefBox, more, moreTo = null, opener = null, pushed = false, open = false, busy = false;
 const build = () => {
 dlg = el('dialog', 'cc-dlg', null, { id: 'cc-dialog', 'aria-labelledby': 'cc-title', 'aria-describedby': 'cc-desc', 'data-lenis-prevent': '' });
 panel = el('div', 'cc-panel');
@@ -807,7 +927,14 @@ if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) { e
 });
 const submit = e => { e.preventDefault(); const v = input.value.trim(); if (!v) return; input.value = ''; sendBtn.disabled = true; size(); say(v); };
 form.addEventListener('submit', submit);
-panel.append(head, strip, log, live, form);
+more = el('div', 'cc-more');
+more.hidden = true;
+const mb = el('button', 'cc-chip', C.more_below, { type: 'button' });
+mb.prepend(icon(I.down));
+mb.addEventListener('click', onMore);
+more.appendChild(mb);
+log.addEventListener('scroll', () => { if (!more.hidden && atBottom()) noMore(); }, { passive: true });
+panel.append(head, strip, log, more, live, form);
 dlg.appendChild(panel);
 document.body.appendChild(dlg);
 dlg.addEventListener('cancel', e => { e.preventDefault(); const set = log.querySelector('.cc-chips.is-cur'); if (set && set.contains(document.activeElement)) { set.remove(); input.focus(); return; } hide(); });
@@ -903,10 +1030,8 @@ card.append(u, el('p', 'cc-card__b', f.body[0]), el('blockquote', 'cc-q', f.quot
 return card;
 },
 projects: b => {
-const f = { client: p => p.k === 'client', ecommerce: p => p.e, saas: p => p.sa, concept: p => p.k !== 'client', personal: p => p.k === 'personal', all: () => true }[b.filter];
-const list = b.slugs ? kb.projects.filter(p => b.slugs.includes(p.s)) : kb.projects.filter(f);
 const s = el('div', 'cc-strip-p cc-strip-p--big');
-list.forEach(p => s.appendChild(projCard(p)));
+projList(b).forEach(p => s.appendChild(projCard(p)));
 return s;
 },
 project: b => {
@@ -948,6 +1073,8 @@ if (b.mode === 'book') w.appendChild(emailBlock(true));
 return w;
 },
 };
+const FILTER = { client: p => p.k === 'client', ecommerce: p => p.e, saas: p => p.sa, concept: p => p.k !== 'client', personal: p => p.k === 'personal', all: () => true };
+const projList = b => (b.slugs ? kb.projects.filter(p => b.slugs.includes(p.s)) : kb.projects.filter(FILTER[b.filter]));
 const stepBody = (s, i) => {
 const w = el('div', 'cc-step');
 if (s.body) w.appendChild(el('p', null, s.body));
@@ -1000,7 +1127,7 @@ li.append(mark('cc-tava'), body);
 return li;
 };
 const chipsEl = (t) => {
-const g = el('div', 'cc-chips' + (t.c.some(c => c.a && c.a.cur) ? ' is-cur' : ''), null, { role: 'group', 'aria-label': 'Suggested replies' });
+const g = el('div', 'cc-chips' + (t.c.every(c => c.a && c.a.cur) ? ' is-cur' : ''), null, { role: 'group', 'aria-label': 'Suggested replies' });
 const multi = new Set(t.multi ? (flow.st.multi || []) : []);
 t.c.slice(0, 9).forEach((c, j) => {
 const a = c.a || {}, k = a.k && kb && kb.chips[a.k];
@@ -1009,7 +1136,7 @@ if (a.u || (k && typeof k === 'object')) b = el('a', 'cc-chip', c.l, { href: hre
 else {
 b = el('button', 'cc-chip', c.l, { type: 'button' });
 if (a.m) { b.setAttribute('aria-pressed', String(multi.has(a.m))); b.prepend(icon(I.check)); }
-if (a.cur) b.setAttribute('aria-pressed', String(!!c.pressed));
+if (a.cur && 'pressed' in c) b.setAttribute('aria-pressed', String(!!c.pressed));   // (the switcher; not an offer)
 b.addEventListener('click', () => {
 if (a.m) {
 const none = /^(None of these|Not sure yet)$/.test(a.m);
@@ -1032,6 +1159,7 @@ return li;
 };
 const render = () => {
 if (!log) return;
+noMore();
 log.replaceChildren(...turns.map((t, i) => turnEl(t, i)));
 const last = turns[turns.length - 1];
 if (last && last.who === 'b' && last.c && last.c.length) log.appendChild(chipsEl(last));
@@ -1050,32 +1178,73 @@ briefBox.replaceChildren(briefRows());
 };
 const atBottom = () => log.scrollHeight - log.scrollTop - log.clientHeight < 40;
 const toEnd = () => { log.scrollTop = log.scrollHeight; };
-const push = t => { turns.push(t); if (log) { const c = log.querySelector('.cc-turn--chips'); if (c) c.remove(); log.appendChild(turnEl(t, turns.length - 1)); toEnd(); } save(); };
-const plain = t => t.b.map(b => (b.t === 'p' || b.t === 'c' || b.t === 'echo' || b.t === 'quote') ? T(b.text || C[b.k] || fill(C.echo, { parts: (b.parts || []).join(', ') }))
-: b.t === 'price' ? T(b.k === 'w' ? `${C.price_label_w} {W}.` : `${C.price_label_e} {E}.`) : b.t === 'faq' ? kb.faq[b.i].a : b.t === 'list' ? b.items.join('. ') : '').filter(Boolean).join(' ');
+const top = li => li.offsetTop - log.offsetTop - 12;
+const showMore = li => { if (!moreTo) moreTo = li; more.hidden = false; };
+const noMore = () => { if (more) more.hidden = true; moreTo = null; };
+const onMore = () => {
+const li = moreTo, f = more.contains(document.activeElement);
+if (li && li.isConnected && log.scrollHeight - li.offsetTop + log.offsetTop > log.clientHeight) log.scrollTop = top(li); else toEnd();
+noMore();
+if (f) { const c = log.querySelector('.cc-turn--chips .cc-chip'), n = li && li.isConnected ? li : [...log.querySelectorAll('.cc-turn--b')].pop(); if (c && c.getBoundingClientRect().bottom <= log.getBoundingClientRect().bottom) c.focus({ preventScroll: true }); else if (n) { n.tabIndex = -1; n.focus({ preventScroll: true }); } }
+};
+const push = (t, keep) => {
+turns.push(t);
+if (log) {
+const c = log.querySelector('.cc-turn--chips');
+if (c) { if (c.contains(document.activeElement)) title.focus({ preventScroll: true }); c.remove(); }
+log.appendChild(turnEl(t, turns.length - 1));
+if (!keep) { noMore(); toEnd(); }
+}
+save();
+};
+const SR = {
+p: b => T(b.text), c: b => T(C[b.k]), echo: b => T(fill(C.echo, { parts: (b.parts || []).join(', ') })), quote: b => b.text,
+price: b => T(b.k === 'w' ? `${C.price_label_w} {W}.` : `${C.price_label_e} {E}.`),
+faq: b => { const a = kb.faq[b.i].a; return b.sent != null ? a.split(/(?<=[.?])\s+/)[b.sent] || a : a; },
+list: b => b.items.map(T).join('. ') + '.',
+included: () => { const s = kb.services.find(v => v.id === 'e-commerce'); return `${C.included_label}: ${s.tags.join(', ')}. ${C.included_work} ${kb.projects.filter(p => p.e).map(p => p.t).join(', ')}.`; },
+service: b => { const s = kb.services.find(v => v.id === b.id); return `${s.n} ${s.name}. ${s.title} ${s.body || ''} ${C.service_includes}: ${s.tags.join(', ')}.`; },
+step: b => { const s = kb.process.steps[b.i]; return `${s.n} ${s.name}. ${s.sub} ${[s.body, s.list_intro, (s.list || []).join(', '), (s.ask || []).join(' '), s.end].filter(Boolean).join(' ')}`; },
+stepper: () => kb.process.steps.map(s => `${s.n} ${s.name}: ${s.sub}`).join(' '),
+founder: () => { const f = kb.founder; return `${f.label}. ${f.name}, ${f.roles.join(', ')}. ${f.body[0]}`; },
+project: b => { const p = kb.projects.find(x => x.s === b.s); return `${p.t}, ${p.i}, ${kb.labels[p.k]}. ${p.sum || ''}`; },
+projects: b => projList(b).map(p => `${p.t}, ${p.i}`).join('. ') + '.',
+email: () => kb.contact.email,
+socials: () => kb.contact.socials.map(s => s.label).join(', ') + '.',
+brief: () => `${C.brief_title}: ${flow.briefRows().map(r => `${r.l}: ${r.v}`).join('. ')}.`,
+handoff: b => `${b.mode === 'url' ? C.chips.pick_time : b.mode === 'send' ? C.chips.open_form_short : C.chips.open_form}, ${C.chips.copy_brief}.`,
+};
+const plain = t => t.b.map(b => (SR[b.t] ? SR[b.t](b) : '')).filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 const bot = async list => {
+let hold = false;
+const said = [];
 for (const t of list) {
 const words = plain(t).split(/\s+/).length;
 busy = true;
 log.setAttribute('aria-busy', 'true');
 const ty = el('li', 'cc-turn cc-turn--b cc-typing');
 ty.appendChild(mark('cc-tava is-typing'));
-log.appendChild(ty); toEnd();
+log.appendChild(ty);
+if (!hold) toEnd();
 await new Promise(r => setTimeout(r, reduced() ? 120 : Math.min(900, 360 + 10 * words)));
 ty.remove();
-push({ who: 'b', b: t.b, c: t.c || [], multi: t.multi, g: t.g });
+push({ who: 'b', b: t.b, c: t.c || [], multi: t.multi, g: t.g }, hold);
 const c = t.c && t.c.length ? chipsEl(t) : null;
 if (c) log.appendChild(c);
+strip();   // (24 Oct) before the scroll: the brief strip appearing makes the log shorter
 const li = [...log.querySelectorAll('.cc-turn--b')].pop(), h = log.scrollHeight - (li ? li.offsetTop - log.offsetTop : 0);
-if (li && h > log.clientHeight - 24) log.scrollTop = li.offsetTop - log.offsetTop - 12; else toEnd();
+if (hold) { if (!atBottom()) showMore(li); }
+else if (li && h > log.clientHeight - 24) { log.scrollTop = top(li); hold = true; if (!atBottom()) showMore(null); }
+else toEnd();
 if (t.g || t.b.some(b => b.t === 'price')) gesture(t.g || 'nod');
 log.removeAttribute('aria-busy');
 busy = false;
-live.textContent = plain(t) + (t.c && t.c.length ? ` ${C.options} ${t.c.map(x => x.l).join(', ')}.` : '');
+said.push(plain(t) + (t.c && t.c.length ? ` ${C.options} ${t.c.map(x => x.l).join(', ')}.` : ''));
 }
-strip();
+if (said.length) live.textContent = said.join(' ');
 const first = log.querySelector('.cc-turn--chips .cc-chip'), newest = [...log.querySelectorAll('.cc-turn--b')].pop();
-if (focusChips && first) first.focus({ preventScroll: true });
+if (focusChips && !more.hidden && !coarse()) more.firstChild.focus({ preventScroll: true });   // (the rest waits below)
+else if (focusChips && first) first.focus({ preventScroll: true });
 else if (focusChips && coarse() && newest) { newest.tabIndex = -1; newest.focus({ preventScroll: true }); }
 else if (focusChips) input.focus({ preventScroll: true });
 focusChips = false;
@@ -1143,8 +1312,7 @@ root.classList.add('cc-open');
 if (TS.lockScroll) TS.lockScroll(true);
 dlg.classList.remove('is-out', 'is-in', 'is-drag');
 dlg.showModal();
-dock.setAttribute('aria-expanded', 'true');
-launch.setAttribute('aria-expanded', 'true');
+launch.setAttribute('aria-expanded', 'true');   // (the launcher carries the state; the dock is a plain div)
 dock.classList.remove('has-dot');
 vv(true);
 requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));

@@ -202,6 +202,18 @@ def _hero(ctx):
             ls += '<span class="who-display__dot"><span class="who-display__p">.</span></span>'
         letters.append(f'<span class="who-display__w">{ls}</span>')
     title = ' '.join(letters)
+    # Entrance starter (PERF2-01): app.js's first task ran 1-2 s after the monitor image on a mid-range phone and held
+    # the LCP image at opacity 0 until then, so the entrance starts here, during parsing: once the image is decoded (or
+    # after 1.2 s, so a stalled image never holds the hero), in the next frame. That frame resolves the resting styles
+    # first (the getComputedStyle read), then sets .is-on, so the transitions start from the frame's first paint - not
+    # one frame later, which a deferred app.js task can push back by 0.5-1 s; once started they run on the compositor.
+    # .who-hero--cued tells 30-who.css that a script owns the entrance (no CSS fail-safe). Intro sessions (html.ts-intro)
+    # leave it to 30-who.js, which waits for the stage to lift. No JS: html.motion is never set, so the hero is static
+    # and visible.
+    starter = ("<script>(function(d){var h=d.querySelector('[data-who-hero]'),i=h&&h.querySelector('.who-hero__img'),n=0,"
+               "go=function(){if(n++)return;requestAnimationFrame(function(){getComputedStyle(i).opacity;h.classList.add('is-on')})};"
+               "if(!i||d.documentElement.classList.contains('ts-intro'))return;h.classList.add('who-hero--cued');"
+               "i.decode?i.decode().then(go,go):i.complete?go():i.addEventListener('load',go);setTimeout(go,1200)})(document)</script>")
     return f'''<section class="who-hero" aria-labelledby="page-title" data-who-hero>
   <div class="who-hero__stage">
     <div class="who-hero__art" aria-hidden="true">
@@ -223,7 +235,8 @@ def _hero(ctx):
     </div>
     <h1 class="who-display" id="page-title" data-who-display aria-label="{E(' '.join(words).capitalize())}."><span class="who-display__txt" aria-hidden="true">{title}</span></h1>
   </div>
-</section>'''
+</section>
+{starter}'''
 
 
 # ================================================================== 2. the person behind TESERACT (#founder)
@@ -253,6 +266,10 @@ def _founder(ctx):
 def _intro(ctx):
     h = WHO['hero']
     b0, b1, b2 = (T(fmt(t)) for t in h['body'])
+    # the box text's last two words stay together: its column is narrow on 320-360px phones, where text-wrap:pretty
+    # still left "DIFFERENT." alone on the last line (TYPO-R2-05)
+    lead_, _, last_ = b1.rpartition(' ')
+    b1 = f'{lead_}&nbsp;{last_}' if lead_ else b1
     title = T(h['title']).replace(' small', ' <br>small', 1).replace(' with', ' <br>with', 1)
     # ---- bands A + B: H2, the three hero.body annotations, rock, decorative boxes (board 1333 x 824)
     ab_wires = wires(1333, 824, ''.join([

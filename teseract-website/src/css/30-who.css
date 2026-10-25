@@ -23,6 +23,15 @@
      narrow phones keep two (10.4vw = 37.4px at 360: still 1.34x the page's 28px H2s) */
   .ct-hero .pg-hero__title{font-size:min(var(--h1-phone),10.4vw)}
 }
+/* landscape phones (e.g. 844 x 390): the 64px tablet H1 and the 64px top padding filled the first view; at 44px with a
+   short top and 12px steps the pill, H1 and lead are in view (TYPO-R2-03) - contact's questions and its "Let's talk."
+   too, whose rise (--y:40px) must still reach the reveal zone (bottom 94 % of the screen) to show. Contact keeps its
+   min() below 720px; .who-display and the 404 code have their own sizes. */
+@media (orientation:landscape) and (max-height:520px) and (min-width:656px){
+  .pg-hero{padding-top:8px}
+  .pg-hero__inner{gap:12px}
+  .pg-hero__title{font-size:44px;line-height:1}
+}
 
 /* ---------- Reference checklist seal (20x29; dark seal + --ink tick, colours in pages/who.py SEAL) */
 .seal{display:block;width:20px;height:29px;flex:none}
@@ -42,8 +51,8 @@
               (.who-ed, 1125 design px, --v) place every element at its measured design position
               (--x/--y/--w/--h on .at elements).
    <  1200px  everything flows: tablet two-column re-flow, phone single column; leader lines, nodes and
-              grid crosses give way to quiet hairlines (tablet) or to the phone circuit (< 800px: a trace in the
-              left gutter with a node at each box, two gutter hairlines, globe, "+" and end-mark; 30-who.js).
+              grid crosses give way to the circuit (a trace in the left gutter with a node at each left-column
+              box, two gutter hairlines, globe, "+" and end-mark; 30-who.js; phones since P-09, 800-1199 since PAR2-03).
    Colour: --ink type, --ink-2 secondary, --muted-strong small labels, white hairlines; the hero keeps
    image 5's photographic orange (page-local --who-accent for the display full stop); red appears once
    per band (one node, the boxed question, the promise underline).
@@ -130,12 +139,28 @@
 .motion .who-hero__curtain{transition:transform 1.35s cubic-bezier(.45,0,.2,1)}
 .motion .who-hero:not(.is-on) .who-hero__lightin{opacity:0}
 .motion .who-hero__lightin{transition:opacity .9s var(--ease)}
-.motion .who-hero:not(.is-on) .who-hero__img{opacity:0;transform:translate3d(0,24px,0) scale(.97)}
-.motion .who-hero__img{transition:opacity .9s var(--ease) .4s,transform 1.2s var(--ease) .4s}   /* rises as the light reaches it */
+/* the monitor waits in the shade (a quarter lit, not hidden) and rises with the light; no delay of its own. It is the
+   page's LCP element: Chrome counts an image painted at opacity 0 only once a fade from 0 has ended on the main thread,
+   which a busy phone pushed past 3 s; from a visible start it counts at its first paint (PERF2-01) */
+.motion .who-hero:not(.is-on) .who-hero__img{opacity:.25;transform:translate3d(0,24px,0) scale(.97)}
+.motion .who-hero__img{transition:opacity .5s var(--ease),transform .8s var(--ease)}
 .motion .who-hero:not(.is-on) .who-display__l{transform:translate3d(0,112%,0)}
 .motion .who-display__l{transition:transform 1s var(--ease) calc(.55s + var(--i) * 38ms)}
 .motion .who-hero:not(.is-on) .who-display__dot::before{transform:scale(0)}
 .motion .who-display__dot::before{transition:transform .6s var(--spring) 1.02s;transform-origin:50% 50%}
+/* Fail-safe (as 20-hero.css hero-failsafe): .is-on normally comes from the inline starter after the hero (pages/who.py,
+   .who-hero--cued) or from 30-who.js. Without either - the starter did not run and app.js has not marked the page
+   ready - the hero shows by ~1.5 s; in an intro session only once the stage's own fail-safe (04-intro.css, 4.4-4.9 s)
+   has cleared it. Keyed to html.is-ready, never to .is-on: Chrome starts no transition in the style change that also
+   drops an animation, so it must be gone frames before .is-on lands (30-who.js shows the hero at once instead when the
+   fade has already begun, so it is never replayed). */
+.motion:not(.is-ready) .who-hero:not(.who-hero--cued) :is(.who-hero__lightin,.who-hero__img,.who-display__l),
+.motion:not(.is-ready) .who-hero:not(.who-hero--cued) .who-display__dot::before{animation:who-failsafe .5s ease 1s both}
+.motion:not(.is-ready) .who-hero:not(.who-hero--cued) .who-hero__curtain{animation:who-failsafe-out .5s ease 1s both}
+.motion.ts-intro:not(.is-ready) .who-hero :is(.who-hero__lightin,.who-hero__img,.who-display__l,.who-hero__curtain),
+.motion.ts-intro:not(.is-ready) .who-hero .who-display__dot::before{animation-delay:5s}
+@keyframes who-failsafe{to{opacity:1;transform:none}}
+@keyframes who-failsafe-out{to{opacity:0;transform:translateX(85%) skewX(-13.5deg)}}
 /* settle: as the light arrives it breathes up once, the amber core flickers once and one sheen travels the streak, then
    all three rest (WCAG 2.2.2: no motion loop runs longer than ~5 s without a control, A11Y-06); paused off-screen. The
    light keeps moving only with the visitor: pointer tilt on desktop, scroll on touch (30-who.js). */
@@ -165,7 +190,7 @@
    2–4. IMAGE 6 BOARDS: intro (A+B), statement (C), why, philosophy (D)
    ========================================================================== */
 /* ---- shared annotation vocabulary (flow sizes; the desktop boards override with design px) */
-.who-note{font-size:15px;line-height:1.35;color:var(--ink-2);letter-spacing:-.005em}
+.who-note{font-size:15px;line-height:1.35;color:var(--ink-2);letter-spacing:-.005em;text-wrap:pretty}   /* no lone "CREATIVITY." (TYPO-R2-05) */
 .who-note--work,.who-note--tagline{font-size:13px;line-height:1.28;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
 .who-intro__title{font-size:clamp(40px,8.6cqw,74px);line-height:.88;letter-spacing:-.045em;text-transform:uppercase;color:var(--ink)}
 .font-hn .who-intro__title{letter-spacing:-.03em}
@@ -175,7 +200,7 @@
 .who-whobox__box{display:flex;gap:14px;align-items:flex-start;padding:8px 12px 8px 8px;border:1px solid var(--who-line);background:#050505}
 .who-whobox__thumb{flex:none;width:94px;height:94px;overflow:hidden}
 .who-whobox__thumb img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05)}
-.who-whobox__text{font-size:13px;line-height:1.33;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);padding-top:4px}
+.who-whobox__text{font-size:13px;line-height:1.33;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);padding-top:4px;text-wrap:pretty}
 .who-tag__box{display:inline-block;white-space:nowrap;padding:5px 10px;border:1px solid var(--who-line);font-size:12px;line-height:1.3;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
 .who-tag__box span{color:var(--muted-strong);padding:0 .25em}
 .who-time__in{display:flex;flex-direction:column;align-items:flex-end;font-size:12px;line-height:1.3;letter-spacing:.06em;text-transform:uppercase;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -257,7 +282,7 @@
 .who-collab__foot{margin-top:9px;padding-top:9px;border-top:1px solid var(--who-line);color:var(--muted-strong)}
 .who-collage{position:relative}
 .who-dial{color:rgba(255,255,255,.3)}
-.who-dial svg{width:100%;height:100%;overflow:visible;transform:rotate(var(--dial,0deg));will-change:transform}
+.who-dial svg{width:100%;height:100%;overflow:visible;will-change:transform}   /* rotation: 30-who.js (inline transform) */
 /* the sphere turns with the scroll through band C (30-who.js, with the dial; no endless spin: A11Y-06) */
 .who-sphere svg{transform-origin:50% 50%}
 /* image 6 end-mark: globe tile + checker chip (decorative) */
@@ -360,7 +385,7 @@
 .motion .is-in>.who-grid .who-grid__v,.motion .is-in>.who-grid .who-grid__h{transform:none}
 .motion .is-in>.who-grid .who-grid__c{opacity:1}
 
-/* ---- phone circuit (< 800px; bands A+B, C and D): the board language in one column. .who-rail is filled by 30-who.js
+/* ---- circuit (< 1200px, the re-flowed boards; bands A+B, C and D): the board language in the flow. .who-rail is filled by 30-who.js
    (trace x = half the gutter, one node per [data-who-pin] box, a short leader into it; crisp half-pixel geometry);
    the trace grows one way as its 55 % line is scrolled past and each node switches on when the trace reaches it.
    Static and complete under reduced motion; without JS the boards stay as they are (decorative only). */
@@ -526,6 +551,40 @@
   .who-panel6{grid-area:panel;margin-top:40px;margin-left:-24px;position:relative;z-index:1;max-width:420px}
   .who-steps{grid-area:steps;margin-top:16px}
   .who-phil__more{grid-area:more}
+  /* circuit (P-09 on phones; PAR2-03: the whole flow below 1200px, so tablets and landscape phones keep a trace where
+     the desktop leader lines give way): trace + nodes (30-who.js), two hairline verticals on the gutters (drawn in like
+     the desktop grid), the globe and "+" marks by the tag and clock rows, the end-mark closing band C */
+  .who-board--ab,.who-board--c,.who-board--d{position:relative}
+  .who-rail{display:block}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid{display:block}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid>i{display:none}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::before,
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{content:"";position:absolute;top:0;bottom:0;left:var(--page-pad);width:1px;
+    background:var(--who-grid);transform-origin:50% 0}
+  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{left:auto;right:var(--page-pad)}
+  .motion :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::before,
+  .motion :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{transform:scaleY(0);transition:transform 1.4s var(--ease)}
+  .motion .is-in>.who-grid::before,.motion .is-in>.who-grid::after{transform:none}
+  .who-board--ab .who-globe{display:block;grid-area:tag;justify-self:end;align-self:center;width:30px}
+  .who-board--ab .who-plus{display:block;grid-area:time;justify-self:end;align-self:center;width:22px}
+  .who-board--c .who-endmark{display:flex;grid-area:collage;align-self:end;justify-self:end;position:relative;z-index:1;width:128px;height:44px}
+}
+/* two-column flow (800-1199): the globe closes the tag's column, the "+" opens the clock's (the clock holds the right
+   edge), and the end-mark sits at the board's bottom right as on desktop; the clock's two lines keep their row while it
+   is hidden (it shows as the intro nears the screen, 30-who.js) */
+@media (min-width:800px) and (max-width:1199.98px){
+  .who-board--ab .who-plus{justify-self:start}
+  .who-time{min-height:32px}
+  .who-board--c .who-endmark{grid-area:collab}
+}
+/* short landscape (e.g. 844 x 390): band C's collage is a square that fits the screen under the nav, the card beside it
+   (VIS2-04), the sphere in the dial's lower-left corner */
+@media (min-width:800px) and (max-width:1199.98px) and (max-height:540px){
+  .who-board--c{grid-template-columns:auto minmax(0,1fr)}
+  .who-collage{width:calc(100svh - var(--nav-h) - 72px);max-width:none;margin-left:0;aspect-ratio:1;overflow:visible}
+  .who-collage .who-dial{left:0;top:0;width:100%}
+  .who-collage .who-sphere{left:0;top:auto;bottom:0;width:22%}
+  .who-collab{justify-self:start;align-self:center;margin-top:0}
 }
 @media (max-width:799.98px){
   .who-board{gap:22px;padding-top:56px}
@@ -538,12 +597,18 @@
   .who-whobox__thumb{width:72px;height:72px}
   .who-note--work,.who-note--tagline{border-left:0;padding:16px 0 0;border-top:1px solid var(--who-line)}
   .who-note--work::before,.who-note--tagline::before{margin-top:calc(.64em - 5.5px)}   /* centred on the first line: the rail's leader meets it */
-  .who-board--c{grid-template-columns:minmax(0,1fr);grid-template-areas:"stmt" "chips" "collab" "collage";padding-top:48px}
+  /* band C closes on one panel (VIS2-04): the collaborators card over the dial's upper half, the dial (75 % of the board,
+     centred, no ring off the edge) under it, the sphere and the end-mark tucked into its lower corners (the owner took
+     out only the hand and laptop photos, 15 Oct) */
+  .who-board--c{grid-template-columns:minmax(0,1fr);grid-template-areas:"stmt" "chips" "panel";padding-top:48px}
   .who-stmt{font-size:8.6cqw;line-height:1.1}
   .who-bx{padding:0 .06em}
   .who-ic svg{transform:scale(.92)}
-  .who-collab{justify-self:start;max-width:none;width:100%;margin-top:4px}
-  .who-collage{max-width:none}
+  .who-collab{grid-area:panel;justify-self:start;width:min(100%,264px);max-width:none;margin-top:4px;position:relative;z-index:2}
+  .who-collage{grid-area:panel;justify-self:center;width:75%;max-width:none;margin:68px 0 0;aspect-ratio:1;overflow:visible}
+  .who-collage .who-dial{left:0;top:0;width:100%}
+  .who-collage .who-sphere{left:-9%;top:auto;bottom:-3%;width:25%}
+  .who-board--c .who-endmark{grid-area:panel}
   .who-board--w{padding:72px var(--page-pad) 88px}
   .who-q{margin-top:24px;font-size:8.2cqw}
   .who-board--w .fdr-rs{margin-top:32px;max-width:none}
@@ -561,23 +626,10 @@
   .who-chips{display:grid;grid-template-columns:repeat(2,max-content);gap:8px}
   .who-chips li{text-align:center}
   .who-phil__more{text-wrap:pretty}
-  /* phone circuit (P-09, 30-who.js): trace + nodes, two hairline verticals on the gutters (drawn in like the desktop
-     grid), the globe and "+" mark at the ends of the tag and clock rows, the end-mark under band C */
-  .who-board--ab,.who-board--c,.who-board--d{position:relative}
-  .who-rail{display:block}
-  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid{display:block}
-  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid>i{display:none}
-  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::before,
-  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{content:"";position:absolute;top:0;bottom:0;left:var(--page-pad);width:1px;
-    background:var(--who-grid);transform-origin:50% 0}
-  :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{left:auto;right:var(--page-pad)}
-  .motion :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::before,
-  .motion :is(.who-board--ab,.who-board--c,.who-board--d)>.who-grid::after{transform:scaleY(0);transition:transform 1.4s var(--ease)}
-  .motion .is-in>.who-grid::before,.motion .is-in>.who-grid::after{transform:none}
-  .who-board--ab .who-globe{display:block;grid-area:tag;justify-self:end;align-self:center;width:30px}
-  .who-board--ab .who-plus{display:block;grid-area:time;justify-self:end;align-self:center;width:22px}
-  .who-board--c .who-endmark{display:flex;grid-area:collage;align-self:end;justify-self:end;position:relative;z-index:1;width:128px;height:44px}
 }
+/* very narrow phones (< 350px, e.g. the 320px reflow): the tag fills its row, so the globe joins the clock's row, left of
+   the "+" (A11Y2-04: it ran over "EXPERIENCES") */
+@media (max-width:349.98px){.who-board--ab .who-globe{grid-area:time;margin-right:32px}}
 
 /* founder on tablets: two columns, the aside (bar, plate, roles) pinned while the board, quote and bio scroll */
 @media (min-width:800px) and (max-width:1199.98px){
@@ -592,14 +644,13 @@
    the reveal observer's zone, otherwise they could never reveal on a short screen */
 @media (min-width:800px){.who-fdr__aside .fdr-roles{--y:8px}}
 /* short screens >= 800px wide (landscape phones, e.g. 844 x 390): the aside still pins, compacted so the bar, the
-   whole plate and the roles fit the visible height under the nav (the plate is sized by height, the roles run
-   inline); the left column is never empty while the board, quote and bio scroll */
+   whole plate and the roles fit the visible height under the nav (the plate is sized by height and leaves room for the
+   roles' three rows; run inline they wrapped after a "·", VIS2-05); the left column is never empty while the board,
+   quote and bio scroll */
 @media (min-width:800px) and (max-height:540px){
   .who-fdr__aside{top:calc(var(--nav-h) + 12px)}
-  .who-fdr__aside .fdr-frame{margin-top:12px;width:min(100%,(100svh - var(--nav-h) - 112px) * .8)}
-  .who-fdr__aside .fdr-roles{display:block;margin-top:12px}
-  .who-fdr__aside .fdr-role::before{display:none}
-  .who-fdr__aside .fdr-roles__sep{position:static;width:auto;height:auto;margin:0 .3em;overflow:visible;clip:auto}
+  .who-fdr__aside .fdr-frame{margin-top:12px;width:min(100%,(100svh - var(--nav-h) - 146px) * .8)}
+  .who-fdr__aside .fdr-roles{margin-top:12px;gap:2px}
 }
 /* too short to pin anything (< 360px tall): the aside scrolls with the page */
 @media (min-width:800px) and (max-height:359.98px){.who-fdr__aside{position:static}.who-fdr__aside .fdr-frame{width:min(100%,240px)}}
@@ -664,13 +715,16 @@
 /* non-person visual panel: near-black plate, soft brand light, the TESERACT mark */
 .who-pnl{position:relative;overflow:hidden;aspect-ratio:4/5;background:#070707;border:1px solid var(--who-line);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06);isolation:isolate}
-.who-pnl__light{position:absolute;inset:-12%;transform:translate3d(var(--lx,0),var(--ly,0),0);transition:transform .9s var(--ease)}
+/* the light's drift and the mark's turn are inline transforms from 30-who.js (no --lx/--ly: 26-founder.css registers
+   those as non-inherited with the plate's 68 % / 30 % rest values, which pushed this light off-centre before a write).
+   The drift is eased there (lerp) and written every frame, so no CSS transition (it restarted on every write, PERF2-03) */
+.who-pnl__light{position:absolute;inset:-12%}
 .who-pnl--1 .who-pnl__light{background:radial-gradient(58% 46% at 66% 30%,rgba(var(--who-glow),.42),transparent 72%),radial-gradient(40% 30% at 30% 86%,rgba(var(--who-glow),.12),transparent 70%)}
 .who-pnl--2 .who-pnl__light{background:radial-gradient(52% 40% at 30% 30%,rgba(244,244,242,.2),transparent 72%),radial-gradient(46% 36% at 72% 74%,rgba(244,244,242,.12),transparent 70%)}
 .who-pnl--3 .who-pnl__light{background:radial-gradient(56% 44% at 50% 40%,rgba(251,38,41,.32),transparent 72%),radial-gradient(40% 28% at 70% 90%,rgba(251,38,41,.12),transparent 70%)}
 .who-pnl__grid{position:absolute;inset:0;opacity:.5;
   background:linear-gradient(var(--who-grid),var(--who-grid)) 50% 0/1px 100% no-repeat,linear-gradient(var(--who-grid),var(--who-grid)) 0 50%/100% 1px no-repeat}
-.who-pnl__vis{position:absolute;left:50%;top:50%;width:58%;transform:translate(-50%,-50%) rotate(var(--rot,0deg));will-change:transform}
+.who-pnl__vis{position:absolute;left:50%;top:50%;width:58%;transform:translate(-50%,-50%);will-change:transform}
 .who-pnl__mark{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.65))}
 .who-pnl--2 .who-pnl__vis{width:118%;left:32%;top:64%}   /* close-up of the mark (<= 1.25x its 515 px) */
 .who-pnl--2 .who-pnl__mark{filter:drop-shadow(0 30px 40px rgba(0,0,0,.65)) brightness(.95)}
@@ -687,8 +741,9 @@
 .who-promise__rail{font-size:15px;line-height:1.1;letter-spacing:-.01em;text-transform:lowercase;color:var(--muted-strong);margin-bottom:22px}
 .who-promise__title{max-width:22ch;font-size:clamp(30px,4.6cqw,60px);line-height:1.06;letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
 .font-hn .who-promise__title{letter-spacing:-.025em}
-.who-promise__title::before{content:"{";color:var(--muted-strong);margin-right:.04em}
-.who-promise__title::after{content:"}";color:var(--muted-strong);margin-left:.04em}
+/* the braces are drawn, not read: empty alternative text keeps them out of the H2's name (A11Y2-05) */
+.who-promise__title::before{content:"{";content:"{" / "";color:var(--muted-strong);margin-right:.04em}
+.who-promise__title::after{content:"}";content:"}" / "";color:var(--muted-strong);margin-left:.04em}
 .motion .who-promise__title::before,.motion .who-promise__title::after{display:inline-block;transition:opacity .6s ease,transform .9s var(--ease)}
 .motion .who-promise__title:not(.is-in)::before{opacity:0;transform:translateX(-10px)}
 .motion .who-promise__title:not(.is-in)::after{opacity:0;transform:translateX(10px)}

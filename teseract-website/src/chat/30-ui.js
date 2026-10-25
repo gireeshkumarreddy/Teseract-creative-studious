@@ -52,7 +52,7 @@ const icon = d => {
   p.setAttribute('d', d); svg.appendChild(p);
   return svg;
 };
-const I = { close: 'M6 6l12 12M18 6 6 18', send: 'M5 12h13M13 6l6 6-6 6', restart: 'M5 12a7 7 0 1 0 2.1-5M5 4v4h4', check: 'm6 12.5 4 4 8-9' };
+const I = { close: 'M6 6l12 12M18 6 6 18', send: 'M5 12h13M13 6l6 6-6 6', restart: 'M5 12a7 7 0 1 0 2.1-5M5 4v4h4', check: 'm6 12.5 4 4 8-9', down: 'M12 5v13M6 12l6 6 6-6' };
 
 // ---- knowledge base: fetched on open, once (the only request the chat makes, to this website)
 let kb = null, kbP = null;
@@ -91,7 +91,7 @@ const prices = () => {
 const T = t => kb ? fill(t, prices()) : t;
 
 // ---- the window
-let dlg, panel, log, live, input, sendBtn, title, ava, stripBtn, briefBox, opener = null, pushed = false, open = false, busy = false;
+let dlg, panel, log, live, input, sendBtn, title, ava, stripBtn, briefBox, more, moreTo = null, opener = null, pushed = false, open = false, busy = false;
 const build = () => {
   dlg = el('dialog', 'cc-dlg', null, { id: 'cc-dialog', 'aria-labelledby': 'cc-title', 'aria-describedby': 'cc-desc', 'data-lenis-prevent': '' });
   panel = el('div', 'cc-panel');
@@ -138,7 +138,15 @@ const build = () => {
   });
   const submit = e => { e.preventDefault(); const v = input.value.trim(); if (!v) return; input.value = ''; sendBtn.disabled = true; size(); say(v); };
   form.addEventListener('submit', submit);
-  panel.append(head, strip, log, live, form);
+  // "More below" (25 Oct): a long answer shows from its start; the rest of its batch waits below this cue
+  more = el('div', 'cc-more');
+  more.hidden = true;
+  const mb = el('button', 'cc-chip', C.more_below, { type: 'button' });
+  mb.prepend(icon(I.down));
+  mb.addEventListener('click', onMore);
+  more.appendChild(mb);
+  log.addEventListener('scroll', () => { if (!more.hidden && atBottom()) noMore(); }, { passive: true });
+  panel.append(head, strip, log, more, live, form);
   dlg.appendChild(panel);
   document.body.appendChild(dlg);
   // close: Esc ('cancel'), the backdrop, Back on phones, a drag down on the header
@@ -237,10 +245,8 @@ const R = {
     return card;
   },
   projects: b => {
-    const f = { client: p => p.k === 'client', ecommerce: p => p.e, saas: p => p.sa, concept: p => p.k !== 'client', personal: p => p.k === 'personal', all: () => true }[b.filter];
-    const list = b.slugs ? kb.projects.filter(p => b.slugs.includes(p.s)) : kb.projects.filter(f);
     const s = el('div', 'cc-strip-p cc-strip-p--big');
-    list.forEach(p => s.appendChild(projCard(p)));
+    projList(b).forEach(p => s.appendChild(projCard(p)));
     return s;
   },
   project: b => {
@@ -282,6 +288,8 @@ const R = {
     return w;
   },
 };
+const FILTER = { client: p => p.k === 'client', ecommerce: p => p.e, saas: p => p.sa, concept: p => p.k !== 'client', personal: p => p.k === 'personal', all: () => true };
+const projList = b => (b.slugs ? kb.projects.filter(p => b.slugs.includes(p.s)) : kb.projects.filter(FILTER[b.filter]));
 const stepBody = (s, i) => {
   const w = el('div', 'cc-step');
   if (s.body) w.appendChild(el('p', null, s.body));
@@ -335,7 +343,7 @@ const turnEl = (t, i, last) => {
   return li;
 };
 const chipsEl = (t) => {
-  const g = el('div', 'cc-chips' + (t.c.some(c => c.a && c.a.cur) ? ' is-cur' : ''), null, { role: 'group', 'aria-label': 'Suggested replies' });
+  const g = el('div', 'cc-chips' + (t.c.every(c => c.a && c.a.cur) ? ' is-cur' : ''), null, { role: 'group', 'aria-label': 'Suggested replies' });
   const multi = new Set(t.multi ? (flow.st.multi || []) : []);
   t.c.slice(0, 9).forEach((c, j) => {
     const a = c.a || {}, k = a.k && kb && kb.chips[a.k];
@@ -344,7 +352,7 @@ const chipsEl = (t) => {
     else {
       b = el('button', 'cc-chip', c.l, { type: 'button' });
       if (a.m) { b.setAttribute('aria-pressed', String(multi.has(a.m))); b.prepend(icon(I.check)); }
-      if (a.cur) b.setAttribute('aria-pressed', String(!!c.pressed));
+      if (a.cur && 'pressed' in c) b.setAttribute('aria-pressed', String(!!c.pressed));   // (the switcher; not an offer)
       b.addEventListener('click', () => {
         if (a.m) {
           const none = /^(None of these|Not sure yet)$/.test(a.m);
@@ -367,6 +375,7 @@ const chipsEl = (t) => {
 };
 const render = () => {
   if (!log) return;
+  noMore();
   log.replaceChildren(...turns.map((t, i) => turnEl(t, i)));
   const last = turns[turns.length - 1];
   if (last && last.who === 'b' && last.c && last.c.length) log.appendChild(chipsEl(last));
@@ -385,36 +394,82 @@ const strip = () => {
 };
 const atBottom = () => log.scrollHeight - log.scrollTop - log.clientHeight < 40;
 const toEnd = () => { log.scrollTop = log.scrollHeight; };
-const push = t => { turns.push(t); if (log) { const c = log.querySelector('.cc-turn--chips'); if (c) c.remove(); log.appendChild(turnEl(t, turns.length - 1)); toEnd(); } save(); };
-const plain = t => t.b.map(b => (b.t === 'p' || b.t === 'c' || b.t === 'echo' || b.t === 'quote') ? T(b.text || C[b.k] || fill(C.echo, { parts: (b.parts || []).join(', ') }))
-  : b.t === 'price' ? T(b.k === 'w' ? `${C.price_label_w} {W}.` : `${C.price_label_e} {E}.`) : b.t === 'faq' ? kb.faq[b.i].a : b.t === 'list' ? b.items.join('. ') : '').filter(Boolean).join(' ');
+const top = li => li.offsetTop - log.offsetTop - 12;
+// the cue: shown while the visitor reads a long answer from its start and more of it waits below; it goes at the bottom
+const showMore = li => { if (!moreTo) moreTo = li; more.hidden = false; };
+const noMore = () => { if (more) more.hidden = true; moreTo = null; };
+const onMore = () => {
+  const li = moreTo, f = more.contains(document.activeElement);
+  if (li && li.isConnected && log.scrollHeight - li.offsetTop + log.offsetTop > log.clientHeight) log.scrollTop = top(li); else toEnd();
+  noMore();
+  if (f) { const c = log.querySelector('.cc-turn--chips .cc-chip'), n = li && li.isConnected ? li : [...log.querySelectorAll('.cc-turn--b')].pop(); if (c && c.getBoundingClientRect().bottom <= log.getBoundingClientRect().bottom) c.focus({ preventScroll: true }); else if (n) { n.tabIndex = -1; n.focus({ preventScroll: true }); } }
+};
+// a chip's group goes when it is used: focus that was on one of its chips moves to the title first (24 Oct: it fell to
+// the page), and on to the next chips or the answer when it arrives (bot). keep: the reading position stays (bot)
+const push = (t, keep) => {
+  turns.push(t);
+  if (log) {
+    const c = log.querySelector('.cc-turn--chips');
+    if (c) { if (c.contains(document.activeElement)) title.focus({ preventScroll: true }); c.remove(); }
+    log.appendChild(turnEl(t, turns.length - 1));
+    if (!keep) { noMore(); toEnd(); }
+  }
+  save();
+};
+// a turn as text for the live region: what every block shows (24 Oct: cards were silent, only the options were read)
+const SR = {
+  p: b => T(b.text), c: b => T(C[b.k]), echo: b => T(fill(C.echo, { parts: (b.parts || []).join(', ') })), quote: b => b.text,
+  price: b => T(b.k === 'w' ? `${C.price_label_w} {W}.` : `${C.price_label_e} {E}.`),
+  faq: b => { const a = kb.faq[b.i].a; return b.sent != null ? a.split(/(?<=[.?])\s+/)[b.sent] || a : a; },
+  list: b => b.items.map(T).join('. ') + '.',
+  included: () => { const s = kb.services.find(v => v.id === 'e-commerce'); return `${C.included_label}: ${s.tags.join(', ')}. ${C.included_work} ${kb.projects.filter(p => p.e).map(p => p.t).join(', ')}.`; },
+  service: b => { const s = kb.services.find(v => v.id === b.id); return `${s.n} ${s.name}. ${s.title} ${s.body || ''} ${C.service_includes}: ${s.tags.join(', ')}.`; },
+  step: b => { const s = kb.process.steps[b.i]; return `${s.n} ${s.name}. ${s.sub} ${[s.body, s.list_intro, (s.list || []).join(', '), (s.ask || []).join(' '), s.end].filter(Boolean).join(' ')}`; },
+  stepper: () => kb.process.steps.map(s => `${s.n} ${s.name}: ${s.sub}`).join(' '),
+  founder: () => { const f = kb.founder; return `${f.label}. ${f.name}, ${f.roles.join(', ')}. ${f.body[0]}`; },
+  project: b => { const p = kb.projects.find(x => x.s === b.s); return `${p.t}, ${p.i}, ${kb.labels[p.k]}. ${p.sum || ''}`; },
+  projects: b => projList(b).map(p => `${p.t}, ${p.i}`).join('. ') + '.',
+  email: () => kb.contact.email,
+  socials: () => kb.contact.socials.map(s => s.label).join(', ') + '.',
+  brief: () => `${C.brief_title}: ${flow.briefRows().map(r => `${r.l}: ${r.v}`).join('. ')}.`,
+  handoff: b => `${b.mode === 'url' ? C.chips.pick_time : b.mode === 'send' ? C.chips.open_form_short : C.chips.open_form}, ${C.chips.copy_brief}.`,
+};
+const plain = t => t.b.map(b => (SR[b.t] ? SR[b.t](b) : '')).filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 
-// one bot turn after the typing shards: delay = min(900, 360 + 10 x words); reduced motion 120 ms
+// one bot turn after the typing shards: delay = min(900, 360 + 10 x words); reduced motion 120 ms. A turn taller than
+// the log shows from its start; the rest of the batch then lands below without moving it, behind "More below" (25 Oct:
+// the e-commerce answer's first turn was scrolled away unseen). The live region reads the whole batch once, at its end.
 const bot = async list => {
+  let hold = false;
+  const said = [];
   for (const t of list) {
     const words = plain(t).split(/\s+/).length;
     busy = true;
     log.setAttribute('aria-busy', 'true');
     const ty = el('li', 'cc-turn cc-turn--b cc-typing');
     ty.appendChild(mark('cc-tava is-typing'));
-    log.appendChild(ty); toEnd();
+    log.appendChild(ty);
+    if (!hold) toEnd();
     await new Promise(r => setTimeout(r, reduced() ? 120 : Math.min(900, 360 + 10 * words)));
     ty.remove();
-    push({ who: 'b', b: t.b, c: t.c || [], multi: t.multi, g: t.g });
+    push({ who: 'b', b: t.b, c: t.c || [], multi: t.multi, g: t.g }, hold);
     const c = t.c && t.c.length ? chipsEl(t) : null;
     if (c) log.appendChild(c);
-    // a turn taller than the log: show its start (the answer reads from the top), else the end
+    strip();   // (24 Oct) before the scroll: the brief strip appearing makes the log shorter
     const li = [...log.querySelectorAll('.cc-turn--b')].pop(), h = log.scrollHeight - (li ? li.offsetTop - log.offsetTop : 0);
-    if (li && h > log.clientHeight - 24) log.scrollTop = li.offsetTop - log.offsetTop - 12; else toEnd();
+    if (hold) { if (!atBottom()) showMore(li); }
+    else if (li && h > log.clientHeight - 24) { log.scrollTop = top(li); hold = true; if (!atBottom()) showMore(null); }
+    else toEnd();
     if (t.g || t.b.some(b => b.t === 'price')) gesture(t.g || 'nod');
     log.removeAttribute('aria-busy');
     busy = false;
-    live.textContent = plain(t) + (t.c && t.c.length ? ` ${C.options} ${t.c.map(x => x.l).join(', ')}.` : '');
+    said.push(plain(t) + (t.c && t.c.length ? ` ${C.options} ${t.c.map(x => x.l).join(', ')}.` : ''));
   }
-  strip();
+  if (said.length) live.textContent = said.join(' ');
   // after a chip: focus goes to the next chips, else the composer (on touch screens the newest answer: no keyboard pops)
   const first = log.querySelector('.cc-turn--chips .cc-chip'), newest = [...log.querySelectorAll('.cc-turn--b')].pop();
-  if (focusChips && first) first.focus({ preventScroll: true });
+  if (focusChips && !more.hidden && !coarse()) more.firstChild.focus({ preventScroll: true });   // (the rest waits below)
+  else if (focusChips && first) first.focus({ preventScroll: true });
   else if (focusChips && coarse() && newest) { newest.tabIndex = -1; newest.focus({ preventScroll: true }); }
   else if (focusChips) input.focus({ preventScroll: true });
   focusChips = false;
@@ -489,8 +544,7 @@ const show = async (opts = {}) => {
   if (TS.lockScroll) TS.lockScroll(true);
   dlg.classList.remove('is-out', 'is-in', 'is-drag');
   dlg.showModal();
-  dock.setAttribute('aria-expanded', 'true');
-  launch.setAttribute('aria-expanded', 'true');
+  launch.setAttribute('aria-expanded', 'true');   // (the launcher carries the state; the dock is a plain div)
   dock.classList.remove('has-dot');
   vv(true);
   requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));

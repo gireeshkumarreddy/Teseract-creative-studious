@@ -64,10 +64,10 @@ G.TSChatFlow = (C, env) => {
       if (direct) lead.push(P(C.p0[1]), { t: 'list', items: C.factors_web, src: 'chat:factors_web' });
       return next(priceTurn('w', lead).concat(st.bq ? budgetReply() : [], [P(C.w_after)]));
     }
-    if (path === 'E') {
+    if (path === 'E') {   // two turns (24 Oct): what the service includes, then the price and the first question
       const s = kb().services.find(v => v.id === 'e-commerce');
-      return next(priceTurn('e', lead.concat([P(C.e_intro), P(s.body, s.src + '.body'), { t: 'included' }]))
-        .concat(st.bq ? budgetReply() : [], [P(C.e_after)]));
+      return [{ b: lead.concat([P(C.e_intro), P(s.body, s.src + '.body'), { t: 'included' }]), c: [] }]
+        .concat(next(priceTurn('e', []).concat(st.bq ? budgetReply() : [], [P(C.e_after)])));
     }
     if (path === 'S') {
       const svc = a && guessService(a);
@@ -81,8 +81,14 @@ G.TSChatFlow = (C, env) => {
   const SVC = { 'Product & SaaS': 'product-saas', 'AI & Automation': 'ai-automation', 'Interactive & 3D': 'interactive-3d',
     'Brand & Digital Identity': 'brand-digital-identity', 'Digital Strategy': 'digital-strategy' };
   const serviceId = name => SVC[name];
-  const guessService = a => a.c.has('AI') ? 'AI & Automation' : a.c.has('BRAND') ? 'Brand & Digital Identity' : a.c.has('THREE_D') ? 'Interactive & 3D'
-    : a.c.has('STRAT') ? 'Digital Strategy' : a.c.has('SAAS') ? 'Product & SaaS' : null;
+  // the service the question weighs most ("an interactive 3D experience for my brand" is 3D); ties in this order
+  const GUESS = [['THREE_D', 'Interactive & 3D'], ['AI', 'AI & Automation'], ['SAAS', 'Product & SaaS'], ['BRAND', 'Brand & Digital Identity'], ['STRAT', 'Digital Strategy']];
+  const guessService = a => {
+    const w = EN.weigh(a.toks || []);
+    a.c.forEach(k => { if (!w[k]) w[k] = .5; });   // (a concept found by phrase: "digital product")
+    const best = GUESS.reduce((b, g) => ((w[g[0]] || 0) > (w[b[0]] || 0) ? g : b), GUESS[0]);
+    return w[best[0]] ? best[1] : null;
+  };
 
   // ---- slots typed in passing: fill the brief, say back what was understood
   const take = (sl, a) => {
@@ -108,8 +114,9 @@ G.TSChatFlow = (C, env) => {
     st.bq = 0;
     if (!bu || bu.text || bu.skip) return [];
     if (st.path === 'S') return [P(C.budget_s)];
-    const e = st.path === 'E', start = e ? kb().pricing.e : kb().pricing.w;
-    if (bu.inr < start) return [P(fill(C.budget_low, { Xs: e ? C.budget_low_e : C.budget_low_w, X: e ? '{E}' : '{W}' }))];
+    // compared in the visitor's own currency with the amount the chat shows (24 Oct: £430 for a store is not "below")
+    const e = st.path === 'E', A = kb().pricing.amounts, k = e ? 'e' : 'w';
+    if (A[bu.cur] ? bu.amount < A[bu.cur][k] : bu.inr < A.INR[k]) return [P(fill(C.budget_low, { Xs: e ? C.budget_low_e : C.budget_low_w, X: e ? '{E}' : '{W}' }))];
     return [P(C.budget_ok)];
   };
 
@@ -143,14 +150,19 @@ G.TSChatFlow = (C, env) => {
     'about.founder': () => [{ b: [{ t: 'founder' }], c: [{ l: C.chips.story, a: { u: { r: 'who-we-are', f: 'founder' } } }].concat(chips(['why', 'talk'])) }],
     'about.clients_count': () => {
       const cl = kb().projects.filter(p => p.k === 'client');
-      return [{ b: [P(fill(C.clients_count, { n_client: cl.length, first: cl[0].i.toLowerCase(), another: cl[cl.length - 1].i.toLowerCase() })), from('work', 'projects')], c: chips(['work']) }];
+      return [{ b: [P(fill(C.clients_count, { n_client: cl.length, first: low(cl[0].i), another: low(cl[cl.length - 1].i) })), from('work', 'projects')], c: chips(['work']) }];
     },
     'contact.how': () => [{ b: [P(fill(C.contact, { email: kb().contact.email })), { t: 'email' }, { t: 'socials' }], c: chips(['book']) }],
     'contact.phone': () => [{ b: [P(C.phone), { t: 'email' }], c: chips(['book']) }],
     'contact.socials': () => [{ b: [{ t: 'socials' }], c: chips(['book', 'show_email']) }],
     'contact.email': () => [{ b: [{ t: 'email' }], c: chips(['book']) }],
     'contact.book': () => handoff('book'),
-    'contact.start': () => st.brief.type ? next() : H['price.general'](),
+    // "I want to start", or a project told in a sentence ("a website before Diwali, around 5 pages": into the brief)
+    'contact.start': (a) => {
+      if (st.brief.type) { if (a && a.sl) take(a.sl, a); return next(); }
+      const t = a && a.c && a.c.size ? (a.c.has('ECOM') ? 'E' : /landing|one_pager/.test(a.s) ? 'L' : a.c.has('SITE') ? 'W' : null) : null;
+      return t ? enter(t, false, a) : H['price.general']();
+    },
     'meta.hi': () => [{ b: [P(C.hi)], c: welcomeChips() }],
     'meta.thanks': () => [{ b: [P(C.thanks)], c: welcomeChips().slice(0, 4) }],
     'meta.bye': () => [{ b: [P(C.bye)], c: [] }],
@@ -161,17 +173,28 @@ G.TSChatFlow = (C, env) => {
     'meta.personal': () => [{ b: [P(C.personal)], c: [] }],
     'meta.off_topic': () => [{ b: [P(C.off_topic)], c: welcomeChips(), g: 'tilt' }],
     'nodata.address': () => [{ b: [{ t: 'faq', i: 1 }, P(C.nodata)], c: chips(['ask_gireesh', 'book']), g: 'tilt' }],
+    // paying in a currency is not on the site; the displayed currency can still change (24 Oct)
+    'nodata.payment': (a) => [{ b: [P(C.nodata)], c: chips(a && a.ent && a.ent.cur ? ['ask_gireesh', 'change_cur', 'prices'] : ['ask_gireesh', 'prices', 'back_start']), g: 'tilt' }],
+    'nodata.consult': () => [{ b: [P(C.nodata)], c: chips(['ask_gireesh', 'book']), g: 'tilt' }],
   };
   const nodata = () => [{ b: [P(C.nodata)], c: chips(['ask_gireesh', 'prices', 'back_start']), g: 'tilt' }];
+  // a project's name in a sentence (24 Oct): "ONE PIECE (Luffy)", and a personal project named after the founder by
+  // what it is, "Gireesh's designer portfolio"; an industry in a sentence keeps its acronyms ("AI creative ...")
+  const low = t => String(t).split(' ').map(w => (/[A-Z].*[A-Z]/.test(w) ? w : w.toLowerCase())).join(' ');
+  const self = p => p.k === 'personal' && kb().founder && new RegExp('^' + kb().founder.name + '\\b', 'i').test(p.t);
+  const pname = p => (self(p) ? `${kb().founder.name}'s ${low(p.i)}` : p.t.replace(/\s*\|\s*(.+)$/, ' ($1)'));
 
+  // never a figure for the project itself; then, as every price answer, a quote through Gireesh (24 Oct: + Book a call).
+  // A client store (p.e, or p.st: a store by its summary, Vynk) compares with the e-commerce start.
   const projectPrice = p => {
     if (!p) return H['price.general']();
     st.pent = { project: p.s };
+    const n = pname(p), shop = p.e || p.st;
     let t;
-    if (p.k === 'client') t = fill(C.pp_client, { project: p.t, industry: p.i, X: p.e ? '{E}' : '{W}', factors: p.e ? C.pp_factors_e : C.pp_factors_w });
-    else if (p.k === 'personal') t = fill(C.pp_personal, { project: p.t });
-    else t = fill(p.sa ? C.pp_saas : p.e ? C.pp_concept_e : C.pp_concept, { project: p.t });
-    return [{ b: [P(t)], c: [{ l: C.chips.like, a: { x: '@like', p: p.s } }, { l: fill(C.chips.see_project, { project: p.t }), a: { u: { r: 'projects/' + p.s, f: '' } } }].concat(chips(['other_prices'])) }];
+    if (p.k === 'client') t = fill(C.pp_client, { project: n, industry: low(p.i), X: shop ? '{E}' : '{W}', factors: shop ? C.pp_factors_e : C.pp_factors_w });
+    else if (p.k === 'personal') t = fill(self(p) ? C.pp_personal_self : C.pp_personal, { project: n });
+    else t = fill(p.sa ? C.pp_saas : p.e ? C.pp_concept_e : C.pp_concept, { project: n });
+    return [{ b: [P(t), P(C.s_close)], c: [{ l: C.chips.like, a: { x: '@like', p: p.s } }, { l: fill(C.chips.see_project, { project: n }), a: { u: { r: 'projects/' + p.s, f: '' } } }].concat(chips(['book', 'other_prices'])) }];
   };
   const FILTERS = { client: p => p.k === 'client', ecommerce: p => p.e, saas: p => p.sa, concept: p => p.k !== 'client', personal: p => p.k === 'personal', all: () => true };
   const work = (f, intro) => {
@@ -200,10 +223,21 @@ G.TSChatFlow = (C, env) => {
       if (['USD', 'CAD', 'AUD', 'SGD'].includes(now)) cur = now;
       else return [{ b: [P(C.cur_which)], c: C.choices.dollars.map((l, i) => ({ l, a: { cur: ['USD', 'CAD', 'AUD', 'SGD'][i] } })) }];
     }
+    // a place the visitor names (24 Oct review, TP-01; awaiting the owner, LAUNCH-CHECKLIST 3h): it switches the
+    // currency only when this device's region is unknown (as the chat's own "Where are you based?" does), else it is
+    // offered as a chip. The owner's rule is the device, never an IP lookup.
+    if (country) {
+      const c = env.cur();
+      if (c.unknown) { env.setCur(cur); st.brief.regionDone = 1; }
+      if (c.unknown || (cur === c.code && !c.unknown)) return [{ b: [P(fill(C.cur_country, { cur_name: name(cur), country }))], c: [] }].concat(back);
+      const t = [{ b: [P(fill(C.cur_offer, { cur_now: name(c.code), cur_name: name(cur) }))], c: [] }].concat(back);
+      t[t.length - 1].c = (t[t.length - 1].c || []).concat(offer(cur));   // (only the last turn keeps its chips)
+      return t;
+    }
     env.setCur(cur);
-    const t = country ? fill(C.cur_country, { cur_name: name(cur), country }) : fill(C.cur_switched, { cur_name: name(cur) });
-    return [{ b: [P(t)], c: [] }].concat(back);
+    return [{ b: [P(fill(C.cur_switched, { cur_name: name(cur) }))], c: [] }].concat(back);
   };
+  const offer = code => ({ l: fill(C.chips.show_cur, { cur_name: kb().pricing.cur[code].name }), a: { cur: code } });
   const curChips = () => CURS.map(c => ({ l: (kb().pricing.cur[c].sym.trim() === c ? c : kb().pricing.cur[c].sym.trim() + ' ' + c), a: { cur: c }, pressed: env.cur().code === c && !env.cur().unknown }));
   const handoff = mode => {
     const has = Object.keys(st.brief).some(k => !/^(needs|store|questions)$/.test(k) && st.brief[k]) || st.brief.questions.length;
@@ -211,7 +245,8 @@ G.TSChatFlow = (C, env) => {
     const url = kb().contact.booking_url;
     if (mode === 'book' && url) return [{ b: [P(C.book_url)].concat(card, [{ t: 'handoff', mode: 'url' }]), c: [] }];
     if (mode === 'book') return [{ b: [P(C.book)].concat(card, [{ t: 'handoff', mode: 'book' }]), c: [] }];
-    return [{ b: [P(C.send)].concat(card, [P(C.send_after), { t: 'handoff', mode: 'send' }]), c: [] }];
+    // (nothing to show yet: no "Here's what I'll put in the form:" over an empty brief)
+    return [{ b: (has ? [P(C.send_lead)] : []).concat(card, [P(C.send_after), { t: 'handoff', mode: 'send' }]), c: [] }];
   };
 
   // ---- an intent's answer
@@ -256,73 +291,104 @@ G.TSChatFlow = (C, env) => {
   };
   const stepTyped = (text, m) => {
     const step = st.step, opts = step === 'type' ? C.choices.type : C.choices[step] || [];
-    const n = EN.norm(text);
-    const i = opts.findIndex(o => EN.norm(o) === n || (n.length > 3 && EN.norm(o).startsWith(n)));
+    const n = EN.norm(text), r = step === 'region' ? n.replace(/^(i am |im |we are |based |i live |we live )?(in |from )?(the )?/, '') : n;
+    const i = opts.findIndex(o => EN.norm(o) === r || (r.length > 3 && EN.norm(o).startsWith(r)));
     if (i >= 0 && !MULTI[step]) return stepAnswer(step, step === 'type' ? 'WLESN'[i] : opts[i]);
-    // a clear question about something else is answered as asked (the step waits: "Back to my brief")
-    const own = { W: 'price.website', L: 'price.website', E: 'price.ecommerce', S: 'price.product' }[st.path];
-    if (m.kind === 'answer' && m.id !== own && !/^price\.(budget|currency)$/.test(m.id) && !(step === 'type' && /^(price\.|svc\.|faq\.[56]$)/.test(m.id))
-      && !(MULTI[step] && /^svc\./.test(m.id))) return null;
+    const path = { W: 'price.website', L: 'price.website', E: 'price.ecommerce', S: 'price.product' }[st.path];
+    const other = m.kind === 'answer' && m.id !== path && !/^price\.(budget|currency)$/.test(m.id);
     const sl = m.a.sl || {};
     if (step === 'type') {
+      if (other && !/^(price\.|svc\.|faq\.[56]$)/.test(m.id)) return null;
       const c = m.a.c;
       const t = c.has('ECOM') ? 'E' : /landing|one_pager/.test(m.a.s) ? 'L' : c.has('SITE') ? 'W' : (c.has('SAAS') || c.has('AI') || c.has('BRAND') || c.has('THREE_D')) ? 'S' : /not sure|no idea|dont know|do not know/.test(n) ? 'N' : null;
       if (t) { const parts = take(sl, m.a); return [{ b: echo(parts, null), c: [] }].filter(x => x.b.length).concat(enter(t, false, m.a)); }
+      return null;
     }
     if (step === 'idea' && !sl.personal) return stepAnswer('idea', text.trim());
     if (MULTI[step]) {
       const picked = opts.filter(o => { const w = EN.tokens(o).filter(x => x.length > 2); return w.some(x => m.a.toks.includes(x)); });
       if (picked.length) { st.brief[MULTI[step]] = picked; st.brief[step + 'Done'] = 1; return next(); }
     }
-    const parts = take(sl, m.a);
-    if (parts.length && (sl.pages || sl.products || sl.categories || sl.timeline || sl.budget)) {
-      if (step === 'budget' && sl.budget) return [{ b: echo(parts).concat(budgetReply()), c: [] }].concat(next()).filter(t => t.b.length || t.c.length);
-      return [{ b: echo(parts).concat(sl.budget ? budgetReply() : []), c: [] }].filter(t => t.b.length).concat(next());
+    // the answer to the question asked comes first (24 Oct): a bare "8", "five", "1000", "1 lakh", "2 months", or
+    // "about 50 products" (never read as a product-design question), with anything else said in it ("8 pages by
+    // December, budget 50k"). Not when the visitor asks another price ("how much is an online store?")
+    if (!(other && /^price\.(website|ecommerce|product|project)$/.test(m.id) && m.a.c.has('PRICE'))) {
+      const own = EN.stepSlot(step, text, kb(), env.cur().code), x = Object.assign({}, sl, own || {});
+      if (own || x.pages || x.products || x.categories || x.timeline || x.budget) {
+        const parts = take(x, m.a);
+        if (x.budget) return [{ b: echo(parts).concat(budgetReply()), c: [] }].concat(next()).filter(t => t.b.length || t.c.length);
+        return [{ b: echo(parts), c: [] }].filter(t => t.b.length).concat(next());
+      }
     }
+    // "how much is it?" in the middle of the intake: the price again, then the question that waits
+    if (m.kind === 'answer' && m.id === 'price.general' && /^[WLE]$/.test(st.path || '')) return enter(st.path, false);
+    // a clear question about something else is answered as asked (the step waits: "Back to my brief")
+    if (other && !(MULTI[step] && /^svc\./.test(m.id))) return null;
     if (step === 'budget' && /not sure|no idea/.test(n)) return stepAnswer('budget', C.choices.budget[0]);
     if (step === 'region' && m.a.ent.place) return stepAnswer('region', Object.keys(REGION).find(k => REGION[k] === m.a.ent.place[0]) || 'else');
+    // not understood while a question waits: say so, and ask it again (never a restart of the intake)
+    if (m.kind === 'miss' || m.kind === 'search') { const t = ask(step); t.b = [P(C.miss1)].concat(t.b); return [t]; }
     return null;
   };
 
   // ---- the public face: one input (typed text or a chip) -> {user, turns}
+  const ASK = /^(ask_gireesh|pass)$/;
   const input = (x) => {
     if (x.chip) return { user: x.chip.l, turns: chipTurns(x.chip) };
     const text = String(x.text || '').slice(0, 500);
-    const m = EN.match(kb(), text, st.prev, env.cur().code);
+    const m = EN.match(kb(), text, st.prev, env.cur().code, st.step);
+    const e = m.a.ent, cur = env.cur();
     // "in dollars" with no dollar currency on: ask which dollars first
-    if (m.kind === 'answer' && /^price\./.test(m.id) && m.a.ent.cur === 'DOL' && !/^(USD|CAD|AUD|SGD)$/.test(env.cur().code)) m.id = 'price.currency';
+    if (m.kind === 'answer' && /^price\./.test(m.id) && e.cur === 'DOL' && e.ask && !/^(USD|CAD|AUD|SGD)$/.test(cur.code)) m.id = 'price.currency';
     let turns = null;
     if (st.step && m.a.sl && !m.a.sl.personal) turns = stepTyped(text, m);
     if (!turns) {
       if (m.kind === 'answer') {
         st.misses = 0;
-        // a place or a currency in the message: switch first (then the answer shows it)
-        const lead = [];
-        if (m.id !== 'price.currency' && (m.a.ent.cur && m.a.ent.cur !== '?' && m.a.ent.cur !== 'DOL' || m.a.ent.place && m.a.ent.place[0] !== '?')) {
-          const cur = m.a.ent.cur || m.a.ent.place[0];
-          if (cur !== env.cur().code || env.cur().unknown) { env.setCur(cur); lead.push(P(m.a.ent.place ? fill(C.cur_country, { cur_name: kb().pricing.cur[cur].name, country: m.a.ent.place[1] }) : fill(C.cur_switched, { cur_name: kb().pricing.cur[cur].name }))); }
+        // the currency (24 Oct review, TP-01): it changes when the visitor asks to see prices in one ("in euros", "show
+        // pounds"), or names a place on a device whose region is unknown (25 Oct, as SPEC 'currency'); else a currency
+        // or a place named in passing is offered as a chip (the device's region stays, pending the owner: 3h)
+        const lead = [], ok = c => c && c !== '?' && c !== 'DOL';
+        let offerCur = null;
+        if (m.id !== 'price.currency' && !/^nodata\./.test(m.id)) {   // ("can I pay in euros": not a display request)
+          if (ok(e.cur) && e.ask) {
+            if (e.cur !== cur.code || cur.unknown) { env.setCur(e.cur); lead.push(P(fill(C.cur_switched, { cur_name: kb().pricing.cur[e.cur].name }))); }
+          } else if (cur.unknown && e.place && ok(e.place[0]) && m.id !== 'faq.1') {   // (not "do you work in the UK")
+            env.setCur(e.place[0]); st.brief.regionDone = 1;
+            lead.push(P(fill(C.cur_country, { cur_name: kb().pricing.cur[e.place[0]].name, country: e.place[1] })));
+          } else {
+            const c = ok(e.cur) ? e.cur : e.place && ok(e.place[0]) ? e.place[0] : null;
+            if (c && (c !== cur.code || cur.unknown)) offerCur = c;
+          }
         }
-        const typeWord = /^price\.(website|ecommerce)$/.test(m.id) && ((m.a.sl.pages && 1) + (m.a.sl.products ? 1 : 0) + (m.a.sl.timeline ? 1 : 0) + (m.a.sl.budget ? 1 : 0)) >= 1
-          ? (m.id === 'price.ecommerce' ? 'an online store' : 'a website') : null;
+        const sl = m.a.sl;
+        const said = /^price\.(website|ecommerce|budget)$|^contact\.start$/.test(m.id) && ((sl.pages ? 1 : 0) + (sl.products ? 1 : 0) + (sl.timeline ? 1 : 0) + (sl.budget ? 1 : 0)) >= 1;
         turns = answer(m.id, m.a);
+        const typeWord = said ? { E: 'an online store', W: 'a website', L: 'a landing page' }[st.path] : null;   // (said back: "Got it: ...")
         if (typeWord) {
           const parts = [];
-          const sl = m.a.sl, b = st.brief;
+          const b = st.brief;
           if (sl.pagesN > 1) parts.push(`about ${sl.pagesN} pages`);
           if (sl.productsN) parts.push(`about ${sl.productsN} products`);
           if (sl.timeline) parts.push('live ' + (sl.timeText || sl.timeline.toLowerCase()));
           if (sl.budget) { b.budget = sl.budget; st.bq = 1; parts.push('budget {B}'); }
-          const e = echo(parts, typeWord);
-          if (e.length) turns[0].b = e.concat(turns[0].b);
+          const ec = echo(parts, typeWord);
+          if (ec.length) turns[0].b = ec.concat(turns[0].b);
         }
         if (lead.length) turns[0].b = lead.concat(turns[0].b);
+        const last = turns[turns.length - 1];
+        if (offerCur && last && !last.multi && !(last.c || []).some(c => c.a && c.a.cur)) last.c = (last.c || []).slice(0, 7).concat(offer(offerCur));
         if (st.step && !/^price\.|^contact\.book|^meta\.restart/.test(m.id) && turns.length === 1 && !turns[0].c.some(c => c.a.k === 'back_brief')) turns[0].c = turns[0].c.slice(0, 5).concat(chip('back_brief'));
+        // ads, marketing or copy asked with a website (25 Oct): the website part is answered, the rest offered to Gireesh
+        if (m.a.also && !st.step && last && !last.multi && !(last.c || []).some(c => c.a && ASK.test(c.a.k || ''))) last.c = (last.c || []).slice(0, 7).concat(chip('ask_gireesh'));
+        // a question the site can't answer goes with "Ask Gireesh" into the form (24 Oct: it was lost)
+        if (m.a.also || turns.some(t => (t.c || []).some(c => c.a && ASK.test(c.a.k || '')))) st.q0 = text;
         st.prev = { c: [...m.a.c], ent: Object.assign({}, m.a.ent, st.pent || {}) };
         st.pent = null;
       } else if (m.kind === 'maybe') {
         st.q0 = text;
         const ids = m.ids.filter((v, i, l) => l.indexOf(v) === i).slice(0, 3);
-        turns = [{ b: [P(C.maybe)], c: ids.map(id => ({ l: label(id), a: { i: id } })).concat(chip('something_else')) }];
+        turns = [{ b: [P(C.maybe)], c: ids.map(id => ({ l: label(id), a: { i: id } })).concat(chip(st.step ? 'back_brief' : 'something_else')) }];
       } else if (m.kind === 'search') {
         st.q0 = text;
         turns = [{ b: [P(C.search)].concat(...m.hits.map(h => [{ t: 'quote', text: h.text }, { t: 'from', page: h.page, url: h.url }])), c: chips(['that_helps', 'ask_gireesh']) }];
@@ -346,8 +412,8 @@ G.TSChatFlow = (C, env) => {
     if (a.i) return answer(a.i, EN.analyze(kb(), ''));
     if (a.x === '@like' || a.k === 'like') {
       const p = proj(a.p || (st.prev && st.prev.ent && st.prev.ent.project) || env.project);
-      if (p) st.brief.similar = p.t;
-      return enter(p && p.e ? 'E' : 'W', true);
+      if (p) st.brief.similar = pname(p);
+      return enter(p && (p.e || p.st) ? 'E' : 'W', true);
     }
     const k = a.k, t = kb().chips[k];
     if (k === 'keep' || k === 'ask_else' || k === 'something_else') return [{ b: [P(C.else)], c: welcomeChips() }];
@@ -412,7 +478,7 @@ G.TSChatFlow = (C, env) => {
   const welcome = () => {
     const b = [P(C.welcome[0])];
     const p = env.project && proj(env.project);
-    if (p) b.push(P(fill(C.welcome_project, { project: p.t, industry: p.i, label_phrase: C.label_phrase[p.k] })));
+    if (p) b.push(P(self(p) ? fill(C.welcome_self, { project: pname(p) }) : fill(C.welcome_project, { project: pname(p), industry: p.i, label_phrase: C.label_phrase[p.k] })));
     b.push(P(C.welcome[1]));
     return [{ b, c: welcomeChips() }];
   };

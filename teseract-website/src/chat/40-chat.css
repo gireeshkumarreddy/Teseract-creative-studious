@@ -33,7 +33,7 @@
 .cc-hbtn svg,.cc-send svg,.cc-chip svg,.cc-check svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .cc-strip{flex:none;border-bottom:1px solid var(--line-2)}
 .cc-strip[hidden]{display:none}
-.cc-strip__btn{display:block;width:100%;min-height:40px;padding:0 16px;border:0;background:none;color:var(--ink-2);font-size:13px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-strip__btn{display:block;width:100%;min-height:44px;padding:0 16px;border:0;background:none;color:var(--ink-2);font-size:13px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cc-brief{padding:0 16px 10px}
 .cc-log{flex:1;min-height:0;margin:0;padding:16px 16px 8px;list-style:none;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;transition:opacity .16s}
 .cc-log.is-swap{opacity:0}
@@ -54,9 +54,11 @@
 .cc-list,.cc-plain{margin:0;padding:0 0 0 18px}
 .cc-plain{padding:0;list-style:none}
 .cc-list li+li,.cc-plain li+li{margin-top:2px}
-.cc-from{margin:-2px 0 2px 4px;font-size:12px;line-height:1.4}
-.cc-from a{color:var(--muted-strong);text-decoration:underline;text-decoration-color:rgba(244,244,242,.25);text-underline-offset:3px}
+/* the From link: 12 px type in a 44 px target (24 Oct), the margins keep the old spacing */
+.cc-from{display:flex;margin:-16px 0 -12px 4px;font-size:12px;line-height:1.4}
+.cc-from a{display:inline-flex;align-items:center;min-height:44px;color:var(--muted-strong);text-decoration:underline;text-decoration-color:rgba(244,244,242,.25);text-underline-offset:3px}
 .cc-from a:hover{color:var(--ink)}
+.cc-linkbtn+.cc-from{margin-top:10px}.cc-strip-p+.cc-from{margin-top:-6px}   /* (25 Oct) its 44 px box clear of the control above */
 .cc-card{width:100%;margin:0;padding:16px;border-radius:16px;background:var(--surface-1);border:1px solid var(--line)}
 .cc-micro{margin:0 0 6px;font-size:11px;line-height:1.3;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-strong)}
 .cc-card__t{margin:0 0 6px;font-size:18px;line-height:1.3}
@@ -96,6 +98,9 @@
 .cc-chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:22px;background:#1c1c1c;border:1px solid var(--line-3);color:var(--ink);font-size:15px;line-height:1.2;text-align:left;text-decoration:none;
   animation:cc-up4 .18s var(--ease) both;animation-delay:calc(var(--i,0) * 30ms);-webkit-tap-highlight-color:transparent}
 .cc-chip:hover,.cc-chip:active{background:#262626}
+/* "More below" (25 Oct, 30-ui.js bot): over the log's bottom edge while the rest of a long answer waits below */
+.cc-more{position:relative;flex:none;height:0;z-index:2}
+.cc-more .cc-chip{position:absolute;left:50%;bottom:10px;translate:-50% 0;box-shadow:0 8px 24px -6px #000}.cc-more svg{display:block}
 .cc-chip:focus-visible,.cc-row:focus-visible,.cc-cta:focus-visible,.cc-proj:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .cc-chip svg{display:none;width:16px;height:16px;margin-left:-4px}
 .cc-chip[aria-pressed="true"]{background:#2a2a2a;border-color:var(--ink-2)}

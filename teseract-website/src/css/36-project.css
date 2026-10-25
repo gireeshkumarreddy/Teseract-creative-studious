@@ -45,6 +45,14 @@
 .pj-chip-link::after{content:"";position:absolute;inset:0;border-radius:10px}
 .pj-chip-link:focus-visible{outline:none}
 .pj-chip-link:focus-visible::after{outline:2px solid var(--red);outline-offset:3px}
+/* touch screens: the target grows to 44px tall and 4px wider each side, inside a 14px row gap and the 8px chip gap, so
+   wrapped chips never share a target; a press washes the chip itself (mobile audit TCH2-02). Same look at rest, and
+   a mouse press on desktop keeps the chip as it was. */
+@media (pointer:coarse){
+  .pj-head__chips{row-gap:14px}
+  .pj-chip-link::after{inset:-7px -4px}
+  .pj-head__chips .chip:has(>.pj-chip-link:active){background:rgba(255,255,255,.12)}
+}
 
 /* ---------- Label line above the title (always visible, ink): ink dot = "Client Project", red dot = the concepts
    group ("Interactive Concept" + its small "Unofficial, not affiliated with ..." line, "Concept Project", "Personal project") */
@@ -74,8 +82,11 @@
   box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -40px rgba(0,0,0,.9)}
 .pj-phone img,.pj-phone video{width:100%;height:100%;object-fit:cover}
 /* the plain-frame hero's first still opens the gallery only where its 4:5 stage shows the phone screen instead
-   (pages/project.PLAIN_NARROW) */
+   (pages/project.PLAIN_NARROW); there, the band's copy of that phone screen steps out (mobile audit PJV-03: it showed
+   twice; the hero's own phone screen opens the viewer instead, .pj-zoom--plain below), and the band's other screen
+   stands alone, centred (the strip's side padding centres it) */
 @media (min-width:656px){.pj-frame--lead{display:none}}
+@media (max-width:655.98px){.pj-phone--hero-copy{display:none}}
 
 /* ---------- Stills as links into the viewer (36-project.js; without JS the link opens the image file itself). The
    badge (expand icon) fades in on hover on hover-capable screens; on touch screens the first frame's badge reads
@@ -95,6 +106,9 @@
 .pj-zoom--hero{width:100%;height:auto;max-width:calc((100svh - 96px) * 1.6);min-width:min(100%,640px);margin-inline:auto;border-radius:clamp(24px,2.4vw,40px)}
 .pj-hero .pj-zoom--hero .scn{max-width:none;min-width:0}
 .pj-zoom--hero:focus-visible{outline-offset:4px}
+/* the plain-frame hero's phone screen on its 4:5 stage (pages/project.hero): the link fills the stage in the image's
+   place (38-scene.css), and its focus ring follows the stage's corners */
+.pj-zoom--plain{border-radius:inherit}
 .pj-zoom__badge{position:absolute;right:12px;bottom:12px;z-index:1;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 9px;border-radius:10px;
   background:rgba(14,14,14,.74);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);color:var(--ink);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px -8px rgba(0,0,0,.8);
@@ -153,6 +167,14 @@
   .pj-viewer__btn--close:hover{background:#fff}
 }
 @media (forced-colors:active){.pj-viewer__shade{background:Canvas}.pj-viewer__btn{border:1px solid ButtonText}}
+/* phones held sideways (at most 520 px tall): previous · close · next become a column at the right edge and the count
+   sits top left, so a still is fitted to the screen's full height (36-project.js measure() reads the column; mobile
+   audit PJV-01: a 16:10 still was 230 px tall on a 390 px screen). Portrait keeps the thumb-zone bar. */
+@media (orientation:landscape) and (max-height:520px){
+  .pj-viewer__count{top:max(12px,env(safe-area-inset-top,0px));left:max(14px,env(safe-area-inset-left,0px));transform:none}
+  .pj-viewer__bar{top:max(12px,env(safe-area-inset-top,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));left:auto;right:max(14px,env(safe-area-inset-right,0px));
+    flex-direction:column;gap:12px}
+}
 
 /* ---------- Next project */
 .pj-next__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:1fr auto;grid-template-areas:"head media" "cta media";gap:0 48px}
@@ -238,22 +260,37 @@
   .pj-phones:has(>.pj-phone:only-child){justify-content:center}
 }
 
-/* ---------- Phones held sideways (landscape, at most 520 px tall; from 656 px wide): the head tightens - smaller
-   margins, name and facts beside the services and Visit - and the hero scene is sized to the screen's height, so the
-   whole device and its plinth fit under the header and part of the scene shows in the first view (the scene's own
-   rule: 38-scene.css, end). Phone screens never grow taller than the screen. */
+/* ---------- Phones held sideways (landscape, at most 520 px tall; from 656 px wide): the head packs into rows so the
+   recording shows in the first view (mobile audit pj-landscape-hero: it started under the fold) - nothing is hidden,
+   the type keeps its sizes. The container is the grid (.pj-head__grid and __main step aside, display:contents), so the
+   back link and the case count share a row with "What we created" (label over the chips) and Visit; then the label
+   line, name and facts (.pj-head__id); then the summary, full width. From 800 px wide the summary moves up beside the
+   name (below). The hero scene is sized to the screen's height, so the whole device and its plinth fit under the header
+   (the scene's own rule: 38-scene.css, end). Phone screens never grow taller than the screen. */
 @media (orientation:landscape) and (max-height:520px) and (min-width:656px){
-  .pj-head{padding:12px 0 20px}
-  .pj-head__bar{margin-bottom:16px}
-  .pj-head__grid{grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;gap:16px 32px}
-  .pj-head__services{justify-self:end;align-items:flex-end;gap:10px;text-align:right}
+  .pj-head{padding:8px 0 10px}
+  .pj-head>.container{display:grid;grid-template-columns:minmax(min-content,1fr) auto;grid-template-areas:"bar svc" "id id" "sum sum";
+    align-items:end;gap:8px 16px}
+  .pj-head__grid,.pj-head__main{display:contents}
+  .pj-head__bar{grid-area:bar;justify-content:flex-start;gap:12px;margin-bottom:0}
+  .pj-head__count{white-space:nowrap}   /* three chips and Visit on a 667px phone: the chips wrap, not the count */
+  .pj-head__id{grid-area:id}
+  .pj-head__summary{grid-area:sum;margin-top:0}
+  .pj-head__services{grid-area:svc;display:grid;grid-template-columns:auto;align-items:end;gap:4px 10px;justify-self:end;width:auto;max-width:none;
+    padding-bottom:0;text-align:right}
+  .pj-head__label{grid-column:1;grid-row:1}
+  .pj-head__chips{grid-column:1;grid-row:2}
   .pj-head__services .chips{justify-content:flex-end}
+  .pj-visit{grid-column:2;grid-row:1/3;margin-top:0}
   .pj-head__title{font-size:44px;line-height:1}
   .pj-next__title{font-size:34px}   /* the H1 stays ~1.3x the next-project H2 */
-  .pj-tag{margin-bottom:10px}
-  .pj-head__meta{margin-top:12px}
-  .pj-head__summary{margin-top:12px}
-  .pj-visit{margin-top:2px}
+  .pj-tag{margin-bottom:8px}
+  .pj-head__meta{margin-top:8px}
   .pj-zoom--hero{width:min(100%,calc((100svh - var(--nav-h) - 16px) * 1.6));max-width:none;min-width:0}
   .pj-phone{width:auto;height:calc(100svh - 120px)}
+}
+/* from 800 px wide (844 x 390, 932 x 430): the bar's row keeps its own width, the services take the rest of it, and the
+   summary sits beside the label line, name and facts in the last 40 % - two rows, about 170 px */
+@media (orientation:landscape) and (max-height:520px) and (min-width:800px){
+  .pj-head>.container{grid-template-columns:auto minmax(0,1fr) minmax(0,40%);grid-template-areas:"bar svc svc" "id id sum";column-gap:24px}
 }

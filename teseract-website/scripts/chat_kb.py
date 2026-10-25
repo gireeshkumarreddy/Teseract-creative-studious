@@ -67,17 +67,19 @@ REGIONS = {
     'lang': {'INR': 'IN', 'GBP': 'GB', 'USD': 'US PR', 'CAD': 'CA', 'AUD': 'AU', 'SGD': 'SG', 'AED': 'AE',
              'EUR': 'AT BE BG CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK CH LI NO SE DK IS PL CZ HU RO'},
     'lang_near': 'CH LI NO SE DK IS PL CZ HU RO',
-    # typed countries, cities and demonyms (the visitor says where they are): currency + the country name shown
+    # typed countries and cities (the visitor says where they are): the chat only OFFERS that currency, the device
+    # decides (owner, 24 Oct); and the answer to its own "Where are you based?". No demonyms and no 'us' / 'states' /
+    # 'york': "a website for us", "Indian ethnic wear", "a German shepherd" are not places (review 22 Oct, TP-01)
     'places': {
-        'INR|India': 'india indian hyderabad bangalore bengaluru mumbai delhi chennai kolkata pune',
-        'GBP|the UK': 'uk england london britain british scotland wales manchester',
-        'EUR|Germany': 'germany german berlin munich', 'EUR|France': 'france french paris',
-        'EUR|Europe': 'europe european eu', 'EUR|Spain': 'spain madrid barcelona', 'EUR|Italy': 'italy milan rome',
-        'EUR|the Netherlands': 'netherlands holland dutch amsterdam', 'EUR|Ireland': 'ireland dublin',
+        'INR|India': 'india hyderabad bangalore bengaluru mumbai delhi chennai kolkata pune',
+        'GBP|the UK': 'uk united_kingdom england london britain scotland wales manchester',
+        'EUR|Germany': 'germany berlin munich', 'EUR|France': 'france paris',
+        'EUR|Europe': 'europe eu', 'EUR|Spain': 'spain madrid barcelona', 'EUR|Italy': 'italy milan rome',
+        'EUR|the Netherlands': 'netherlands holland amsterdam', 'EUR|Ireland': 'ireland dublin',
         'EUR|Portugal': 'portugal lisbon', 'EUR|Belgium': 'belgium brussels', 'EUR|Austria': 'austria vienna',
-        'USD|the US': 'usa america american us states california texas york',
-        'AED|the UAE': 'uae dubai abu_dhabi emirates sharjah', 'CAD|Canada': 'canada canadian toronto vancouver montreal',
-        'AUD|Australia': 'australia australian sydney melbourne', 'SGD|Singapore': 'singapore',
+        'USD|the US': 'usa america united_states new_york california texas',
+        'AED|the UAE': 'uae dubai abu_dhabi emirates united_arab_emirates sharjah', 'CAD|Canada': 'canada toronto vancouver montreal',
+        'AUD|Australia': 'australia sydney melbourne', 'SGD|Singapore': 'singapore',
     },
     # places outside the eight currencies (the reply keeps the current one: CHAT cur_unsupported)
     'other_places': 'japan china brazil mexico russia nigeria kenya pakistan bangladesh nepal saudi qatar yen yuan',
@@ -85,10 +87,13 @@ REGIONS = {
 
 # Matching (src/chat/10-engine.js holds the language: stopwords, synonyms, concepts). Industry words of the Work page:
 INDUSTRY_SYN = {'furniture': 'chair', 'perfume': 'fragrance'}
+# lexicon words a project's industry does not name but its summary does (review 22 Oct, TP-16): AeroSkys books hotels,
+# Hidden Stories are short stays
+INDUSTRY_ALSO = {'hotel': ('hotel', 'stay')}
 GENERIC = {'creative', 'studio', 'select', 'network', 'media', 'solution', 'stories', 'hidden', 'by', 'at', 'careers',
            'a', 'the', 'of', 's', 'and', 'gireesh', 'artist', 'storyteller', 'designer', 'working', 'desk', 'luffy'}
 # keys of the FAQ intents (the words that decide them) and extra phrases of the process steps
-FAQ_KEYS = {0: ['studio', 'teseract'], 1: ['where', 'based', 'outside', 'abroad'], 2: ['brief'], 3: ['package', 'fixed'],
+FAQ_KEYS = {0: ['studio', 'teseract'], 1: ['where', 'based', 'outside', 'abroad', 'internationally', 'overseas', 'remotely'], 2: ['brief'], 3: ['package', 'fixed'],
             5: ['ecommerce', 'build'], 6: ['saas', 'landing'], 7: ['template', 'generic'], 9: ['after', 'launch', 'support'],
             10: ['involved', 'communication', 'feedback'], 11: ['name', 'mean']}
 STEP_PH = {6: ['do you test', 'do you test the website', 'testing'], 8: ['after launch evolve', 'evolve stage']}
@@ -413,6 +418,15 @@ def _norm(s):
     return re.sub(r'\s+', ' ', re.sub(r'[^a-z0-9 ]', ' ', s.lower().replace('ā', 'a'))).strip()
 
 
+def prose_name(p):
+    """A project's name in a sentence (review 22 Oct, TP-14; src/chat/20-flow.js pname() says the same): 'ONE PIECE |
+    Luffy' -> 'ONE PIECE (Luffy)', a personal project named after the founder -> "Gireesh's designer portfolio"."""
+    t, who = p['title'], content.WHO['founder']['name']
+    if p.get('label_kind') == 'personal' and re.match(rf'{re.escape(who)}\b', t, re.I):
+        return f"{who}'s " + ' '.join(w if re.search(r'[A-Z].*[A-Z]', w) else w.lower() for w in p['industry'].split())
+    return re.sub(r'\s*\|\s*(.+)$', r' (\1)', t)
+
+
 def _industry_words(p):
     return re.findall(r'[a-z0-9]+', (p['industry'] + ' ' + p['title']).lower().replace('ā', 'a'))
 
@@ -424,6 +438,9 @@ def _industry_map(shown):
         parts = want.split()
         hits = [p['slug'] for p in shown
                 if all(any(w == x or w.rstrip('s') == x.rstrip('s') for x in _industry_words(p)) for w in parts)]
+        for w in INDUSTRY_ALSO.get(word, ()):
+            hits += [p['slug'] for p in shown if p['slug'] not in hits and any(
+                x.rstrip('s') == w for x in _industry_words(p) + re.findall(r'[a-z]+', (p.get('summary') or '').lower()))]
         out[word] = hits
     return out
 
@@ -449,6 +466,8 @@ def build(out):
             d['sum'] = p['summary']
         if 'E-commerce' in p['services_list']:
             d['e'] = 1
+        elif re.search(r'\b(checkout|cart|storefront|payments)\b', p.get('summary') or ''):
+            d['st'] = 1                                 # sells online by its summary (Vynk): a store's starting price
         if 'SaaS' in p['industry']:
             d['sa'] = 1
         projs.append(d)

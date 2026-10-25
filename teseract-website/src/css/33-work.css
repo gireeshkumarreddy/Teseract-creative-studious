@@ -201,7 +201,10 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
   .wk-hero__ctas{flex-direction:column;align-items:stretch;width:100%;gap:8px}
   .wk-hero__ctas .btn{width:100%}
   .wk-hero__band{margin-top:48px}
-  .wk-marquee{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%)}
+  /* the names have faded out before the docked round Pause button (32px, the page gutter from the right edge): opaque to
+     96px from the band's right end, gone at 52px (mobile audit VIS2-08) */
+  .wk-marquee{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 16%,#000 calc(100% - 96px),transparent calc(100% - 52px));
+    mask-image:linear-gradient(to right,transparent 0,#000 16%,#000 calc(100% - 96px),transparent calc(100% - 52px))}
   .wk-marquee__list{gap:28px}
   .wk-marquee__list li{font-size:18px}
   .wk-intro__grid{gap:32px}
@@ -229,5 +232,20 @@ a.wk-tile:focus-visible{outline:2px solid var(--red);outline-offset:5px;border-r
   .wk-slot__body{font-size:16px}
   .wk-slot__inner>div{width:100%}
   .wk-slot__inner .btn{width:100%}
+}
+
+/* ---------- Phones held sideways (landscape, at most 520 px tall; from 656 px wide): the pill, the H1, the sub-copy and
+   the first call to action fit the first view (mobile audit TYPO-R2-03: the H1 alone filled it) - the H1 at 44px like
+   the project heads, the section H2s at 34px (~1.3 : 1, as on desktop), the hero's spacing tightened and the two calls
+   to action side by side, as on desktop (stacked, they sat below the entrance trigger on a 667 x 375 phone) */
+@media (orientation:landscape) and (max-height:520px) and (min-width:656px){
+  .wk-hero{padding:16px 0 48px}
+  .wk-hero__lockup{padding:0;gap:14px}
+  .wk-hero__inner{gap:16px}
+  .wk-hero__ctas{flex-direction:row;align-items:center;width:auto}
+  .wk-hero__ctas .btn{width:auto}
+  .wk-hero__title{font-size:44px;line-height:1}
+  .wk-intro__title,.wk-slot__title{font-size:34px}
+  .wk-hero__band{margin-top:40px}
 }
 

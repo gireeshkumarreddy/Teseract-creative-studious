@@ -77,7 +77,7 @@ def chat_dock(ctx):
         if proj:
             import projects
             p = projects.by_slug(proj)
-            title = p['title'] if p else ''
+            title = chat_kb.prose_name(p) if p else ''      # "Like ONE PIECE (Luffy)?", "Like Gireesh's designer portfolio?"
         line = fmt(CHAT['hello'][key]).replace('{project}', title)
         q1, q2 = CHAT['hello_chips']
         hello = (f'<div class="cc-hello" id="cc-hello" hidden><p>{E(line)}</p>'

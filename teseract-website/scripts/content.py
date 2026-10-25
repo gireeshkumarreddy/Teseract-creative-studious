@@ -397,6 +397,7 @@ CHAT = {
     'kb_fail': "I can't load my notes right now. You can reach Gireesh at {email} or through the contact form.",
     'you': 'You',
     'options': 'Options:',
+    'more_below': 'More below',   # (25 Oct) a long answer shows from its start; this cue scrolls on to the rest
     'brief_title': 'Your brief',
     'change': 'change',
     'copy': 'Copy',
@@ -427,6 +428,7 @@ CHAT = {
     'welcome': ["Hi. I'm the {brand} assistant, and I answer from what's on this website.",
                 "For anything I can't answer, I'll put you in touch with Gireesh, the person behind {brand}. What can I help you with?"],
     'welcome_project': "You're looking at {project}: {industry}, {label_phrase}.",
+    'welcome_self': "You're looking at {project}, one of his personal projects.",
     'label_phrase': {'client': 'a client project', 'concept': 'a concept project',
                      'interactive': 'an interactive concept', 'personal': 'a personal project'},
     'welcome_contact': 'Your brief is in the form below. Add your name and email, then press Start the conversation.',
@@ -435,7 +437,7 @@ CHAT = {
         'prices': 'Prices', 'create': 'What we create', 'process': 'Our process', 'work': 'See our work',
         'founder': 'Who is Gireesh?', 'book': 'Book a call', 'like': 'A site like this', 'ask_gireesh': 'Ask Gireesh',
         'something_else': 'Something else', 'that_helps': 'That helps', 'pass': 'Pass it to Gireesh',
-        'show_email': 'Show me the email', 'keep': 'Keep chatting', 'back_start': 'Back to start',
+        'show_email': 'Show me the email', 'keep': 'Keep chatting', 'back_start': 'Back to start', 'show_cur': 'Prices in {cur_name}',
         'back_brief': 'Back to my brief', 'send_brief': 'Send my brief', 'ask_else': 'Ask something else',
         'quote': 'Get a quote', 'other_prices': 'Other prices', 'more_work': 'More work',
         'see_project': 'See {project}', 'cost_site': 'What does a website cost?', 'cost_store': 'What does a store cost?',
@@ -521,6 +523,7 @@ CHAT = {
     'pp_concept': "{project} is one of our concept projects, so there's no client price behind it. A site like it would start from {W}, or {E} if it needs to sell online.",
     'pp_concept_e': "{project} is one of our concept projects, so there's no client price behind it. A store like it would start from {E}.",
     'pp_personal': "{project} is one of Gireesh's personal projects, so there's no client price behind it. A site like it would start from {W}.",
+    'pp_personal_self': "{project} is one of his personal projects, so there's no client price behind it. A site like it would start from {W}.",
     'pp_saas': ("{project} is a concept project. Product & SaaS work is priced on scope, so there's no starting price I can "
                 "give you for the product. A marketing website like it starts from {W}."),
     # other price-adjacent replies
@@ -533,6 +536,8 @@ CHAT = {
     'maintenance': "What that costs isn't listed on this website, so Gireesh can tell you directly.",
     'cur_switched': 'Done. Prices now show in {cur_name}.',
     'cur_country': 'Showing prices in {cur_name} for {country}.',
+    # a place named in a message is only offered (owner, 24 Oct: the device's region decides the currency)
+    'cur_offer': "Prices follow this device's region settings, so they're still in {cur_now}. You can see them in {cur_name} instead.",
     'cur_unsupported': ("I can show prices in rupees, euros, pounds, US dollars, UAE dirhams, and Canadian, Australian and "
                         "Singapore dollars. I've kept {cur_name}."),
     'cur_which': 'Which dollars?',
@@ -567,7 +572,7 @@ CHAT = {
     'book': ("Happy to set that up. Send your brief through the contact form and say when suits you for a call. Gireesh "
              "will come back to you to arrange it."),
     'book_url': "Here's where you can pick a time with Gireesh. I've put your brief together, so you can paste it into the booking notes.",
-    'send': "Here's what I'll put in the form:",
+    'send_lead': "Here's what I'll put in the form:",   # (was a second 'send' key, which renamed the composer's Send button)
     'send_after': 'Add your name and email on the next page, check everything, and press Start the conversation. Nothing is sent until you do.',
     'or_write': 'Or write to {email}',
     'email_subject': 'Project brief from the website chat',
@@ -583,7 +588,8 @@ CHAT = {
     'faq_aliases': {
         0: ['what do you do', 'what is teseract', 'what kind of studio are you', 'tell me about the studio', 'what does your company do'],
         1: ['where are you based', 'where are you located', 'do you work outside india', 'do you work remotely',
-            'can you work with clients abroad', 'which country are you in'],
+            'can you work with clients abroad', 'which country are you in', 'do you work internationally',
+            'do you work with international clients'],
         2: ['do i need a brief', 'i do not know what i need', 'do i need a plan before', 'i only have an idea',
             'do i need technical knowledge'],
         3: ['fixed price', 'packages', 'price list', 'do you have plans', 'standard package', 'pricing plans'],

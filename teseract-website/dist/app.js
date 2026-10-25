@@ -3338,7 +3338,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
      through the hero (P-08); scroll parallax (transform only, <= 40px).
    - Boards ([data-who-in], also the rock): .is-in when they enter (grid draw, leader lines, nodes, the rock's
      rise + one bob); .is-off when they leave (pauses a bob in progress).
-   - Phone circuit (< 800px, [data-who-rail]): the trace, nodes and leaders are built from the layout boxes and
+   - Circuit (< 1200px, [data-who-rail]): the trace, nodes and leaders are built from the layout boxes and
      grow one way with scroll (static and complete without html.motion).
    - Rock: scroll parallax (<= 30px) + a slight sway; the glass tile follows the pointer (±6px, lerped), or the
      scroll on touch screens.
@@ -3374,32 +3374,36 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       boards.forEach(b => io.observe(b));
     }
 
-    /* ---------- clock (visitor's local time, hh:mm AM/PM) */
+    /* ---------- clock (visitor's local time, hh:mm AM/PM). Its two formatters (locale data: a few ms of app.js's first
+       task at 4x CPU, PERF2-07) are made when the intro first comes near the screen; the line shows from then and stays
+       hidden if they fail. Nothing moves when it shows: its row is held by the "+" mark on phones and by a min-height in
+       the two-column flow (30-who.css); on desktop it is placed absolutely. */
     const clockLine = document.querySelector('[data-who-time]');
     const clock = document.querySelector('[data-who-clock]');
     if (clockLine && clock) {
-      let fmt = null, iso = null;
-      try {
-        fmt = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-        iso = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
-      } catch (e) { fmt = null; }
-      if (fmt) {
-        const tick = () => {
-          const now = new Date();
-          const text = fmt.format(now).replace(/\s/g, ' ');
-          if (clock.textContent !== text) clock.textContent = text;
-          clock.setAttribute('datetime', iso.format(now));
-        };
-        tick();
-        clockLine.hidden = false;
-        let timer = 0;
-        const run = () => { tick(); timer = setTimeout(run, 60000 - (Date.now() % 60000) + 50); };
-        const start = () => { if (!timer) { tick(); timer = setTimeout(run, 60000 - (Date.now() % 60000) + 50); } };
-        const stop = () => { clearTimeout(timer); timer = 0; };
-        const host = clockLine.closest('section') || clockLine;
-        if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop())).observe(host);
-        else start();
-      }
+      let fmt, iso, timer = 0;
+      const ok = () => {
+        if (fmt === undefined) {
+          try {
+            fmt = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            iso = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+          } catch (e) { fmt = null; }
+        }
+        return !!fmt;
+      };
+      const tick = () => {
+        const now = new Date();
+        const text = fmt.format(now).replace(/\s/g, ' ');
+        if (clock.textContent !== text) clock.textContent = text;
+        clock.setAttribute('datetime', iso.format(now));
+      };
+      const run = () => { tick(); timer = setTimeout(run, 60000 - (Date.now() % 60000) + 50); };
+      const start = () => { if (!timer && ok()) { run(); clockLine.hidden = false; } };
+      const stop = () => { clearTimeout(timer); timer = 0; };
+      const host = clockLine.closest('section') || clockLine;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { rootMargin: '50% 0px' }).observe(host);
+      } else start();
     }
 
     /* ---------- steps: one-way progress through 01-04 */
@@ -3420,12 +3424,14 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       spreads.forEach(s => pio.observe(s));
     }
 
-    /* ---------- phone circuit rails (30-who.css .who-rail): one trace per board in the left gutter, a node beside
-       each [data-who-pin] box (h = its head / first child, l = its first text line, c = its centre; ! = red, - = no
-       node: the leader runs from the trace into the box's own marker) and a leader into it. Positions come from the
-       layout boxes (offset chain), so reveal transforms never move a node; rebuilt whenever a board changes size.
-       The trace centre and node edges sit on half pixels (crisp at 1x-3x). */
-    const phone = matchMedia('(max-width: 799.98px)');
+    /* ---------- circuit rails (30-who.css .who-rail; phones, and since PAR2-03 the 800-1199 flow too): one trace per
+       board in the left gutter, a node beside each [data-who-pin] box (h = its head / first child, l = its first text
+       line, c = its centre; ! = red, - = no node: the leader runs from the trace into the box's own marker) and a leader
+       into it. Only boxes that start at the left content edge are pinned: in the two-column flow a leader to the right
+       column would cross the left one. Positions come from the layout boxes (offset chain), so reveal transforms never
+       move a node; rebuilt whenever a board changes size. The trace centre and node edges sit on half pixels (crisp at
+       1x-3x). */
+    const flow = matchMedia('(max-width: 1199.98px)');
     const rails = [...document.querySelectorAll('[data-who-rail]')].map(svg => ({ svg, board: svg.parentElement, line: null, pins: [], y0: 0, y1: 0, reach: -Infinity }));
     const boxAt = (el, root) => {
       let x = 0, y = 0, n = el;
@@ -3437,21 +3443,24 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       }
       return n === root ? { x, y } : null;
     };
-    const paintRail = r => {   // one-way: the trace reaches the 55 % line of the screen (as the steps do)
+    // one-way: the trace reaches the 55 % line of the screen (as the steps do). top = the board's (= the svg's) top edge
+    // on screen and vh = innerHeight, both read before any write of the frame
+    const paintRail = (r, top, vh) => {
       if (!r.line || !motion) return;
-      r.reach = Math.max(r.reach, innerHeight * 0.55 - r.svg.getBoundingClientRect().top);
+      r.reach = Math.max(r.reach, vh * 0.55 - top);
       const f = clamp((r.reach - r.y0) / Math.max(1, r.y1 - r.y0), 0, 1);
       r.line.style.strokeDashoffset = (1 - f).toFixed(4);
-      r.pins.forEach(pn => { if (r.reach >= pn.y) pn.g.classList.add('is-on'); });
+      r.pins.forEach(pn => { if (!pn.on && r.reach >= pn.y) { pn.on = true; pn.g.classList.add('is-on'); } });
     };
     const buildRail = r => {
       const { svg, board } = r;
-      if (!phone.matches || !board) { if (r.line) { svg.textContent = ''; r.line = null; r.pins = []; } return; }
-      const x = Math.floor(parseFloat(getComputedStyle(board).paddingLeft) / 2) + 0.5;
+      if (!flow.matches || !board) { if (r.line) { svg.textContent = ''; r.line = null; r.pins = []; } return; }
+      const pad = parseFloat(getComputedStyle(board).paddingLeft);
+      const x = Math.floor(pad / 2) + 0.5;
       const pins = [];
       board.querySelectorAll('[data-who-pin]').forEach(el => {
         const b = boxAt(el, board);
-        if (!b || !el.offsetHeight) return;
+        if (!b || !el.offsetHeight || b.x > pad + 48) return;   // right column (800-1199 flow): no leader across the left one
         const m = el.dataset.whoPin;
         let dy = el.offsetHeight / 2;
         if (m[0] === 'h' && el.firstElementChild) {
@@ -3482,8 +3491,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
             + '</g>';
         }).join('');
       r.line = svg.querySelector('.who-wire--rail');
-      r.pins = [...svg.querySelectorAll('.who-pin')].map((g, i) => ({ g, y: pins[i].y }));
-      paintRail(r);
+      r.pins = [...svg.querySelectorAll('.who-pin')].map((g, i) => ({ g, y: pins[i].y, on: false }));
+      paintRail(r, board.getBoundingClientRect().top, innerHeight);
     };
     if (rails.length) {
       const all = () => rails.forEach(buildRail);
@@ -3491,25 +3500,33 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         const ro = new ResizeObserver(es => es.forEach(e => { const r = rails.find(x => x.board === e.target); if (r) buildRail(r); }));
         rails.forEach(r => r.board && ro.observe(r.board));
       } else { all(); addEventListener('resize', all, { passive: true }); }
-      if (phone.addEventListener) phone.addEventListener('change', all);
+      if (flow.addEventListener) flow.addEventListener('change', all);
     }
 
-    /* ---------- hero entrance */
+    /* ---------- hero entrance: without the intro the inline starter after the hero (pages/who.py, .who-hero--cued)
+       normally runs it before app.js; this path is the fallback and the intro session's */
     const hero = document.querySelector('[data-who-hero]');
     if (hero) {
       if (!motion) hero.classList.add('is-on');
       else {
         const im = hero.querySelector('.who-hero__img');
+        const show = () => hero.classList.add('is-on');
         let done = false;
         // the entrance waits for the intro stage to lift (01-intro.js; immediate without an intro)
-        const go = () => { if (done) return; done = true; TS.afterIntro(() => requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add('is-on')))); };
-        if (im && !im.complete && im.decode) { im.decode().then(go, go); setTimeout(go, 900); } else go();
+        const go = () => { if (done) return; done = true; TS.afterIntro(() => requestAnimationFrame(() => requestAnimationFrame(show))); };
+        // late script, no starter: the CSS fail-safe fade (30-who.css, from 1 s) may already show the hero; show it in
+        // the same style change that ends it (html.is-ready, this task), so nothing drops back and replays
+        const now = document.timeline && document.timeline.currentTime;
+        if (now != null && now > 900 && !hero.classList.contains('who-hero--cued') && !TS.intro.held()) { done = true; show(); }
+        else if (im && !im.complete && im.decode) { im.decode().then(go, go); setTimeout(go, 900); } else go();
         new IntersectionObserver(([e]) => hero.classList.toggle('is-off', !e.isIntersecting)).observe(hero);
       }
     }
     if (!motion) return;
 
-    /* ---------- scroll / pointer linked items (one rAF loop) */
+    /* ---------- scroll / pointer linked items (one rAF loop). Each item has a read (layout: rects, innerHeight) and a
+       write (transforms, dash offsets): a frame runs every read first, then every write, so no read follows a write and
+       the frame lays out at most once (PERF2-03); items on the same board share one rect. */
     const items = [];
     const visible = new Set();
     const vio = new IntersectionObserver(es => es.forEach(e => {
@@ -3517,7 +3534,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       items.forEach(it => { if (it.el === e.target) { if (e.isIntersecting) visible.add(it); else visible.delete(it); } });
       kick();
     }), { rootMargin: '10% 0px 10% 0px' });
-    const add = (el, update) => { if (!el) return; const it = { el, update, s: {} }; items.push(it); vio.observe(el); };
+    const add = (el, read, write) => { if (!el) return; const it = { el, read, write, s: {} }; items.push(it); vio.observe(el); };
+    const rects = new Map();
+    const rectOf = el => { let r = rects.get(el); if (!r) { r = el.getBoundingClientRect(); rects.set(el, r); } return r; };
+    let vh = innerHeight;
 
     const pointer = { x: 0, y: 0, active: false };
     addEventListener('pointermove', e => {
@@ -3536,9 +3556,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       const light = hero.querySelector('[data-who-light]');
       const disp = hero.querySelector('[data-who-display]');
       add(hero, it => {
-        const s = it.s;
-        const r = hero.getBoundingClientRect();
-        const p = clamp(-r.top / Math.max(1, r.height), 0, 1);
+        const r = rectOf(hero);
+        it.s.p = clamp(-r.top / Math.max(1, r.height), 0, 1);
+      }, it => {
+        const s = it.s, p = s.p;
         const usePtr = finePointer.matches && desktop.matches;
         // touch screens (no hover pointer): the same tilt and counter-moving light, fed by the scroll through the
         // hero - the monitor turns a little and its top leans back as it rises (P-08)
@@ -3549,7 +3570,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         tilt.style.transform = `perspective(1400px) rotateX(${(-s.py * 2.5).toFixed(3)}deg) rotateY(${(s.px * 2.5).toFixed(3)}deg) translate3d(${(s.px * 6).toFixed(2)}px,${(s.py * 6).toFixed(2)}px,0)`;
         light.style.transform = `translate3d(${(-s.px * 10).toFixed(2)}px,${(30 * p - s.py * 10).toFixed(2)}px,0)`;
         disp.style.transform = `translate3d(0,${(-36 * p).toFixed(2)}px,0)`;
-        return Math.abs(s.px - tx) > 0.001 || Math.abs(s.py - ty) > 0.001;
+        return Math.abs(s.px - tx) > 0.003 || Math.abs(s.py - ty) > 0.003;   // < 0.03 px / 0.01deg from rest: stop
       });
     }
 
@@ -3558,9 +3579,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       const amt = parseFloat(par.dataset.whoPar) || -30;
       const glass = par.querySelector('[data-who-glass]');
       add(par.closest('.who-board') || par, it => {
-        const s = it.s;
-        const r = par.getBoundingClientRect();
-        const c = clamp((r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2), -1, 1);  // -1 .. 1 across the screen
+        const r = rectOf(par);
+        it.s.c = clamp((r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2), -1, 1);  // -1 .. 1 across the screen
+      }, it => {
+        const s = it.s, c = s.c;
         // parallax + a slight sway (the rock's float lives in the scroll; its CSS bob plays once, A11Y-06)
         par.style.transform = `translate3d(0,${(c * -amt / 2).toFixed(2)}px,0) rotate(${(c * -0.8).toFixed(3)}deg)`;
         if (!glass) return false;
@@ -3570,59 +3592,65 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         const tx = fine ? pointer.x * 6 : c * -5, ty = fine ? pointer.y * 6 : c * 9;
         s.gx = lerp(s.gx || 0, tx, 0.08); s.gy = lerp(s.gy || 0, ty, 0.08);
         glass.style.transform = `translate3d(${s.gx.toFixed(2)}px,${s.gy.toFixed(2)}px,0)`;
-        return Math.abs(s.gx - tx) > 0.01 || Math.abs(s.gy - ty) > 0.01;
+        return Math.abs(s.gx - tx) > 0.04 || Math.abs(s.gy - ty) > 0.04;
       });
     });
 
-    // dial: rotation linked to scroll through its band, eased
+    // dial: rotation linked to scroll through its band, eased; written as the svg's own transform (an inherited custom
+    // property would restyle the whole drawing every frame)
     document.querySelectorAll('[data-who-dial]').forEach(dial => {
       const svg = dial.querySelector('svg');
       const band = dial.closest('.who-board') || dial;
       const sphere = band.querySelector('.who-sphere svg');   // turns with the dial (half a turn each way), no spin of its own
       add(band, it => {
+        const r = rectOf(band);
+        it.s.p = clamp((vh - r.top) / (vh + r.height), 0, 1);
+      }, it => {
         const s = it.s;
-        const r = band.getBoundingClientRect();
-        const p = clamp((innerHeight - r.top) / (innerHeight + r.height), 0, 1);
-        const target = -20 + 40 * p;
+        const target = -20 + 40 * s.p;
         s.a = s.a == null ? target : lerp(s.a, target, 0.1);
-        svg.style.setProperty('--dial', `${s.a.toFixed(3)}deg`);
+        svg.style.transform = `rotate(${s.a.toFixed(3)}deg)`;
         if (sphere) sphere.style.transform = `rotate(${(s.a * 9).toFixed(2)}deg)`;
-        return Math.abs(s.a - target) > 0.01;
+        return Math.abs(s.a - target) > 0.02;
       });
     });
 
-    // think panels: mark turns with scroll (±4deg), light drifts with the pointer (±6 %)
+    // think panels: mark turns with scroll (±4deg), light drifts with the pointer (±6 %); both written as transforms
     spreads.forEach(sp => {
       const vis = sp.querySelector('[data-who-rot]');
       const pnl = sp.querySelector('[data-who-pnl]');
       const lightEl = pnl && pnl.querySelector('.who-pnl__light');
       if (!vis) return;
       add(sp, it => {
-        const s = it.s;
-        const r = pnl.getBoundingClientRect();
-        const p = clamp((innerHeight - r.top) / (innerHeight + r.height), 0, 1);
-        vis.style.setProperty('--rot', `${(-4 + 8 * p).toFixed(3)}deg`);
+        const r = rectOf(pnl);
+        it.s.p = clamp((vh - r.top) / (vh + r.height), 0, 1);
+      }, it => {
+        const s = it.s, p = s.p;
+        vis.style.transform = `translate(-50%,-50%) rotate(${(-4 + 8 * p).toFixed(3)}deg)`;
         if (lightEl) {
           // with the pointer, or with the panel's scroll on touch screens (P-08)
           const fine = finePointer.matches;
           const tx = fine ? pointer.x * 6 : (p - 0.5) * 12, ty = fine ? pointer.y * 6 : (0.5 - p) * 8;
           s.lx = lerp(s.lx || 0, tx, 0.06); s.ly = lerp(s.ly || 0, ty, 0.06);
-          lightEl.style.setProperty('--lx', `${s.lx.toFixed(2)}%`);
-          lightEl.style.setProperty('--ly', `${s.ly.toFixed(2)}%`);
-          return Math.abs(s.lx - tx) > 0.02 || Math.abs(s.ly - ty) > 0.02;
+          lightEl.style.transform = `translate3d(${s.lx.toFixed(2)}%,${s.ly.toFixed(2)}%,0)`;
+          return Math.abs(s.lx - tx) > 0.05 || Math.abs(s.ly - ty) > 0.05;   // 0.05 % of the light = a fifth of a pixel
         }
         return false;
       });
     });
 
-    // phone circuit rails: grow with the scroll while their board is on screen
-    rails.forEach(r => r.board && add(r.board, () => { paintRail(r); return false; }));
+    // circuit rails: grow with the scroll while their board is on screen
+    rails.forEach(r => r.board && add(r.board, it => { it.s.top = rectOf(r.board).top; }, it => { paintRail(r, it.s.top, vh); return false; }));
 
     let raf = 0;
     function frame() {
       raf = 0;
+      const live = [...visible];
+      vh = innerHeight;
+      live.forEach(it => it.read(it));
+      rects.clear();
       let again = false;
-      visible.forEach(it => { if (it.update(it)) again = true; });
+      live.forEach(it => { if (it.write(it)) again = true; });
       if (again) kick();
     }
     function kick() { if (!raf && visible.size) raf = requestAnimationFrame(frame); }
@@ -4496,18 +4524,21 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       if (budget && !budget.value.trim() && d.budget) set(budget, String(d.budget).slice(0, 120), 'input');
       if (idea && !idea.value.trim() && d.idea) set(idea, String(d.idea).slice(0, 2000), 'input');
       if (!filled.length) return;
-      if (note) { note.querySelector('span').textContent = note.dataset.text; note.hidden = false; }
+      // the status shows empty, then gets its text, so screen readers hear it after the name field (24 Oct)
+      if (note) { const sp = note.querySelector('span'); sp.textContent = ''; note.hidden = false; setTimeout(() => { sp.textContent = note.dataset.text; }, 400); }
       // focus the name; again after load (a #project-form arrival's fragment scroll moves focus back to the page)
       const name = form.querySelector('#ct-name'), go = () => { if (name && document.activeElement !== name) name.focus({ preventScroll: true }); };
       go();
       if (document.readyState !== 'complete') addEventListener('load', () => setTimeout(go, 0), { once: true });
     };
     if (note) note.querySelector('button').addEventListener('click', () => {
+      const first = filled.find(el => el.type !== 'checkbox') || filled[0] || form.querySelector('#ct-name');
       filled.forEach(el => {
         if (el.type === 'checkbox') el.checked = false;
         else { el.value = ''; el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input')); }
       });
       filled = [];
+      if (first) first.focus();   // (24 Oct: the hidden note held the focus, which fell to the page)
       note.hidden = true;
     });
     try {
@@ -4536,7 +4567,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
    still); double-tap zooms in at that point / back out; at 1x a vertical swipe closes (the still follows the finger,
    the black fades). Mouse: a click on the still toggles the zoom at the pointer, drag pans, the wheel zooms around the
    pointer (a horizontal wheel pans, or changes slide at 1x). Keys: Left / Right, Home / End, + / - / 0, Esc.
-   Controls (pages/project.viewer): previous · close · next at the bottom (the thumb zone), the "3 / 10" count on top.
+   Controls (pages/project.viewer): previous · close · next at the bottom (the thumb zone), the "3 / 10" count on top
+   (a phone held sideways: a column at the right edge, the count top left). Screen readers meet the front still only.
    Closing - X, Esc, Back (opening adds a history entry, so the phone's back gesture closes the viewer instead of
    leaving the page), a vertical swipe, a tap on the black around the still - morphs the still back into its frame on
    the page (scrolled into view first when the visitor swiped to another one) and returns focus to that frame's link.
@@ -4588,12 +4620,19 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const pageImg = a => [...a.querySelectorAll('img')].find(shown) || a.querySelector('img');
     const transformOf = (s, x, y) => `translate3d(${x}px,${y}px,0) scale(${s})`;
 
-    /* ---------- layout: every still fitted between the count and the controls, centred on the screen */
+    /* ---------- layout: every still fitted between the count and the controls, centred on the screen. A phone held
+       sideways has the controls as a column at the right edge and the count top left (36-project.css): the still gets
+       the full height there, and both sides keep clear of the column (and of the count) */
     function measure() {
       W = stage.clientWidth; H = stage.clientHeight;
-      padX = W < 800 ? 12 : 48;
       const bar = chrome[1].getBoundingClientRect(), top = count.getBoundingClientRect();
-      padY = Math.max(48, Math.round(Math.max(top.bottom, H - bar.top) + 10));
+      if (bar.height > bar.width) {
+        padX = Math.round(Math.max(W - bar.left, top.right) + 12);
+        padY = Math.round(Math.max(bar.top, H - bar.bottom));
+      } else {
+        padX = W < 800 ? 12 : 48;
+        padY = Math.max(48, Math.round(Math.max(top.bottom, H - bar.top) + 10));
+      }
       dlg.style.setProperty('--slide-w', W + 'px');
       items.forEach(fit);
     }
@@ -4675,10 +4714,14 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     }
 
     function update() {
-      // the count, and for screen readers the still's own description after it
-      const sr = document.createElement('span');
-      sr.className = 'sr-only'; sr.textContent = cur().el.alt ? `: ${cur().el.alt}` : '';
-      count.replaceChildren(`${index + 1} / ${items.length}`, sr);
+      // the count alone in the live region, and only the front still in the accessibility tree (the others are inert
+      // and hidden), so a screen reader reads each still once, by its own alt text (mobile audit A11Y2-03)
+      count.textContent = `${index + 1} / ${items.length}`;
+      items.forEach((it, i) => {
+        const off = i !== index;
+        it.slide.toggleAttribute('inert', off);
+        if (off) it.slide.setAttribute('aria-hidden', 'true'); else it.slide.removeAttribute('aria-hidden');
+      });
       prevBtn.setAttribute('aria-disabled', String(index === 0));
       nextBtn.setAttribute('aria-disabled', String(index === items.length - 1));
     }
@@ -4694,6 +4737,18 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     }
 
     /* ---------- open / close */
+    // a frame that crops its still (object-fit:cover on another aspect - the plain-frame hero's phone screen on its 4:5
+    // stage): the still morphs at one even scale that covers the frame, at the frame's object-position, clipped to the
+    // frame (in its own pixels), so it never squashes on the way. null when the frame shows the whole still.
+    function cropOf(img, from, b) {
+      const sx = from.width / b.width, sy = from.height / b.height, cs = getComputedStyle(img);
+      if (Math.abs(sx / sy - 1) < 0.02 || cs.objectFit !== 'cover') return null;
+      const s = Math.max(sx, sy), cw = b.width * s, ch = b.height * s, [px = '50%', py = '50%'] = cs.objectPosition.split(' ');
+      const at = (v, room) => (v.endsWith('%') ? parseFloat(v) / 100 * room : parseFloat(v) || 0);
+      const dx = at(px, from.width - cw), dy = at(py, from.height - ch);   // the still's corner in the frame (<= 0)
+      return { s, cx: from.left + dx + cw / 2, cy: from.top + dy + ch / 2,
+        clip: `inset(${-dy / s}px ${(cw + dx - from.width) / s}px ${(ch + dy - from.height) / s}px ${-dx / s}px)` };
+    }
     function morph(opening, from) {
       const it = cur();
       const fade = (el, a, b, ms) => el.animate([{ opacity: a }, { opacity: b }], { duration: ms, easing: 'ease', fill: 'both' });
@@ -4706,10 +4761,11 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         it.el.style.transform = transformOf(1, 0, 0);
         const b = it.el.getBoundingClientRect();
         it.el.style.transform = now;
-        const tx = from.left + from.width / 2 - (b.left + b.width / 2), ty = from.top + from.height / 2 - (b.top + b.height / 2);
-        const flip = `translate3d(${tx}px,${ty}px,0) scale(${from.width / b.width},${from.height / b.height})`;
-        anims.push(it.el.animate(opening ? [{ transform: flip }, { transform: now }] : [{ transform: now }, { transform: flip }],
-          { duration: DUR, easing: EASE, fill: 'both' }));
+        const c = cropOf(it.page, from, b);
+        const tx = (c ? c.cx : from.left + from.width / 2) - (b.left + b.width / 2), ty = (c ? c.cy : from.top + from.height / 2) - (b.top + b.height / 2);
+        const flip = { transform: `translate3d(${tx}px,${ty}px,0) scale(${c ? c.s : `${from.width / b.width},${from.height / b.height}`})` }, to = { transform: now };
+        if (c) { flip.clipPath = c.clip; to.clipPath = 'inset(0px 0px 0px 0px)'; }
+        anims.push(it.el.animate(opening ? [flip, to] : [to, flip], { duration: DUR, easing: EASE, fill: 'both' }));
       } else if (!opening) anims.push(it.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'ease', fill: 'both' }));
       return Promise.all(anims.map(a => a.finished.catch(() => {}))).then(() => anims);
     }
@@ -4957,14 +5013,11 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 })();
 
 /* ---- 40-chat.js ---- */
-/* Ask TESERACT launcher (owner, 21 Oct; markup chrome.chat_dock, look 40-chat.css). At load: one query and the
-   launcher's listeners. After paint: the button semantics. At idle after load: the corner obstacles, the greeting,
-   the field watch, the living launcher. The chat (assets/chat/) loads on the first hover / focus / touch or with the
-   greeting; without it (or in 4 s) the launcher stays a link to the contact form.
-   Living (owner, 21 Oct 23:20, "moving here and there ... he should touch it"): while the visitor is not scrolling, the
-   mark visits a free spot on the screen edge (a hit test per hop: never on or within 12 px of a control or a headline)
-   and comes back, looks at the page, now and then says a line (CHAT 'say'). Home on scroll, menu, dialog, hidden tab;
-   calm after a minute or once the chat is opened, then one short visit a page. Reduced motion: still, "Ask" shown. */
+/* Ask TESERACT launcher (owner 21 Oct; markup chrome.chat_dock, look 40-chat.css). Load: a query + listeners; after
+   paint: button semantics; idle: corner obstacles, greeting, field watch, living. The chat loads on the first hover /
+   focus / touch or with the greeting (else, or in 4 s, it is a link to the contact form). Living (owner 21 Oct 23:20):
+   unscrolled, the mark visits clear edge spots, looks at the page, says a line now and then (CHAT 'say'); home on
+   scroll, menu, dialog, hidden tab; calm after a minute or once opened. Reduced motion or hushed: still. */
 (() => {
   const dock = document.querySelector('[data-cc]');
   if (!dock) return;
@@ -4973,6 +5026,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   const ss = (k, v) => { try { return v == null ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch (e) { return null; } };
   const saying = () => hi && !hi.hidden && hi.classList.contains('is-say');
   let p = null, opened = false, tuck = false, away = false, t0 = 0, tIn = 0, turns = 0, ft = 0, ht = 0, sw = 0, x0 = 0, home = () => {};
+  // hushed (WCAG 2.2.2): a bubble dismissed, Esc on the launcher, a Pause motion ('ts:motion'): home, still
+  let hushed = !!ss('ts-cc-still');
+  const hush = () => { hushed = true; ss('ts-cc-still', '1'); cl.remove('is-ring', 'is-breath', 'is-shim', 'is-bob'); home(1); }, dismiss = () => { fold(1); hush(); };
+  document.addEventListener('ts:motion', e => { if (e.detail && e.detail.still) hush(); }, true);
   const load = () => p || (p = new Promise((ok, no) => {
     const l = document.createElement('link'), s = document.createElement('script');
     l.rel = 'stylesheet'; l.href = d.ccCss; s.src = d.ccJs; s.async = true;
@@ -4988,7 +5045,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       .then(c => c.open({ q, from: btn }), () => location.assign(btn.href))
       .finally(() => cl.remove('is-wait'));
   };
-  // fold the bubble; gone = dismissed (or the chat opened): the dot goes, and no more lines in this tab
+  // fold the bubble; gone: dismissed or the chat opened (the dot goes, no more lines)
   const fold = gone => {
     if (gone) { cl.remove('has-dot'); ss('ts-cc-hush', '1'); }
     clearTimeout(ht);
@@ -4996,7 +5053,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     hi.classList.add('is-off'); btn.removeAttribute('aria-describedby');
     clearTimeout(ft); ft = setTimeout(() => { hi.hidden = true; }, 200);
   };
-  const pop = (line, say, ms, side) => {   // show the bubble (the greeting, or a line), folding by itself unless hovered / focused
+  const pop = (line, say, ms, side) => {   // the greeting or a line; folds itself unless hovered / focused
     hi.querySelector('p').textContent = line; cl.toggle('is-side', !!side);
     hi.classList.toggle('is-say', say); hi.classList.remove('is-off'); hi.classList.add('is-on'); clearTimeout(ft); hi.hidden = false;
     cl.add('has-dot'); btn.setAttribute('aria-describedby', 'cc-hello');
@@ -5007,19 +5064,21 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   btn.addEventListener('click', e => open(null, e));
   btn.addEventListener('keydown', e => {
     if (e.key === ' ') { e.preventDefault(); btn.click(); }
-    if (e.key === 'Escape') fold(1);
+    if (e.key === 'Escape') dismiss();
   });
-  if (hi) {   // a chip asks it; the X or a swipe right dismisses; a tap anywhere else on the bubble opens the chat
+  if (hi) {   // a chip asks; X, Esc, a swipe dismiss (focus: to the launcher); else a tap opens the chat
+    const off = () => { const f = hi.contains(document.activeElement); dismiss(); if (f) btn.focus({ preventScroll: true }); };
     hi.addEventListener('pointerdown', e => { x0 = e.clientX; sw = 0; });
-    hi.addEventListener('pointerup', e => { if (e.clientX - x0 > 60) { sw = 1; fold(1); } });
+    hi.addEventListener('pointerup', e => { if (e.clientX - x0 > 60) { sw = 1; off(); } });
+    hi.addEventListener('keydown', e => { if (e.key === 'Escape') off(); });
     hi.addEventListener('click', e => {
       const b = e.target.closest('button');
       if (sw) return;
-      if (b && b.dataset.ccQ) open(b.dataset.ccQ, e); else if (b) fold(1); else open(null, e);
+      if (b && b.dataset.ccQ) open(b.dataset.ccQ, e); else if (b) off(); else open(null, e);
     });
   }
   const END = { 'cc-br': 'is-breath', 'cc-sm': 'is-shim', 'cc-in': 'is-arrive', 'cc-fd': 'is-fade', 'cc-ld': 'is-land', 'cc-bob': 'is-bob', 'cc-ring': 'is-ring' };
-  dock.addEventListener('animationend', e => {   // (staggered shards: the last one, b, ends theirs)
+  dock.addEventListener('animationend', e => {
     const k = END[e.animationName], c = e.target.classList;
     if (k && !(c.contains('cc-sh') && !c.contains('cc-sh--b'))) cl.remove(k);
   });
@@ -5030,7 +5089,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', resume ? d.ccL2 : d.ccL1);
     if (resume) dock.querySelector('.cc-pill').textContent = d.ccP2;
   });
-  // arrival: the full one in the first page of a tab, a fade on the next ones
+  // arrival: in full on a tab's first page, a fade after
   const arrive = () => {
     const first = !ss('ts-cc-seen');
     ss('ts-cc-seen', '1');
@@ -5041,32 +5100,47 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 
   const idle = () => {
     t0 = now();
-    const R = matchMedia('(prefers-reduced-motion: reduce)'), still = () => R.matches || !root.classList.contains('motion');
+    const R = matchMedia('(prefers-reduced-motion: reduce)'), still = () => R.matches || !root.classList.contains('motion') || hushed;
     const shut = () => (tuck && !away) || root.matches('.is-locked,.cc-field,.ts-intro,.cc-open');
     const ok = () => !opened && !shut();
     const cue = c => { if (!shut() && !still()) cl.add(c); };   // breath, shimmer, ring, landing, hop
-    // corner obstacles (IntersectionObserver only): A = the launcher's corner (its resting box + 12 px), B = the 68 px
-    // above it. A pause control in A lifts the launcher 60 px; anything else in A (or in B while lifted) tucks it away.
-    // (Not while it has wandered off, is-away: its spot was hit-tested.)
-    const LIFT = '.motion-toggle:not([hidden])', AVOID = '.btn,.ct-submit,.ct-quick,.ct-input,.ct-chip,.ft-bar a,.ft-bar__motto,.pj-visit,[data-cc-avoid]';
+    // corner obstacles (IntersectionObserver): A = the resting box + 12 px, B = 68 px above it and 8 px into it. A pause
+    // control in A lifts it 60 px; anything else in A, or in B while lifted (that control too, 25 Oct), tucks it
+    const LIFT = '.motion-toggle:not([hidden])', AVOID = '.btn,.ct-submit,.ct-quick,.ct-input,.ct-chip,.ct-out,.ct-link,.ft-bar a,.ft-bar__motto,.ft__bigmark,'
+      + '.pj-visit,.faq-btn,.sto-btn,.sto-rev__btn,.svc-tap,.video-ctl,[data-cc-avoid]';
     const inA = new Set(), inB = new Set(), inC = new Set();   // C: where the greeting would sit
-    let ios = [], back = 0, rt = 0, G = null;
-    const pin = () => { dock.inert = tuck && !away; };
-    const untuck = () => { tuck = false; cl.remove('is-tuck'); pin(); };
+    let ios = [], back = 0, rt = 0, vt = 0, G = null, M;
+    const untuck = () => { tuck = false; cl.remove('is-tuck'); };
     const sync = () => {
-      const lift = [...inA].some(x => x.matches(LIFT)), t = [...inA].some(x => !x.matches(LIFT)) || (lift && [...inB].some(x => !inA.has(x)));
+      const lift = [...inA].some(x => x.matches(LIFT)), t = [...inA].some(x => !x.matches(LIFT)) || (lift && [...inB].some(x => !inA.has(x) || x.matches(LIFT)));
       cl.toggle('is-lift', lift && !t);
       clearTimeout(back);
-      if (t) { tuck = true; cl.add('is-tuck'); pin(); }
+      if (t) { tuck = true; cl.add('is-tuck'); kk(); }
       else if (tuck) back = setTimeout(untuck, 400);
     };
-    dock.addEventListener('cc:closed', untuck);   // the chat closed: focus returns to the launcher, so it shows
+    dock.addEventListener('cc:closed', untuck);
+    // tucked, it stays in the Tab order: focused (or tucking, or scrolled, while focused: 25 Oct) it shows in the first
+    // gap up its column clear of controls
+    const kk = () => {
+      if (!tuck || away || document.activeElement !== btn) return;
+      const r = btn.getBoundingClientRect(), s = btn.offsetWidth, x = r.left + r.width / 2, y0 = innerHeight - parseFloat(getComputedStyle(dock).bottom);
+      const q = [...document.querySelectorAll('a[href],button,input,select,textarea,summary')].filter(e => !dock.contains(e))
+        .map(e => e.getBoundingClientRect()).filter(b => b.width && b.right > x - s / 2 - 8 && b.left < x + s / 2 + 8);
+      let y = y0, b;
+      while (y - s > 96 && (b = q.find(k => k.top < y + 8 && k.bottom > y - s - 8))) y = b.top - 8;
+      dock.style.setProperty('--kl', Math.round(Math.max(y, 96 + s) - y0) + 'px');
+      cl.add('is-kbd');
+    };
+    btn.addEventListener('focus', kk);
+    btn.addEventListener('blur', () => cl.remove('is-kbd'));
     const watch = () => {
       ios.forEach(o => o.disconnect()); inA.clear(); inB.clear(); inC.clear();
       const W = innerWidth, H = innerHeight, cs = getComputedStyle(dock), n = btn.offsetWidth + 12;
+      M = [n - 12, parseFloat(cs.right), parseFloat(cs.bottom), parseFloat(cs.marginLeft), W - root.clientWidth];
       const a = Math.round(parseFloat(cs.bottom) + n), w = Math.round(parseFloat(cs.right) + n);
-      const els = [...document.querySelectorAll(LIFT + ',' + AVOID)].filter(x => !x.closest('.menu,[data-intro],[data-cc],[aria-hidden="true"],dialog'));
-      ios = [[inA, `-${H - a}px 0px 0px -${W - w}px`], [inB, `-${H - a - 68}px 0px -${a}px -${W - w}px`],
+      const els = [...document.querySelectorAll(LIFT + ',' + AVOID)].filter(x => !x.closest('.menu,[data-intro],[data-cc],[aria-hidden="true"],dialog')
+        && !(x.matches('.video-ctl') && x.closest('[data-ticker]')));
+      ios = [[inA, `-${H - a}px 0px 0px -${W - w}px`], [inB, `-${H - a - 68}px 0px -${a - 8}px -${W - w}px`],
         [inC, `-${Math.max(0, H - a - 250)}px 0px -${a - 12}px -${Math.max(0, W - 330)}px`]].map(([set, m]) => {
         const o = new IntersectionObserver(es => { es.forEach(x => (x.isIntersecting ? set.add(x.target) : set.delete(x.target))); sync(); }, { rootMargin: m });
         els.forEach(x => o.observe(x));
@@ -5075,24 +5149,25 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     };
     watch();
     addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { G = null; V.clear(); home(1); watch(); }, 150); });
-    // a text field outside the chat has focus: the launcher steps aside (phones: the keyboard is up)
+    // video controls added later join the obstacles
+    if (TS.observeVideos) { const ov = TS.observeVideos; TS.observeVideos = r => { ov(r); clearTimeout(vt); vt = setTimeout(watch, 300); }; }
+    // a text field elsewhere has focus: it steps aside (the keyboard)
     const field = x => x && x.matches && x.matches('input,textarea,select,[contenteditable]') && !x.closest('dialog,[data-cc]');
     document.addEventListener('focusin', e => root.classList.toggle('cc-field', field(e.target)));
     document.addEventListener('focusout', () => setTimeout(() => root.classList.toggle('cc-field', field(document.activeElement)), 0));
 
-    // ---- living: wander (hop) every 7-10 s, a line (speak) 20-30 s apart (4 a page), calm (rest) after
+    // ---- living: a hop every 7-10 s, a line 20-30 s apart (4 a page), then calm
     const talk = !!(hi && d.ccSay), lines = (d.ccSay || '').split('|'), l0 = hi ? hi.querySelector('p').textContent : '';
     const BAD = 'a[href],button,input,select,textarea,summary,label,iframe,video[controls],[role=button],[role=link],[role=slider],[tabindex]:not([tabindex="-1"]),[contenteditable],header,nav,.ft-bar,[data-cc-avoid]';
     let wx = 0, wy = 0, wt = 0, tk = 0, mt = 0, prev = 0, act = 0, lastS = 0, lastB = 0, gap = 5e3, says = 0, n = 0;
     let hover = false, calm = false, hopped = false, short = !!(ss('ts-cc-calm') || ss('ts-cc'));
-    // reads and hit tests run just after a frame has painted, on its clean layout (never forcing one)
+    // reads and hit tests just after a paint, on a clean layout
     const clean = f => requestAnimationFrame(() => setTimeout(() => { if (!document.hidden) f(); }, 0));
-    const geo = () => {   // one read per hop: the home spot's centre, the launcher's size, the viewport
-      const cs = getComputedStyle(dock), s = btn.offsetWidth, W = root.clientWidth, H = innerHeight, r = parseFloat(cs.right);
-      return (G = { s, W, H, l: parseFloat(cs.marginLeft) || r, hx: W - r - s / 2, hy: H - parseFloat(cs.bottom) - s / 2,
-        ph: W < 800 || matchMedia('(pointer:coarse)').matches });
+    const geo = () => {   // (25 Oct: no layout read; M from watch)
+      const [s, r, b, l, sb] = M, W = innerWidth - sb, H = innerHeight;
+      return (G = { s, W, H, l: l || r, hx: W - r - s / 2, hy: H - b - s / 2, ph: W < 800 || matchMedia('(pointer:coarse)').matches });
     };
-    // spots (centres): bottom left, part-way up the right edge (desktop: and the left edge), below the header
+    // spots: bottom left, up the right edge (desktop: left too)
     const spots = g => {
       const L = g.l + g.s / 2, out = [[L, g.hy]];
       (g.ph ? [.8, .66, .52, .38] : [.7, .52, .36]).forEach(k => {
@@ -5101,29 +5176,26 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       });
       return out;
     };
-    // hit test of kx x ky points, centre first, two a task (one costs 1-3 ms, 4-10 on a phone): done(2) = a control, a
-    // headline (h1/h2, 28 px type) or text with a link, done(1) = text, done(0) = clear. A scroll meanwhile = 2. The
-    // verdicts hold for this scroll position (V, cleared on scroll) for 30 s, so a still page is tested once.
+    // hit test of kx x ky points, one a task: 2 = a control, a headline, text with a link (or a scroll), 1 = text, 0 =
+    // clear. Verdicts (V) hold at this scroll position: clear 30 s, taken until a scroll (25 Oct: not re-tested a hop)
     const V = new Map();
     const probe = (ax, ay, bx, by, kx, ky, cb) => {
       let t = 0;
       const P = [], mx = (ax + bx) / 2, my = (ay + by) / 2, s0 = lastS, key = [ax, ay, bx, by, kx].map(Math.round).join(), v = V.get(key);
       const done = r => { if (s0 === lastS) V.set(key, [r, now()]); cb(r); };
-      if (v && now() - v[1] < 3e4) return cb(v[0], 1);
-      if (ax < 0 || ay < 96 || bx > G.W || by > G.H) return done(2);   // (and clear of the header band)
+      if (v && (v[0] || now() - v[1] < 3e4)) return cb(v[0], 1);
+      if (ax < 0 || ay < 96 || bx > G.W || by > G.H) return done(2);
       for (let i = 0; i < kx * ky; i++) P.push([ax + (bx - ax) * (i % kx) / (kx - 1), ay + (by - ay) * Math.floor(i / kx) / (ky - 1)]);
       P.sort((a, b) => Math.hypot(a[0] - mx, a[1] - my) - Math.hypot(b[0] - mx, b[1] - my));
       const next = () => {
-        for (let k = 0; k < 2 && P.length; k++) {
-          const [x, y] = P.shift(), st = document.elementsFromPoint(x, y).filter(e => !dock.contains(e)), b = st[0] && st[0].closest('p,li,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dd,dt,td');
-          if (s0 !== lastS || st.some(e => e.matches(BAD)) || (st[0] && parseFloat(getComputedStyle(st[0]).fontSize) >= 28)) return done(2);
-          if (b) { if (b.matches('h1,h2') || b.querySelector('a[href],button')) return done(2); t = 1; }
-        }
+        const [x, y] = P.shift(), st = document.elementsFromPoint(x, y).filter(e => !dock.contains(e)), b = st[0] && st[0].closest('p,li,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dd,dt,td');
+        if (s0 !== lastS || st.some(e => e.matches(BAD)) || (st[0] && parseFloat(getComputedStyle(st[0]).fontSize) >= 28)) return done(2);
+        if (b) { if (b.matches('h1,h2') || b.querySelector('a[href],button')) return done(2); t = 1; }
         if (P.length) setTimeout(next, 0); else done(s0 !== lastS ? 2 : t);
       };
       next();
     };
-    // glide (transform only) to a spot, c = null: home. The mark turns a third on the way, then looks at the page centre.
+    // glide to a spot (null: home), turning a third, then looking at the page centre
     const go = (c, ms, say) => {
       const g = G || geo(), x = c ? Math.round(c[0] - g.hx) : 0, y = c ? Math.round(c[1] - g.hy) : 0, at = c || [g.hx, g.hy];
       if (x === wx && y === wy) return;
@@ -5131,46 +5203,46 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       wx = x; wy = y; away = !!(x || y);
       [['--gd', dur + 'ms'], ['--wx', x + 'px'], ['--wy', y + 'px'], ['--lx', (lx / m).toFixed(2)], ['--ly', (ly / m).toFixed(2)], ['--w', (wt -= 120) + 'deg']]
         .forEach(([k, v]) => dock.style.setProperty(k, v));
-      cl.toggle('is-away', away); cl.toggle('is-l', at[0] < g.W / 2); cl.add('is-move'); pin();
+      cl.toggle('is-away', away); cl.toggle('is-l', at[0] < g.W / 2); cl.add('is-move');
       clearTimeout(mt); mt = setTimeout(() => { cl.remove('is-move'); if (ms !== 1) cue('is-land'); if (say) clean(speak); }, dur);
     };
     home = fast => { if (away) { if (saying()) fold(); go(null, fast ? 1 : 450); } };
-    const hop = done => {   // out to a free spot (2 newly tested at most; done(true)), or a small hop where it is
-      const g = geo(), all = spots(g);
-      let alt = null, i = 0, f = 0;
+    // out to a clear spot (2 probed at most), else a hop in place; text is taken
+    const hop = done => {
+      const g = G || geo(), all = spots(g);
+      let i = 0, f = 0;
       for (let k = all.length; k > 1; k--) { const j = Math.floor(Math.random() * k); [all[k - 1], all[j]] = [all[j], all[k - 1]]; }
       const end = c => { if (c && free()) go(c, 0, 1); else if (!c) cue('is-bob'); done(!!c); };
       const next = () => {
         const c = all[i++];
-        if (!c || f > 1) return end(alt);
+        if (!c || f > 1) return end(null);
         probe(c[0] - g.s / 2 - 12, c[1] - g.s / 2 - 12, c[0] + g.s / 2 + 12, c[1] + g.s / 2 + 12, 3, 3, (r, old) => {
           if (!old) f++;
           if (!r) return end(c);
-          if (r === 1 && !alt) alt = c;
           next();
         });
       };
       next();
     };
-    const speak = () => {   // until the chat has been opened or a bubble dismissed in this tab
+    const speak = () => {   // until the chat opened or a bubble was dismissed
       if (!talk || still() || opened || ss('ts-cc') || ss('ts-cc-hush') || says > 3 || !hi.hidden || shut() || hover || now() - lastB < gap) return;
-      // above the launcher, or else beside it (towards the page); never over a control or a headline
+      // above it, else beside it (towards the page), on a clear area
       const g = G || geo(), s = g.s, l = cl.contains('is-l'), cx = g.hx + wx, cy = g.hy + wy - (cl.contains('is-lift') && !away ? 60 : 0);
       const w = Math.min(270, g.W - 32), ax = l ? cx - s / 2 : cx + s / 2 - w, by = cy - s / 2 - 10;
       const ws = Math.min(270, l ? g.W - cx - s / 2 - 26 : cx - s / 2 - 26), sx = l ? cx + s / 2 + 10 : cx - s / 2 - 10 - ws, w0 = wx + ',' + wy;
       const say = side => {
-        if (w0 !== wx + ',' + wy || !hi.hidden || shut() || hover) return;   // (it moved, or something else showed meanwhile)
+        if (w0 !== wx + ',' + wy || !hi.hidden || shut() || hover) return;
         const i = +ss('ts-cc-say') || 0;
         ss('ts-cc-say', String(i + 1)); says++; lastB = now(); gap = 2e4 + Math.random() * 1e4;
         dock.style.setProperty('--bw', (side ? ws : w) + 'px');
         pop(lines[i % lines.length], true, 7e3, side); cue('is-ring');
       };
-      const beside = r => (r < 2 ? say(0) : ws >= 200 && probe(sx, cy - 46, sx + ws, cy + 46, 4, 3, q => q < 2 && say(1)));
+      const beside = r => (!r ? say(0) : ws >= 200 && probe(sx, cy - 46, sx + ws, cy + 46, 4, 3, q => !q && say(1)));
       if (!away && [...inC].some(x => !x.matches(LIFT))) beside(2); else probe(ax, by - 92, ax + w, by, 4, 3, beside);
     };
     const later = (f, ms) => { clearTimeout(tk); tk = setTimeout(f, ms); };
     const settle = () => { calm = true; if (hopped) ss('ts-cc-calm', '1'); home(still()); later(rest, 9e3 + Math.random() * 6e3); };
-    const rest = () => {   // calm: a breath or a shimmer every 14-22 s, and a line when one is due
+    const rest = () => {   // calm: a breath or shimmer every 14-22 s, a line when due
       if (document.hidden) return;
       if (root.matches('.is-locked,.cc-open')) home(1);
       else if (!still()) { cue(++n % 2 ? 'is-breath' : 'is-shim'); clean(speak); }
@@ -5186,21 +5258,23 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       if (!free()) return later(step, 1200);
       if (prev) act += t - prev;
       prev = t;
-      if (away) { go(null, 0, 1); return short || act > 6e4 ? settle() : later(step, 7e3 + Math.random() * 3e3); }   // a visit, then home
+      if (away) { go(null, 0, 1); return short || act > 6e4 ? settle() : later(step, 7e3 + Math.random() * 3e3); }
       if (short ? hopped : act > 6e4) return settle();
       hopped = true;
       clean(() => hop(out => later(step, out ? 5e3 + Math.random() * 1500 : 7e3 + Math.random() * 3e3)));
     };
-    // the menu / a dialog / a field (html classes): home at once
+    // menu, dialog, field: home at once
     new MutationObserver(() => { if (away && root.matches('.is-locked,.cc-open,.cc-field')) home(1); }).observe(root, { attributes: true, attributeFilter: ['class'] });
-    addEventListener('scroll', () => { lastS = now(); V.clear(); if (away) home(); else if (saying()) fold(); }, { passive: true });
+    // any bubble folds on scroll (25 Oct: the greeting sat over a link)
+    let kr = 0;
+    addEventListener('scroll', () => { lastS = now(); V.clear(); if (away) home(); else if (hi && !hi.hidden) fold(); if (tuck && !kr) kr = requestAnimationFrame(() => { kr = 0; kk(); }); }, { passive: true });
     ['pointerdown', 'keydown'].forEach(t => addEventListener(t, () => { lastS = now(); }, { passive: true, capture: true }));
     dock.addEventListener('pointerenter', () => { hover = true; });
     dock.addEventListener('pointerleave', () => { hover = false; });
     document.addEventListener('visibilitychange', () => { if (document.hidden) { clearTimeout(tk); prev = 0; home(1); } else later(calm ? rest : step, 1500); });
     later(step, 1200);
 
-    // the greeting: once per tab, 8 s of visible time after the intro or 40% down the page, never in the first 3 s
+    // the greeting: once a tab, after 8 s seen or 40% down the page (never in the first 3 s)
     if (!hi || ss('ts-cc-hello')) return;
     let left = 8e3, at = 0, tm = 0, pS = -1;
     const show = () => clean(greet), greet = () => {
@@ -5208,9 +5282,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       if (!ok() || !hi.hidden || [...inC].some(x => !x.matches(LIFT)) || now() - t0 < 3e3 || now() - lastB < 12e3) { tm = setTimeout(show, 2e3); return; }   // never over a button
       const g = G || geo(), y = g.hy - g.s / 2 - (cl.contains('is-lift') ? 70 : 10), w = Math.min(300, g.W - 32);
       if (now() - lastS < 1e3 || pS === lastS) { tm = setTimeout(show, 2e3); return; }
-      probe(g.hx + g.s / 2 - w, y - 150, g.hx + g.s / 2, y, 5, 3, r => {   // nor a link or a headline (tested again after a scroll)
+      probe(g.hx + g.s / 2 - w, y - 150, g.hx + g.s / 2, y, 5, 3, r => {   // nor a link or headline
         if (r > 1 || !ok() || !hi.hidden) { if (r > 1) pS = lastS; tm = setTimeout(show, 2e3); return; }
-        if (away) { home(); tm = setTimeout(show, 1e3); return; }   // (it shows from the launcher's corner)
+        if (away) { home(); tm = setTimeout(show, 1e3); return; }
         ss('ts-cc-hello', '1'); lastB = now(); gap = 2e4 + Math.random() * 1e4;
         pop(l0, false, 12e3); cue('is-breath');
         const c = navigator.connection;
@@ -5225,4 +5299,375 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     if (mark) { const o = new IntersectionObserver(es => { if (es[0].isIntersecting) { o.disconnect(); show(); } }); o.observe(mark); }
   };
   addEventListener('load', () => (window.requestIdleCallback || setTimeout)(idle, { timeout: 3000 }), { once: true });
+})();
+
+/* ---- 96-tone.js ---- */
+/* Tone: the whole page alternates BLACK and WHITE on scroll (owner, 22 Oct, reference elokeglobal.com: start
+   'top center', .6s power1.out, on time not on scroll; 25 Oct: "I want you to follow that color thing in every page"
+   and "in every page, the first should be black color and then white"). Every page opens BLACK (after the logo
+   intro), then white, black, white ... per its chapter map (MAPS below). Look + tokens: 96-tone.css. Build spec:
+   scratchpad tone/final/SPEC.md (this file is its final prototype, tone.js, made site code: the FAST PATH of 25 Oct,
+   with the base flipped to black; the full build moves the maps into data-chapter marks from the page builders).
+   - Fade: ONE fixed black veil under all content (.tone-veil, made here as body's first child); only its opacity
+     animates (Web Animations, compositor): smooth even while the main thread restyles. The canvas (html background)
+     turns black when a fade to black ends, white as a fade to white starts (overscroll never shows the other colour).
+   - Ink: every colour token swaps in ONE step when the veil holds at .541 (page grey 117: outgoing #0b0b0b and
+     incoming #f4f4f2 ink both >= 4.2:1). A crossfade would pass through 1:1 (the reference's flaw).
+   - Cost: the swap is per TONE UNIT (the header, each child of <main>, the page shade, the skip link). Units on or
+     near the screen swap in the balance frame, the rest in idle time (nearest first; at once if one scrolls near).
+     The fade runs in two compositor segments that meet at the balance grey: the veil HOLDS there until the main thread
+     has swapped the ink, so a slow phone or a long task can pause the fade at mid-grey but never show the wrong ink.
+   - Switch: the chapter owning the screen's centre line (or the chapter's own line, data-chapter-at), with a +-6vh
+     (>= 40px) band around each switch point: a resting finger never makes the page flap; a reversal continues from
+     the current shade. Every page opens black; it ends on a black chapter that the footer joins, except the two
+     shortest pages (Terms, 404), which end white above the always-black footer panel.
+   - Instant (no fade): first evaluation (load, restored scroll, bfcache), a jump of more than 1.5 screens, reduced
+     motion or motion off (TS.motion()), forced colours, a hidden tab. Frozen while the menu, the chat or a scroll lock
+     holds the page (both overlays are black islands).
+   - Statement scrub (home, first black chapter): the Idea copy's words brighten one by one with scroll (motion only;
+     the crawler HTML is unchanged).
+   - No JS: no veil, no units: the page is the black base (96-tone.css :root = today's black theme). Readable.
+   Read-only state for other scripts and QA: TS.tone (= window.TSTone).{tone, target, index, chapters, pending,
+   opacity()} and the window event 'ts:tone' {detail: {tone}} after each swap. */
+(() => {
+  'use strict';
+  const root = document.documentElement;
+  const TS = window.TS = window.TS || {};
+  if (TS.tone) return;
+
+  // a head pre-paint (SPEC 3.6, not shipped yet) may mark a reload inside a chapter of the other tone: keep it until
+  // the browser has restored the scroll
+  const prepainted = root.hasAttribute('data-tone');
+
+  const DUR = 600;                                   // a full white <-> black fade (reference .6s)
+  const EASE = [.25, .46, .45, .94];                 // power1.out (reference)
+  const SWAP = 1 - 117 / 255;                        // veil opacity at the balance grey (117): swap the ink here
+  const PAGE = { light: '#ffffff', dark: '#000000' };
+  const RM = matchMedia('(prefers-reduced-motion: reduce)'), FC = matchMedia('(forced-colors: active)');
+  const FINE = matchMedia('(hover: hover) and (pointer: fine)');
+  const W = 'light', B = 'dark';
+  const END = .6;                                    // the closing black chapter owns at least .6 of a screen
+
+  /* ---------- Chapter maps per page (body class). [first element, tone, {at, mq}]: a chapter runs until the next
+     entry; `at` = its switch line (fraction of the screen from the top, default .5 = the centre line; a negative value
+     puts the line above the screen, i.e. the chapter starts once its root has scrolled that far past the top); `mq` =
+     only where the media query matches. The first chapter is always BLACK (25 Oct). The maps alternate and keep black
+     where the art is black (the hero, the Idea and FAQ sheets, client work, the footer) and give the white chapters
+     to content made for paper (service cards, concepts, forms, legal text). Spans in screens of scroll (phone 390x844
+     / desktop 1440x900); no middle chapter under ~.75 of a screen where the page allows it.
+     data-chapter="light|dark" marks in the markup take precedence (SPEC section 4). */
+  const PHONE = '(max-width:799.98px)', WIDE = '(min-width:800px)', STEPS = '(max-width:1199.98px)';
+  const MAPS = {
+    // B hero + Idea 2.95/3.37 . W services 5.17/3.02 . B beliefs 3.24/2.06 . W founder + agency 3.60/3.25 . B FAQ + footer
+    'page-home': [['#hero', B], ['#services', W], ['#believe', B], ['#founder-teaser', W], ['#faq', B]],
+    // B hero . W intro .76/.77 . B client work . W concepts (the tone says "not a client project") . B case study + CTA + footer
+    'page-work': [['.wk-hero', B], ['.wk-intro', W], ['.wk-projects--client', B], ['.wk-projects--concept', W], ['.wk-story', B]],
+    // B the hero (black art, full-bleed) . W founder . B studio + why . W philosophy + how we think . B promise + footer
+    'page-who': [['.who-hero', B], ['#founder', W], ['#intro', B], ['#philosophy', W], ['#promise', B]],
+    // two service rows per beat: B hero + rows 1-2 . W rows 3-4 . B rows 5-6 . W rows 7-8 + CTA . B footer
+    'page-create': [['.create-hero', B], ['.create-list__inner > .svc-row:nth-child(3)', W],
+      ['.create-list__inner > .svc-row:nth-child(5)', B], ['.create-list__inner > .svc-row:nth-child(7)', W], ['.site-footer', B]],
+    // B head + hero scene . W gallery (the work on paper) . B next project + footer
+    'page-project': [['.pj-head', B], ['.pj-gallery-wrap', W], ['.pj-next', B]],
+    // phones/tablets (the step timeline): B hero + steps 1-2 . W steps 3-5 . B steps 6-8 . W step 9 + signature . B footer;
+    // desktop (one artboard, never split inside it): B . W from .9 screen past the poster's top . B footer
+    'page-approach': [['.ap', B], ['.ap-step:nth-of-type(3)', W, { mq: STEPS }], ['.ap-step:nth-of-type(6)', B, { mq: STEPS }],
+      ['.ap-step:nth-of-type(9)', W, { mq: STEPS }], ['.ap', W, { at: -.9, mq: '(min-width:1200px)' }], ['.site-footer', B]],
+    // B hero + Client Deck . W how it works . B leave a review + footer
+    'page-stories': [['.sto-hero', B], ['#experience', W], ['#review', B]],
+    // B hero (+ the first fields) . W the form . B footer (wide screens: the form tops the first screen, so its line
+    // sits higher, at .2, for a real black opening)
+    'page-contact': [['.ct-hero', B], ['#project-form', W, { at: -.15, mq: PHONE }], ['#project-form', W, { at: .2, mq: WIDE }], ['.site-footer', B]],
+    // B hero . W the text (from .3 screen past its top) . B footer (privacy); terms is too short for three: B . W above the black footer
+    'page-legal': [['.lg-hero', B], ['.lg-body', W, { at: -.3 }], ['.site-footer', B]],
+    // B . W as the black footer panel rises (too short for three)
+    'page-notfound': [['.nf', B], ['.site-footer', W]]
+  };
+
+  let chapters = [], units = [], pending = [], idleId = 0, veil = null, meta = null, scrubEl = null;
+  let index = -1, shown = null, target = null, frozen = false, lastY = -1, raf = 0, vh = innerHeight;
+  let anim = null, to = 0, dur = DUR, watchRaf = 0;
+
+  const motion = () => (TS.motion ? TS.motion() : root.classList.contains('motion') && !RM.matches) && !FC.matches;
+
+  /* ---------- Measure: chapters (switch scroll positions) and units (document tops, heights, element counts) */
+  function spec() {
+    const marked = [...document.querySelectorAll('[data-chapter]')].filter(el => !el.hasAttribute('data-tone-map'));
+    if (marked.length) return marked.map(el => [el, el.getAttribute('data-chapter'), { at: +(el.getAttribute('data-chapter-at') || .5) }]);
+    const key = [...document.body.classList].find(c => MAPS[c]);
+    return (MAPS[key] || [['main', B]]).map(([sel, tone, o = {}]) => {
+      if (o.mq && !matchMedia(o.mq).matches) return null;
+      const el = document.querySelector(sel);
+      if (!el) return null;
+      el.setAttribute('data-chapter', tone); el.setAttribute('data-tone-map', '');
+      return [el, tone, { at: o.at === undefined ? .5 : o.at }];
+    }).filter(Boolean);
+  }
+  const H = () => Math.max(40, vh * .06);            // the switch band, each side
+  function recompute() {
+    vh = innerHeight;
+    const y = scrollY, max = Math.max(0, root.scrollHeight - vh);
+    let list = spec().map(([el, tone, o]) => ({ el, tone, s: el.getBoundingClientRect().top + y - vh * o.at }));
+    list.sort((a, b) => a.s - b.s);
+    list = list.filter((c, i) => i === 0 || c.tone !== list[i - 1].tone);           // never a B-B "beat"
+    if (!list.length || list[0].tone !== B) list.unshift({ el: document.body, tone: B, s: 0 });   // every page opens black
+    list[0].s = -Infinity;
+    list.forEach(c => { c.s0 = c.s; });
+    const place = () => {
+      for (let i = 1; i < list.length; i++) {
+        list[i].s = list[i].s0;
+        // the closing chapter owns at least END of a screen (short pages: Contact, legal, 404) and is reachable
+        if (i === list.length - 1) list[i].s = Math.min(list[i].s, max - Math.max(2 * H(), vh * END));
+        // ... but every page still OPENS black: the first switch lies beyond the band (a very short page, e.g. a 404
+        // on a tall desktop screen, would otherwise put the end rule's chapter at scroll 0)
+        if (i === 1) list[i].s = Math.max(list[i].s, H() + 1);
+        list[i].s = Math.max(list[i].s, list[i - 1].s + 1);
+      }
+    };
+    place();
+    // a chapter the page cannot scroll into (a page that scrolls less than its band) is dropped
+    while (list.length > 1 && list[list.length - 1].s + H() > max) list.pop();
+    // no chapter may be a flash (shorter than the two bands, or .3 of a screen): when the closing chapter squeezes the
+    // one before it (Terms on a phone), the page ends on that one; a squeezed middle chapter (an odd viewport size) is
+    // dropped together with the next one (the same tone as the one before), so the rhythm stays strict, nothing strobes
+    const flash = Math.max(2 * H() + 1, vh * .3);
+    while (list.length > 2 && list[list.length - 1].s - list[list.length - 2].s < flash) { list.pop(); place(); }
+    for (let i = 1; i < list.length - 1; i++) if (list[i + 1].s - list[i].s < flash) { list.splice(i--, 2); place(); }
+    chapters = list;
+    const els = [document.querySelector('.site-header'), ...(document.querySelector('main') || document.body).children,
+      document.querySelector('.page-shade'), document.querySelector('.skip-link')]
+      .filter(el => el && !/^(SCRIPT|TEMPLATE|STYLE)$/.test(el.tagName));
+    units = els.map(el => {
+      const r = el.getBoundingClientRect(), fixed = getComputedStyle(el).position;
+      return { el, top: r.top + (fixed === 'fixed' ? 0 : y), h: r.height, fixed: fixed === 'fixed' || fixed === 'sticky' };
+    });
+  }
+  const isNear = (u, y, m) => u.fixed || (u.top + u.h > y - vh * m && u.top < y + vh * (1 + m));
+
+  /* ---------- The ink swap (per unit) */
+  const COLOR_T = /^(color|background-color|background|border(-\w+)?-color|border|fill|stroke|box-shadow|outline-color|text-decoration-color|-webkit-text-fill-color)$/;
+  // a STYLE-ONLY flush of the whole document: document.getAnimations() brings the style up to date (not layout) and
+  // lists the CSS transitions the swap just started. getComputedStyle(body) is not enough (Blink then restyles only
+  // the body's ancestors) and a layout read (offsetWidth) is too much (measured: the x4 swap frame grew 3x).
+  const restyle = () => (document.getAnimations ? document.getAnimations() : []);
+  const setUnit = (u, t) => { if (u.el.getAttribute('data-tone') !== t) u.el.setAttribute('data-tone', t); };
+  const ric = window.requestIdleCallback ? (f => requestIdleCallback(f, { timeout: 600 })) : (f => setTimeout(() => f({ timeRemaining: () => 6 }), 80));
+  function swap(t, all) {
+    shown = t;
+    root.setAttribute('data-tone-state', t);
+    if (meta) meta.setAttribute('content', PAGE[t]);
+    const y = scrollY;
+    pending = [];
+    for (const u of units) {
+      if (all || isNear(u, y, .5)) setUnit(u, t);
+      else pending.push(Object.assign(u, { d: Math.min(Math.abs(u.top - y), Math.abs(u.top + u.h - y - vh)) }));
+    }
+    if (root.hasAttribute('data-tone')) root.removeAttribute('data-tone');            // the pre-paint hands over
+    // the restyle, now; components with their own colour transitions (buttons .35s, chips, FAQ rows) would crossfade
+    // fill and label through 1:1 after the swap: finish them in this frame (no extra restyle)
+    finishColourTransitions(restyle());
+    pending.sort((a, b) => a.d - b.d);
+    if (pending.length) { if (!idleId) idleId = ric(drain) || 1; } else scheme();
+    window.dispatchEvent(new CustomEvent('ts:tone', { detail: { tone: t } }));
+  }
+  function drain(dl) {
+    idleId = 0;
+    while (pending.length) {
+      setUnit(pending.shift(), shown);
+      restyle();                                     // restyle THIS unit inside the idle slice (off screen)
+      if (dl.timeRemaining() < 4) break;
+    }
+    if (pending.length) idleId = ric(drain) || 1; else scheme();
+  }
+  function finishColourTransitions(list) {
+    for (const a of list) {
+      const p = a.transitionProperty;
+      if (p && COLOR_T.test(p)) try { a.finish(); } catch (e) { /* idle */ }
+    }
+  }
+  function catchUp(y) {                                                              // a pending unit scrolls near
+    if (!pending.length) return;
+    let hit = false;
+    pending = pending.filter(u => { if (isNear(u, y, .6)) { setUnit(u, shown); hit = true; return false; } return true; });
+    if (hit) finishColourTransitions(restyle());
+  }
+  function scheme() { if (FINE.matches && root.getAttribute('data-scheme') !== shown) ric(() => root.setAttribute('data-scheme', shown)); }
+  const canvas = t => { if (root.getAttribute('data-canvas') !== t) root.setAttribute('data-canvas', t); };
+
+  /* ---------- The fade: veil opacity only, on the compositor, in TWO segments that meet at the balance grey.
+     Segment 1 runs from the current shade to the balance (opacity SWAP) and HOLDS there (fill forwards); the main
+     thread swaps the ink in the first frame after the veil holds there and then starts segment 2 from wherever the
+     veil is: a slow restyle holds the page at mid-grey for its duration, where outgoing and incoming ink are both
+     >= 4.2:1, so the ink can never lag or lead the page. The two segments sample one power1.out curve (piecewise-linear
+     keyframes), so together they are the reference fade. */
+  const bez = (() => {
+    const [p1x, p1y, p2x, p2y] = EASE, cx = 3 * p1x, bx = 3 * (p2x - p1x) - cx, ax = 1 - cx - bx, cy = 3 * p1y, by = 3 * (p2y - p1y) - cy, ay = 1 - cy - by;
+    return x => { if (x <= 0) return 0; if (x >= 1) return 1; let t = x; for (let i = 0; i < 8; i++) { const e = ((ax * t + bx) * t + cx) * t - x, d = (3 * ax * t + 2 * bx) * t + cx; if (Math.abs(e) < 1e-5 || !d) break; t -= e / d; } t = Math.min(1, Math.max(0, t)); return ((ay * t + by) * t + cy) * t; };
+  })();
+  const SEG = 10;                                    // keyframes per segment
+  let phase = 0, curve = null, seg1 = 0;             // phase 1 = to the balance (hold), 2 = to the goal
+  const veilNow = () => (veil ? +getComputedStyle(veil).opacity || 0 : 0);
+  const xAt = (c, o) => { let lo = 0, hi = 1; for (let i = 0; i < 24; i++) { const m = (lo + hi) / 2; if ((c.from + (c.to - c.from) * bez(m) - o) * Math.sign(c.to - c.from) < 0) lo = m; else hi = m; } return (lo + hi) / 2; };
+  function runSeg(c, x0, x1, hold) {                 // animate the curve c between x0 and x1
+    const kf = [];
+    for (let i = 0; i <= SEG; i++) { const x = x0 + (x1 - x0) * i / SEG; kf.push({ offset: i / SEG, opacity: c.from + (c.to - c.from) * bez(x) }); }
+    return veil.animate(kf, { duration: Math.max(16, (x1 - x0) * c.dur), easing: 'linear', fill: hold ? 'forwards' : 'none' });
+  }
+  function settle() {
+    anim = null; phase = 0;
+    veil.style.opacity = String(to);
+    if (to === 1) canvas(B);
+  }
+  function phase2() {                               // after the swap: from wherever the veil is, the rest of the curve
+    const o = veilNow(), x = xAt(curve, o);
+    if (anim) anim.cancel();
+    veil.style.opacity = String(to);
+    phase = 2;
+    const kf = [];
+    for (let i = 0; i <= SEG; i++) { const xi = x + (1 - x) * i / SEG; kf.push({ offset: i / SEG, opacity: i ? curve.from + (curve.to - curve.from) * bez(xi) : o }); }
+    anim = veil.animate(kf, { duration: Math.max(16, (1 - x) * curve.dur), easing: 'linear' });
+    anim.onfinish = settle;
+  }
+  function watch() {
+    watchRaf = 0;
+    if (!anim) return;
+    if (phase === 1 && anim.playState !== 'paused') {
+      if ((anim.currentTime || 0) >= seg1 || anim.playState === 'finished') {
+        if (shown !== target) swap(target);
+        phase2();
+      }
+    }
+    if (anim) watchRaf = requestAnimationFrame(watch);
+  }
+  function fade(t, instant) {
+    target = t;
+    const goal = t === B ? 1 : 0;
+    const now = veilNow();
+    if (anim) { anim.cancel(); anim = null; phase = 0; }
+    to = goal;
+    // no Web Animations (very old browsers): the tone simply changes at once
+    if (instant || !veil.animate) { veil.style.opacity = String(goal); swap(t, shown === null); canvas(t); return; }
+    if (t === W) canvas(W);                          // the canvas under the veil goes white first (overscroll)
+    const span = Math.abs(goal - now);
+    if (span < .002) { veil.style.opacity = String(goal); if (shown !== t) swap(t); canvas(t); return; }
+    dur = Math.max(240, DUR * span);
+    curve = { from: now, to: goal, dur };
+    if (shown === t) {                               // the ink is already right (a reversal before the swap): one segment
+      veil.style.opacity = String(goal);
+      seg1 = 0; phase = 2; anim = runSeg(curve, 0, 1, false); anim.onfinish = settle;
+    } else if ((goal - now) * (SWAP - now) <= 0) {   // already at or past the balance: swap now, then the rest
+      swap(t); veil.style.opacity = String(goal); seg1 = 0; phase = 2; anim = runSeg(curve, 0, 1, false); anim.onfinish = settle;
+    } else {                                         // to the balance and hold; the ink swap releases segment 2
+      const xb = xAt(curve, SWAP);
+      seg1 = Math.max(16, xb * dur);
+      phase = 1; anim = runSeg(curve, 0, xb, true);
+    }
+    if (!watchRaf) watchRaf = requestAnimationFrame(watch);
+  }
+
+  /* ---------- Which chapter owns the line (Schmitt band +-H around each switch point) */
+  function pick(y) {
+    const n = chapters.length;
+    if (!n) return 0;
+    let i = Math.max(0, Math.min(index, n - 1)), h = H();
+    while (i + 1 < n && y >= chapters[i + 1].s + h) i++;
+    while (i > 0 && y < chapters[i].s - h) i--;
+    if (index < 0) { i = 0; while (i + 1 < n && y >= chapters[i + 1].s) i++; }   // first evaluation: no band
+    return i;
+  }
+  function update() {
+    raf = 0;
+    if (frozen || !veil) return;
+    const y = scrollY;
+    const jump = lastY >= 0 && Math.abs(y - lastY) > vh * 1.5;
+    lastY = y;
+    catchUp(y);
+    const i = pick(y);
+    if (chapters[i] && (i !== index || target !== chapters[i].tone)) {
+      const first = index < 0;
+      index = i;
+      if (target !== chapters[i].tone || shown !== chapters[i].tone) fade(chapters[i].tone, first || jump || !motion() || document.hidden);
+    }
+    scrub();
+  }
+  const request = () => { if (!raf) raf = requestAnimationFrame(update); };
+
+  /* ---------- Scroll-scrubbed statement on the first black chapter (home: the Idea copy). Words brighten one by one
+     from a .24 ghost as the block travels from 88% to 50% of the screen, lerped (reference scrub: 1). The crawler
+     HTML is unchanged (split at runtime). Reduced motion / motion off: not split. */
+  let scrubP = 0, scrubT = 0, scrubRaf = 0;
+  function setupScrub() {
+    const el = document.querySelector('.idea__copy');
+    if (!el || !motion()) return;
+    let i = 0;
+    const walk = node => [...node.childNodes].forEach(nd => {
+      if (nd.nodeType === 3) {
+        if (!nd.nodeValue.trim()) return;
+        const frag = document.createDocumentFragment();
+        nd.nodeValue.split(/(\s+)/).forEach(p => {
+          if (!p) return;
+          if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(p)); return; }
+          const s = document.createElement('span'); s.className = 'tw'; s.style.setProperty('--i', i++); s.textContent = p; frag.appendChild(s);
+        });
+        nd.replaceWith(frag);
+      } else if (nd.nodeType === 1) walk(nd);
+    });
+    walk(el);
+    el.style.setProperty('--n', i); el.style.setProperty('--p', 0);
+    scrubEl = el;
+  }
+  function scrub() {
+    if (!scrubEl) return;
+    const r = scrubEl.getBoundingClientRect(), a = vh * .88, b = vh * .5;
+    scrubT = Math.min(1, Math.max(0, (a - r.top) / ((a - b) + r.height)));
+    if (!scrubRaf) scrubRaf = requestAnimationFrame(lerp);
+  }
+  function lerp() {
+    scrubRaf = 0;
+    scrubP += (scrubT - scrubP) * .16;
+    if (Math.abs(scrubT - scrubP) < .001) scrubP = scrubT; else scrubRaf = requestAnimationFrame(lerp);
+    scrubEl.style.setProperty('--p', scrubP.toFixed(4));
+  }
+
+  function init() {
+    meta = document.querySelector('meta[name="theme-color"]');
+    veil = document.querySelector('.tone-veil');
+    if (!veil) { veil = document.createElement('div'); veil.className = 'tone-veil'; veil.setAttribute('aria-hidden', 'true'); document.body.prepend(veil); }
+    recompute();
+    setupScrub();
+    const start = () => { lastY = scrollY; update(); };
+    // a pre-painted reload keeps its black until the browser has restored the scroll (first scroll event or load)
+    if (prepainted && scrollY < 2) {
+      let done = false;
+      const go = () => { if (done) return; done = true; recompute(); start(); };
+      addEventListener('scroll', go, { once: true, passive: true });
+      addEventListener('load', () => requestAnimationFrame(() => requestAnimationFrame(go)), { once: true });
+    } else start();
+    addEventListener('scroll', request, { passive: true });
+    addEventListener('resize', () => { recompute(); request(); });
+    addEventListener('load', () => { recompute(); request(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { recompute(); request(); });
+    if ('ResizeObserver' in window) { let q = 0; new ResizeObserver(() => { if (!q) q = requestAnimationFrame(() => { q = 0; recompute(); request(); }); }).observe(document.body); }
+    addEventListener('pageshow', e => { if (e.persisted) { index = -1; lastY = -1; recompute(); update(); } });
+    const remember = () => { try { sessionStorage.setItem('ts-tone', JSON.stringify({ p: location.pathname, t: shown })); } catch (e) { /* blocked */ } };
+    addEventListener('pagehide', remember);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) remember(); });
+    // the menu, the chat window or a scroll lock holds the page: freeze the tone (both overlays are black islands);
+    // on release, catch up instantly
+    new MutationObserver(() => {
+      const f = root.matches('.menu-is-open,.cc-open,.is-locked');
+      if (f === frozen) return;
+      frozen = f;
+      if (!f) { lastY = -1; const i = pick(scrollY); if (chapters[i] && chapters[i].tone !== target) { index = i; fade(chapters[i].tone, true); } request(); }
+    }).observe(root, { attributes: true, attributeFilter: ['class'] });
+    if (RM.addEventListener) RM.addEventListener('change', () => { if (target) fade(target, true); });
+
+    window.TSTone = TS.tone = {                      // read-only state (diagnostics, QA, section scripts)
+      get tone() { return shown; }, get target() { return target; }, get index() { return index; },
+      get pending() { return pending.length; }, opacity: veilNow,
+      get chapters() { return chapters.map(c => ({ tone: c.tone, s: Math.round(c.s), el: (c.el.id ? '#' + c.el.id : String(c.el.className).split(' ')[0]) || c.el.tagName })); }
+    };
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true }); else init();
 })();

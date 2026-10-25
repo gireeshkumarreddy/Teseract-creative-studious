@@ -1180,7 +1180,11 @@ _chat = lib.CONFIG.get('chat')
 # lazy chat.js carries content.CHAT (13 KB) - these are the ceilings now (owner's review: LAUNCH-CHECKLIST 'Chat').
 # 21 Oct 23:20, the living launcher (wander, lines, calm): the stub 20 KB and its CSS 8 KB. app.js is a deferred script
 # (parsed off the main thread) and all of it runs at idle after load; its first task is unchanged.
-CHAT_MAX = {'src/js/40-chat.js': 20 * 1024, 'src/css/40-chat.css': 8 * 1024, 'assets/chat/chat.js': 96 * 1024,
+# 24 Oct, the review fixes (step answers, budget rules, gates, screen-reader text of every card): the lazy chat.js 104 KB
+# (99 KB raw, 33 KB gzip; loaded only when the chat opens).
+# 25 Oct, the same fixes in the stub (launcher keyboard reach, the safe spots that keep it off controls) and its CSS:
+# 21 KB / 9 KB (20.2 / 8.0 KB raw at the time).
+CHAT_MAX = {'src/js/40-chat.js': 21 * 1024, 'src/css/40-chat.css': 9 * 1024, 'assets/chat/chat.js': 104 * 1024,
             'assets/chat/chat.css': 14 * 1024, 'assets/chat-kb.json': 48 * 1024}
 CHAT_BANNED = re.compile(r"guarantee(d)?|cheapest|lowest|world-class|unbeatable|number one|#1|for free|free of charge|"
                          r"best (price|rate|deal|agency|studio)|within \d+ (days|weeks)", re.I)
@@ -1327,18 +1331,29 @@ def chat_checks():
         errors.append("assets/chat/chat.js has an http(s):// literal (the chat requests nothing but this website's files)")
     if len(re.findall(r'\bfetch\(', js)) != 1 or not re.search(r'fetch\(D\.ccKb\b', js):
         errors.append('assets/chat/chat.js: exactly one fetch(, of the knowledge base (data-cc-kb)')
-    for bad in ('.innerHTML', 'insertAdjacentHTML', 'eval(', 'new Function', 'document.write', 'localStorage',
-                'document.cookie', 'sendBeacon', 'XMLHttpRequest', 'WebSocket', 'import('):
-        if bad in js:
-            errors.append(f'assets/chat/chat.js uses {bad}')
+    # nothing leaves the site (review 22 Oct, PRIV-1): one banned list for the lazy chat and the stub in app.js - every
+    # way to send or fetch, HTML injection, storage beyond sessionStorage - and no URL string but this site's own
+    # (a protocol-relative '//host' too); the chat's CSS loads nothing but ./ ../ data: or # (no @import)
+    no_send = ('.innerHTML', 'insertAdjacentHTML', 'eval(', 'new Function', 'document.write', 'localStorage',
+               'document.cookie', 'sendBeacon', 'XMLHttpRequest', 'WebSocket', 'EventSource', 'new Image', 'Worker(',
+               'serviceWorker', 'import(', 'window.open', 'RTCPeerConnection')
+    stub = (ROOT / 'src/js/40-chat.js').read_text(encoding='utf-8')
+    for name, text in (('assets/chat/chat.js', js), ('src/js/40-chat.js', stub)):
+        for bad in no_send + (('fetch(',) if name.startswith('src/') else ()):
+            if bad in text:
+                errors.append(f'{name} uses {bad}')
+        if re.search(r'''["'`]\s*(?:[a-z][a-z0-9+.-]*:)?//''', text, re.I):
+            errors.append(f'{name} has a URL string to another site (// or a scheme): the chat requests only its own files')
+    for name, text in (('chat.css', css), ('40-chat.css', (ROOT / 'src/css/40-chat.css').read_text(encoding='utf-8'))):
+        for u in re.findall(r'url\(\s*([^)]*?)\s*\)', text):
+            if not re.match(r'''["']?(\./|\.\./|data:|#)''', u):
+                errors.append(f'{name}: url({u[:40]}) is not this site\'s own file')
+        if '@import' in text:
+            errors.append(f'{name} uses @import')
     for f in sorted((ROOT / 'src/chat').glob('*.js')):
         for i, ln in enumerate(f.read_text(encoding='utf-8').splitlines(), 1):
             if ln.count('`') % 2:
                 errors.append(f'src/chat/{f.name}:{i}: a template literal across lines (build.py strip_js keeps lines whole)')
-    stub = (ROOT / 'src/js/40-chat.js').read_text(encoding='utf-8')
-    for bad in ('fetch(', '.innerHTML', 'localStorage', 'document.cookie', 'XMLHttpRequest'):
-        if bad in stub:
-            errors.append(f'src/js/40-chat.js uses {bad}')
     for name, text in (('chat.css', css), ('40-chat.css', (ROOT / 'src/css/40-chat.css').read_text(encoding='utf-8'))):
         if re.search(r'font-(weight|family)\s*:', text):
             errors.append(f'{name} sets a font weight or family (the typography layer, 95-typography.css, decides)')
@@ -1453,7 +1468,7 @@ def chat_checks():
             line = lib.fmt(_CHAT['hello'][hello[page]])
             if page == 'project':
                 x = next((c for c in projects.CASES if f"{c['route']}/index.html" == rel), None)
-                line = line.replace('{project}', x['title'] if x else '')
+                line = line.replace('{project}', _ckb.prose_name(x) if x else '')
             if not bubble or _h.unescape(bubble.group(1)) != line:
                 errors.append(f'{rel}: the chat greeting is not content.CHAT hello "{hello[page]}"')
         elif bubble:

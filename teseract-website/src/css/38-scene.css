@@ -589,6 +589,10 @@
   .scn--plain .scn-stage>.scn-media--narrow{display:block}
 }
 .scn--plain .scn-stage::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);pointer-events:none}
+/* the next-project tile's plain frame on its 4:5 stage (pages/project.next_block, caption=True): the label pill sat on
+   the site's logo in the phone screen's header, so it docks at the frame's foot, bottom left - as the landing loops'
+   labels do (20-hero.css; mobile audit PJV-05) */
+@container scn (max-width:639.98px){.pj-next__tile .scn--plain .scn-cap{top:auto;bottom:5.5cqw}}
 
 /* a scene's fade-in (03-motion.css data-reveal="fade", on any page): while it waits it holds no composited layer of its
    own (2D offset, no will-change) and its entrance runs no blur(0) filter transition, which cannot run on the

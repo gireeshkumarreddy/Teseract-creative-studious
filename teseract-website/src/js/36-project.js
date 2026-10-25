@@ -11,7 +11,8 @@
    still); double-tap zooms in at that point / back out; at 1x a vertical swipe closes (the still follows the finger,
    the black fades). Mouse: a click on the still toggles the zoom at the pointer, drag pans, the wheel zooms around the
    pointer (a horizontal wheel pans, or changes slide at 1x). Keys: Left / Right, Home / End, + / - / 0, Esc.
-   Controls (pages/project.viewer): previous · close · next at the bottom (the thumb zone), the "3 / 10" count on top.
+   Controls (pages/project.viewer): previous · close · next at the bottom (the thumb zone), the "3 / 10" count on top
+   (a phone held sideways: a column at the right edge, the count top left). Screen readers meet the front still only.
    Closing - X, Esc, Back (opening adds a history entry, so the phone's back gesture closes the viewer instead of
    leaving the page), a vertical swipe, a tap on the black around the still - morphs the still back into its frame on
    the page (scrolled into view first when the visitor swiped to another one) and returns focus to that frame's link.
@@ -63,12 +64,19 @@
     const pageImg = a => [...a.querySelectorAll('img')].find(shown) || a.querySelector('img');
     const transformOf = (s, x, y) => `translate3d(${x}px,${y}px,0) scale(${s})`;
 
-    /* ---------- layout: every still fitted between the count and the controls, centred on the screen */
+    /* ---------- layout: every still fitted between the count and the controls, centred on the screen. A phone held
+       sideways has the controls as a column at the right edge and the count top left (36-project.css): the still gets
+       the full height there, and both sides keep clear of the column (and of the count) */
     function measure() {
       W = stage.clientWidth; H = stage.clientHeight;
-      padX = W < 800 ? 12 : 48;
       const bar = chrome[1].getBoundingClientRect(), top = count.getBoundingClientRect();
-      padY = Math.max(48, Math.round(Math.max(top.bottom, H - bar.top) + 10));
+      if (bar.height > bar.width) {
+        padX = Math.round(Math.max(W - bar.left, top.right) + 12);
+        padY = Math.round(Math.max(bar.top, H - bar.bottom));
+      } else {
+        padX = W < 800 ? 12 : 48;
+        padY = Math.max(48, Math.round(Math.max(top.bottom, H - bar.top) + 10));
+      }
       dlg.style.setProperty('--slide-w', W + 'px');
       items.forEach(fit);
     }
@@ -150,10 +158,14 @@
     }
 
     function update() {
-      // the count, and for screen readers the still's own description after it
-      const sr = document.createElement('span');
-      sr.className = 'sr-only'; sr.textContent = cur().el.alt ? `: ${cur().el.alt}` : '';
-      count.replaceChildren(`${index + 1} / ${items.length}`, sr);
+      // the count alone in the live region, and only the front still in the accessibility tree (the others are inert
+      // and hidden), so a screen reader reads each still once, by its own alt text (mobile audit A11Y2-03)
+      count.textContent = `${index + 1} / ${items.length}`;
+      items.forEach((it, i) => {
+        const off = i !== index;
+        it.slide.toggleAttribute('inert', off);
+        if (off) it.slide.setAttribute('aria-hidden', 'true'); else it.slide.removeAttribute('aria-hidden');
+      });
       prevBtn.setAttribute('aria-disabled', String(index === 0));
       nextBtn.setAttribute('aria-disabled', String(index === items.length - 1));
     }
@@ -169,6 +181,18 @@
     }
 
     /* ---------- open / close */
+    // a frame that crops its still (object-fit:cover on another aspect - the plain-frame hero's phone screen on its 4:5
+    // stage): the still morphs at one even scale that covers the frame, at the frame's object-position, clipped to the
+    // frame (in its own pixels), so it never squashes on the way. null when the frame shows the whole still.
+    function cropOf(img, from, b) {
+      const sx = from.width / b.width, sy = from.height / b.height, cs = getComputedStyle(img);
+      if (Math.abs(sx / sy - 1) < 0.02 || cs.objectFit !== 'cover') return null;
+      const s = Math.max(sx, sy), cw = b.width * s, ch = b.height * s, [px = '50%', py = '50%'] = cs.objectPosition.split(' ');
+      const at = (v, room) => (v.endsWith('%') ? parseFloat(v) / 100 * room : parseFloat(v) || 0);
+      const dx = at(px, from.width - cw), dy = at(py, from.height - ch);   // the still's corner in the frame (<= 0)
+      return { s, cx: from.left + dx + cw / 2, cy: from.top + dy + ch / 2,
+        clip: `inset(${-dy / s}px ${(cw + dx - from.width) / s}px ${(ch + dy - from.height) / s}px ${-dx / s}px)` };
+    }
     function morph(opening, from) {
       const it = cur();
       const fade = (el, a, b, ms) => el.animate([{ opacity: a }, { opacity: b }], { duration: ms, easing: 'ease', fill: 'both' });
@@ -181,10 +205,11 @@
         it.el.style.transform = transformOf(1, 0, 0);
         const b = it.el.getBoundingClientRect();
         it.el.style.transform = now;
-        const tx = from.left + from.width / 2 - (b.left + b.width / 2), ty = from.top + from.height / 2 - (b.top + b.height / 2);
-        const flip = `translate3d(${tx}px,${ty}px,0) scale(${from.width / b.width},${from.height / b.height})`;
-        anims.push(it.el.animate(opening ? [{ transform: flip }, { transform: now }] : [{ transform: now }, { transform: flip }],
-          { duration: DUR, easing: EASE, fill: 'both' }));
+        const c = cropOf(it.page, from, b);
+        const tx = (c ? c.cx : from.left + from.width / 2) - (b.left + b.width / 2), ty = (c ? c.cy : from.top + from.height / 2) - (b.top + b.height / 2);
+        const flip = { transform: `translate3d(${tx}px,${ty}px,0) scale(${c ? c.s : `${from.width / b.width},${from.height / b.height}`})` }, to = { transform: now };
+        if (c) { flip.clipPath = c.clip; to.clipPath = 'inset(0px 0px 0px 0px)'; }
+        anims.push(it.el.animate(opening ? [flip, to] : [to, flip], { duration: DUR, easing: EASE, fill: 'both' }));
       } else if (!opening) anims.push(it.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'ease', fill: 'both' }));
       return Promise.all(anims.map(a => a.finished.catch(() => {}))).then(() => anims);
     }

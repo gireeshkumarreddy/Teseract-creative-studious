@@ -222,18 +222,21 @@
       if (budget && !budget.value.trim() && d.budget) set(budget, String(d.budget).slice(0, 120), 'input');
       if (idea && !idea.value.trim() && d.idea) set(idea, String(d.idea).slice(0, 2000), 'input');
       if (!filled.length) return;
-      if (note) { note.querySelector('span').textContent = note.dataset.text; note.hidden = false; }
+      // the status shows empty, then gets its text, so screen readers hear it after the name field (24 Oct)
+      if (note) { const sp = note.querySelector('span'); sp.textContent = ''; note.hidden = false; setTimeout(() => { sp.textContent = note.dataset.text; }, 400); }
       // focus the name; again after load (a #project-form arrival's fragment scroll moves focus back to the page)
       const name = form.querySelector('#ct-name'), go = () => { if (name && document.activeElement !== name) name.focus({ preventScroll: true }); };
       go();
       if (document.readyState !== 'complete') addEventListener('load', () => setTimeout(go, 0), { once: true });
     };
     if (note) note.querySelector('button').addEventListener('click', () => {
+      const first = filled.find(el => el.type !== 'checkbox') || filled[0] || form.querySelector('#ct-name');
       filled.forEach(el => {
         if (el.type === 'checkbox') el.checked = false;
         else { el.value = ''; el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input')); }
       });
       filled = [];
+      if (first) first.focus();   // (24 Oct: the hidden note held the focus, which fell to the page)
       note.hidden = true;
     });
     try {

@@ -10,6 +10,7 @@
            reduced motion), or showing its Work still (a still on the screen opens in the viewer below); a project
            without a scene style (owner: Geetha Jewellers, whose gold palette suits no backdrop) shows the plain frame
            of its Work card: its first still on the 16:10 stage, its first phone screen on the 4:5 stage of a phone
+           (there it opens in the viewer)
   gallery  the captured stills (scripts/media-manifest.json): desktop screens in the ZIP full/half rhythm,
            phone screens as pairs on a band (a swipe strip on phones); alt text = the capture report's "shows" lines.
            The hero's still is not repeated, and a still the hero shows only on wide screens opens the phone gallery.
@@ -106,6 +107,8 @@ def head(ctx, p):
       </div>''' if chips or visit else '')
     back = (f'<a class="pj-back" href="{ctx.url("work")}" aria-label="Back to all work">'
             f'<span class="pj-back__icon" aria-hidden="true">{ICONS["arrow-r"]}</span>{roll("All work")}</a>')
+    # .pj-head__id holds label line, name and facts as one block (no style of its own): a phone held sideways sets the
+    # summary beside it (36-project.css, landscape)
     return f'''<section class="pj-head" aria-labelledby="pj-title">
   <div class="container">
     <nav class="pj-head__bar" aria-label="Case study" data-reveal="fade">
@@ -114,9 +117,11 @@ def head(ctx, p):
     </nav>
     <div class="pj-head__grid">
       <div class="pj-head__main">
-        {_tag(p)}
-        <h1 class="pj-head__title{caps(p['title'])}" id="pj-title" data-reveal style="--y:80px;--d:200ms">{E(lib.name_text(p['title']))}</h1>
-        <p class="pj-head__meta" data-reveal style="--y:40px;--d:300ms"><span>{E(p['year'])}</span><span class="pj-head__dot" aria-hidden="true">·</span><span>{E(p['industry'])}</span></p>
+        <div class="pj-head__id">
+          {_tag(p)}
+          <h1 class="pj-head__title{caps(p['title'])}" id="pj-title" data-reveal style="--y:80px;--d:200ms">{E(lib.name_text(p['title']))}</h1>
+          <p class="pj-head__meta" data-reveal style="--y:40px;--d:300ms"><span>{E(p['year'])}</span><span class="pj-head__dot" aria-hidden="true">·</span><span>{E(p['industry'])}</span></p>
+        </div>
         {summary}
       </div>
       {created}
@@ -134,14 +139,17 @@ def _largest(it):
     return max(it['entry']['variants'], key=lambda v: v['width'])
 
 
-def _zoom(ctx, it, media, *, hint=False, badge=True, cls=''):
+def _zoom(ctx, it, media, *, hint=False, badge=True, cls='', name=False):
     """A still as a link to its largest file (2560 desktop / 1170 phone): without JS it opens the image itself;
     36-project.js opens it in the full-screen viewer instead, loading that file only then. The link's name is the
-    still's alt text; the badge is decorative (the first frame's says "Tap to enlarge" on touch screens)."""
+    still's alt text; the badge is decorative (the first frame's says "Tap to enlarge" on touch screens). name=True
+    gives the link that alt text as its aria-label: a still inside a device scene sits in the scene's <figure>, which
+    browsers do not read a link's name from (the hero link was unnamed; mobile audit A11Y2-01)."""
     label = f'<span class="pj-zoom__label">{E(ZOOM_HINT)}</span>' if hint else ''
     mark = (f'<span class="pj-zoom__badge{" pj-zoom__badge--hint" if hint else ""}" aria-hidden="true">{ZOOM_ICON}{label}</span>'
             if badge else '')
-    return (f'<a class="pj-zoom{(" " + cls) if cls else ""}" href="{E(ctx.asset(_largest(it)["file"]))}" data-zoom>'
+    aria = f' aria-label="{E(it["alt"])}"' if name and it.get('alt') else ''
+    return (f'<a class="pj-zoom{(" " + cls) if cls else ""}" href="{E(ctx.asset(_largest(it)["file"]))}"{aria} data-zoom>'
             f'{media}{mark}</a>')
 
 
@@ -153,7 +161,8 @@ def hero(ctx, p):
     """(html, still not to repeat in the gallery, still the gallery opens with on narrow screens only) - the device
     scene playing the laptop recording, or showing the Work still when there is no recording (a link into the
     viewer, so the still the gallery no longer repeats stays enlargeable); without a scene style, the plain frame of
-    the Work card: the first still on the 16:10 stage, the first phone screen on a phone's 4:5 stage (38-scene.css)."""
+    the Work card: the first still on the 16:10 stage, the first phone screen on a phone's 4:5 stage (38-scene.css),
+    there a link into the viewer for the same reason."""
     skip = lead = None
     if p['scene']:
         if p['laptop']:
@@ -169,7 +178,7 @@ def hero(ctx, p):
             media = lib.media_img(ctx, st['entry'], st['alt'], sizes=SCREEN_SIZES, eager=True, cls='scn-media', max_width=1920)
             # the scenes' shared SVG defs stay outside the link
             inner = lib.scene_defs(ctx) + _zoom(ctx, st, lib.scene(ctx, p, media, caption=False, aspect=st['w'] / st['h']),
-                                                badge=False, cls='pj-zoom--hero')
+                                                badge=False, cls='pj-zoom--hero', name=True)
     else:
         first = skip = p['cover']
         phone = _phone_still(p) if first['frame'] != 'phone' else None
@@ -178,9 +187,13 @@ def hero(ctx, p):
                             eager=True, cls='scn-media' + (' scn-media--wide' if phone else ''), max_width=1920,
                             attrs=f'style="object-position:{P.focal(p, first)}"')
         if phone:
-            img += lib.media_img(ctx, phone['entry'], phone['alt'], sizes=PLAIN_SIZES['narrow'], eager=True,
-                                 cls='scn-media scn-media--narrow', max_width=1280,
-                                 attrs=f'style="object-position:{P.focal(p, phone)}"')
+            # the phone screen on the 4:5 stage is a link into the viewer (as a still scene's is): the band no longer
+            # repeats it there (media_gallery, mobile audit PJV-03), so it stays enlargeable. The link takes the image's
+            # place and classes - shown on the 4:5 stage only (38-scene.css) - and the image fills it; the 16:10
+            # stage's still stays as it was
+            narrow = lib.media_img(ctx, phone['entry'], phone['alt'], sizes=PLAIN_SIZES['narrow'], eager=True,
+                                   cls='scn-media', max_width=1280, attrs=f'style="object-position:{P.focal(p, phone)}"')
+            img += _zoom(ctx, phone, narrow, badge=False, cls='pj-zoom--plain scn-media scn-media--narrow')
             lead = first          # the 4:5 stage shows the phone screen: the first still opens the gallery there
         inner = lib.plain_frame(p, img, cls='pj-frame--hero')   # the hero-media class check.py looks for
     # No scroll reveal on the scene: it is the page's largest paint (poster first), shown at once.
@@ -200,11 +213,12 @@ def _frame(ctx, it, slot, *, hint=False, cls=''):
     return f'<figure class="pj-frame pj-frame--{slot} reveal-image{extra}" style="aspect-ratio:{it["w"]}/{it["h"]}">{media}</figure>'
 
 
-def _phones(ctx, phones, hint=None):
-    """Phone screens two by two, centred on a band (a lone last screen stays centred; a swipe strip on phones)."""
+def _phones(ctx, phones, hint=None, copy=None):
+    """Phone screens two by two, centred on a band (a lone last screen stays centred; a swipe strip on phones).
+    `copy` = the screen the plain-frame hero shows below PLAIN_NARROW: hidden there (.pj-phone--hero-copy)."""
     rows = []
     for i in range(0, len(phones), 2):
-        rows.append(f'<div class="pj-phones">{"".join(_frame(ctx, it, "phone", hint=it is hint) for it in phones[i:i + 2])}</div>')
+        rows.append(f'<div class="pj-phones">{"".join(_frame(ctx, it, "phone", hint=it is hint, cls="pj-phone--hero-copy" if it is copy else "") for it in phones[i:i + 2])}</div>')
     return ''.join(rows)
 
 
@@ -214,14 +228,17 @@ def media_gallery(ctx, p, *, skip=None, lead=None):
     phone screens as pairs on a band: the first band after the PHONES_AFTER-th desktop screen, each further band
     after the next desktop row (never two dark bands back to back while desktop screens remain). `lead` (the
     plain-frame hero's first still, which its 4:5 stage swaps for the phone screen) opens the gallery below a
-    PLAIN_NARROW viewport only (36-project.css .pj-frame--lead), so phones still show it. The first frame phones
-    see carries the "Tap to enlarge" hint (the lead, else the rhythm's first). Returns '' when there is nothing."""
+    PLAIN_NARROW viewport only (36-project.css .pj-frame--lead), so phones still show it; that phone screen, which
+    the hero shows there, leaves the band there in turn (.pj-phone--hero-copy; mobile audit PJV-03), so no screen
+    shows twice at any width. The first frame phones see carries the "Tap to enlarge" hint (the lead, else the
+    rhythm's first). Returns '' when there is nothing."""
     items = [it for it in p['items'] if it is not skip and it is not lead]
     desk = [it for it in items if it['frame'] != 'phone']
     phones = [it for it in items if it['frame'] == 'phone']
     if not items:
         return ''
     bands = [phones[j:j + 2] for j in range(0, len(phones), 2)]
+    copy = _phone_still(p) if lead else None
     # the lead is the first frame phones see, so it carries the hint too (the rhythm's copy is hidden under
     # PLAIN_NARROW, 36-project.css); from PLAIN_NARROW up the lead is hidden and the rhythm's first frame has it
     frames = [_frame(ctx, lead, 'full', hint=lead['type'] != 'video', cls='pj-frame--lead')] if lead else []
@@ -234,9 +251,9 @@ def media_gallery(ctx, p, *, skip=None, lead=None):
         i += n
         k += 1
         if bands and i >= min(PHONES_AFTER, len(desk)):
-            frames.append(_phones(ctx, bands.pop(0), hint))
+            frames.append(_phones(ctx, bands.pop(0), hint, copy))
     for band in bands:
-        frames.append(_phones(ctx, band, hint))
+        frames.append(_phones(ctx, band, hint, copy))
     return (f'<section class="pj-gallery-wrap" aria-label="{E(p["title"])} project gallery">'
             f'<div class="pj-gallery">{"".join(frames)}</div></section>')
 

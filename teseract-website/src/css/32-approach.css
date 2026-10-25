@@ -207,7 +207,9 @@
   .ap-mast{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
   .ap-word{font-size:18px}
   .ap-disc{gap:20px;font-size:12px;flex-wrap:wrap}
-  .ap-tag{display:none}
+  /* the poster's tagline with its accent rule, as on desktop and phones (PAR2-03: it was hidden at 800-1199) */
+  .ap-tag{display:block;position:relative;padding-left:14px;font-size:12px;line-height:16px}
+  .ap-tag::before{left:0;top:2px;height:44px}
   .ap-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);column-gap:40px;margin-top:56px;align-items:start}
   .ap-index{grid-column:1;grid-row:1;font-size:16px}
   .ap-kicker{grid-column:1;grid-row:2;margin-top:12px;font-size:18.5px;line-height:19px}
@@ -280,10 +282,8 @@
   .ap-mast{flex-direction:column;align-items:flex-start;gap:14px}
   .ap-word{font-size:16px;letter-spacing:.32em}
   /* the four disciplines as a 2 x 2 block (no "EXPERIENCE" alone on a row; no smaller type), then the poster's tagline
-     under them with its accent rule, as on desktop (P-10: it was hidden below 1200px) */
+     under them with its accent rule (the flow rule above; P-10) */
   .ap-disc{display:grid;grid-template-columns:repeat(2,max-content);gap:8px 20px;font-size:12px;letter-spacing:.16em}
-  .ap-tag{display:block;position:relative;padding-left:14px;font-size:12px;line-height:16px}
-  .ap-tag::before{left:0;top:2px;height:44px}
   .ap-hero{display:block;margin-top:40px}
   .ap-kicker{margin-top:10px}
   .ap-title{margin-top:40px;font-size:clamp(56px,calc(100cqi / 4.62),110px);line-height:.8;letter-spacing:-.09em}   /* "Experience" + dot = 4.54em: stays inside the gutter */
