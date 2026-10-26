@@ -11,6 +11,7 @@ Structure (reference geometry at 1440: padding 120, header -> rows gap 80, rows 
 All copy is content.CREATE; imagery is the owner's own designs and websites (see service_cards.MEDIA).
 """
 from lib import E, button, pill_label
+from tone import chapter, LIGHT
 from content import CREATE
 from sections import service_cards as sc
 
@@ -36,7 +37,7 @@ def render(ctx):
     rows = ''.join(sc.row(ctx, s, stack=sc.stackable(s['n'])) for s in big)
     smalls = ''.join(sc.small_row(ctx, rest[i:i + 3], more=more) for i in range(0, len(rest), 3))
     see_all = button(ctx, 'See all services', ctx.url('what-we-create'), variant='dark', icon_name='arrow-r', cls='svc__more-btn')
-    return f'''<section class="svc section" id="services" aria-labelledby="services-title">
+    return f'''<section class="svc section" id="services" aria-labelledby="services-title"{chapter(LIGHT)}>
   <div class="svc__inner">
     <header class="section-head svc__head">
       {pill_label('What We Create')}

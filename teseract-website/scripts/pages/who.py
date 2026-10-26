@@ -39,6 +39,7 @@ import re
 from lib import E, fmt, img, svg_inline, pill_label, longpath, PUBLIC, BRAND
 from content import WHO, HOME, BRAND as BRAND_COPY
 from sections import founder as FD
+from tone import chapter, DARK, LIGHT
 
 # Reference checklist seal-check (ref-plans-faq-footer, appendix A), 20x29. Black theme: the light-grey
 # seal + dark tick pair becomes a quiet raised #2C2C2C seal with a hairline rim and an --ink (#F4F4F2) tick.
@@ -63,11 +64,12 @@ def flat_mark(cls='pg-mark'):
     return f'<span class="{cls}" aria-hidden="true">{svg_inline("assets/brand/logo-mark.svg")}</span>'
 
 
-def page_hero(ctx, label, title_html, *, sub_html='', extra='', cls=''):
-    """Inner-page hero in the reference vocabulary: pill label, 72px H1, 18px balanced sub.
+def page_hero(ctx, label, title_html, *, sub_html='', extra='', cls='', tone=DARK):
+    """Inner-page hero in the reference vocabulary: pill label, 72px H1, 18px balanced sub. tone: its chapter mark
+    (every page opens black: Stories, Contact, Privacy, Terms; scripts/tone.py).
     Appear timings follow the reference hero (H1 y80 @200ms, sub y80 @300ms, extras @400ms+)."""
     sub = f'<p class="pg-hero__sub" data-reveal style="--y:80px;--d:300ms">{sub_html}</p>' if sub_html else ''
-    return (f'<section class="pg-hero{(" " + cls) if cls else ""}" aria-labelledby="page-title">'
+    return (f'<section class="pg-hero{(" " + cls) if cls else ""}" aria-labelledby="page-title"{chapter(tone)}>'
             f'<div class="container"><div class="pg-hero__inner">{pill_label(label)}'
             f'<h1 class="pg-hero__title" id="page-title" data-reveal style="--y:80px;--d:200ms">{title_html}</h1>'
             f'{sub}{extra}</div></div></section>')
@@ -214,7 +216,7 @@ def _hero(ctx):
                "go=function(){if(n++)return;requestAnimationFrame(function(){getComputedStyle(i).opacity;h.classList.add('is-on')})};"
                "if(!i||d.documentElement.classList.contains('ts-intro'))return;h.classList.add('who-hero--cued');"
                "i.decode?i.decode().then(go,go):i.complete?go():i.addEventListener('load',go);setTimeout(go,1200)})(document)</script>")
-    return f'''<section class="who-hero" aria-labelledby="page-title" data-who-hero>
+    return f'''<section class="who-hero" aria-labelledby="page-title" data-who-hero{chapter(DARK)}>
   <div class="who-hero__stage">
     <div class="who-hero__art" aria-hidden="true">
       <div class="who-hero__light" data-who-light>
@@ -243,7 +245,7 @@ def _hero(ctx):
 def _founder(ctx):
     f = FD.F
     # the aside is the sticky unit on >= 800px: it carries no data-reveal of its own (a transform would not pin)
-    html = f"""<section class="who-fdr" id="founder" aria-labelledby="founder-title" data-fdr>
+    html = f"""<section class="who-fdr" id="founder" aria-labelledby="founder-title" data-fdr{chapter(LIGHT)}>
   <div class="who-board who-board--f" data-who-in>
     {grid(GRID_X, (0,), [(x, 0) for x in GRID_X])}
     <div class="who-fdr__aside">
@@ -364,7 +366,7 @@ def _intro(ctx):
       {c_wires}
     </div>
   </div>'''
-    return f'''<section class="who-intro" id="intro" aria-labelledby="intro-title">
+    return f'''<section class="who-intro" id="intro" aria-labelledby="intro-title"{chapter(DARK)}>
   {board_ab}
   {board_c}
 </section>'''
@@ -429,7 +431,7 @@ def _philosophy(ctx):
         node(671, 245, red=True, d=820),
     ]))
     link = ctx.url('our-approach')
-    return f'''<section class="who-phil" id="philosophy" aria-labelledby="philosophy-title">
+    return f'''<section class="who-phil" id="philosophy" aria-labelledby="philosophy-title"{chapter(LIGHT)}>
   <div class="who-board who-board--d" data-who-in>
     {grid(GRID_X, (0,), [(x, 0) for x in GRID_X])}
     {rail()}
@@ -538,7 +540,7 @@ def _promise(ctx):
     assert all(l in WHO['philosophy']['title'].lower() for l in labels)
     underline = ('<svg class="who-promise__line" viewBox="0 0 420 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">'
                  '<path d="M5 15.5C70 8.5 170 5.5 262 7.2c55 1 104 4.2 153 9.3" pathLength="1"/></svg>')
-    return f'''<section class="who-promise" id="promise" aria-labelledby="promise-title">
+    return f'''<section class="who-promise" id="promise" aria-labelledby="promise-title"{chapter(DARK)}>
   <div class="who-ed who-ed--promise" data-who-in>
     <div class="who-ed__grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <ul class="who-promise__labels" role="list" aria-hidden="true" data-reveal="fade">{''.join(f'<li>({T(l)})</li>' for l in labels)}</ul>

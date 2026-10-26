@@ -5331,28 +5331,47 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 /* Tone: the whole page alternates BLACK and WHITE on scroll (owner, 22 Oct, reference elokeglobal.com: start
    'top center', .6s power1.out, on time not on scroll; 25 Oct: "I want you to follow that color thing in every page"
    and "in every page, the first should be black color and then white"). Every page opens BLACK (after the logo
-   intro), then white, black, white ... per its chapter map (MAPS below). Look + tokens: 96-tone.css. Build spec:
-   scratchpad tone/final/SPEC.md (this file is its final prototype, tone.js, made site code: the FAST PATH of 25 Oct,
-   with the base flipped to black; the full build moves the maps into data-chapter marks from the page builders).
-   - Fade: ONE fixed black veil under all content (.tone-veil, made here as body's first child); only its opacity
-     animates (Web Animations, compositor): smooth even while the main thread restyles. The canvas (html background)
-     turns black when a fade to black ends, white as a fade to white starts (overscroll never shows the other colour).
+   intro), then white, black, white ... per its CHAPTER MARKS: data-chapter="dark|light" on the first element of each
+   chapter, emitted by the page builders (scripts/tone.py chapter(); scripts/pages/*.py, scripts/sections/*.py,
+   chrome_footer.py), guarded by check.py (the tone block). Look + tokens: 96-tone.css. Build spec: scratchpad
+   tone/final/SPEC.md (base flipped to black, 25 Oct).
+   - Marks: a chapter runs from its mark to the next one. data-chapter-at = its switch line as a fraction of the
+     screen from the top (default .5 = the centre line; negative: the chapter starts once its mark has scrolled that
+     far past the top); a list like the sizes attribute picks a value per media query ("(max-width:799.98px) -.15, .2").
+     data-chapter-mq = the mark only counts where the media query matches (Our Approach: the step timeline on phones
+     and tablets, the artboard from 1200 px). Marks that are not rendered (display:none) are skipped.
+   - Fade: ONE fixed black veil under all content (.tone-veil, emitted by chrome.py after the skip link); only its
+     opacity animates (Web Animations, compositor): smooth even while the main thread restyles. The canvas (html
+     background) turns black when a fade to black ends, white as a fade to white starts (overscroll never shows the
+     other colour).
    - Ink: every colour token swaps in ONE step when the veil holds at .541 (page grey 117: outgoing #0b0b0b and
      incoming #f4f4f2 ink both >= 4.2:1). A crossfade would pass through 1:1 (the reference's flaw).
-   - Cost: the swap is per TONE UNIT (the header, each child of <main>, the page shade, the skip link). Units on or
-     near the screen swap in the balance frame, the rest in idle time (nearest first; at once if one scrolls near).
+   - Cost: the swap is per TONE UNIT (the header, each child of <main>, the page shade, the skip link); one unit's
+     restyle is its whole subtree (~20-30 us an element on a desktop, x4 on a mid phone). Only the units ON the screen
+     swap in the balance frame; the rest wait for a quiet moment (no scroll for 220 ms: idle time, nearest first, one
+     unit per idle slice unless it fits) or swap just before they scroll into view. Never a forced restyle of an
+     off-screen unit while the visitor scrolls (review 26 Oct: long tasks of 0.5-1 s on a phone at x4).
      The fade runs in two compositor segments that meet at the balance grey: the veil HOLDS there until the main thread
      has swapped the ink, so a slow phone or a long task can pause the fade at mid-grey but never show the wrong ink.
-   - Switch: the chapter owning the screen's centre line (or the chapter's own line, data-chapter-at), with a +-6vh
-     (>= 40px) band around each switch point: a resting finger never makes the page flap; a reversal continues from
-     the current shade. Every page opens black; it ends on a black chapter that the footer joins, except the two
-     shortest pages (Terms, 404), which end white above the always-black footer panel.
+   - Switch: the chapter owning the screen's centre line (or the chapter's own line), with a +-6vh (>= 40px) band
+     around each switch point: a resting finger never makes the page flap; a reversal continues from the current
+     shade. A FLICK through a short chapter does not start its fade: a new tone starts only when the scroll, at its
+     current speed, would stay in that chapter for at least .5 s (or it has slowed down there), and the target is
+     checked again before the ink swaps (a chapter already left is never completed: no grey flash, no double swap).
+     Same-tone neighbours collapse (the footer's dark mark joins the last black chapter); the closing chapter
+     owns at least .6 of a screen; a chapter the page cannot scroll into, or one squeezed into a flash, is dropped
+     (Terms and the 404 are too short for three chapters: they end white above the always-black footer panel).
    - Instant (no fade): first evaluation (load, restored scroll, bfcache), a jump of more than 1.5 screens, reduced
      motion or motion off (TS.motion()), forced colours, a hidden tab. Frozen while the menu, the chat or a scroll lock
      holds the page (both overlays are black islands).
+   - Reload / back-forward PRE-PAINT (chrome.py head script): the tone shown when the visitor left a page is kept per
+     path in sessionStorage 'ts-tone' (pagehide); a reload or back navigation of a page left inside a WHITE chapter
+     paints white from the first frame (html data-tone / data-tone-state / data-canvas = light, theme-color #ffffff).
+     This controller holds that pre-paint until the browser has restored the scroll, then evaluates instantly.
    - Statement scrub (home, first black chapter): the Idea copy's words brighten one by one with scroll (motion only;
      the crawler HTML is unchanged).
-   - No JS: no veil, no units: the page is the black base (96-tone.css :root = today's black theme). Readable.
+   - No JS: the veil stays transparent, no units: the page is the black base (96-tone.css :root = today's black
+     theme). Readable.
    Read-only state for other scripts and QA: TS.tone (= window.TSTone).{tone, target, index, chapters, pending,
    opacity()} and the window event 'ts:tone' {detail: {tone}} after each swap. */
 (() => {
@@ -5361,8 +5380,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   const TS = window.TS = window.TS || {};
   if (TS.tone) return;
 
-  // a head pre-paint (SPEC 3.6, not shipped yet) may mark a reload inside a chapter of the other tone: keep it until
-  // the browser has restored the scroll
+  // the head pre-paint (chrome.py) marks a reload / back navigation inside a WHITE chapter: keep it until the browser
+  // has restored the scroll
   const prepainted = root.hasAttribute('data-tone');
 
   const DUR = 600;                                   // a full white <-> black fade (reference .6s)
@@ -5370,63 +5389,37 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   const SWAP = 1 - 117 / 255;                        // veil opacity at the balance grey (117): swap the ink here
   const PAGE = { light: '#ffffff', dark: '#000000' };
   const RM = matchMedia('(prefers-reduced-motion: reduce)'), FC = matchMedia('(forced-colors: active)');
-  const FINE = matchMedia('(hover: hover) and (pointer: fine)');
   const W = 'light', B = 'dark';
   const END = .6;                                    // the closing black chapter owns at least .6 of a screen
-
-  /* ---------- Chapter maps per page (body class). [first element, tone, {at, mq}]: a chapter runs until the next
-     entry; `at` = its switch line (fraction of the screen from the top, default .5 = the centre line; a negative value
-     puts the line above the screen, i.e. the chapter starts once its root has scrolled that far past the top); `mq` =
-     only where the media query matches. The first chapter is always BLACK (25 Oct). The maps alternate and keep black
-     where the art is black (the hero, the Idea and FAQ sheets, client work, the footer) and give the white chapters
-     to content made for paper (service cards, concepts, forms, legal text). Spans in screens of scroll (phone 390x844
-     / desktop 1440x900); no middle chapter under ~.75 of a screen where the page allows it.
-     data-chapter="light|dark" marks in the markup take precedence (SPEC section 4). */
-  const PHONE = '(max-width:799.98px)', WIDE = '(min-width:800px)', STEPS = '(max-width:1199.98px)';
-  const MAPS = {
-    // B hero + Idea 2.95/3.37 . W services 5.17/3.02 . B beliefs 3.24/2.06 . W founder + agency 3.60/3.25 . B FAQ + footer
-    'page-home': [['#hero', B], ['#services', W], ['#believe', B], ['#founder-teaser', W], ['#faq', B]],
-    // B hero . W intro .76/.77 . B client work . W concepts (the tone says "not a client project") . B case study + CTA + footer
-    'page-work': [['.wk-hero', B], ['.wk-intro', W], ['.wk-projects--client', B], ['.wk-projects--concept', W], ['.wk-story', B]],
-    // B the hero (black art, full-bleed) . W founder . B studio + why . W philosophy + how we think . B promise + footer
-    'page-who': [['.who-hero', B], ['#founder', W], ['#intro', B], ['#philosophy', W], ['#promise', B]],
-    // two service rows per beat: B hero + rows 1-2 . W rows 3-4 . B rows 5-6 . W rows 7-8 + CTA . B footer
-    'page-create': [['.create-hero', B], ['.create-list__inner > .svc-row:nth-child(3)', W],
-      ['.create-list__inner > .svc-row:nth-child(5)', B], ['.create-list__inner > .svc-row:nth-child(7)', W], ['.site-footer', B]],
-    // B head + hero scene . W gallery (the work on paper) . B next project + footer
-    'page-project': [['.pj-head', B], ['.pj-gallery-wrap', W], ['.pj-next', B]],
-    // phones/tablets (the step timeline): B hero + steps 1-2 . W steps 3-5 . B steps 6-8 . W step 9 + signature . B footer;
-    // desktop (one artboard, never split inside it): B . W from .9 screen past the poster's top . B footer
-    'page-approach': [['.ap', B], ['.ap-step:nth-of-type(3)', W, { mq: STEPS }], ['.ap-step:nth-of-type(6)', B, { mq: STEPS }],
-      ['.ap-step:nth-of-type(9)', W, { mq: STEPS }], ['.ap', W, { at: -.9, mq: '(min-width:1200px)' }], ['.site-footer', B]],
-    // B hero + Client Deck . W how it works . B leave a review + footer
-    'page-stories': [['.sto-hero', B], ['#experience', W], ['#review', B]],
-    // B hero (+ the first fields) . W the form . B footer (wide screens: the form tops the first screen, so its line
-    // sits higher, at .2, for a real black opening)
-    'page-contact': [['.ct-hero', B], ['#project-form', W, { at: -.15, mq: PHONE }], ['#project-form', W, { at: .2, mq: WIDE }], ['.site-footer', B]],
-    // B hero . W the text (from .3 screen past its top) . B footer (privacy); terms is too short for three: B . W above the black footer
-    'page-legal': [['.lg-hero', B], ['.lg-body', W, { at: -.3 }], ['.site-footer', B]],
-    // B . W as the black footer panel rises (too short for three)
-    'page-notfound': [['.nf', B], ['.site-footer', W]]
-  };
+  const ON = .12;                                    // "on the screen": within .12 of a screen of the viewport
+  const AHEAD = .8;                                  // a waiting unit swaps once it is .8 of a screen from view
+  const QUIET = 220;                                 // ms without a scroll event = a quiet moment (idle swaps)
+  const STAY = 500;                                  // a new tone starts only if the scroll would stay this long
 
   let chapters = [], units = [], pending = [], idleId = 0, veil = null, meta = null, scrubEl = null;
   let index = -1, shown = null, target = null, frozen = false, lastY = -1, raf = 0, vh = innerHeight;
   let anim = null, to = 0, dur = DUR, watchRaf = 0;
+  let lastT = 0, speed = 0, scrollT = -1e9, waitT = 0;   // scroll speed (px/ms, smoothed), last scroll event
+  let perEl = .03;                                   // measured restyle cost, ms per element (adaptive)
 
   const motion = () => (TS.motion ? TS.motion() : root.classList.contains('motion') && !RM.matches) && !FC.matches;
 
   /* ---------- Measure: chapters (switch scroll positions) and units (document tops, heights, element counts) */
+  // data-chapter-at: a number, or a list like the sizes attribute ("(max-width:799.98px) -.15, .2": the value of the
+  // first condition that matches, else the plain value); default .5, the centre line
+  function lineAt(v) {
+    if (v === null || v.trim() === '') return .5;
+    for (const part of v.split(',')) {
+      const p = part.trim(), m = /^(\(.*\))\s+(-?\d*\.?\d+)$/.exec(p);
+      if (m) { if (matchMedia(m[1]).matches) return +m[2]; } else if (p !== '' && isFinite(+p)) return +p;
+    }
+    return .5;
+  }
   function spec() {
-    const marked = [...document.querySelectorAll('[data-chapter]')].filter(el => !el.hasAttribute('data-tone-map'));
-    if (marked.length) return marked.map(el => [el, el.getAttribute('data-chapter'), { at: +(el.getAttribute('data-chapter-at') || .5) }]);
-    const key = [...document.body.classList].find(c => MAPS[c]);
-    return (MAPS[key] || [['main', B]]).map(([sel, tone, o = {}]) => {
-      if (o.mq && !matchMedia(o.mq).matches) return null;
-      const el = document.querySelector(sel);
-      if (!el) return null;
-      el.setAttribute('data-chapter', tone); el.setAttribute('data-tone-map', '');
-      return [el, tone, { at: o.at === undefined ? .5 : o.at }];
+    return [...document.querySelectorAll('[data-chapter]')].map(el => {
+      const tone = el.getAttribute('data-chapter'), mq = el.getAttribute('data-chapter-mq');
+      if ((tone !== B && tone !== W) || (mq && !matchMedia(mq).matches) || !el.getClientRects().length) return null;
+      return [el, tone, { at: lineAt(el.getAttribute('data-chapter-at')) }];
     }).filter(Boolean);
   }
   const H = () => Math.max(40, vh * .06);            // the switch band, each side
@@ -5465,8 +5458,11 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       .filter(el => el && !/^(SCRIPT|TEMPLATE|STYLE)$/.test(el.tagName));
     units = els.map(el => {
       const r = el.getBoundingClientRect(), fixed = getComputedStyle(el).position;
-      return { el, top: r.top + (fixed === 'fixed' ? 0 : y), h: r.height, fixed: fixed === 'fixed' || fixed === 'sticky' };
+      return { el, top: r.top + (fixed === 'fixed' ? 0 : y), h: r.height, fixed: fixed === 'fixed' || fixed === 'sticky',
+        n: el.getElementsByTagName('*').length + 1 };
     });
+    // a waiting unit keeps its place in the queue with its new measurements
+    if (pending.length) pending = units.filter(u => u.el.getAttribute('data-tone') !== shown);
   }
   const isNear = (u, y, m) => u.fixed || (u.top + u.h > y - vh * m && u.top < y + vh * (1 + m));
 
@@ -5476,34 +5472,53 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   // lists the CSS transitions the swap just started. getComputedStyle(body) is not enough (Blink then restyles only
   // the body's ancestors) and a layout read (offsetWidth) is too much (measured: the x4 swap frame grew 3x).
   const restyle = () => (document.getAnimations ? document.getAnimations() : []);
-  const setUnit = (u, t) => { if (u.el.getAttribute('data-tone') !== t) u.el.setAttribute('data-tone', t); };
-  const ric = window.requestIdleCallback ? (f => requestIdleCallback(f, { timeout: 600 })) : (f => setTimeout(() => f({ timeRemaining: () => 6 }), 80));
+  // set a unit's tone; -> its element count when it changed (0 when it already had it)
+  const setUnit = (u, t) => { if (u.el.getAttribute('data-tone') === t) return 0; u.el.setAttribute('data-tone', t); return u.n; };
+  const ric = window.requestIdleCallback ? (f => requestIdleCallback(f, { timeout: 1000 })) : (f => setTimeout(() => f({ timeRemaining: () => 8 }), 60));
+  // the restyle, now; components with their own colour transitions (buttons .35s, chips, FAQ rows) would crossfade
+  // fill and label through 1:1 after the swap: finish them in this frame. Timed: the cost per element on this device
+  // tells the idle queue how many units fit in a slice.
+  function flush(n) {
+    const t0 = performance.now();
+    finishColourTransitions(restyle());
+    if (n > 150) perEl = perEl * .6 + .4 * Math.min(.5, (performance.now() - t0) / n);
+  }
+  const away = (u, y) => (u.fixed ? 0 : Math.max(0, u.top - y - vh, y - u.top - u.h));
   function swap(t, all) {
     shown = t;
     root.setAttribute('data-tone-state', t);
     if (meta) meta.setAttribute('content', PAGE[t]);
     const y = scrollY;
+    let n = 0;
     pending = [];
     for (const u of units) {
-      if (all || isNear(u, y, .5)) setUnit(u, t);
-      else pending.push(Object.assign(u, { d: Math.min(Math.abs(u.top - y), Math.abs(u.top + u.h - y - vh)) }));
+      if (all || isNear(u, y, ON)) n += setUnit(u, t);                  // on the screen: in the balance frame
+      else if (u.el.getAttribute('data-tone') !== t) pending.push(u);   // the rest: a quiet moment, or just in time
     }
     if (root.hasAttribute('data-tone')) root.removeAttribute('data-tone');            // the pre-paint hands over
-    // the restyle, now; components with their own colour transitions (buttons .35s, chips, FAQ rows) would crossfade
-    // fill and label through 1:1 after the swap: finish them in this frame (no extra restyle)
-    finishColourTransitions(restyle());
-    pending.sort((a, b) => a.d - b.d);
-    if (pending.length) { if (!idleId) idleId = ric(drain) || 1; } else scheme();
+    flush(n);
+    queue();
     window.dispatchEvent(new CustomEvent('ts:tone', { detail: { tone: t } }));
   }
+  function queue() { if (pending.length && !idleId) idleId = ric(drain) || 1; }
   function drain(dl) {
     idleId = 0;
+    if (!pending.length) return;
+    // the visitor is scrolling (or an overlay holds the page): wait for a quiet moment; units about to come into view
+    // swap just in time (catchUp)
+    if (frozen || performance.now() - scrollT < QUIET) { idleId = setTimeout(() => { idleId = 0; queue(); }, QUIET) || 1; return; }
+    const y = scrollY;
+    pending.sort((a, b) => away(a, y) - away(b, y));
+    let done = 0;
     while (pending.length) {
-      setUnit(pending.shift(), shown);
-      restyle();                                     // restyle THIS unit inside the idle slice (off screen)
-      if (dl.timeRemaining() < 4) break;
+      const u = pending[0];
+      if (done && u.n * perEl > dl.timeRemaining()) break;            // one unit per slice unless it fits
+      pending.shift();
+      const n = setUnit(u, shown);
+      if (n) { flush(n); done++; }
+      if (dl.timeRemaining() < 3) break;
     }
-    if (pending.length) idleId = ric(drain) || 1; else scheme();
+    queue();
   }
   function finishColourTransitions(list) {
     for (const a of list) {
@@ -5511,13 +5526,12 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       if (p && COLOR_T.test(p)) try { a.finish(); } catch (e) { /* idle */ }
     }
   }
-  function catchUp(y) {                                                              // a pending unit scrolls near
+  function catchUp(y) {                                                              // a waiting unit comes near
     if (!pending.length) return;
-    let hit = false;
-    pending = pending.filter(u => { if (isNear(u, y, .6)) { setUnit(u, shown); hit = true; return false; } return true; });
-    if (hit) finishColourTransitions(restyle());
+    let n = 0;
+    pending = pending.filter(u => { if (isNear(u, y, AHEAD)) { n += setUnit(u, shown); return false; } return true; });
+    if (n) flush(n);
   }
-  function scheme() { if (FINE.matches && root.getAttribute('data-scheme') !== shown) ric(() => root.setAttribute('data-scheme', shown)); }
   const canvas = t => { if (root.getAttribute('data-canvas') !== t) root.setAttribute('data-canvas', t); };
 
   /* ---------- The fade: veil opacity only, on the compositor, in TWO segments that meet at the balance grey.
@@ -5559,6 +5573,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     if (!anim) return;
     if (phase === 1 && anim.playState !== 'paused') {
       if ((anim.currentTime || 0) >= seg1 || anim.playState === 'finished') {
+        // the target again, before the ink swaps: a chapter the scroll has left meanwhile is not completed (the fade
+        // turns back from the balance grey, no swap)
+        const i = pick(scrollY);
+        if (chapters[i] && chapters[i].tone !== target) { index = i; fade(chapters[i].tone); return; }
         if (shown !== target) swap(target);
         phase2();
       }
@@ -5601,18 +5619,33 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     if (index < 0) { i = 0; while (i + 1 < n && y >= chapters[i + 1].s) i++; }   // first evaluation: no band
     return i;
   }
+  // a flick: would the scroll, at its current speed, leave chapter i within STAY ms? (then its fade does not start)
+  let dir = 1;
+  function passing(i, y) {
+    const v = performance.now() - scrollT > 100 ? 0 : speed;                      // px per ms; 0 once it has stopped
+    if (v * 1000 < vh * .6) return false;                                         // slower than .6 of a screen a second
+    const h = H(), nx = chapters[i + 1];
+    const left = dir > 0 ? (nx ? nx.s + h - y : Infinity) : y - (chapters[i].s - h);
+    return left / v < STAY;
+  }
   function update() {
     raf = 0;
     if (frozen || !veil) return;
-    const y = scrollY;
+    const y = scrollY, now = performance.now();
     const jump = lastY >= 0 && Math.abs(y - lastY) > vh * 1.5;
-    lastY = y;
+    if (lastY >= 0 && y !== lastY) { speed = speed * .4 + .6 * Math.abs(y - lastY) / Math.max(8, now - lastT); dir = y > lastY ? 1 : -1; }
+    lastY = y; lastT = now;
     catchUp(y);
     const i = pick(y);
     if (chapters[i] && (i !== index || target !== chapters[i].tone)) {
-      const first = index < 0;
-      index = i;
-      if (target !== chapters[i].tone || shown !== chapters[i].tone) fade(chapters[i].tone, first || jump || !motion() || document.hidden);
+      const first = index < 0, t = chapters[i].tone, instant = first || jump || !motion() || document.hidden;
+      if (!instant && t !== shown && t !== target && passing(i, y)) {
+        // flicking through: look again when the scroll has slowed down or stopped
+        if (!waitT) waitT = setTimeout(() => { waitT = 0; request(); }, 120);
+      } else {
+        index = i;
+        if (target !== t || shown !== t) fade(t, instant);
+      }
     }
     scrub();
   }
@@ -5658,6 +5691,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   function init() {
     meta = document.querySelector('meta[name="theme-color"]');
     veil = document.querySelector('.tone-veil');
+    // chrome.py emits the veil after the skip link; a page without it still fades
     if (!veil) { veil = document.createElement('div'); veil.className = 'tone-veil'; veil.setAttribute('aria-hidden', 'true'); document.body.prepend(veil); }
     recompute();
     setupScrub();
@@ -5669,13 +5703,24 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       addEventListener('scroll', go, { once: true, passive: true });
       addEventListener('load', () => requestAnimationFrame(() => requestAnimationFrame(go)), { once: true });
     } else start();
-    addEventListener('scroll', request, { passive: true });
+    addEventListener('scroll', () => { scrollT = performance.now(); request(); }, { passive: true });
     addEventListener('resize', () => { recompute(); request(); });
     addEventListener('load', () => { recompute(); request(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { recompute(); request(); });
     if ('ResizeObserver' in window) { let q = 0; new ResizeObserver(() => { if (!q) q = requestAnimationFrame(() => { q = 0; recompute(); request(); }); }).observe(document.body); }
     addEventListener('pageshow', e => { if (e.persisted) { index = -1; lastY = -1; recompute(); update(); } });
-    const remember = () => { try { sessionStorage.setItem('ts-tone', JSON.stringify({ p: location.pathname, t: shown })); } catch (e) { /* blocked */ } };
+    // the tone shown when the visitor leaves, per path (the head pre-paint reads it on a reload / back navigation)
+    const remember = () => {
+      try {
+        let m = JSON.parse(sessionStorage.getItem('ts-tone') || '{}');
+        if (!m || typeof m !== 'object' || Array.isArray(m)) m = {};
+        delete m[location.pathname];
+        m[location.pathname] = shown;
+        const keys = Object.keys(m);
+        keys.slice(0, Math.max(0, keys.length - 40)).forEach(k => delete m[k]);   // the 40 most recent pages
+        sessionStorage.setItem('ts-tone', JSON.stringify(m));
+      } catch (e) { /* storage blocked: no pre-paint; the page opens black and switches at once */ }
+    };
     addEventListener('pagehide', remember);
     document.addEventListener('visibilitychange', () => { if (document.hidden) remember(); });
     // the menu, the chat window or a scroll lock holds the page: freeze the tone (both overlays are black islands);

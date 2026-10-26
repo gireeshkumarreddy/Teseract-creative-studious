@@ -18,6 +18,7 @@ by pages/project.py.
 """
 import lib
 from lib import E, fmt, ICONS, roll, button, pill_label
+from tone import chapter, DARK, LIGHT
 import chrome
 import content
 import projects as P
@@ -189,7 +190,7 @@ def hero(ctx):
     names = ''.join(('<li class="is-caps">' if caps(p['title']) else '<li>') + f'{E(p["title"])}</li>' for p in P.PROJECTS)
     ctas = (button(ctx, content.PRIMARY_CTA, ctx.url('contact'), variant='dark', lead=lead_mark(ctx))
             + button(ctx, 'See the projects', ctx.url('work', 'projects'), variant='light'))
-    return f'''<section class="wk-hero" aria-labelledby="wk-hero-title">
+    return f'''<section class="wk-hero" aria-labelledby="wk-hero-title"{chapter(DARK)}>
   <div class="container wk-hero__inner">
     <div class="wk-hero__lockup">
       {pill_label('The Work')}
@@ -211,7 +212,7 @@ def intro(ctx):
     it = W['intro']
     lines = ''.join(f'<li class="wk-intro__row" data-reveal><span class="wk-intro__n" aria-hidden="true">{i:02d}</span>'
                     f'<span class="wk-intro__text">{E(T(t))}</span></li>' for i, t in enumerate(it['lines'], 1))
-    return f'''<section class="wk-intro section" aria-labelledby="wk-intro-title">
+    return f'''<section class="wk-intro section" aria-labelledby="wk-intro-title"{chapter(LIGHT)}>
   <div class="container wk-intro__grid">
     <h2 class="wk-intro__title" id="wk-intro-title" data-split>{E(T(it['title']))}</h2>
     <div class="wk-intro__body">
@@ -242,7 +243,9 @@ def group_section(ctx, key, items, first):
     intro_line = (f'<p class="wk-group__intro" data-reveal style="--d:120ms">{E(concept_intro())}</p>'
                   if key == 'concept' else '')
     anchor = ' id="projects"' if first else ''       # the hero's "See the projects" lands on the first group
-    return f'''<section class="wk-projects wk-projects--{key} section"{anchor} aria-labelledby="{hid}">
+    # the tone says it: client work in a black chapter, the concepts in a white one ("not a client project")
+    mark = chapter(DARK if key == 'client' else LIGHT)
+    return f'''<section class="wk-projects wk-projects--{key} section"{anchor} aria-labelledby="{hid}"{mark}>
   <div class="container">
     <div class="wk-index wk-index--group" data-reveal="fade">
       <h2 class="wk-index__title" id="{hid}">{E(P.GROUPS[key])}</h2>
@@ -269,7 +272,7 @@ def story(ctx):
         f'<div class="wk-story__copy"><h3 class="wk-story__name">{E(name)}</h3><p class="wk-story__q">{E(q)}</p></div>'
         f'<span class="wk-story__n" aria-hidden="true">{i:02d}</span></li>'
         for i, (name, q) in enumerate(W['case_structure'], 1))
-    return f'''<section class="wk-story section" aria-labelledby="wk-story-title">
+    return f'''<section class="wk-story section" aria-labelledby="wk-story-title"{chapter(DARK)}>
   <div class="container">
     <header class="section-head section-head--center wk-story__head">
       {pill_label('Case Studies')}

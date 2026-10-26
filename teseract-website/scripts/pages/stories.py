@@ -23,6 +23,7 @@ import lib
 from lib import E, fmt, CONFIG, BRAND, ICONS, pill_label
 from content import STORIES
 from pages.who import page_hero
+from tone import chapter, DARK, LIGHT
 
 DOTS = '<span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>'
 
@@ -230,7 +231,7 @@ def _experience(ctx):
         </li>''')
     c1, c2 = (x['closing'] + ['', ''])[:2]
     mark = lib.img(ctx, 'assets/brand/logo-mark-3d.webp', '', w=64, h=64, cls='sto-close__img')
-    return f'''<section class="section sto-exp" id="experience" aria-labelledby="experience-title">
+    return f'''<section class="section sto-exp" id="experience" aria-labelledby="experience-title"{chapter(LIGHT)}>
   <div class="container sto-exp__inner">
     <header class="section-head sto-head">
       {pill_label(x['label'])}
@@ -256,7 +257,7 @@ def _review(ctx):
     btn = swap_button(f"{r['cta']}", 'Send an email', href, icon_name='arrow-r', cls='sto-review__btn',
                       label=f"{r['cta']} (opens your email app)" if email else r['cta'])
     note = f'<p class="sto-review__mail mono">{E(email)}</p>' if email and not CONFIG.get('email_is_placeholder') else ''
-    return f'''<section class="section sto-review" id="review" aria-labelledby="review-title">
+    return f'''<section class="section sto-review" id="review" aria-labelledby="review-title"{chapter(DARK)}>
   <div class="container sto-review__inner">
     <div class="frame sto-review__frame" data-reveal style="--y:60px">
       <div class="card sto-review__card">

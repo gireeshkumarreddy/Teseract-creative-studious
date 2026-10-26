@@ -6,6 +6,7 @@ who-we-are/#founder (a hash entry skips the intro). No image of him, no cursor p
 CSS 26-founder.css (.fdt); JS 26-founder.js.
 """
 from lib import E
+from tone import chapter, LIGHT
 from sections import founder as FD
 from pages.who import link_text
 
@@ -14,7 +15,7 @@ LINK = 'Meet the founder'
 
 def render(ctx):
     f = FD.F
-    html = f'''<section class="fdt section" id="founder-teaser" aria-labelledby="fdt-name">
+    html = f'''<section class="fdt section" id="founder-teaser" aria-labelledby="fdt-name"{chapter(LIGHT)}>
   <div class="container"><div class="fdt__grid">
     <div class="fdt__id">
       {FD.bar('data-reveal="fade"')}

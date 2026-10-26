@@ -25,6 +25,7 @@ import re
 import lib
 from lib import E, fmt, CONFIG, BRAND, button
 from content import HOME, FOOTER, NAV
+from tone import chapter, footer_tone
 
 TIMEZONE = str(CONFIG.get('timezone') or '').strip()
 
@@ -270,7 +271,8 @@ def _bar(ctx, compact=False):
 
 
 def render(ctx, cta=True):
-    return f'''<footer class="site-footer{' site-footer--compact' if not cta else ''}" id="footer">
+    # the closing chapter mark of the white/black scroll (scripts/tone.py): the footer joins the last black chapter
+    return f'''<footer class="site-footer{' site-footer--compact' if not cta else ''}" id="footer"{chapter(footer_tone(ctx.page))}>
 {_cta(ctx) if cta else _compact(ctx)}
 {_bar(ctx, compact=not cta)}
 </footer>'''

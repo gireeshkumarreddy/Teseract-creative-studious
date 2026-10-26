@@ -1,24 +1,30 @@
 /* ======================================================================================================================
-   Tone: the page opens BLACK; scrolling fades the WHOLE page to WHITE at chosen chapters, back to BLACK, then WHITE
-   again (owner, 22 Oct, reference elokeglobal.com; 25 Oct: "in every page, the first should be black color and then
-   white"). FAST PATH (25 Oct): the final prototype (scratchpad tone/final/tone.css, build spec tone/final/SPEC.md) as
-   ONE override layer, numbered to load after every component file (and after 95-typography.css, which it never
-   touches: no font property here), with the base flipped: :root carries the DARK set (today's owner-approved black
-   theme, so no JS = today's black site, readable), [data-tone=light] the white chapters (the exact neutral mirror).
-   The full build folds it into 00-tokens.css + 07-tone.css + the codemod in place (SPEC sections 2, 3.2, 6).
-   Layers (cascade order): 1 tokens + islands  2 the codemod layer in TOKEN FORM (generated from src/css)  3 hand fixes.
+   Tone: the white/black scroll (owner, 22 Oct, reference elokeglobal.com; 25 Oct: "in every page, the first should be
+   black color and then white"). Every page opens BLACK after the logo intro; scrolling fades the WHOLE page to WHITE
+   at the chapters the page builders mark (data-chapter, scripts/tone.py), back to BLACK, then WHITE again. Controller:
+   src/js/96-tone.js; head pre-paint + veil: scripts/chrome.py; guards: check.py (the tone block). Build spec: scratchpad
+   tone/final/SPEC.md (the base flipped to black on 25 Oct).
+   Numbered to load after every component file (and after 95-typography.css, which it never touches: no font property
+   here): :root carries the DARK set (today's owner-approved black theme, so no JS = today's black site, readable),
+   [data-tone=light] the white chapters (the exact neutral mirror; also on html for the reload pre-paint).
+   The component colours: the BUILD tokenises every neutral literal of src/css IN PLACE (scripts/tone_codemod.py), so
+   each rule keeps its own place in the cascade; nothing to re-run after a colour change.
+   Parts (cascade order): 1-2 tokens + islands  3 canvas/veil  @tone-gen (filled by the build: the :root custom
+   properties re-declared per unit and island)  hand fixes.
    State set by 96-tone.js:
-     html[data-tone-state=light|dark]  the tone SHOWN (CSS hooks; set in the balance frame)
+     html[data-tone-state=light|dark]  the tone SHOWN (CSS hooks; set in the balance frame; the head pre-paint sets light)
      html[data-canvas=light|dark]      the canvas under the veil (dark after a fade to black ends; light as one starts)
-     .tone-veil (body's first child)   the page-wide fade: ONE fixed black layer, opacity only (compositor)
+     .tone-veil (after the skip link)  the page-wide fade: ONE fixed black layer, opacity only (compositor)
      [data-tone=light|dark] on each TONE UNIT (the header, every child of <main>, the page shade, the skip link)
                                        the token set; on-screen units swap in the balance frame, the rest in idle time
    ====================================================================================================================== */
 
 /* ---------- 1. LIGHT = the white chapters (base flipped 25 Oct: the page opens black). Exact neutral mirror of the owner-approved black theme (v -> 255 - v):
    page #000 -> #fff, ink #f4f4f2 -> #0b0b0b, surfaces #0d0d0d/#141414/#1c1c1c -> #f2f2f2/#ebebeb/#e3e3e3.
-   Translucent TEXT does not mirror (luminance is not symmetric): --a-min lifts it to >= .62 on light. */
-[data-tone=light]{
+   Translucent TEXT does not mirror (luminance is not symmetric): --a-min lifts it to >= .62 on light.
+   :root[data-tone=light] = the head pre-paint of a reload / Back inside a white chapter (chrome.py): it must beat the
+   dark set's plain :root below (same specificity, later), or the white page would paint with near-white ink. */
+:root[data-tone=light],[data-tone=light]{
   color-scheme:light;
   --bg:#ffffff;--bg-1:#f9f9f9;--surface-1:#f2f2f2;--surface-2:#ebebeb;--surface-3:#e3e3e3;
   --paper:var(--surface-1);--bg-soft:var(--surface-2);
@@ -70,9 +76,10 @@
 /* zero specificity: a component's own colour rule still wins; anything without one takes its unit's / island's ink */
 :where([data-tone],.menu,.cc,.cc-dlg,.site-footer,.scn,.idea.section,.home-faq,.who-hero,.fdr-frame,.fdr-flap,.fdr-rs,
   .motion-toggle,.video-ctl,.idea__toggle,.pj-zoom__badge,.pj-viewer,.hero-tile__tag,.svc-cap,.wk-cap){color:var(--ink)}
-/* desktop scrollbars + form controls: the root scheme follows the tone in idle time (tone.js), light units stay light */
-html[data-scheme=dark]{color-scheme:dark}
-html[data-scheme=light]{color-scheme:light}
+/* The desktop page scrollbar: one neutral thumb on a clear track (the canvas shows through) reads on both tones. The
+   root colour scheme stays dark: switching it per chapter restyled the whole document (a 220 ms task on a desktop at
+   every switch, review 26 Oct). Inner scrollers keep their own unit's scheme. */
+@media (hover:hover) and (pointer:fine){html{scrollbar-color:rgba(128,128,128,.6) transparent}body{scrollbar-color:auto}}
 
 /* ---------- 3. Canvas + veil: the page-wide fade is ONE fixed black layer under all content whose OPACITY alone
    animates (Web Animations on the compositor: no repaint per frame, smooth even while the main thread restyles).
@@ -82,380 +89,23 @@ html[data-canvas=light]{background:#fff}
 body{background:transparent}
 .tone-veil{position:fixed;left:0;right:0;top:-30vh;height:calc(100lvh + 60vh);z-index:-1;pointer-events:none;
   background:#000;opacity:0;will-change:opacity;contain:strict}
-html[data-tone-state=dark] .tone-veil{opacity:1}        /* settled state + the reload pre-paint (tone.js sets inline opacity while it runs) */
+html[data-tone-state=dark] .tone-veil{opacity:1}        /* the settled black state (96-tone.js sets an inline opacity while it fades) */
 @supports not (height:100lvh){.tone-veil{height:160vh}}
 @media (forced-colors:active){.tone-veil{display:none}html,html[data-canvas=light]{background:Canvas}}
 @media print{.tone-veil{display:none}}
 
-/* tone-gen.css: GENERATED by gen_tone.py from src/css (runtime prototype only). Every neutral literal is a
-   tone-aware expression: dark tone = today's exact value, light tone = mirrored (255 - v), text alpha lifted to
-   --a-min, black shadows x --shadow-k. Do not edit by hand. TOKEN FORM (tokenform.py). */
-/* --- 01-base.css --- */
-::selection{color:var(--lo)}
-.skip-link{color:var(--lo)}
-.build-error{background:rgb(calc(var(--pb) + var(--ps) * 255) calc(var(--pb) + var(--ps) * 244) calc(var(--pb) + var(--ps) * 244))}
-/* --- 02-components.css --- */
-.btn--dark{background:var(--ink);color:var(--lo);box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.08),0 10px 30px -10px rgb(var(--hi-rgb) / 0.18)}
-.btn--dark::before{background:var(--hi)}
-.btn--dark:hover{box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.12),0 14px 40px -12px rgb(var(--hi-rgb) / 0.28)}
-.btn--light{background:rgb(var(--hi-rgb) / 0.04)}
-.btn--light:hover{background:rgb(var(--hi-rgb) / 0.09)}
-.btn--outline:hover{color:var(--lo)}
-.btn--ghost{background:rgb(var(--hi-rgb) / 0.06)}
-.btn--ghost:hover{background:rgb(var(--hi-rgb) / 0.11)}
-.btn--inverse{background:var(--ink);color:var(--lo)}
-.btn--inverse::before{background:rgb(var(--lo-rgb) / 0.08)}
-.pill-label{background:radial-gradient(50% 202.28% at 50% 50%,color-mix(in srgb,var(--hi) 16.86%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 4.31%,var(--lo)) 100%);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.06)}
-.pill-label i{background:rgb(var(--hi-rgb) / 0.16);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14)}
-.pill-label i::after{background:rgb(var(--lo-rgb) / 0.7)}
-.pill-label--light{color:var(--lo)}
-.chip{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.05);color:rgb(var(--ink-rgb) / max(0.8, var(--a-min)))}
-.card{background:linear-gradient(180deg,color-mix(in srgb,var(--hi) 7.84%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 5.1%,var(--lo)) 100%);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 0 0 1px rgb(var(--hi-rgb) / 0.07),0 30px 60px -32px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.card::after{border:1px solid rgb(var(--hi-rgb) / 0.02)}
-.dots i{background:color-mix(in srgb,var(--hi) 12.55%,var(--lo));box-shadow:inset 0 1px 2px rgb(0 0 0 / calc(0.8 * var(--shadow-k))),0 1px 0 rgb(var(--hi-rgb) / 0.05)}
-.motion-toggle{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 5.49%,var(--lo)) 74%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-@media (hover:hover){.motion-toggle:hover{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 15.69%,var(--lo)) 84%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.22),inset 0 1px 0 rgb(var(--hi-rgb) / 0.08),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}}
-/* --- 04-intro.css --- */
-.tsi__tail{background:linear-gradient(var(--bg),rgb(var(--lo-rgb) / 0))}
-.tsi__light{background:radial-gradient(closest-side,rgb(var(--ink-rgb) / 0.1),rgb(var(--ink-rgb) / 0.035) 50%,rgb(var(--ink-rgb) / 0))}
-.tsi__glint{background:radial-gradient(closest-side,rgb(var(--ink-rgb) / 0.55),rgb(var(--ink-rgb) / 0.12) 45%,rgb(var(--ink-rgb) / 0))}
-.tsi__sh .tsi__shade{fill:var(--lo)}
-/* --- 06-video.css --- */
-.video-ctl{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 5.49%,var(--lo)) 74%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-@media (hover:hover){.video-ctl:hover{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 15.69%,var(--lo)) 84%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.22),inset 0 1px 0 rgb(var(--hi-rgb) / 0.08),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}}
-/* --- 10-header.css --- */
-.site-header::before{background:linear-gradient(180deg,rgb(var(--lo-rgb) / 0.78) 0%,rgb(var(--lo-rgb) / 0.58) 100%);box-shadow:inset 0 -1px 0 rgb(var(--hi-rgb) / 0.07)}
-.nav-toggle:hover{background:rgb(var(--hi-rgb) / 0.07)}
-/* --- 11-menu.css --- */
-.menu{--m-ink:var(--ink,var(--ink));--m-ink-2:var(--ink-2,rgb(var(--ink-rgb) / 0.74));--m-soon:rgb(var(--ink-rgb) / max(0.5, var(--a-min)));--m-label:rgb(var(--ink-rgb) / max(0.5, var(--a-min)));--m-paper:var(--bg,var(--lo))}
-.menu__cta{border:1.5px solid rgb(var(--ink-rgb) / 0.82)}
-.menu__cta[aria-current]{color:var(--lo);box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.08),0 12px 32px -14px rgb(var(--hi-rgb) / 0.3)}
-@media (hover:hover){.menu:not(.is-settling) .menu__cta:hover{color:var(--lo);box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.08),0 12px 32px -14px rgb(var(--hi-rgb) / 0.3)}}
-.art__typo .art__rule{background:rgb(var(--ink-rgb) / 0.4)}
-.art__swatches b{box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.14),inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06),0 0 0 .222cqw var(--m-paper),0 0 0 .389cqw var(--ring,var(--c))}
-.art__swatches li:first-child b{--ring:rgb(var(--ink-rgb) / 0.55)}
-.art__swatches li:last-child b{box-shadow:inset 0 -.6cqw 1.2cqw rgb(0 0 0 / calc(0.08 * var(--shadow-k))),0 0 0 .222cqw var(--m-paper),0 0 0 .389cqw color-mix(in srgb,color-mix(in srgb,var(--hi) 96.47%,var(--lo)) 90%,transparent)}
-.art__swatches span{color:rgb(var(--ink-rgb) / max(0.72, var(--a-min)))}
-.art__palette .art__rule{background:rgb(var(--ink-rgb) / 0.82)}
-.art__index{color:rgb(var(--ink-rgb) / max(0.6, var(--a-min)))}
-.art__index i{background:rgb(var(--ink-rgb) / 0.38)}
-@media (max-width:799.98px),(orientation:landscape) and (max-height:599.98px){.menu__chips i{box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.14),inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06),0 0 0 2px var(--m-paper),0 0 0 3.25px var(--ring,var(--c))}}
-@media (max-width:799.98px),(orientation:landscape) and (max-height:599.98px){.menu__chips i:first-child{--ring:rgb(var(--ink-rgb) / 0.55)}}
-@media (max-width:799.98px),(orientation:landscape) and (max-height:599.98px){.menu__chips i:last-child{box-shadow:inset 0 -2px 4px rgb(0 0 0 / calc(0.08 * var(--shadow-k))),0 0 0 2px var(--m-paper),0 0 0 3.25px color-mix(in srgb,color-mix(in srgb,var(--hi) 96.47%,var(--lo)) 90%,transparent)}}
-/* --- 12-footer.css --- */
-.ft{--ft-arc:rgb(var(--hi-rgb) / 0.12)}
-.ft__bg::before{background:linear-gradient(90deg,rgb(var(--hi-rgb) / 0) 0%,rgb(var(--hi-rgb) / 0.34) 50%,rgb(var(--hi-rgb) / 0) 100%) top center/100% 1px no-repeat,
-             radial-gradient(50% 100% at 50% 0%,rgb(var(--hi-rgb) / 0.055) 0%,rgb(var(--hi-rgb) / 0) 100%)}
-.ft__black{background:var(--lo)}
-.ft__sheet{background:radial-gradient(100% 100% at 0% 0%,color-mix(in srgb,var(--hi) 18.04%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 8.63%,var(--lo)) 100%)}
-.ft__streak{background:linear-gradient(var(--hi) 0%,var(--hi) var(--fill,83.93%),transparent 100%)}
-.ft__card{background:color-mix(in srgb,var(--hi) 8.24%,var(--lo))}
-.ft__card::after{border:1px solid rgb(var(--hi-rgb) / 0.08);background:linear-gradient(0deg,rgb(var(--lo-rgb) / 0.22) 0%,rgb(var(--lo-rgb) / 0.04) 100%)}
-.ft__blur i:nth-child(1){--m:linear-gradient(to bottom,transparent 0%,var(--lo) 12.5%,var(--lo) 25%,transparent 37.5%)}
-.ft__blur i:nth-child(2){--m:linear-gradient(to bottom,transparent 12.5%,var(--lo) 25%,var(--lo) 37.5%,transparent 50%)}
-.ft__blur i:nth-child(3){--m:linear-gradient(to bottom,transparent 25%,var(--lo) 37.5%,var(--lo) 50%,transparent 62.5%)}
-.ft__blur i:nth-child(4){--m:linear-gradient(to bottom,transparent 37.5%,var(--lo) 50%,var(--lo) 62.5%,transparent 75%)}
-.ft__blur i:nth-child(5){--m:linear-gradient(to bottom,transparent 50%,var(--lo) 62.5%,var(--lo) 75%,transparent 87.5%)}
-.ft__blur i:nth-child(6){--m:linear-gradient(to bottom,transparent 62.5%,var(--lo) 75%,var(--lo) 87.5%,transparent 100%)}
-.ft__blur i:nth-child(7){--m:linear-gradient(to bottom,transparent 75%,var(--lo) 87.5%,var(--lo) 100%)}
-.ft__blur i:nth-child(8){--m:linear-gradient(to bottom,transparent 87.5%,var(--lo) 100%)}
-.ft__fade{background:linear-gradient(180deg,rgb(var(--lo-rgb) / 0) 77%,var(--bg) 100%)}
-.ft .ft__btn{color:color-mix(in srgb,var(--hi) 4.31%,var(--lo));box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.1),0 12px 32px -12px rgb(var(--hi-rgb) / 0.22)}
-.ft .ft__btn:hover,.ft .ft__btn:focus-visible{background:var(--hi);box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.16),0 16px 44px -12px rgb(var(--hi-rgb) / 0.34)}
-.ft .ft__btn::after{border:1px solid rgb(var(--lo-rgb) / 0.08)}
-.ft-av__mark{background:radial-gradient(100% 100% at 0% 0%,color-mix(in srgb,var(--hi) 22.75%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 1.96%,var(--lo)) 100%);box-shadow:0 1px 2px rgb(0 0 0 / calc(0.3 * var(--shadow-k)))}
-.ft-av__you{background:rgb(var(--lo-rgb) / 0.07);color:rgb(var(--lo-rgb) / max(0.66, var(--a-min)))}
-.ft-av__plus{color:rgb(var(--lo-rgb) / max(0.6, var(--a-min)))}
-.ft-bar__inner::before{background:linear-gradient(90deg,rgb(var(--hi-rgb) / 0.04) 0%,rgb(var(--hi-rgb) / 0.1) 50%,rgb(var(--hi-rgb) / 0.04) 100%)}
-.ft-bar__link{background:rgb(var(--hi-rgb) / 0)}
-.ft-bar__link:hover,.ft-bar__link:focus-visible{background:rgb(var(--hi-rgb) / 0.08)}
-.ft-bar__link:active{background:rgb(var(--hi-rgb) / 0.12)}
-.ft-bar__link[aria-current]{background:rgb(var(--hi-rgb) / 0.06)}
-.ft-bar__link[aria-disabled=true]:hover{background:rgb(var(--hi-rgb) / 0)}
-@media (max-width:799.98px){.ft .ft__btn{box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.1),0 10px 28px -10px rgb(var(--hi-rgb) / 0.24)}}
-/* --- 20-hero.css --- */
-.hero.section::before{background:radial-gradient(600px 360px at 50% 50%,rgb(var(--hi-rgb) / 0.055) 0%,rgb(var(--hi-rgb) / 0.018) 55%,transparent 100%)}
-.hero-pill__av{background:radial-gradient(95.31% 95.31% at 19.53% 0%,color-mix(in srgb,var(--hi) 22.75%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 2.35%,var(--lo)) 100%);box-shadow:0 12px 24px -4px rgb(0 0 0 / calc(0.7 * var(--shadow-k))),0 3px 6px -2px rgb(0 0 0 / calc(0.6 * var(--shadow-k)))}
-.hero-pill__av::after{border:1px solid rgb(var(--hi-rgb) / 0.3)}
-.hero-pill__bubble{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.07),inset 0 1px 0 rgb(var(--hi-rgb) / 0.05);color:rgb(var(--ink-rgb) / max(0.88, var(--a-min)))}
-.hero-pill__tip{color:color-mix(in srgb,var(--hi) 4.31%,var(--lo));box-shadow:0 8px 20px -6px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.hero .hero-cta__av{background:radial-gradient(120% 120% at 28% 12%,color-mix(in srgb,var(--hi) 23.53%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 6.67%,var(--lo)) 55%,var(--lo) 100%);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),0 2px 6px -2px rgb(0 0 0 / calc(0.45 * var(--shadow-k)))}
-.hero .hero-cta__you{background:rgb(calc(var(--pb) + var(--ps) * 214) calc(var(--pb) + var(--ps) * 214) calc(var(--pb) + var(--ps) * 210));color:rgb(var(--lo-rgb) / max(0.62, var(--a-min)))}
-.hero .hero-cta__plus{color:rgb(var(--lo-rgb) / max(0.42, var(--a-min)))}
-.hero-gallery__handle{background:rgb(calc(var(--pb) + var(--ps) * 233) calc(var(--pb) + var(--ps) * 233) calc(var(--pb) + var(--ps) * 230));border:1px solid rgb(var(--lo-rgb) / 0.55);box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.12),0 4px 8px -3px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.hero-tile::after{border:1px solid rgb(var(--hi-rgb) / 0.08)}
-@media (hover:hover){.hero-tile:hover::after{border-color:rgb(var(--hi-rgb) / 0.22)}}
-.hero-tile:focus-visible::before{box-shadow:inset 0 0 0 2px var(--red),inset 0 0 0 3px rgb(0 0 0 / calc(0.55 * var(--shadow-k)))}
-.hero-tile__cap{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 3.14%,var(--lo)) 90%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.1),0 10px 24px -10px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.hero-tile__ind{color:rgb(var(--ink-rgb) / max(0.66, var(--a-min)))}
-@media (hover:none){.hero-tile__cap{box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.08)}}
-.hero-tile__tag{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 3.14%,var(--lo)) 82%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.12)}
-.hero-tile__tag--client i{box-shadow:0 0 0 2px rgb(var(--ink-rgb) / 0.16)}
-.hero-tile__note{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 3.14%,var(--lo)) 82%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.12)}
-@media (max-width:479.98px),(hover:none){.hero-tile__note{box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.08)}}
-@media (max-width:799.98px){.hero.section::before{background:radial-gradient(300px 320px at 50% 50%,rgb(var(--hi-rgb) / 0.05) 0%,rgb(var(--hi-rgb) / 0.016) 55%,transparent 100%)}}
-/* --- 21-idea.css --- */
-.idea{--idea-bg:color-mix(in srgb,var(--hi) 4.31%,var(--lo))}
-.idea.section{box-shadow:0 -36px 90px -28px rgb(0 0 0 / calc(0.92 * var(--shadow-k))),0 -2px 0 -1px rgb(0 0 0 / calc(0.6 * var(--shadow-k)))}
-.idea.section::before{background:radial-gradient(72% 560px at 50% 0,rgb(var(--hi-rgb) / 0.052) 0%,rgb(var(--hi-rgb) / 0.016) 48%,transparent 78%)}
-.idea.section::after{border:1px solid rgb(var(--hi-rgb) / 0.11)}
-.idea__laptop::before{background:radial-gradient(closest-side,rgb(var(--hi-rgb) / 0.075) 0%,rgb(var(--hi-rgb) / 0.03) 52%,transparent 100%)}
-.idea-screen{background:color-mix(in srgb,var(--hi) 5.49%,var(--lo))}
-.idea-slide::after{box-shadow:inset 0 0 0 3px var(--red),inset 0 0 0 5px var(--hi)}
-.idea__toggle{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 5.49%,var(--lo)) 78%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.idea__toggle:hover{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 15.69%,var(--lo)) 86%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.22),inset 0 1px 0 rgb(var(--hi-rgb) / 0.08),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.idea__toggle-count{color:rgb(var(--ink-rgb) / max(0.8, var(--a-min)))}
-/* --- 22-services.css --- */
-.svc,.create-list{--svc-card:radial-gradient(120% 70% at 0% 0%,rgb(var(--hi-rgb) / 0.035) 0%,rgb(var(--hi-rgb) / 0) 60%),linear-gradient(180deg,color-mix(in srgb,var(--hi) 8.63%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 5.49%,var(--lo)) 100%);--svc-rim:linear-gradient(180deg,rgb(var(--hi-rgb) / 0.16) 0%,rgb(var(--hi-rgb) / 0.07) 28%,rgb(var(--hi-rgb) / 0.045) 100%);--svc-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.05),inset 0 -24px 40px -32px rgb(0 0 0 / calc(0.7 * var(--shadow-k))),0 0 0 1px rgb(0 0 0 / calc(0.6 * var(--shadow-k))),0 24px 48px -28px rgb(0 0 0 / calc(0.95 * var(--shadow-k)));--svc-shadow-out:0 0 0 1px rgb(0 0 0 / calc(0.6 * var(--shadow-k))),0 24px 48px -28px rgb(0 0 0 / calc(0.95 * var(--shadow-k)));--svc-shadow-in:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.08),inset 0 1px 0 rgb(var(--hi-rgb) / 0.1);--svc-chip-bg:rgb(var(--hi-rgb) / 0.055);--svc-chip-ink:rgb(var(--ink-rgb) / max(0.74, var(--a-min)));--svc-chip-icon:rgb(var(--ink-rgb) / max(0.5, var(--a-min)));--svc-hi:var(--ink)}
-.svc-info::after,.svc-small::after{border:1px solid rgb(var(--hi-rgb) / 0.07)}
-.svc-frame{background:linear-gradient(180deg,rgb(var(--hi-rgb) / 0.042) 0%,rgb(var(--hi-rgb) / 0.028) 100%)}
-.svc-frame::after{box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.035)}
-.svc-cta{background:rgb(var(--hi-rgb) / 0.07);box-shadow:inset 0 0 0 1px var(--line-3),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 8px 18px -10px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.svc-cta:hover,.svc-cta:focus-visible{color:var(--lo);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0),inset 0 1px 0 rgb(var(--hi-rgb) / 0),0 12px 30px -12px rgb(var(--hi-rgb) / 0.28)}
-.svc-chip{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.045)}
-.svc-chip--more{background:rgb(var(--hi-rgb) / 0.1);box-shadow:inset 0 0 0 1px var(--line-3),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06)}
-.svc-chip--more:hover,.svc-chip--more:focus-visible{color:var(--lo);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0),0 8px 20px -10px rgb(var(--hi-rgb) / 0.3)}
-.svc-folder::before{background:rgb(var(--lo-rgb) / 0.65)}
-.svc-folder__back{filter:drop-shadow(0 0 .5px rgb(var(--hi-rgb) / 0.18))}
-.svc-folder__paper--back{background:linear-gradient(180deg,rgb(calc(var(--pb) + var(--ps) * 212) calc(var(--pb) + var(--ps) * 212) calc(var(--pb) + var(--ps) * 209)) 0%,rgb(calc(var(--pb) + var(--ps) * 189) calc(var(--pb) + var(--ps) * 189) calc(var(--pb) + var(--ps) * 186)) 100%);box-shadow:0 0 0 .25px rgb(calc(var(--pb) + var(--ps) * 169) calc(var(--pb) + var(--ps) * 169) calc(var(--pb) + var(--ps) * 166))}
-.svc-folder__lip{background:linear-gradient(180deg,rgb(calc(var(--pb) + var(--ps) * 119) calc(var(--pb) + var(--ps) * 121) calc(var(--pb) + var(--ps) * 124)) 0%,rgb(calc(var(--pb) + var(--ps) * 83) calc(var(--pb) + var(--ps) * 85) calc(var(--pb) + var(--ps) * 88)) 100%)}
-.svc-folder__front{background:linear-gradient(174deg,rgb(calc(var(--pb) + var(--ps) * 98) calc(var(--pb) + var(--ps) * 101) calc(var(--pb) + var(--ps) * 106) / 0.86) 0%,rgb(calc(var(--pb) + var(--ps) * 54) calc(var(--pb) + var(--ps) * 57) calc(var(--pb) + var(--ps) * 63) / 0.88) 78.4%,rgb(calc(var(--pb) + var(--ps) * 46) calc(var(--pb) + var(--ps) * 49) calc(var(--pb) + var(--ps) * 55) / 0.9) 100%);box-shadow:inset 0 .5px 1.15px rgb(calc(var(--pb) + var(--ps) * 252) calc(var(--pb) + var(--ps) * 255) calc(var(--pb) + var(--ps) * 255) / 0.6),inset 0 0 0 .5px rgb(var(--hi-rgb) / 0.08)}
-.svc-media__card--dark,.svc-media__card--dark .svc-media__img{background:color-mix(in srgb,var(--hi) 0.39%,var(--lo))}
-.svc-media__card.is-contain,.svc-media__card.is-contain .svc-media__img,.svc-art__card.is-contain{background:var(--ground,var(--lo))}
-.svc-cap{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 3.92%,var(--lo)) 72%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.12),inset 0 1px 0 rgb(var(--hi-rgb) / 0.08),0 10px 24px -10px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.svc-media--stack .svc-media__card:not([data-pos="0"]){box-shadow:0 0 0 1px rgb(0 0 0 / calc(0.6 * var(--shadow-k))),-14px -10px 36px -10px rgb(0 0 0 / calc(0.85 * var(--shadow-k)))}
-.svc-media--stack .svc-media__card:not([data-pos="0"])::after{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.17),inset 0 1px 0 rgb(var(--hi-rgb) / 0.16)}
-.svc-tap{color:var(--lo);box-shadow:inset 0 -1px 0 rgb(0 0 0 / calc(0.12 * var(--shadow-k))),0 0 0 1px rgb(0 0 0 / calc(0.35 * var(--shadow-k))),0 10px 24px -8px rgb(0 0 0 / calc(0.85 * var(--shadow-k))),0 0 28px -6px rgb(var(--hi-rgb) / 0.22)}
-.svc-brand,.svc-art__card.svc-brand,.svc-media__card.svc-brand{background:radial-gradient(95% 90% at 50% 8%,color-mix(in srgb,var(--hi) 20.78%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 8.24%,var(--lo)) 52%,color-mix(in srgb,var(--hi) 1.57%,var(--lo)) 100%)}
-.svc-brand__glow{background:radial-gradient(closest-side,rgb(var(--hi-rgb) / 0.16),rgb(var(--hi-rgb) / 0))}
-.svc-brand__ring--1{border:1px solid rgb(var(--hi-rgb) / 0.13)}
-.svc-brand__ring--2{border:1px dashed rgb(var(--hi-rgb) / 0.1)}
-.svc-brand__orbit b{background:var(--hi);box-shadow:0 0 12px 2px rgb(var(--hi-rgb) / 0.45)}
-.svc-brand__axis::before,.svc-brand__axis::after{background:rgb(var(--hi-rgb) / 0.07)}
-.svc-brand__mark{filter:drop-shadow(0 22px 30px rgb(0 0 0 / calc(0.55 * var(--shadow-k)))) drop-shadow(0 2px 4px rgb(0 0 0 / calc(0.4 * var(--shadow-k))))}
-.svc-pill{background:rgb(var(--hi-rgb) / 0.07);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.13),0 8px 18px -10px rgb(0 0 0 / calc(0.6 * var(--shadow-k)));color:rgb(var(--hi-rgb) / max(0.86, var(--a-min)))}
-.svc-pill svg{stroke:rgb(var(--hi-rgb) / 0.66)}
-.svc-small__art::before{background:radial-gradient(closest-side,rgb(var(--hi-rgb) / 0.06),rgb(var(--hi-rgb) / 0))}
-.svc-small .svc-chip{background:color-mix(in srgb,var(--hi) 12.16%,var(--lo))}
-.svc-small .svc-chip--more{background:color-mix(in srgb,var(--hi) 16.47%,var(--lo))}
-.svc-art__card{box-shadow:0 0 0 1px rgb(0 0 0 / calc(0.55 * var(--shadow-k))),0 10px 18px -8px rgb(0 0 0 / calc(0.7 * var(--shadow-k))),0 28px 44px -14px rgb(0 0 0 / calc(0.85 * var(--shadow-k)))}
-.svc-art__card::after{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.1),inset 0 1px 0 rgb(var(--hi-rgb) / 0.14)}
-.svc-art__card--paper{background:linear-gradient(160deg,color-mix(in srgb,var(--hi) 12.55%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 7.06%,var(--lo)) 100%)}
-.svc-cap__label{color:rgb(var(--ink-rgb) / max(0.72, var(--a-min)))}
-.svc-flow__grid{fill:rgb(var(--hi-rgb) / 0.16)}
-.svc-flow__node{fill:color-mix(in srgb,var(--hi) 14.9%,var(--lo));stroke:rgb(var(--hi-rgb) / 0.14)}
-.svc-flow__node--ai{stroke:rgb(var(--hi-rgb) / 0.4)}
-.svc-flow__sq{fill:rgb(var(--ink-rgb) / 0.82)}
-.svc-flow__bar{fill:rgb(var(--hi-rgb) / 0.3)}
-.svc-flow__bar--ai{fill:rgb(var(--lo-rgb) / 0.28)}
-.svc-flow__pin{fill:rgb(var(--ink-rgb) / 0.7)}
-.svc-flow__wire{stroke:rgb(var(--hi-rgb) / 0.34)}
-/* --- 23-believe.css --- */
-.bel__in{--grey:rgb(var(--ink-rgb) / max(0.5, var(--a-min)))}
-.bel__media::after{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}
-.bel-car__dots{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.05)}
-.bel-car__play{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.05)}
-.bel-car__play:hover{background:rgb(var(--hi-rgb) / 0.12)}
-@media (max-width:799.98px){.bel-car__play::before{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.05)}}
-.bel-card{background:radial-gradient(120% 70% at 50% 0%,rgb(var(--hi-rgb) / 0.035) 0%,rgb(var(--hi-rgb) / 0) 60%),linear-gradient(180deg,color-mix(in srgb,var(--hi) 8.63%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 5.1%,var(--lo)) 100%);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.07),0 0 0 1px rgb(var(--hi-rgb) / 0.08),0 30px 60px -32px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.bel-card__dots i{background:color-mix(in srgb,var(--hi) 12.55%,var(--lo));box-shadow:inset 0 1px 2px rgb(0 0 0 / calc(0.8 * var(--shadow-k))),0 1px 0 rgb(var(--hi-rgb) / 0.05)}
-.bel-card__avatar,.bel-card__photo,.bel-card__initials{box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.1),0 6px 12px -6px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.bel-card__avatar{background:radial-gradient(95.31% 95.31% at 19.53% 0%,color-mix(in srgb,var(--hi) 22.75%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 6.67%,var(--lo)) 100%)}
-.bel-card__tile{background:rgb(var(--hi-rgb) / 0.04);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.04)}
-.bel-card__tiles--strip{background:rgb(var(--hi-rgb) / 0.04)}
-/* --- 24-agency.css --- */
-.agc-fig__floor{background:radial-gradient(closest-side,rgb(var(--hi-rgb) / 0.07) 0%,rgb(var(--hi-rgb) / 0.035) 38%,rgb(var(--hi-rgb) / 0.01) 72%,rgb(var(--hi-rgb) / 0) 100%)}
-.agc-pin i{text-shadow:0 0 3px rgb(0 0 0 / calc(1 * var(--shadow-k))),0 0 8px rgb(0 0 0 / calc(0.85 * var(--shadow-k)))}
-.agc-ld{stroke:rgb(var(--hi-rgb) / 0.3)}
-.agc-scene__pool{background:radial-gradient(50% 50% at 50% 46%,rgb(var(--hi-rgb) / 0.075) 0%,rgb(var(--hi-rgb) / 0.03) 45%,rgb(var(--hi-rgb) / 0) 72%)}
-.agc-note__m{stroke:var(--hi)}
-.agc-cta .btn__lead img.agc-lead{background:radial-gradient(120% 120% at 28% 12%,color-mix(in srgb,var(--hi) 23.53%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 6.67%,var(--lo)) 55%,var(--lo) 100%);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),0 2px 6px -2px rgb(0 0 0 / calc(0.45 * var(--shadow-k)))}
-.agc-link__t::before{background:rgb(var(--hi-rgb) / 0.22)}
-@media (min-width:1024px){.agc-stage:has(.agc-pt--1:hover) .agc-ln--1 .agc-ld,.agc-stage:has(.agc-pt--2:hover) .agc-ln--2 .agc-ld, .agc-stage:has(.agc-pt--3:hover) .agc-ln--3 .agc-ld,.agc-stage:has(.agc-pt--4:hover) .agc-ln--4 .agc-ld{stroke:rgb(var(--hi-rgb) / 0.66)}}
-/* --- 25-faq.css --- */
-.home-faq{--faq-surface:color-mix(in srgb,var(--hi) 4.31%,var(--lo));--faq-rim:rgb(var(--hi-rgb) / 0.08);--faq-line:rgb(var(--hi-rgb) / 0.09);--faq-line-hi:rgb(var(--hi-rgb) / 0.16)}
-.faq__panel{background:radial-gradient(70% 420px at 50% 0%,rgb(var(--hi-rgb) / 0.028) 0%,rgb(var(--hi-rgb) / 0) 100%),var(--faq-surface);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.06)}
-.faq-card{background:linear-gradient(180deg,color-mix(in srgb,var(--hi) 8.63%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 6.67%,var(--lo)) 100%);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.07),0 0 0 1px rgb(var(--hi-rgb) / 0.07),0 24px 48px -24px rgb(0 0 0 / calc(0.9 * var(--shadow-k))),0 2px 4px rgb(0 0 0 / calc(0.5 * var(--shadow-k)))}
-.faq-card::after{border:1px solid rgb(var(--hi-rgb) / 0.02)}
-.faq-card__dots i{background:color-mix(in srgb,var(--hi) 13.73%,var(--lo));box-shadow:inset 0 1px 2px rgb(0 0 0 / calc(0.8 * var(--shadow-k))),0 1px 0 rgb(var(--hi-rgb) / 0.05)}
-.faq-card__avatar{background:radial-gradient(100% 100% at 0% 0%,color-mix(in srgb,var(--hi) 22.75%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 4.31%,var(--lo)) 100%);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.1),0 8px 18px -6px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.faq-card__avatar::after{border:1px solid rgb(var(--hi-rgb) / 0.14)}
-.faq-btn{background:rgb(var(--hi-rgb) / 0.02)}
-.faq-btn:focus-visible{border-color:rgb(var(--hi-rgb) / 0.24)}
-.faq-btn__blob{background:rgb(var(--hi-rgb) / 0.07)}
-@media (hover:hover){.faq-btn:hover{border-color:rgb(var(--hi-rgb) / 0.24)}}
-.faq-btn:active{background:rgb(var(--hi-rgb) / 0.06)}
-.faq-item{background:rgb(var(--hi-rgb) / 0)}
-@media (hover:hover){.faq-item:hover{background:rgb(var(--hi-rgb) / 0.03)}}
-.faq-item:active{background:rgb(var(--hi-rgb) / 0.04)}
-.faq-item.is-open{background:rgb(var(--hi-rgb) / 0.035);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.05)}
-@media (max-width:799.98px){.faq__panel{background:radial-gradient(90% 260px at 50% 0%,rgb(var(--hi-rgb) / 0.028) 0%,rgb(var(--hi-rgb) / 0) 100%),var(--faq-surface)}}
-/* --- 26-founder.css --- */
-:root{--fdr-line:rgb(var(--hi-rgb) / 0.22);--fdr-lead:rgb(var(--hi-rgb) / 0.34)}
-.fdr-bar__a{color:var(--lo)}
-.fdr-name__l2{color:rgb(var(--ink-rgb) / max(0.86, var(--a-min)))}
-@supports ((-webkit-background-clip:text) or (background-clip:text)){.fdr-l{background-image:linear-gradient(180deg,var(--ink) 0%,var(--ink) 55%,rgb(var(--ink-rgb) / 0.5) 100%)}}
-.fdr-links__a:active{background:rgb(var(--hi-rgb) / 0.12)}
-.fdr-frame{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.fdr-frame__tex{color:rgb(var(--ink-rgb) / max(0.62, var(--a-min)))}
-@supports not ((mask-image:none) or (-webkit-mask-image:none)){.fdr-frame__tex{color:rgb(var(--ink-rgb) / 0.06)}}
-.fdr-frame__cross{background:linear-gradient(rgb(var(--hi-rgb) / 0.07),rgb(var(--hi-rgb) / 0.07)) 50% 0/1px 100% no-repeat,
-    linear-gradient(rgb(var(--hi-rgb) / 0.07),rgb(var(--hi-rgb) / 0.07)) 0 50%/100% 1px no-repeat}
-.fdr-frame__marks i{border:0 solid rgb(var(--ink-rgb) / 0.5)}
-.fdr-frame--photo::after{background:linear-gradient(transparent 45%,rgb(var(--lo-rgb) / 0.78))}
-.fdr-flap{background:color-mix(in srgb,var(--hi) 2.75%,var(--lo))}
-.fdr-flap__h--t,.fdr-flap__leaf--t{background:color-mix(in srgb,var(--hi) 3.92%,var(--lo))}
-.fdr-flap__h--b,.fdr-flap__leaf--b{background:color-mix(in srgb,var(--hi) 2.75%,var(--lo))}
-.fdr-flap::before{background:var(--lo);box-shadow:0 1px 0 rgb(var(--hi-rgb) / 0.05)}
-.fdr-flap__pin{background:rgb(var(--ink-rgb) / 0.5)}
-.fdr-strip__plan{stroke:rgb(var(--hi-rgb) / 0.22)}
-.fdr-strip__nd{fill:var(--lo)}
-.fdr-strip__x3{stroke:rgb(var(--ink-rgb) / 0.62)}
-.fdr-q__s--1{color:var(--pg-grey-lg,rgb(calc(var(--pb) + var(--ps) * 122) calc(var(--pb) + var(--ps) * 122) calc(var(--pb) + var(--ps) * 120)))}
-.fdr-rs{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.js .fdr-rs__v{color:rgb(var(--ink-rgb) / max(0.5, var(--a-min)))}
-.fdr-rs__line.is-restored .fdr-rs__a{color:rgb(var(--ink-rgb) / max(0.62, var(--a-min)))}
-@media (hover:hover) and (pointer:fine){.is-armed .fdr-rs__line:not(.is-restored):hover .fdr-rs__v{color:rgb(var(--ink-rgb) / max(0.8, var(--a-min)))}}
-/* --- 30-who.css --- */
-:root{--pg-grey-lg:rgb(calc(var(--pb) + var(--ps) * 122) calc(var(--pb) + var(--ps) * 122) calc(var(--pb) + var(--ps) * 120))}
-.page-who{--who-grid:rgb(var(--hi-rgb) / 0.07);--who-cross:rgb(var(--hi-rgb) / 0.22);--who-line:rgb(var(--hi-rgb) / 0.22);--who-lead:rgb(var(--hi-rgb) / 0.34);--who-bar:rgb(var(--hi-rgb) / 0.09)}
-.who-hero{background:var(--lo)}
-.who-hero__curtain{background:linear-gradient(90deg,transparent 0,var(--lo) 6%)}
-@supports ((-webkit-background-clip:text) or (background-clip:text)){.who-display__l{background-image:linear-gradient(180deg,var(--ink) 0%,var(--ink) 52%,rgb(var(--ink-rgb) / 0.46) 100%)}}
-.who-whobox__box{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.who-b01{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.who-rock__img{filter:drop-shadow(0 40px 50px rgb(0 0 0 / calc(0.9 * var(--shadow-k))))}
-.who-rock__glass{border:1px solid rgb(var(--hi-rgb) / 0.38);background:rgb(var(--hi-rgb) / 0.07);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.25)}
-.who-rock__glow{background:radial-gradient(50% 45% at 50% 70%,rgb(var(--hi-rgb) / 0.07),transparent 75%)}
-.who-bx::before{border-top:1px solid rgb(var(--hi-rgb) / 0.58);border-bottom:1px solid rgb(var(--hi-rgb) / 0.58)}
-.who-bx::after{border-left:1px solid rgb(var(--hi-rgb) / 0.58);border-right:1px solid rgb(var(--hi-rgb) / 0.58)}
-.who-collab{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.who-dial{color:rgb(var(--hi-rgb) / 0.3)}
-.who-endmark__g{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.who-endmark__c{background:rgb(var(--hi-rgb) / 0.06)}
-.who-b02{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.who-b02__head>span:first-child{color:var(--lo)}
-.who-close{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.who-b03{background:color-mix(in srgb,var(--hi) 1.96%,var(--lo))}
-.who-b03__img{background:color-mix(in srgb,var(--hi) 5.1%,var(--lo))}
-.who-panel6{background:var(--lo);box-shadow:0 30px 60px -30px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.who-step__n{border:1px solid rgb(var(--hi-rgb) / 0.36)}
-.who-step.is-done .who-step__n{color:var(--lo)}
-.who-node__o{fill:var(--lo)}
-.who-pnl{background:color-mix(in srgb,var(--hi) 2.75%,var(--lo));box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.06)}
-.who-pnl--2 .who-pnl__light{background:radial-gradient(52% 40% at 30% 30%,rgb(var(--ink-rgb) / 0.2),transparent 72%),radial-gradient(46% 36% at 72% 74%,rgb(var(--ink-rgb) / 0.12),transparent 70%)}
-.who-pnl__mark{filter:drop-shadow(0 30px 40px rgb(0 0 0 / calc(0.65 * var(--shadow-k))))}
-.who-pnl--2 .who-pnl__mark{filter:drop-shadow(0 30px 40px rgb(0 0 0 / calc(0.65 * var(--shadow-k)))) brightness(.95)}
-/* --- 31-create.css --- */
-.create-index__link{background:rgb(var(--hi-rgb) / 0.05);box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgb(var(--hi-rgb) / 0.05),0 8px 16px -10px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.create-index__link:hover,.create-index__link:focus-visible{background:var(--ink);color:var(--lo);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0),inset 0 1px 0 rgb(var(--hi-rgb) / 0),0 10px 26px -10px rgb(var(--hi-rgb) / 0.28)}
-.create-cta__icon{filter:drop-shadow(0 10px 16px rgb(0 0 0 / calc(0.7 * var(--shadow-k)))) drop-shadow(0 0 18px rgb(var(--hi-rgb) / 0.08))}
-/* --- 32-approach.css --- */
-.ap{--ap-bg:color-mix(in srgb,var(--hi) 2.75%,var(--lo));--ap-frame:color-mix(in srgb,var(--hi) 7.84%,var(--lo));--ap-ink:var(--ink);--ap-ink-2:rgb(var(--ink-rgb) / 0.86);--ap-ink-3:rgb(var(--ink-rgb) / 0.8);--ap-ink-4:rgb(var(--ink-rgb) / 0.66);--ap-ink-5:rgb(var(--ink-rgb) / 0.58);--ap-line:color-mix(in srgb,var(--hi) 54.12%,var(--lo));--ap-line-2:color-mix(in srgb,var(--hi) 40%,var(--lo));--ap-line-soft:color-mix(in srgb,var(--hi) 22.75%,var(--lo));--ap-rule:color-mix(in srgb,var(--hi) 56.08%,var(--lo));--ap-rule-2:color-mix(in srgb,var(--hi) 34.51%,var(--lo));--ap-ray:color-mix(in srgb,var(--hi) 29.8%,var(--lo));--ap-ghost:color-mix(in srgb,var(--hi) 10.2%,var(--lo));--ap-ring-off:color-mix(in srgb,var(--hi) 14.9%,var(--lo));--ap-disc-ink:color-mix(in srgb,var(--hi) 1.96%,var(--lo));box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.07),inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}
-.ap ::selection{color:var(--hi)}
-.ap-wires .w-col{stroke:color-mix(in srgb,var(--hi) 5.49%,var(--lo))}
-.ap-wires .w-mask path{stroke:var(--hi)}
-.ap-wires .w-yes text,.ap-wires .w-no text{fill:var(--hi)}
-.ap-dec__mini text:not(.m-dia-t){fill:var(--hi)}
-/* --- 33-work.css --- */
-.wk-tile{color:var(--hi)}
-.wk-tile::after{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}
-.wk-cap{background:var(--lo);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.08)}
-.wk-cap__dot{color:rgb(var(--ink-rgb) / max(0.5, var(--a-min)))}
-.wk-hero__second{color:rgb(var(--ink-rgb) / max(0.5, var(--a-min)))}
-.btn__lead img.wk-lead{background:radial-gradient(120% 120% at 28% 12%,color-mix(in srgb,var(--hi) 23.53%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 6.67%,var(--lo)) 55%,var(--lo) 100%);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),0 2px 6px -2px rgb(0 0 0 / calc(0.45 * var(--shadow-k)))}
-.wk-intro__n{color:rgb(var(--ink-rgb) / max(0.5, var(--a-min)))}
-.wk-info__n{color:rgb(var(--ink-rgb) / max(0.5, var(--a-min)))}
-.wk-link__label::before{background:rgb(var(--hi-rgb) / 0.18)}
-.wk-tag--client i{box-shadow:0 0 0 3px rgb(var(--ink-rgb) / 0.12)}
-.wk-story__n{color:rgb(var(--ink-rgb) / 0.2)}
-.wk-slot{background:radial-gradient(70% 60% at 50% 0%,rgb(var(--hi-rgb) / 0.035) 0%,rgb(var(--hi-rgb) / 0) 70%),color-mix(in srgb,var(--hi) 3.14%,var(--lo));box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.05)}
-.wk-slot::after{border:1px solid rgb(var(--hi-rgb) / 0.1)}
-.wk-slot__x{color:rgb(var(--hi-rgb) / 0.06)}
-.wk-slot__h{border:1px solid rgb(var(--hi-rgb) / 0.5);box-shadow:0 0 0 3px rgb(0 0 0 / calc(0.6 * var(--shadow-k))),0 0 12px rgb(var(--hi-rgb) / 0.18)}
-.wk-slot__n{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.07)}
-/* --- 34-stories.css --- */
-.sto-sample{background:rgb(var(--hi-rgb) / 0.03);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.09)}
-@media (min-width:800px){.js .sto-voice.card{box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 0 0 1px rgb(var(--hi-rgb) / 0.07),0 30px 60px -32px rgb(0 0 0 / calc(0.9 * var(--shadow-k))),0 0 44px 12px rgb(0 0 0 / calc(0.82 * var(--shadow-k)))}}
-.sto-voice__media{box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.08),0 24px 40px -28px rgb(0 0 0 / calc(0.95 * var(--shadow-k)))}
-.sto-voice__media::after{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}
-.sto-voice__glare{background:radial-gradient(360px circle at var(--gx,50%) var(--gy,50%),rgb(var(--hi-rgb) / 0.07),transparent 60%)}
-.sto-stars svg:first-child{color:rgb(var(--ink-rgb) / 0.26)}
-.sto-voice__dim{background:var(--lo)}
-.sto-rev__btn{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}
-@media (hover:hover){.sto-rev__btn:hover{background:rgb(var(--hi-rgb) / 0.12)}}
-.sto-deck__dots{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.05)}
-.sto-step__pip{background:rgb(var(--hi-rgb) / 0.05);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.08),inset 0 1px 2px rgb(0 0 0 / calc(0.6 * var(--shadow-k)))}
-.sto-step__pip::after{background:rgb(var(--ink-rgb) / 0.42)}
-.sto-step--last.card{background:radial-gradient(200px 150px at var(--glow-at),rgba(251,38,41,.15) 0%,rgba(251,38,41,0) 100%),radial-gradient(120% 120% at 15% 0%,color-mix(in srgb,var(--hi) 16.47%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 6.27%,var(--lo)) 62%,color-mix(in srgb,var(--hi) 4.31%,var(--lo)) 100%);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.1),0 0 0 1px rgb(var(--hi-rgb) / 0.12),0 30px 60px -30px rgb(0 0 0 / calc(0.95 * var(--shadow-k)))}
-.sto-step--last.card::after{border-color:rgb(var(--hi-rgb) / 0.04)}
-.sto-step--last .dots i{background:color-mix(in srgb,var(--hi) 14.9%,var(--lo))}
-.sto-close__mark{filter:drop-shadow(0 12px 16px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))) drop-shadow(0 0 18px rgb(var(--hi-rgb) / 0.06))}
-.sto-review__icon{background:radial-gradient(95.31% 95.31% at 19.53% 0%,color-mix(in srgb,var(--hi) 22.75%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 1.96%,var(--lo)) 100%);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.1),inset 0 1px 0 rgb(var(--hi-rgb) / 0.08),0 14px 28px -8px rgb(0 0 0 / calc(0.85 * var(--shadow-k)))}
-.sto-btn{color:var(--lo);box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.08),0 10px 30px -10px rgb(var(--hi-rgb) / 0.18)}
-.sto-btn:hover{box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.12),0 14px 40px -12px rgb(var(--hi-rgb) / 0.3)}
-/* --- 35-contact.css --- */
-:root{--ct-field:rgb(var(--hi-rgb) / 0.035);--ct-field-hover:rgb(var(--hi-rgb) / 0.055);--ct-field-focus:rgb(var(--hi-rgb) / 0.065);--ct-border:rgb(var(--hi-rgb) / 0.36);--ct-border-hover:rgb(var(--hi-rgb) / 0.5)}
-.ct-ask{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.07),inset 0 1px 0 rgb(var(--hi-rgb) / 0.05)}
-.ct-input{box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.025)}
-.ct-input:focus,.ct-input:focus-visible{border-color:rgb(var(--ink-rgb) / 0.62);box-shadow:0 0 0 4px rgb(var(--hi-rgb) / 0.08)}
-.ct-select option{background:color-mix(in srgb,var(--hi) 7.84%,var(--lo))}
-.ct-chip>span{background:rgb(var(--hi-rgb) / 0.05);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.07)}
-@media (hover:hover){.ct-chip:hover>span{background:rgb(var(--hi-rgb) / 0.09);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.12)}}
-.ct-chip:active>span{background:rgb(var(--hi-rgb) / 0.12)}
-.ct-chip input:checked+span{color:var(--lo);box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.2),0 10px 24px -10px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.ct-quick{background:rgb(var(--hi-rgb) / 0.04);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.05),0 6px 14px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-@media (hover:hover){.ct-quick:hover{background:rgb(var(--hi-rgb) / 0.09);box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.06)}}
-.ct-quick:active{background:rgb(var(--hi-rgb) / 0.12)}
-.ct-quick[aria-pressed=true]{color:var(--lo);box-shadow:0 10px 24px -10px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.ct-spinner{border:2px solid rgb(var(--lo-rgb) / 0.18);border-top-color:var(--lo)}
-.ct-link{text-decoration-color:rgb(var(--ink-rgb) / max(0.35, var(--a-min)))}
-.ct-done__text a{text-decoration-color:rgb(var(--ink-rgb) / max(0.35, var(--a-min)))}
-.ct-before__avatar{background:radial-gradient(95% 95% at 20% 0%,color-mix(in srgb,var(--hi) 21.96%,var(--lo)) 0%,color-mix(in srgb,var(--hi) 4.31%,var(--lo)) 100%);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.1),inset 0 1px 0 rgb(var(--hi-rgb) / 0.09),0 12px 24px -10px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.ct-before__mark{filter:drop-shadow(0 4px 6px rgb(0 0 0 / calc(0.6 * var(--shadow-k))))}
-.ct-before__close{background:rgb(var(--hi-rgb) / 0.045);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.07),inset 0 1px 0 rgb(var(--hi-rgb) / 0.04)}
-.ct-out:hover::after,.ct-out:focus-visible::after{border-color:rgb(var(--hi-rgb) / 0.26)}
-.ct-out__blob{background:rgb(var(--hi-rgb) / 0.07)}
-.ct-prefill{background:rgb(var(--hi-rgb) / 0.03)}
-.ct-prefill button:hover{background:rgb(var(--hi-rgb) / 0.08)}
-/* --- 36-project.css --- */
-.pj-back{background:rgb(var(--hi-rgb) / 0.05);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.08),inset 0 1px 0 rgb(var(--hi-rgb) / 0.04)}
-.pj-back:hover{background:rgb(var(--hi-rgb) / 0.1);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06)}
-.pj-back:active{background:rgb(var(--hi-rgb) / 0.07)}
-.pj-head__chips .chip{background:rgb(var(--hi-rgb) / 0.06);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.08),inset 0 1px 0 rgb(var(--hi-rgb) / 0.04)}
-.pj-head__chips .chip:has(>.pj-chip-link:active){background:rgb(var(--hi-rgb) / 0.12)}
-.pj-tag--client i{box-shadow:0 0 0 3px rgb(var(--ink-rgb) / 0.12)}
-.pj-frame::after{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}
-.pj-phones{background:radial-gradient(60% 70% at 50% 0%,rgb(var(--hi-rgb) / 0.04) 0%,rgb(var(--hi-rgb) / 0) 70%),var(--surface-1)}
-.pj-phones::after{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}
-.pj-phone{box-shadow:0 0 0 1px rgb(var(--hi-rgb) / 0.08),0 40px 80px -40px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.pj-zoom__badge{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 5.49%,var(--lo)) 74%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.pj-viewer__shade{background:var(--lo)}
-.pj-viewer__count{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 5.49%,var(--lo)) 74%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.1)}
-.pj-viewer__btn{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 5.49%,var(--lo)) 74%,transparent);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.14),inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-.pj-viewer__btn--close{color:var(--lo);box-shadow:0 8px 20px -8px rgb(0 0 0 / calc(0.8 * var(--shadow-k)))}
-@media (hover:hover){.pj-viewer__btn:not(.pj-viewer__btn--close):not([aria-disabled="true"]):hover{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 15.69%,var(--lo)) 84%,transparent)}}
-@media (hover:hover){.pj-viewer__btn--close:hover{background:var(--hi)}}
-@media (max-width:599.98px){.pj-phones{box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.06)}}
-/* --- 37-legal.css --- */
-.lg-glance li{background:rgb(var(--hi-rgb) / 0.045);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.07),inset 0 1px 0 rgb(var(--hi-rgb) / 0.04)}
-.nf-zero{filter:drop-shadow(0 30px 34px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))) drop-shadow(0 0 42px rgb(var(--hi-rgb) / 0.09))}
-.nf-lead{background:var(--lo);box-shadow:inset 0 0 0 1px rgb(var(--hi-rgb) / 0.1)}
-/* --- 40-chat.css --- */
-.cc-launch{background:linear-gradient(color-mix(in srgb,var(--hi) 7.84%,var(--lo)),color-mix(in srgb,var(--hi) 5.1%,var(--lo)));box-shadow:inset 0 1px 0 rgb(var(--hi-rgb) / 0.06),0 10px 24px -8px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.cc-launch::before{border:1px solid rgb(var(--ink-rgb) / 0.42)}
-.cc-pill{background:color-mix(in srgb,color-mix(in srgb,var(--hi) 7.84%,var(--lo)) 78%,transparent)}
-.cc-hello{box-shadow:0 24px 48px -20px rgb(0 0 0 / calc(0.9 * var(--shadow-k)))}
-.cc-hello button{background:color-mix(in srgb,var(--hi) 10.98%,var(--lo))}
-.cc-hello button:hover{background:color-mix(in srgb,var(--hi) 14.9%,var(--lo))}
-/* --- :root custom properties re-declared on the always-dark islands (resolved values do not re-resolve) --- */
-[data-tone],.menu,.cc,.cc-dlg,.site-footer,.scn,.idea.section,.home-faq,.who-hero,.fdr-frame,.fdr-flap,.fdr-rs,.motion-toggle,.video-ctl,.idea__toggle,.pj-zoom__badge,.pj-viewer,.hero-tile__tag,.svc-cap,.wk-cap,.cursor-pill{--fdr-line:rgb(var(--hi-rgb) / 0.22);--fdr-lead:rgb(var(--hi-rgb) / 0.34);--pg-grey-lg:rgb(calc(var(--pb) + var(--ps) * 122) calc(var(--pb) + var(--ps) * 122) calc(var(--pb) + var(--ps) * 120));--who-grid:rgb(var(--hi-rgb) / 0.07);--who-cross:rgb(var(--hi-rgb) / 0.22);--who-line:rgb(var(--hi-rgb) / 0.22);--who-lead:rgb(var(--hi-rgb) / 0.34);--who-bar:rgb(var(--hi-rgb) / 0.09);--ct-field:rgb(var(--hi-rgb) / 0.035);--ct-field-hover:rgb(var(--hi-rgb) / 0.055);--ct-field-focus:rgb(var(--hi-rgb) / 0.065);--ct-border:rgb(var(--hi-rgb) / 0.36);--ct-border-hover:rgb(var(--hi-rgb) / 0.5)}
+/* @tone-gen begin: FILLED BY THE BUILD (scripts/tone_codemod.py via build.py; keep these markers, write nothing between
+   them). Every neutral colour literal of the component CSS is turned into its tone-aware token form IN PLACE by the build
+   (dark tone = today's exact value, light tone = its mirror 255 - v, text alpha lifted to --a-min, black depth shadows
+   x --shadow-k), so the authors' cascade order is kept. Here the build writes the :root custom properties of the
+   component files, re-declared on every tone unit and island (a custom property inherits as its RESOLVED value). */
+/* @tone-gen end */
 
-/* ---------- Part 3: hand-made fixes (after the generated layer). Each line says why. ---------- */
+/* ---------- Part 4: hand-made fixes (after every component rule: each one beats the authors' rule of the same
+   specificity, so keep them few, narrow and scoped to the light tone where they can be). Each line says why. ---------- */
 
-/* Header: the frosted bar is the codemod's mirror (white glass .78/.58 on white, today's black glass on black); the
+/* Header: the frosted bar is the transform's mirror (white glass .78/.58 on white, today's black glass on black); the
    logo and menu lines are currentColor SVG, so bar and mark swap together in the balance frame (no blink). */
-.nav-toggle:hover{background:rgb(var(--hi-rgb) / .07)}
 
 /* Scroll-scrubbed statement (home, first black chapter, the reference's signature): words brighten one by one with
    scroll from a .24 ghost. tone.js writes --p (0..1) on the block, --i on each word, --n on the block. */
@@ -467,9 +117,8 @@ html[data-tone-state=dark] .tone-veil{opacity:1}        /* settled state + the r
 html[data-tone-state=light] .idea.section{box-shadow:0 -18px 50px -28px rgba(0,0,0,.32)}
 html[data-tone-state=light] .faq__panel{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 -18px 50px -28px rgba(0,0,0,.32)}
 
-/* Who We Are: the hero is dark art from y=0 (opaque raster + screen-blend beams). The page still starts WHITE: the
-   hero becomes an inset black window under the header (owner decision: or repaint image 5 on white). */
-/* (25 Oct, black first: the hero opens on a black page, so it stays full-bleed: no inset window) */
+/* Who We Are: the hero is dark art from y=0; the page opens black there, so it stays the owner's full-bleed hero (the
+   white-first prototype made it an inset black window: not needed since the black start of 25 Oct). */
 
 /* Red TEXT: brand red is 3.9:1 on white; small red words take --red-ink (5.9:1 on white, = brand red on black). */
 .ct-req,.ct-status{color:var(--red-ink)}
@@ -517,3 +166,8 @@ html[data-tone-state=light] .cc-launch{box-shadow:inset 0 1px 0 rgba(255,255,255
 /* ::selection keeps black on brand red in both tones (5.4:1); the mirrored white label would be 3.9:1. The red focus
    ring stays: 3.9:1 on white, 5.4:1 on black (non-text, WCAG 1.4.11). */
 ::selection{background:var(--red);color:#000}
+
+/* Our Approach: the YES label and the text selection sit on the blue fill (#2f5bff), not on the page: white in both
+   tones (5.2:1; the mirrored black would be 4.0:1). The NO label follows its disc (--ap-disc-ink, the authors' rule). */
+.ap-wires .w-yes text,.ap-dec__mini .m-yes text{fill:#fff}
+.ap ::selection{color:#fff}

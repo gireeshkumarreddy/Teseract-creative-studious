@@ -18,6 +18,7 @@ import math
 import re
 import lib
 from lib import E, fmt, CONFIG, button, roll
+from tone import chapter, DARK
 import chrome
 import content
 import projects
@@ -442,7 +443,7 @@ def _gallery(ctx):
 def render(ctx):
     # The H1 carries no [data-reveal]: it is painted (opaque) from the first frame and only rises
     # a few px in CSS (20-hero.css), so it never depends on the script to become visible.
-    return f'''<section class="hero section" id="hero" aria-labelledby="hero-title" data-motion-scope>
+    return f'''<section class="hero section" id="hero" aria-labelledby="hero-title" data-motion-scope{chapter(DARK)}>
   <div class="hero__inner">
     <div class="hero__lockup">
       {_pill(ctx)}

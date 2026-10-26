@@ -16,6 +16,7 @@ from lib import E, button, pill_label
 from content import CREATE
 from sections import service_cards as sc
 from sections.home_services import title_html
+from tone import chapter, DARK, LIGHT
 
 DOTS = '<span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>'
 
@@ -27,7 +28,7 @@ def _hero(ctx):
         f'<li><a class="create-index__link" href="#{sc.slug(s["name"])}">'
         f'<span class="create-index__n">{E(s["n"])}</span><span>{E(s["name"])}</span></a></li>'
         for s in CREATE['services'])
-    return f'''<section class="create-hero" aria-labelledby="page-title">
+    return f'''<section class="create-hero" aria-labelledby="page-title"{chapter(DARK)}>
   <div class="create-hero__inner">
     {pill_label('What We Create')}
     <h1 class="create-hero__title" id="page-title" data-reveal style="--y:80px;--d:200ms">{title_html()}</h1>
@@ -39,9 +40,14 @@ def _hero(ctx):
 </section>'''
 
 
+# two service rows per beat: the hero + rows 1-2 black, rows 3-4 white, 5-6 black, 7-8 + the CTA white, the footer black
+ROW_CHAPTERS = {3: LIGHT, 5: DARK, 7: LIGHT}
+
+
 def _services(ctx):
     rows = ''.join(
-        sc.row(ctx, s, tag='h2', flip=bool(i % 2), number=True, note=True, stack=sc.stackable(s['n']), anchor=True, cta=True)
+        sc.row(ctx, s, tag='h2', flip=bool(i % 2), number=True, note=True, stack=sc.stackable(s['n']), anchor=True, cta=True,
+               mark=chapter(ROW_CHAPTERS[i + 1]) if i + 1 in ROW_CHAPTERS else '')
         for i, s in enumerate(CREATE['services']))
     return f'''<section class="create-list" aria-label="Services">
   <div class="create-list__inner svc__rows">{rows}</div>

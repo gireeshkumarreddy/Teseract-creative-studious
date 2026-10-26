@@ -24,6 +24,7 @@ import re
 
 from lib import E, BRAND
 from content import APPROACH, WHO, NAV
+from tone import chapter, DARK, LIGHT, STEPS, ARTBOARD
 
 INDEX = '02 — 09'          # image 4's own pagination label (see report: master IA would be "04 - 07")
 DISCIPLINES = ['Strategy', 'Design', 'Technology', 'Experience']
@@ -326,9 +327,16 @@ def decision(key, question_lines, no_lines, no_src, nx, ny, yes_to, solid_no=Fal
             f'<p class="ap-dec__no ap-at" aria-hidden="true"{at(nx, ny)}>{br(no_src, *no_lines)}</p></div>')
 
 
+# the white/black chapters: on the step timeline (phones, tablets) the hero + steps 1-2 open black, steps 3-5 white,
+# 6-8 black, step 9 + the signature white, the footer black; the desktop artboard is never split inside: it turns white
+# .9 screen past the poster's top and the footer closes it black
+STEP_CHAPTERS = {3: LIGHT, 6: DARK, 9: LIGHT}
+
+
 def step_li(n, step, side, extra):
     acc = ' ap-node--accent' if n in ACCENT else ''
-    return (f'<li class="ap-step{" ap-step--inline" if n in INLINE else ""}" data-k="s{n}">'
+    mark = chapter(STEP_CHAPTERS[n], mq=STEPS) if n in STEP_CHAPTERS else ''
+    return (f'<li class="ap-step{" ap-step--inline" if n in INLINE else ""}" data-k="s{n}"{mark}>'
             f'<span class="ap-node{acc}" aria-hidden="true"></span>'
             f'{head(n, step)}'
             f'<div class="ap-side">{side}</div>'
@@ -458,8 +466,8 @@ def signoff_html():
 
 
 def render(ctx):
-    return (f'<section class="ap" id="approach" aria-labelledby="ap-title">'
-            f'<div class="ap-poster">'
+    return (f'<section class="ap" id="approach" aria-labelledby="ap-title"{chapter(DARK)}>'
+            f'<div class="ap-poster"{chapter(LIGHT, at=-.9, mq=ARTBOARD)}>'
             f'{wires_svg()}'
             f'{masthead_html()}{hero_html()}{steps_html()}{signoff_html()}'
             f'</div></section>')

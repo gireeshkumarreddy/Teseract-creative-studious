@@ -103,7 +103,13 @@ def chat_dock(ctx):
 
 
 def document(ctx, title, description, body, *, footer_cta=True, head_extra=''):
-    """The page. head_extra: trusted markup for the end of <head> (a project page's poster preload)."""
+    """The page. head_extra: trusted markup for the end of <head> (a project page's poster preload).
+    The white/black scroll (owner 22 + 25 Oct; scripts/tone.py, src/js/96-tone.js): every page opens BLACK (the metas
+    below, the black canvas of 96-tone.css). One block of the head script is the PRE-PAINT: a reload or a back /
+    forward navigation of a page the visitor left inside a WHITE chapter (sessionStorage 'ts-tone', written by
+    96-tone.js on pagehide) paints white from the first frame, so the black start never flashes over a white chapter;
+    96-tone.js takes over once the browser has restored the scroll. .tone-veil (after the skip link) is the page-wide
+    fade: one fixed black layer under all content, opacity only."""
     import seo
     full_title, description = seo.meta(ctx, title, description)
     b = ctx.base
@@ -159,6 +165,8 @@ if(document.visibilityState!=='visible'){{d.classList.add('tsi-wait');document.a
 var k=window.__tsiK=function(e){{if(e.type==='keydown'&&/^(Shift|Control|Alt|Meta|CapsLock|Fn|OS)$/.test(e.key))return;if(!window.__tsiT)window.__tsiT=performance.now();d.classList.add('tsi-skip')}};
 ['pointerdown','keydown','wheel','touchmove'].forEach(function(t){{addEventListener(t,k,{{capture:true,passive:true}})}});
 addEventListener('animationstart',window.__tsiF=function f(e){{if(e.animationName==='tsi-failsafe'){{['pointerdown','keydown','wheel','touchmove'].forEach(function(t){{removeEventListener(t,k,true)}});removeEventListener('animationstart',f,true)}}}},true)}}}}catch(e){{}}
+try{{var g=performance.getEntriesByType('navigation')[0],v=JSON.parse(sessionStorage.getItem('ts-tone')||'{{}}')[location.pathname];
+if(v==='light'&&g&&(g.type==='reload'||g.type==='back_forward')){{d.setAttribute('data-tone','light');d.setAttribute('data-tone-state','light');d.setAttribute('data-canvas','light');var mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.setAttribute('content','#ffffff')}}}}catch(e){{}}
 try{{var c=document.createElement('canvas').getContext('2d'),t='mmmmmmmmmmlliWQ@#',w=function(f){{c.font='72px '+f;return c.measureText(t).width}};d.classList.add('font-hn');if({'true' if lib.WEBFONT else 'false'}||w('"Helvetica Neue",monospace')!==w('monospace'))d.classList.add('font-hn-real')}}catch(e){{}}}})(document.documentElement)</script>
 <link rel="preload" href="{b}assets/{'fonts/helvetica-neue-400.woff2' if lib.WEBFONT else 'inter-tight-latin.woff2'}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{b}styles.css?v={lib.ASSET_VERSION.get('styles.css', '1')}">
@@ -167,6 +175,7 @@ try{{var c=document.createElement('canvas').getContext('2d'),t='mmmmmmmmmmlliWQ@
 <body class="page-{ctx.page}">
 {intro}
 <a class="skip-link" href="#main">Skip to content</a>
+<div class="tone-veil" aria-hidden="true"></div>
 {header(ctx)}
 {menu}
 <main id="main" tabindex="-1">

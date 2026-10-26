@@ -70,11 +70,23 @@ def minify_css(css):
     return css.replace(';}', '}').strip() + '\n'
 
 
+def bundle(src_dir, header, pattern='*.*'):
+    """The partials of src_dir concatenated in name order. src/css passes through the white/black scroll's colour
+    transform (scripts/tone_codemod.py, owner 22 + 25 Oct): every neutral colour literal in its tone-aware token form, in
+    place, so the authors' cascade order is kept (check.py compares dist/styles.css with this)."""
+    files = sorted(src_dir.glob(pattern))
+    if src_dir.resolve() == (lib.ROOT / 'src/css').resolve() and pattern == '*.*':
+        import tone_codemod
+        named = tone_codemod.partials([f for f in files if f.suffix == '.css'])
+        named += [(f.name, f.read_text(encoding='utf-8')) for f in files if f.suffix != '.css']
+        named.sort(key=lambda x: x[0])
+    else:
+        named = [(f.name, f.read_text(encoding='utf-8')) for f in files]
+    return header + ''.join(f'\n/* ---- {name} ---- */\n' + text for name, text in named)
+
+
 def concat(src_dir, out_file, header, pattern='*.*'):
-    parts = [header]
-    for f in sorted(src_dir.glob(pattern)):
-        parts.append(f'\n/* ---- {f.name} ---- */\n' + f.read_text(encoding='utf-8'))
-    text = ''.join(parts)
+    text = bundle(src_dir, header, pattern)
     if out_file.suffix == '.css' and '--no-minify' not in sys.argv:
         text = f'/*! {BRAND} styles — generated from src/css (edit the partials). */\n' + minify_css(text)
     if out_file.suffix == '.js' and out_file.parent.name == 'chat' and '--no-minify' not in sys.argv:

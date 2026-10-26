@@ -31,6 +31,7 @@ import re
 
 import lib
 from lib import E, fmt, BRAND, CONFIG, ICONS, svg_inline
+from tone import chapter, DARK
 from content import HOME, CREATE, WHO, BRAND as BRAND_COPY
 
 
@@ -162,7 +163,7 @@ def render(ctx):
     side_html = ' '.join(f'<span>{E(x)}</span>' for x in side if x)
     stats = ''.join(_stat(v, l, i) for i, (v, l) in enumerate(n['items']))
     think = ctx.url('who-we-are', 'how-we-think')
-    return f'''<section class="bel section" id="believe" aria-labelledby="believe-title">
+    return f'''<section class="bel section" id="believe" aria-labelledby="believe-title"{chapter(DARK)}>
   <div class="container bel__in">
     <p class="bel__eyebrow" data-reveal style="--y:20px"><span class="bel__dot" aria-hidden="true"></span>{E(T(b['label']))}</p>
     <h2 class="bel__title" id="believe-title" data-split>{title}</h2>

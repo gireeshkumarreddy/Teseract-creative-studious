@@ -85,6 +85,9 @@ means setting two values, `site_url` and `indexable`, together. `build.py` refus
 | 13 | Adding or replacing project media | `C:\Teseract-media\<project>\` then `python scripts/prepare_media.py --src C:/Teseract-media` and `python scripts/build.py` | See `MEDIA-GUIDE.md`. Captured stills/videos for all projects live there (outside OneDrive). |
 | 15 | Approve the new functional labels from the mobile work | shown on the site | "Play", "Pause the video — (project name)", "Pause motion" / "Play motion", "Tap to enlarge", "Previous screen" / "Next screen" / "Close" (the still viewer), "Show the next (service) image" (screen readers). They are plain control labels, used until you say otherwise. |
 | 16 | One pass on a real iPhone | the live link | Checked in Edge's phone emulation only: the notch in landscape, autoplay refused in Low Power Mode (the PLAY pill), the tap washes on Contact. |
+| 17 | The black / white scroll on real phones (your request of 22 + 25 Oct) | the live link, every page | Every page opens black after the logo intro, then turns white, black, white as you scroll (`_ref/specs/DARK-THEME.md`, Client update 9). Checked in Edge at 390 / 834 / 1440 px, reduced motion, no JS, reload and Back. On a real mid-range Android and an iPhone, please check: the first change on the home page (it may pause at mid-grey for a moment on a slow phone, never with unreadable text), the address-bar colour following the page, the bounce at the top and bottom inside a black part, and a fast flick through the home page. Decide: Terms and the 404 are too short for three parts, so they end white above the black footer panel (or keep them black). Colour changes in `src/css` need no extra step: the build makes every neutral colour follow the tone in its own rule (`scripts/tone_codemod.py`). |
+| 18 | Your founder photo: the original, uncropped portrait (mobile audit, 21 Oct: FDR-01) | `C:/Teseract-media/_supplied/`, then `python scripts/prepare_supplied.py` and `python scripts/build.py` | Who We Are shows your photo from a 650 px wide cut of your poster (1122 × 1402 px), so phones draw it about 1.6–1.8 times its file size and it looks slightly soft there. Send the original portrait, at least 1200 px wide for the 4:5 cut, and phones get a sharp version (a 1300 px file). Until then it stays as it is: nothing is upscaled, no AI upscale. |
+| 19 | The second mobile round (21–26 Oct): the choices made for you | the live link (`_ref/specs/DARK-THEME.md`, "DONE 25 Oct (mobile run-2 fixes …)") | Used until you say otherwise: **(a)** the project videos and stills keep their full screen-reader descriptions (up to about 840 characters), or the scene videos get short labels and only the stills keep the long text (A11Y2-06); **(b)** the Who We Are monitor shows faintly (25 %) before its entrance instead of not at all, so phones count the page as loaded sooner (its largest image paints at once); **(c)** short desktop windows (landscape, 520 px tall or less) get the same compact hero as landscape phones, on every page; **(d)** What We Create's service list is always 4 + 4 on landscape phones and short windows (it was 5 + 3 there; no jump when the font loads); **(e)** on a landscape phone (844 × 390) the contact form's first field is below the first screen (showing it needs a landscape contact layout); **(f)** on a slow phone the Who We Are and home scroll is still less smooth than the target (page-wide work). The chat's own choices are in 3h. |
 
 ## Hosting notes
 
@@ -96,7 +99,10 @@ means setting two values, `site_url` and `indexable`, together. `build.py` refus
 
 ## Decisions already made with you
 
-- Brand spelling **TESERACT**; single typeface (Helvetica Neue → Inter Tight stand-in); black theme; header = logo + menu only.
+- Brand spelling **TESERACT**; single typeface (Helvetica Neue → Inter Tight stand-in); header = logo + menu only.
+- Black and white (22 + 25 Oct, replaces the all-black theme of 13 Oct): every page opens black after the logo intro,
+  then turns white, black, white as you scroll, on every page (like elokeglobal.com). The menu, the chat, the footer,
+  the Idea and FAQ panels and the 3D scenes stay black in both.
 - H1 line "Website design & development studio"; Reach **2M+**; approved micro-labels on What We Believe and A Different Kind of Agency.
 - Who We Are: H1 "who we are."; "Always." omitted; no stock people shown as the team.
 - One light typography everywhere (the "Your business is unique" style); 22 dark-theme audit fixes applied.
@@ -112,8 +118,9 @@ means setting two values, `site_url` and `indexable`, together. `build.py` refus
 - Mobile = desktop (your brief of 15 Oct): every page has the same content and features on phones, with touch versions
   of the hover effects; project screenshots open full screen when tapped (pinch to zoom, swipe between them); the
   galleries, marquees and videos have a pause control and other loops stop by themselves (the footer ring keeps turning
-  with no pause control: your decision of 18 Oct). The intro's shard echo stays off on phones. Final check of 20 Oct:
-  every page and project page passes the browser QA at 1440 / 834 / 390, with and without reduced motion.
+  with no pause control: your decision of 18 Oct). The intro's shard echo stays off on phones. Final check of 26 Oct
+  (after the second mobile round, with the chat repairs and the black / white scroll): every page and project page
+  passes the browser QA at 1440 / 834 / 390, with and without reduced motion.
 - Client Stories: an interactive client-reviews section with six client profiles (Aivinci, Geetha Jewellers, Derlin Haus,
   AeroSkys, SIAARA, Hidden Stories) and SAMPLE reviews until the real ones arrive (item 3c); never shown as
   search-engine review stars (no review structured data).

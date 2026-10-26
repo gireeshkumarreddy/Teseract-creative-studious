@@ -11,6 +11,7 @@ import re
 
 import lib
 from lib import E, fmt, CONFIG, ICONS, pill_label
+from tone import chapter, DARK
 from content import FAQ, CONTACT
 
 # Phosphor "Plus" (bold), exactly as the reference accordion icon.
@@ -85,7 +86,7 @@ def _item(i, q, a):
 
 def render(ctx):
     items = ''.join(_item(i, q, a) for i, (q, a) in enumerate(FAQ, 1))
-    return f'''<section class="home-faq section" id="faq" aria-labelledby="faq-title">
+    return f'''<section class="home-faq section" id="faq" aria-labelledby="faq-title"{chapter(DARK)}>
   <div class="faq__panel">
     <div class="faq__aside">
       <header class="faq__head">

@@ -9,6 +9,7 @@ CSS: src/css/35-contact.css (.ct-*). Footer CTA is suppressed for this page by c
 from lib import E, fmt, CONFIG, BRAND, ICONS, roll
 from content import CONTACT, CREATE, PRIMARY_CTA
 from pages.who import page_hero, mark3d, SEAL, DOTS
+from tone import chapter, LIGHT, PHONE
 
 EMAIL = CONFIG.get('email') or ''
 ENDPOINT = (CONFIG.get('form_endpoint') or '').strip()
@@ -184,6 +185,11 @@ def _hero(ctx):
     return page_hero(ctx, 'Contact', E(h['title']), extra=extra, cls='ct-hero')
 
 
+# the form is the white chapter: on phones from .15 screen past its top (the hero and the first fields open black); on
+# wider screens, where the form tops the first screen, its line sits higher (.2) for a real black opening
+FORM_CHAPTER = chapter(LIGHT, at=f'{PHONE} -.15, .2')
+
+
 def render(ctx):
     owner_note = ''
     if PLACEHOLDER:
@@ -192,7 +198,7 @@ def render(ctx):
                       'the form and the "Email us" button use it. -->')
     return f'''{_hero(ctx)}
 {owner_note}
-<section class="ct-sec" id="project-form" aria-labelledby="ct-form-title"{' data-config-email-placeholder="true"' if PLACEHOLDER else ''}>
+<section class="ct-sec" id="project-form" aria-labelledby="ct-form-title"{' data-config-email-placeholder="true"' if PLACEHOLDER else ''}{FORM_CHAPTER}>
   <div class="container">
     <div class="frame ct-frame" data-reveal style="--y:60px;--d:200ms">
       <div class="ct-grid">

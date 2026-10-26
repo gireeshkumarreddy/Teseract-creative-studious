@@ -622,3 +622,102 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   chips out of view) and hands it on when it goes. Files: src/chat/10-engine.js, 20-flow.js, 30-ui.js (trailing comments
   moved onto their own lines: the lazy bundle drops them), src/js/40-chat.js, src/css/40-chat.css, LAUNCH-CHECKLIST 3h
   (12), _tools/chat-corpus.json (241 lines, budget / nobudget checks), chat-test.cjs.
+
+## Client update 9 (22 + 25 Oct; live 25 Oct, finished 26 Oct): BLACK start, WHITE / BLACK on scroll, on EVERY page (supersedes the all-black base)
+- OWNER (22 Oct, verbatim): "http://elokeglobal.com/ In this website, there is a transition of the two colors like
+  white and black. Even here, I want that transition. ... If I scroll, it should turn to black. If I scroll, it should
+  turn to white and then black." OWNER (25 Oct): "I want you to follow that color thing in every page" and "in every
+  page, the first should be black color and then white" (this replaces the 22 Oct white start).
+- EVERY page opens BLACK after the logo intro (today's owner-approved black theme, unchanged: #000, ink #F4F4F2), then
+  scrolling fades the WHOLE page, edge to edge, to WHITE (#FFFFFF), back to BLACK, then WHITE ... (0.6 s, power1.out,
+  like the reference; the switch is the chapter that owns the middle of the screen, with a +-6vh band so a resting
+  finger never flaps the page). The white tone is the exact neutral mirror of the black theme (v -> 255 - v);
+  translucent text alpha >= .62 on white; red TEXT on white is --red-ink #C8151A (brand red #FB2629 stays for dots,
+  rules, focus, glows). Text, logo and cards swap in ONE frame at the balance grey (both inks >= 4.2:1 there, never
+  invisible); the fade holds at that grey on a slow phone instead of ever showing the wrong ink.
+- Chapters (marked in the page builders: data-chapter on the first section of each chapter, scripts/tone.py chapter();
+  the footer carries the closing mark): Home B hero + Idea / W services / B beliefs / W founder + agency / B FAQ +
+  footer. The Work B hero / W intro / B client work / W concepts ("not a client project" in the tone itself) / B case
+  study + CTA + footer. Who We Are B hero (full-bleed, as approved) / W founder / B studio + why / W philosophy + how we
+  think / B promise + footer. Project pages B head + scene / W gallery / B next project + footer. What We Create two
+  service rows per beat: B hero + rows 1-2 / W 3-4 / B 5-6 / W 7-8 + CTA / B footer. Our Approach on phones and tablets
+  B hero + steps 1-2 / W steps 3-5 / B steps 6-8 / W step 9 / B footer; on the desktop artboard B / W from .9 screen /
+  B footer. Client Stories B hero + Client Deck / W how it works / B leave a review + footer. Contact B hero / W the form
+  / B footer. Privacy B hero / W the text / B footer. Terms and the 404 are too short for three chapters: B, then W
+  above the always-black footer panel.
+- ALWAYS BLACK (islands, in both tones): the menu, the chat launcher and chat window, the footer, the Idea and FAQ
+  sheets, the 3D device scenes, the Who We Are hero, the founder frame and boards, controls and captions over media.
+- Reload / back: a page left inside a WHITE chapter paints white from the first frame when it is reloaded or reached
+  with Back (the head pre-paint in chrome.py reads the tone 96-tone.js keeps per page in sessionStorage 'ts-tone');
+  a fresh visit always opens black. The phone address bar (theme-color) follows the tone shown.
+- Reduced motion / Pause motion: the same chapters, the tone changes in one frame (no fade). No JavaScript: the black
+  site, readable. Forced colours: no veil, system colours. The logo intro, the one typeface (95-typography.css
+  untouched), the red accent, SEO, the chat and the motion toggle are unchanged.
+- Files: src/css/96-tone.css (tokens + islands + canvas/veil + hand fixes; its @tone-gen block is filled by the build),
+  src/js/96-tone.js (the controller), scripts/tone.py (the marks), scripts/tone_codemod.py (the colour transform the
+  BUILD applies to src/css: every neutral colour literal becomes its tone-aware token form IN PLACE, in its own rule),
+  build.py (bundle()), chrome.py (black-start metas, the pre-paint, the veil), chrome_footer.py and the page / section
+  builders (the marks), check.py tone_checks().
+- Guards (check.py): every page opens black (metas, the dark :root, the black canvas, the first mark dark), has the
+  pre-paint and the veil, its marks alternate with at least one white chapter at 390 / 834 / 1440 px and the footer
+  closes it; dist/styles.css is src/css through the build's colour transform and nothing is hand-written between the
+  @tone-gen markers; the white set is also on :root[data-tone=light] (the pre-paint); the tone layer sets no font
+  property.
+- Review repair (26 Oct): the first version appended a generated colour layer AFTER every file, which beat later rules
+  of the same specificity (the Our Approach NO label invisible in both tones, the contact form's red error border and a
+  pressed quick-answer chip's label lost, the AI node and the red Who We Are brackets recoloured, extra hairlines). The
+  build now tokenises in place: the black tone is again exactly the approved black site, rule for rule. Also fixed: a
+  reload / Back inside a white chapter painted near-white text until the scripts ran (the white set now wins on html);
+  a fast flick through a short white chapter no longer flashes grey or swaps the ink twice (a new tone starts only
+  when the scroll would stay in that chapter for .5 s, and the target is checked again before the ink swaps); the
+  desktop no longer restyles the whole page at each switch (the root colour scheme stays dark; the page scrollbar is a
+  neutral grey thumb on a clear track in both tones); only the sections ON the screen swap in the fade's balance frame,
+  the rest in quiet moments (no scroll for .22 s) or just before they scroll into view.
+- RULES for later work: do NOT revert to an all-black site; colours are written as usual in the component files (the
+  build makes them follow the tone; never add a colour layer between the @tone-gen markers); a white label on a
+  coloured fill (blue, red) must stay white in both tones: add it to the hand fixes of 96-tone.css (the Our Approach
+  YES label precedent); do not give a section an opaque page-coloured background (it hides the fade: the Our Approach
+  plate precedent); mark chapters only with tone.chapter() on real sections, never inside a sticky area, the Client
+  Deck, the contact form or the desktop Approach artboard.
+- Open owner decisions: Terms / 404 end white above the black footer panel (or: stay black, no white chapter there);
+  pure white #FFFFFF (or a soft #F4F4F2 page with white cards: one token); the chat window stays black on both tones (a
+  light one needs a chat CSS budget raise); a real mid Android + iPhone pass (the first home flip can hold at mid-grey
+  for up to ~0.3-0.7 s on a slow phone; address-bar colour; rubber-band at both ends).
+- DONE 25 Oct (mobile run-2 fixes, chat repair, tone polish; integration pass 26 Oct): the 20-21 Oct mobile audit run 2
+  (32 issues; plan fix-plan-2.json, 7 groups) is fixed and verified, together with the chat repair rounds (the bullets
+  above) and the white / black scroll polish (Client update 9), in one build. G1 core: no forced layout in app.js's
+  first task (the reveals' end check, the agency drift); a refused autoplay turns the motion toggle to "Play motion"
+  (WCAG 2.2.2). G2 Who We Are / Our Approach: the hero monitor's starter + CSS fail-safe (no replay on a slow
+  connection), the circuit rail and leaders on every layout under 1200 px, board C one panel on phones, the founder
+  roles stacked in landscape, no lone last word in the notes and the who-box, the H2's braces silent, the clock's
+  formatters made only as it nears the screen, the globe clear of the tag box at 320. G3 projects + The Work: every
+  still-viewer link named (the scene-still heroes by their alt), the landscape viewer's controls in a right-edge column,
+  one image in the viewer's accessibility tree, a compact landscape project head, Geetha Jewellers' hero phone screen
+  opens the viewer on phones (11 stills there, 10 on desktop), larger chip taps, the marquee fades before its Pause
+  button, The Work's landscape hero (also in short desktop windows, like the other pages), the viewer's Close button
+  white again. G4 home + footer: the footer services in two groups (Web Design · Development · E-commerce / Interactive
+  · Branding · Product · AI; a line each on phones, 44 px touch rows, aria-hidden dots), the tile pills in the name
+  strip on touch with the industry line under the name, "e-commerce" kept whole in the FAQ, a one-line 44 px landscape
+  H1 (tighter on 360-380 px tall screens), the VYRN tile and ring card and the E-commerce back print framed on the
+  model, the footer clock made when the footer first shows, Tab focus no longer blanks a touch tile's strip, the
+  landscape statement pill rolls inside its slot. G5 founder: the restore box's count row at its foot on phones and
+  short landscape (on screen when the auto-restore fires), the home teaser's roles stacked, the bio's short line gone,
+  the portrait requested early at low priority. G6 What We Create + contact: the landscape H1 and the service index
+  always 4 + 4 (no font-swap shift), contact's chips a two-column grid under 380 px (one per row under 320, ticks never
+  squashed). G7: check.py mobile_guards() fails a still-viewer link without a name of its own, a hyphenated word of an
+  h1-h3 or FAQ question outside a nowrap span, and a footer services row whose dots are not aria-hidden or that is not
+  the two groups (15 broken copies caught, the real build clean). Integration (26 Oct, one build): build.py 39 routes,
+  check.py 0 errors (the 3 known warnings); qa.cjs on all 39 routes at 1440 / 834 / 390: 117 checks, 0 problems, and 0
+  with reduced motion; font-check Inter Tight only; no JS: nothing hidden, one H1 (home, work, vyrn, sagewell at 1440 /
+  390); the contact form link lands on the form (390 and 1440); the viewer opens with its white Close inside a white
+  chapter; 390 and 1440 walks of the 10 main pages and 6 project pages in both tones (300 frames, 142 of them white; 0
+  console errors, no sideways scroll) looked at: nothing broken by the combination, no change needed. Perf (390@3, 4x
+  CPU, 9 / 1.5 Mbps, median of 3; run 2 in brackets; the host benchmark 44 vs 41 ms): home with the intro LCP 1512
+  (1784) ms, TBT 1430 (2901) ms, intro end 4719 (5504) ms, scroll p90 50 (67) ms, CLS 0; home ?intro=0 LCP 1388 (1460),
+  TBT 536 (1214); The Work LCP 1272 (1508), TBT 340 (1082), scroll p90 17 (17), CLS 0; Who We Are LCP 1284 (5504), TBT
+  360 (1499), scroll p90 17 (50), CLS 0; bytes at settle 1914 / 1077 / 1048 KB (1875 / 974 / 945). Still with the owner
+  (LAUNCH-CHECKLIST 18, 19): the founder's original portrait (FDR-01; the 650 px cut stays, no AI upscale), the long
+  screen-reader descriptions (A11Y2-06, default keep), the Who We Are monitor resting at 25 % before its entrance, short
+  desktop windows getting the compact heroes, What We Create's 4 + 4 index in landscape, contact's first field below the
+  first view at 844 x 390, the scroll smoothness targets on a slow phone (PERF2-03 / PERF2-04: page-wide style and layer
+  cost), defaults 2-11, a real iPhone and mid Android pass.

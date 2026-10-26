@@ -506,14 +506,15 @@ def info(ctx, s, *, hid, tag='h3', number=False, total=8, note=False, cta=False)
             f'{chips(s["tags"])}{_cta(ctx, s) if cta else ""}</div>')
 
 
-def row(ctx, s, *, tag='h3', flip=False, number=False, note=False, stack=False, anchor=False, cta=False, reveal=True):
-    """Large framed row: info card + image card (reference rows 1-2)."""
+def row(ctx, s, *, tag='h3', flip=False, number=False, note=False, stack=False, anchor=False, cta=False, reveal=True, mark=''):
+    """Large framed row: info card + image card (reference rows 1-2). mark: a chapter mark (scripts/tone.py: What We
+    Create turns white / black every two rows)."""
     sid = slug(s['name'])
     hid = f'svc-{sid}-title'
     rid = f' id="{sid}"' if anchor else ''
     rev = ' data-reveal style="--y:60px"' if reveal else ''
     mods = (' svc-row--flip' if flip else '') + (' svc-row--cta' if cta else '')
-    return (f'<article class="svc-frame svc-row{mods}"{rid} aria-labelledby="{hid}"{rev}>'
+    return (f'<article class="svc-frame svc-row{mods}"{rid} aria-labelledby="{hid}"{rev}{mark}>'
             f'{info(ctx, s, hid=hid, tag=tag, number=number, note=note, cta=cta)}{media(ctx, s, stack=stack)}</article>')
 
 

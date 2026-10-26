@@ -7,6 +7,7 @@ service). Terms are a placeholder until the studio publishes its own. CSS: src/c
 from lib import E, fmt, CONFIG, BRAND, ICONS, button
 from content import PRIMARY_CTA
 from pages.who import page_hero, mark3d, flat_mark, SEAL, DOTS
+from tone import chapter, DARK, LIGHT
 
 EMAIL = CONFIG.get('email') or ''
 PLACEHOLDER = bool(CONFIG.get('email_is_placeholder'))
@@ -31,7 +32,8 @@ def _doc(ctx, blocks, *, aside=''):
         f'<section class="lg-block" aria-labelledby="lg-{i}" data-reveal style="--y:40px">'
         f'<h2 class="lg-block__t" id="lg-{i}">{E(t)}</h2>{body}</section>'
         for i, (t, body) in enumerate(blocks, 1))
-    return (f'<div class="lg-body"><div class="container"><div class="frame lg-frame" data-reveal style="--y:60px;--d:200ms">'
+    # the text is the white chapter, from .3 screen past its top (the hero opens black)
+    return (f'<div class="lg-body"{chapter(LIGHT, at=-.3)}><div class="container"><div class="frame lg-frame" data-reveal style="--y:60px;--d:200ms">'
             f'<article class="card lg-card">{DOTS}{aside}{items}</article></div></div></div>')
 
 
@@ -90,7 +92,7 @@ def terms(ctx):
 def notfound(ctx):
     lead = f'<span class="nf-lead">{flat_mark("nf-lead__mark")}</span>'
     zero = f'<span class="nf-zero">{mark3d(ctx, "nf-zero__img", 220, eager=True)}</span>'
-    return f'''<section class="nf" aria-labelledby="page-title">
+    return f'''<section class="nf" aria-labelledby="page-title"{chapter(DARK)}>
   <div class="container nf__inner">
     <h1 class="nf__code" id="page-title" data-reveal style="--y:80px;--d:120ms">
       <span class="sr-only">404, page not found</span>

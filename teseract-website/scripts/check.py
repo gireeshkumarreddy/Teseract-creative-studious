@@ -22,7 +22,11 @@ name as one screen-reader text and the restore toggles' accessible-name spacing;
 request, 18 Oct; docs/SEO.md): the launch switch (indexable only with an https site_url, no CNAME before launch), robots
 (noindex,nofollow + robots.txt Disallow while not indexable), one self canonical = og:url, absolute https share images,
 directory links and sitemap.xml = the indexable pages once site_url is set, absolute URLs only from site_url, unique
-titles and descriptions, no address / telephone / geo in the JSON-LD, the project summaries.
+titles and descriptions, no address / telephone / geo in the JSON-LD, the project summaries; the mobile run-2 guards
+(mobile_guards: every still-viewer link named, hyphenated words in headings and FAQ questions kept whole, the footer's
+service words in their two groups with aria-hidden dots); the white/black scroll (owner,
+22 + 25 Oct: every page opens black, then white / black on scroll): the tone files, the black start, the pre-paint and
+the veil, the chapter marks of every page, the build's in-place colour transform in styles.css (tone_checks).
 
     python scripts/check.py [--dist DIR]
 
@@ -1492,10 +1496,262 @@ def chat_checks():
         errors.append('robots.txt: a launch build must disallow /assets/chat (the chat code and knowledge base are not pages)')
 
 
+# ---------------------------------------------------------------- mobile audit run 2 (group 7 guards, 21-26 Oct)
+# A11Y2-01: a still-viewer link (a[data-zoom]) has a name of its own - an aria-label (or aria-labelledby), or the alt of
+# its own image with no <figure> inside the link (a figure in the link left the VYRN, Mahira Select and cinematic heroes
+# read as just "link"; project.py hero() labels them with the still's alt). TYPO-R2-01: a hyphenated word in a heading
+# (h1-h3) or a FAQ question sits in a nowrap span (a class the stylesheet sets white-space:nowrap outside any @media,
+# such as .faq-item__nw), so a phone never breaks it as "e-" / "commerce"; a heading of that one word alone is exempt
+# (it breaks only where it cannot fit, and nowrap would overflow there). PAR2-02: the footer's service words are the
+# two groups of chrome_footer.FOOTER_SPLIT (a line each on phones, so no line ends on a dot) joined by one dot, every
+# dot an aria-hidden span (screen readers read "Services:" and the links, never "dot").
+HYPHENATED = re.compile(r'[^\W_]-[^\W_]')
+
+
+def _nowrap_classes(text):
+    """Classes a lone-class rule of the stylesheet sets white-space:nowrap in, outside any @media / @supports block."""
+    out, depth, start, sel, body = set(), 0, 0, '', 0
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.S)
+    for m in re.finditer(r'[{}]', text):
+        if m.group(0) == '{':
+            if depth == 0:
+                sel, body = text[start:m.start()].strip(), m.end()
+            depth += 1
+            continue
+        depth -= 1
+        if depth == 0:
+            if not sel.startswith('@') and re.search(r'white-space\s*:\s*nowrap', text[body:m.start()]):
+                out.update(s.strip()[1:] for s in sel.split(',') if re.fullmatch(r'\.[\w-]+', s.strip()))
+            start = m.end()
+    return out
+
+
+class HyphenBreaks(HTMLParser):
+    """The visible text of every h1-h3 and FAQ question (.faq-item__q), hyphens inside a nowrap span masked; found =
+    [(what, text)] where a hyphenated word can still break at its hyphen."""
+
+    def __init__(self, nowrap):
+        super().__init__()
+        self.nowrap, self.stack, self.open, self.found = nowrap, [], [], []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in VOID:
+            return
+        a = dict(attrs)
+        cls = set((a.get('class') or '').split())
+        up = self.stack[-1] if self.stack else (None, False, False)
+        whole = up[1] or bool(cls & self.nowrap) or 'white-space:nowrap' in (a.get('style') or '').replace(' ', '')
+        unseen = up[2] or 'sr-only' in cls or 'hidden' in a
+        self.stack.append((tag, whole, unseen))
+        if tag in ('h1', 'h2', 'h3') or 'faq-item__q' in cls:
+            self.open.append([f'<{tag}>' if tag in ('h1', 'h2', 'h3') else 'FAQ question', [], len(self.stack)])
+
+    def handle_endtag(self, tag):
+        if tag in VOID or not any(t == tag for t, _, _ in self.stack):
+            return
+        while self.stack.pop()[0] != tag:
+            pass
+        while self.open and self.open[-1][2] > len(self.stack):
+            what, parts, _ = self.open.pop()
+            text = ''.join(parts)
+            if len(text.split()) > 1 and HYPHENATED.search(text):
+                self.found.append((what, ' '.join(text.replace('\x00', '-').split())))
+
+    def handle_data(self, data):
+        if not self.stack or self.stack[-1][2]:
+            return
+        for o in self.open:
+            o[1].append(data.replace('-', '\x00') if self.stack[-1][1] else data)
+
+
+def mobile_guards():
+    import chrome_footer
+    from content import FOOTER
+    nowrap = _nowrap_classes(css)
+    words = [_h.unescape(w) for w in FOOTER['services']]
+    want = [words[:chrome_footer.FOOTER_SPLIT], words[chrome_footer.FOOTER_SPLIT:]]
+    for rel, html in page_html.items():
+        for m in re.finditer(r'<a\b([^>]*\sdata-zoom(?![\w-])[^>]*)>(.*?)</a>', html, re.S):
+            attrs, inner = m.groups()
+            if re.search(r'\saria-label(?:ledby)?="[^"]*\S[^"]*"', attrs):
+                continue
+            img = re.search(r'<img\b(?![^>]*\saria-hidden="true")[^>]*\salt="([^"]*)"', inner)
+            if '<figure' in inner or not img or not img.group(1).strip():
+                href = re.search(r'\shref="([^"]*)"', attrs)
+                errors.append(f'{rel}: still-viewer link {href.group(1) if href else ""} has no name of its own (A11Y2-01): '
+                              'give it aria-label = the still\'s alt, or keep its <img alt> outside a <figure>')
+        hb = HyphenBreaks(nowrap)
+        hb.feed(re.sub(r'<(script|style|template)\b.*?</\1>', '', html, flags=re.S))
+        for text, what in {t: w for w, t in reversed(hb.found)}.items():   # once per text (a FAQ question is in an h3)
+            errors.append(f'{rel}: {what} "{text[:60]}" can break a hyphenated word at its hyphen on a phone (TYPO-R2-01): '
+                          'wrap the word in a nowrap span (e.g. <span class="faq-item__nw">)')
+        row = re.search(r'<p class="ft-bar__services">(.*?)</p>', html, re.S)
+        if not row:
+            errors.append(f'{rel}: no footer services row (p.ft-bar__services, chrome_footer._services)')
+            continue
+        row = row.group(1)
+        seps = re.findall(r'<span class="ft-bar__sep(?: ft-bar__sep--join)?"([^>]*)>[^<]*</span>', row)
+        bare = re.sub(r'<span class="ft-bar__sep(?: ft-bar__sep--join)?" aria-hidden="true">[^<]*</span>|<span class="sr-only">[^<]*</span>', '', row)
+        if any('aria-hidden="true"' not in a for a in seps) or '·' in _h.unescape(re.sub(r'<[^>]+>', '', bare)):
+            errors.append(f'{rel}: a footer service dot is not an aria-hidden <span class="ft-bar__sep"> (PAR2-02: '
+                          'screen readers read "Services:" and the links, never "dot")')
+        parts = re.split(r'<span class="ft-bar__sep ft-bar__sep--join" aria-hidden="true">[^<]*</span>',
+                         re.sub(r'^\s*<span class="sr-only">[^<]*</span>', '', row))
+        got = []
+        for part in parts:
+            g = re.fullmatch(r'\s*<span class="ft-bar__grp">(.*)</span>\s*', part, re.S)
+            items = re.split(r'<span class="ft-bar__sep" aria-hidden="true">[^<]*</span>', g.group(1)) if g else [part]
+            got.append([_h.unescape(re.sub(r'<[^>]+>', '', x)).strip() for x in items])
+        if got != want:
+            errors.append(f'{rel}: the footer services row must be the two groups {" · ".join(want[0])} | '
+                          f'{" · ".join(want[1])} (span.ft-bar__grp, joined by one ft-bar__sep--join; PAR2-02), got {got}')
+
+
+# ---------------------------------------------------------------- the white/black scroll (owner, 22 + 25 Oct)
+# Every page opens BLACK after the logo intro, then turns WHITE / BLACK / WHITE ... on scroll, on every page (like
+# elokeglobal.com; DARK-THEME.md "Client update 9"). Guards: the tone files are built in; the black start (metas, the
+# dark :root set, the black canvas); the reload / back pre-paint and the veil in every page; the chapter marks of the
+# page builders (scripts/tone.py: first mark dark, no two same-tone marks in a row but the footer's, at least one light
+# chapter, the footer closes) at 390, 834 and 1440 px wide; dist/styles.css = src/css through the build's in-place colour
+# transform (scripts/tone_codemod.py: every neutral literal tone-aware in its own place in the cascade; review 26 Oct: an
+# appended override layer beat later rules) and no hand-written layer between the @tone-gen markers; the light set also
+# on :root[data-tone=light] (the pre-paint); no font property in the tone layer (95-typography.css decides).
+TONE_WIDTHS = (390, 834, 1440)
+TONE_MARK = re.compile(r'<(\w+)\b([^>]*\sdata-chapter="[^"]*"[^>]*)>')
+
+
+def _tone_mq(mq, width):
+    """True / False for a (min-width:Npx) / (max-width:Npx) query (joined by 'and') at a viewport width; None if the
+    query uses anything else (the marks use widths only)."""
+    ok = True
+    for part in re.split(r'\s+and\s+', mq.strip()):
+        m = re.fullmatch(r'\(\s*(min|max)-width\s*:\s*([\d.]+)px\s*\)', part.strip())
+        if not m:
+            return None
+        v = float(m.group(2))
+        ok = ok and (width >= v if m.group(1) == 'min' else width <= v)
+    return ok
+
+
+def _tone_at(value):
+    """A data-chapter-at value: a number or a sizes-like list '(mq) n, (mq) n, n'. -> list of (mq or None, n), or None."""
+    out = []
+    for part in value.split(','):
+        m = re.fullmatch(r'\s*(?:(\(.*\))\s+)?(-?\d*\.?\d+)\s*', part)
+        if not m:
+            return None
+        out.append((m.group(1), float(m.group(2))))
+    return out
+
+
+def tone_checks():
+    import tone_codemod
+    tone_css_f, tone_js_f = ROOT / 'src/css/96-tone.css', ROOT / 'src/js/96-tone.js'
+    if not tone_css_f.exists() or not tone_js_f.exists():
+        errors.append('the white/black scroll files src/css/96-tone.css + src/js/96-tone.js are missing (owner, 22 + 25 Oct)')
+        return
+    tcss = tone_css_f.read_text(encoding='utf-8').replace('\r\n', '\n')
+    tjs = tone_js_f.read_text(encoding='utf-8')
+    app = (DIST / 'app.js').read_text(encoding='utf-8') if (DIST / 'app.js').exists() else ''
+    if '.tone-veil{' not in css or '[data-tone=light]{' not in css or 'window.TSTone' not in app:
+        errors.append('dist styles.css / app.js do not carry the tone layer (96-tone.css / 96-tone.js): rebuild')
+    # the black start: :root = the dark set (+ the always-dark islands), the light set on [data-tone=light], black canvas
+    dark = re.search(r':root,\[data-tone=dark\],([^{]*)\{([^}]*)\}', tcss)
+    light = re.search(r'\n:root\[data-tone=light\],\[data-tone=light\]\{([^}]*)\}', tcss)
+    if not dark or '--bg:#000' not in dark.group(2) or '--ink:#f4f4f2' not in dark.group(2):
+        errors.append('96-tone.css: :root must carry the DARK set (--bg:#000, --ink:#f4f4f2): every page opens black (owner, 25 Oct)')
+    else:
+        isl = set(re.sub(r'\s+', '', dark.group(1)).split(','))
+        for need in ('.menu', '.cc', '.cc-dlg', '.site-footer', '.scn', '.idea.section', '.home-faq', '.who-hero'):
+            if need not in isl:
+                errors.append(f'96-tone.css: {need} is no longer an always-dark island (the dark set\'s selector list)')
+    if not light or '--bg:#ffffff' not in light.group(1) or '--ink:#0b0b0b' not in light.group(1):
+        errors.append('96-tone.css: ":root[data-tone=light],[data-tone=light]{" must carry the white chapters\' set '
+                      '(--bg:#ffffff, --ink:#0b0b0b); :root[data-tone=light] lets the reload pre-paint beat the dark :root')
+    elif dark and light.start() > dark.start():
+        errors.append('96-tone.css: the light set must come before the dark :root set (the islands win over light units)')
+    if '\nhtml{background:#000}' not in tcss:
+        errors.append('96-tone.css: the canvas must start black (html{background:#000}; data-canvas=light turns it white)')
+    if re.search(r'(?<![-\w])font(-family|-weight|-size|-style)?\s*:', re.sub(r'/\*.*?\*/', '', tcss, flags=re.S)):
+        errors.append('96-tone.css sets a font property (the typography layer, 95-typography.css, decides)')
+    for k in ('prefers-reduced-motion', 'forced-colors', "'ts-tone'", 'data-canvas', 'getAttribute(\'data-chapter-mq\')'):
+        if k not in tjs:
+            errors.append(f'src/js/96-tone.js no longer handles {k} (reduced motion = instant, forced colours, pre-paint memory, marks)')
+    if 'MAPS' in tjs:
+        errors.append('src/js/96-tone.js has a chapter map again: the page builders mark the chapters (scripts/tone.py)')
+    # the colour transform: the build tokenises src/css in place; nothing hand-written between the @tone-gen markers
+    gen = tone_codemod.block(tcss)
+    if gen is None or gen:
+        errors.append('src/css/96-tone.css: keep the empty "/* @tone-gen begin ... */ /* @tone-gen end */" block (the build '
+                      'fills it); a colour layer appended there beats later rules of the same specificity (review 26 Oct)')
+    else:
+        import importlib
+        try:
+            bld = importlib.import_module('build')
+            want = bld.minify_css(bld.bundle(ROOT / 'src/css', '')).strip()
+        except SystemExit as ex:
+            want = None
+            errors.append(f'the tone colour transform failed: {ex}')
+        if want is not None and want not in css:
+            errors.append('dist/styles.css is not src/css through the tone colour transform (scripts/tone_codemod.py): '
+                          'rebuild (python scripts/build.py)')
+    # every page: black-start metas, pre-paint, veil, marks
+    for rel, html in page_html.items():
+        head = html.split('</head>', 1)[0]
+        if '<meta name="theme-color" content="#000000">' not in head or '<meta name="color-scheme" content="dark">' not in head:
+            errors.append(f'{rel}: the head must open black (theme-color #000000, color-scheme dark)')
+        if "'ts-tone'" not in head or 'data-canvas' not in head:
+            errors.append(f'{rel}: the head script lost the white/black pre-paint (sessionStorage ts-tone, data-canvas)')
+        if html.count('class="tone-veil"') != 1 or not re.search(
+                r'<a class="skip-link"[^>]*>[^<]*</a>\s*<div class="tone-veil" aria-hidden="true"></div>', html):
+            errors.append(f'{rel}: expected one <div class="tone-veil" aria-hidden="true"></div> directly after the skip link')
+        if 'data-tone=' in re.sub(r'<script\b.*?</script>', '', html, flags=re.S):
+            errors.append(f'{rel}: a data-tone attribute in the markup (96-tone.js sets the tone units; marks are data-chapter)')
+        page = re.search(r'<body class="page-([\w-]+)"', html)
+        page = page.group(1) if page else ''
+        marks = []
+        for tag, attrs in TONE_MARK.findall(html):
+            a = dict(re.findall(r'\s(data-chapter(?:-at|-mq)?)="([^"]*)"', attrs))
+            t, at, mq = a.get('data-chapter'), a.get('data-chapter-at'), a.get('data-chapter-mq')
+            cls = re.search(r'class="([^"]*)"', attrs)
+            name = f'<{tag} {cls.group(1) if cls else ""}>'
+            if t not in ('dark', 'light'):
+                errors.append(f'{rel}: chapter mark {name} data-chapter="{t}" (dark or light)')
+                continue
+            if at is not None and _tone_at(_h.unescape(at)) is None:
+                errors.append(f'{rel}: chapter mark {name} data-chapter-at="{at}" is not a number or a sizes-like list')
+            marks.append((name, t, _h.unescape(mq) if mq else None, 'id="footer"' in attrs))
+        if not marks:
+            errors.append(f'{rel}: no chapter marks (data-chapter): every page opens black and turns white on scroll')
+            continue
+        if not marks[-1][3]:
+            errors.append(f'{rel}: the footer must carry the closing chapter mark (chrome_footer.py, tone.footer_tone)')
+        elif marks[-1][1] != ('light' if page == 'notfound' else 'dark'):
+            errors.append(f'{rel}: the footer closes the page {marks[-1][1]} (want dark; light on the 404 only)')
+        for w in TONE_WIDTHS:
+            seq = []
+            for name, t, mq, foot in marks:
+                hit = _tone_mq(mq, w) if mq else True
+                if hit is None:
+                    errors.append(f'{rel}: chapter mark {name} data-chapter-mq="{mq}" (only (min|max-width:Npx) queries)')
+                    hit = False
+                if hit:
+                    seq.append((name, t, foot))
+            if not seq or seq[0][1] != 'dark':
+                errors.append(f'{rel}: at {w}px the first chapter mark is not dark (every page opens black, owner 25 Oct)')
+            for (n0, t0, _), (n1, t1, f1) in zip(seq, seq[1:]):
+                if t0 == t1 and not f1:
+                    errors.append(f'{rel}: at {w}px two {t0} chapter marks in a row ({n0}, {n1}): the chapters alternate')
+            if not any(t == 'light' for _, t, _ in seq):
+                errors.append(f'{rel}: at {w}px no light chapter mark (every page turns white on scroll)')
+
+
 TYPO_SHA1 = '6f2d00f1c798c572bdedbecbefbbf73350e2d2ab'
 if hashlib.sha1((ROOT / 'src/css/95-typography.css').read_bytes()).hexdigest() != TYPO_SHA1:
     errors.append('src/css/95-typography.css changed (owner: one typography layer, never edited)')
 chat_checks()
+mobile_guards()
+tone_checks()
 
 report_file = lib.build_report_path(DIST)
 report = json.loads(report_file.read_text(encoding='utf-8')) if report_file.exists() else {}

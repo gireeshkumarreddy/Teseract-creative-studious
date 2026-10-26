@@ -27,6 +27,7 @@ import content
 import projects as P
 from pages.work import tile, lead_mark, caps
 from sections.service_cards import slug
+from tone import chapter, DARK, LIGHT
 
 W = content.WORK
 
@@ -109,7 +110,7 @@ def head(ctx, p):
             f'<span class="pj-back__icon" aria-hidden="true">{ICONS["arrow-r"]}</span>{roll("All work")}</a>')
     # .pj-head__id holds label line, name and facts as one block (no style of its own): a phone held sideways sets the
     # summary beside it (36-project.css, landscape)
-    return f'''<section class="pj-head" aria-labelledby="pj-title">
+    return f'''<section class="pj-head" aria-labelledby="pj-title"{chapter(DARK)}>
   <div class="container">
     <nav class="pj-head__bar" aria-label="Case study" data-reveal="fade">
       {back}
@@ -254,7 +255,7 @@ def media_gallery(ctx, p, *, skip=None, lead=None):
             frames.append(_phones(ctx, bands.pop(0), hint, copy))
     for band in bands:
         frames.append(_phones(ctx, band, hint, copy))
-    return (f'<section class="pj-gallery-wrap" aria-label="{E(p["title"])} project gallery">'
+    return (f'<section class="pj-gallery-wrap" aria-label="{E(p["title"])} project gallery"{chapter(LIGHT)}>'
             f'<div class="pj-gallery">{"".join(frames)}</div></section>')
 
 
@@ -292,8 +293,8 @@ def next_block(ctx, p):
       <div class="pj-next__btns">{btns}</div>
     </div>'''
     if not nxt:
-        return f'<section class="pj-next section"><div class="container pj-next__grid">{cta}</div></section>'
-    return f'''<section class="pj-next section" aria-labelledby="pj-next-title">
+        return f'<section class="pj-next section"{chapter(DARK)}><div class="container pj-next__grid">{cta}</div></section>'
+    return f'''<section class="pj-next section" aria-labelledby="pj-next-title"{chapter(DARK)}>
   <div class="container pj-next__grid">
     <div class="pj-next__head">
       <p class="pj-next__label" data-reveal>Next project <span aria-hidden="true">—</span> {k:02d} / {total:02d}</p>
