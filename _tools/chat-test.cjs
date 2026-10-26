@@ -29,6 +29,10 @@ corpus.forEach(it => {
     const sl = m.a.sl;
     Object.keys(it.slots).forEach(k => { if (sl[k] !== it.slots[k]) fail(`slot ${k} of "${it.q}": ${sl[k]} (want ${it.slots[k]})`); });
   }
+  // (26 Oct) a price said back, a rate or a payment question is no budget; an offered sum is
+  const bu = m.a && m.a.sl && m.a.sl.budget;
+  if (it.nobudget && bu) fail(`"${it.q}" saved a budget: ${JSON.stringify(bu)}`);
+  if (it.budget && (!bu || bu.amount !== it.budget)) fail(`"${it.q}" budget ${JSON.stringify(bu)} (want ${it.budget})`);
 });
 let n = 0, ok = 0;
 Object.keys(byCat).forEach(k => {

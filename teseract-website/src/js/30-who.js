@@ -27,6 +27,10 @@
     const motion = TS.motion ? TS.motion() : false;
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
     const lerp = (a, b, t) => a + (b - a) * t;
+    // one eased step towards a target; within eps (a fraction of a pixel / degree on screen) it lands on the target, so
+    // the loop stops a few dozen frames sooner than an endless approach would (each frame that moves anything costs a
+    // full re-layerization of this long page, PERF2-03) and the settled value is the target itself
+    const ease = (v, to, t, eps) => { const n = lerp(v, to, t); return Math.abs(n - to) < eps ? to : n; };
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
     const desktop = matchMedia('(min-width: 1024px)');
 
@@ -171,7 +175,8 @@
     }
 
     /* ---------- hero entrance: without the intro the inline starter after the hero (pages/who.py, .who-hero--cued)
-       normally runs it before app.js; this path is the fallback and the intro session's */
+       normally runs it before app.js; this path is the fallback and the intro session's. Played once: never replayed
+       over a hero the CSS fail-safe has already shown */
     const hero = document.querySelector('[data-who-hero]');
     if (hero) {
       if (!motion) hero.classList.add('is-on');
@@ -181,11 +186,21 @@
         let done = false;
         // the entrance waits for the intro stage to lift (01-intro.js; immediate without an intro)
         const go = () => { if (done) return; done = true; TS.afterIntro(() => requestAnimationFrame(() => requestAnimationFrame(show))); };
-        // late script, no starter: the CSS fail-safe fade (30-who.css, from 1 s) may already show the hero; show it in
-        // the same style change that ends it (html.is-ready, this task), so nothing drops back and replays
-        const now = document.timeline && document.timeline.currentTime;
-        if (now != null && now > 900 && !hero.classList.contains('who-hero--cued') && !TS.intro.held()) { done = true; show(); }
-        else if (im && !im.complete && im.decode) { im.decode().then(go, go); setTimeout(go, 900); } else go();
+        // late script, no starter: the CSS fail-safe (30-who.css; from 1 s, or 5 s in an intro session) may already be
+        // showing the hero. Then it finishes and the hero is kept as shown (.who-hero--shown: no transitions), so nothing
+        // drops back and replays; before it begins, .who-hero--cued ends it and the entrance runs as usual
+        const safe = !hero.classList.contains('who-hero--cued') && im && im.getAnimations
+          ? im.getAnimations().find(a => a.animationName === 'who-failsafe') : null;
+        const timing = safe && safe.effect && safe.effect.getComputedTiming();
+        if (timing && timing.progress > 0) {
+          done = true;
+          const keep = () => { if (!hero.classList.contains('is-on')) hero.classList.add('who-hero--shown', 'is-on'); };
+          safe.finished.then(keep, keep);
+          setTimeout(keep, 700);   // paused (off screen): never left half shown
+        } else {
+          hero.classList.add('who-hero--cued');
+          if (im && !im.complete && im.decode) { im.decode().then(go, go); setTimeout(go, 900); } else go();
+        }
         new IntersectionObserver(([e]) => hero.classList.toggle('is-off', !e.isIntersecting)).observe(hero);
       }
     }
@@ -232,12 +247,12 @@
         // hero - the monitor turns a little and its top leans back as it rises (P-08)
         const useScroll = !finePointer.matches;
         const tx = usePtr ? pointer.x : useScroll ? p * 0.7 : 0, ty = usePtr ? pointer.y : useScroll ? -p : 0;
-        s.px = lerp(s.px || 0, tx, 0.08); s.py = lerp(s.py || 0, ty, 0.08);
+        s.px = ease(s.px || 0, tx, 0.08, 0.02); s.py = ease(s.py || 0, ty, 0.08, 0.02);   // 0.02 = 0.2px of the light, 0.05deg
         mon.style.transform = `translate3d(0,${(-40 * p).toFixed(2)}px,0) scale(${(1 - 0.06 * p).toFixed(4)})`;
         tilt.style.transform = `perspective(1400px) rotateX(${(-s.py * 2.5).toFixed(3)}deg) rotateY(${(s.px * 2.5).toFixed(3)}deg) translate3d(${(s.px * 6).toFixed(2)}px,${(s.py * 6).toFixed(2)}px,0)`;
         light.style.transform = `translate3d(${(-s.px * 10).toFixed(2)}px,${(30 * p - s.py * 10).toFixed(2)}px,0)`;
         disp.style.transform = `translate3d(0,${(-36 * p).toFixed(2)}px,0)`;
-        return Math.abs(s.px - tx) > 0.003 || Math.abs(s.py - ty) > 0.003;   // < 0.03 px / 0.01deg from rest: stop
+        return s.px !== tx || s.py !== ty;
       });
     }
 
@@ -257,9 +272,9 @@
         // reads as a pane floating in front rather than a grey patch
         const fine = finePointer.matches;
         const tx = fine ? pointer.x * 6 : c * -5, ty = fine ? pointer.y * 6 : c * 9;
-        s.gx = lerp(s.gx || 0, tx, 0.08); s.gy = lerp(s.gy || 0, ty, 0.08);
+        s.gx = ease(s.gx || 0, tx, 0.08, 0.2); s.gy = ease(s.gy || 0, ty, 0.08, 0.2);   // px
         glass.style.transform = `translate3d(${s.gx.toFixed(2)}px,${s.gy.toFixed(2)}px,0)`;
-        return Math.abs(s.gx - tx) > 0.04 || Math.abs(s.gy - ty) > 0.04;
+        return s.gx !== tx || s.gy !== ty;
       });
     });
 
@@ -275,10 +290,10 @@
       }, it => {
         const s = it.s;
         const target = -20 + 40 * s.p;
-        s.a = s.a == null ? target : lerp(s.a, target, 0.1);
+        s.a = s.a == null ? target : ease(s.a, target, 0.1, 0.02);
         svg.style.transform = `rotate(${s.a.toFixed(3)}deg)`;
         if (sphere) sphere.style.transform = `rotate(${(s.a * 9).toFixed(2)}deg)`;
-        return Math.abs(s.a - target) > 0.02;
+        return s.a !== target;
       });
     });
 
@@ -298,9 +313,9 @@
           // with the pointer, or with the panel's scroll on touch screens (P-08)
           const fine = finePointer.matches;
           const tx = fine ? pointer.x * 6 : (p - 0.5) * 12, ty = fine ? pointer.y * 6 : (0.5 - p) * 8;
-          s.lx = lerp(s.lx || 0, tx, 0.06); s.ly = lerp(s.ly || 0, ty, 0.06);
+          s.lx = ease(s.lx || 0, tx, 0.06, 0.1); s.ly = ease(s.ly || 0, ty, 0.06, 0.1);   // 0.1 % of the soft light: < 0.7px
           lightEl.style.transform = `translate3d(${s.lx.toFixed(2)}%,${s.ly.toFixed(2)}%,0)`;
-          return Math.abs(s.lx - tx) > 0.05 || Math.abs(s.ly - ty) > 0.05;   // 0.05 % of the light = a fifth of a pixel
+          return s.lx !== tx || s.ly !== ty;
         }
         return false;
       });

@@ -34,9 +34,10 @@ from content import PRIMARY_CTA, NAV, HOME, CREATE
 #   'zoom'               (scale, origin) - a captured still drawn that much larger about that point (CSS scale, so
 #                        the reveal and hover zooms still apply), for a screen whose own page margin would show as
 #                        a light band along the card's edge (Vantline's and Sagewell's inset hero frames)
-#   'small'              {'focal', 'zoom'} - this still's own framing as a small card's BACK print only (the front
-#                        print, the row cards and the stack keep the above): the back print shows only the part the
-#                        front print and its caption leave free, so a centred headline there reads as fragments
+#   'small'              {'focal', 'zoom', 'fit'} - this image's own framing as a small card's BACK print only (the
+#                        front print, the row cards and the stack keep the above): the back print shows only the part
+#                        the front print and its caption leave free, so a centred headline there reads as fragments
+#                        ('fit': 'cover' frames a contained owner-supplied image, VYRN's categories frame)
 # and per service 'tap': 'low' - on phones the stack's Tap Here sticker sits low on the right, not in the top-right
 # corner (for stills whose centred headline reaches that corner; 22-services.css .svc-media--tap-low)
 # A small card shows the first two images (front / back); a large row shows the first, or - with more than one -
@@ -54,8 +55,15 @@ MEDIA = {
     # owner's own VYRN categories frame behind it ("VYRN · Concept Project", linking to its page since VYRN became a
     # portfolio project, owner 14-15 Oct), and on the What We Create page's stack a Mahira Select saree still (its first
     # screen: allowed by its skip list)
+    # Home small card (mobile audit VIS2-03, 21 Oct): behind the SIAARA print, the whole VYRN frame (contained on white)
+    # showed as '...ORIES', '02' and 'AL' - only its top band and right side are free (beside and under the caption).
+    # As the BACK print ('small') it is the frame's model in the brown suit: drawn 3.6x (cover) about '37.9% 39.5%', the
+    # print shows the frame's y .285-.563 (from just under the 'DIFFERENT EXPRESSIONS' line to his hips, above the
+    # FORMAL letters at .606) and x .34-.54, the model's head in the band above the caption on phones, his upper body
+    # beside it; the What We Create page's stack keeps the whole frame.
     '03': {'images': [{'slug': 'siaara', 'role': 'gallery-01', 'focal': '30% 50%'},
-                      {'supplied': 'ecommerce-vyrn-categories', 'slug': 'vyrn'},
+                      {'supplied': 'ecommerce-vyrn-categories', 'slug': 'vyrn',
+                       'small': {'fit': 'cover', 'focal': '50% 50%', 'zoom': (3.6, '37.9% 39.5%')}},
                       {'slug': 'mahira-select', 'role': 'gallery-01', 'focal': '18% 50%'}]},
     # OBSCURA (front, whole design on its black page) and FaiPy (back, logo row cropped out): the owner's own designs
     '04': {'images': [{'supplied': 'interactive-3d-1-obscura'}, {'supplied': 'interactive-3d-2-faipy'}]},
@@ -312,7 +320,8 @@ def slides(n):
             p = projects.by_slug(it['slug']) if it.get('slug') else None
             out.append({'p': p, 'entry': img, 'alt': img['alt'], 'pos': it.get('focal') or img.get('focal') or '50% 50%',
                         'fit': img.get('fit') or 'cover', 'ground': img.get('ground'), 'fade': img.get('fade'),
-                        'ar': img['w'] / img['h'], 'work': not p, 'cap': _cap_text(p['title'], p) if p else None})
+                        'ar': img['w'] / img['h'], 'work': not p, 'cap': _cap_text(p['title'], p) if p else None,
+                        'zoom': it.get('zoom'), 'small': it.get('small')})
             continue
         p = projects.by_slug(it['slug'])
         st = next((x for x in p['stills'] if x['role'] == it.get('role')), None) if p else None
@@ -351,14 +360,15 @@ def _img(ctx, sl, alt, sizes, max_width, extra_style=''):
 
 def _back_sizes(sl):
     """(sizes, max_width) for a small card's back print: ART_SIZES and the 640 file, or - for a still drawn larger by
-    its 'zoom' (MEDIA 'small') - the width it is drawn at (cover on the 4:3 print, times the scale), up to the 1280 file,
-    so a 2-3x phone or a 2x desktop never stretches a 640 file across it."""
+    its 'zoom' (MEDIA 'small') - the width it is drawn at (cover on the 4:3 print, times the scale), up to the 1280 file
+    (the 1920 one where a 2x desktop draws it wider than 1280px: VYRN's model at 3.6x), so a 2-3x phone or a 2x desktop
+    never stretches a 640 file across it."""
     if not sl.get('zoom') or sl['fit'] == 'contain':
         return ART_SIZES, 640
     top = max(sl['entry']['variants'], key=lambda v: v['width'])
     k = max(1, top['width'] / top['height'] / (4 / 3)) * sl['zoom'][0]
     w, vw, px = BACK_W
-    return f'(min-width:800px) {w * k:.0f}px, calc({vw * k:.0f}vw - {px * k:.0f}px)', 1280
+    return f'(min-width:800px) {w * k:.0f}px, calc({vw * k:.0f}vw - {px * k:.0f}px)', 1280 if 2 * w * k <= 1280 else 1920
 
 
 def _row_sizes(sl):
@@ -522,9 +532,10 @@ def _art(ctx, s):
     o, c = _tag(ctx, first, 'svc-art')
     other = len(sl) > 1 and sl[1]['p'] and not sl[1]['work'] and sl[1]['p'] is not first['p']
     if len(sl) > 1:
-        gcls, gstyle = _ground(sl[1])
-        sm = sl[1].get('small') or {}            # MEDIA 'small': the still's own framing as a back print
-        back = {**sl[1], 'pos': sm.get('focal') or sl[1]['pos'], 'zoom': sm.get('zoom') or sl[1].get('zoom')}
+        sm = sl[1].get('small') or {}            # MEDIA 'small': the image's own framing as a back print
+        back = {**sl[1], 'pos': sm.get('focal') or sl[1]['pos'], 'zoom': sm.get('zoom') or sl[1].get('zoom'),
+                'fit': sm.get('fit') or sl[1]['fit']}
+        gcls, gstyle = _ground(back)
         back_img = _img(ctx, back, '', *_back_sizes(back))
     else:  # a single image: the back print is a detail crop of it
         gcls, gstyle = _ground(first)

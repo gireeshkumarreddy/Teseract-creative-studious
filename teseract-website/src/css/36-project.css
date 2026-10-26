@@ -157,7 +157,9 @@
   transition:background-color .3s ease,opacity .3s ease,transform .5s var(--ease)}
 .pj-viewer__btn svg{width:18px;height:18px}
 .pj-viewer__btn--prev svg{transform:scaleX(-1)}
-.pj-viewer__btn--close{width:56px;height:56px;background:var(--ink);color:#000;box-shadow:0 8px 20px -8px rgba(0,0,0,.8)}
+/* the Close is the one solid (ink) button: named with the base class too, so the tone layer's later copy of the base
+   button's frosted fill (96-tone.css) cannot take its fill back - it did, and the black X sat on a dark disc */
+.pj-viewer__btn.pj-viewer__btn--close{width:56px;height:56px;background:var(--ink);color:#000;box-shadow:0 8px 20px -8px rgba(0,0,0,.8)}
 .pj-viewer__btn--close svg{width:20px;height:20px}
 .pj-viewer__btn:active{transform:scale(.94)}
 .pj-viewer__btn[aria-disabled="true"]{opacity:.32;cursor:default}

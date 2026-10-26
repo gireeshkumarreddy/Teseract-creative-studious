@@ -78,13 +78,24 @@ def _sheet():
 TWIN_MEDIA = '(max-width:599.98px)'
 
 
+RING_SIZES = '(max-width:799.98px) 80px, (max-height:500px) and (orientation:landscape) 80px, 110px'
+
+
 def _img(ctx, item, style):
     import projects
     p, still = item
-    # phone ring cards are 64-80px (12-footer.css), so a phone picks the smallest prepared rung
-    return lib.media_img(ctx, still['entry'], '', max_width=640,
-                         sizes='(max-width:799.98px) 80px, (max-height:500px) and (orientation:landscape) 80px, 110px',
-                         attrs=f'style="{style}"' if style else f'style="object-position:{projects.focal(p, still)}"')
+    # phone ring cards are 64-80px (12-footer.css), so a phone picks the smallest prepared rung; a still drawn larger in
+    # its card (portfolio.json "zoom", VYRN's) asks for a file that much wider
+    z = projects.zoom(p, still)
+    return lib.media_img(ctx, still['entry'], '', max_width=640, sizes=projects.scale_sizes(RING_SIZES, z[0]) if z else RING_SIZES,
+                         attrs=f'style="{style}"' if style else f'style="{projects.tile_style(p, still)}"')
+
+
+def _zoom_vars(item, suffix=''):
+    """A twin card's zoom as custom properties (--fz / --fo, -ph for the image upright phones show), 12-footer.css."""
+    import projects
+    z = projects.zoom(*item)
+    return f';--fz{suffix}:{z[0]};--fo{suffix}:{z[1]}' if z else ''
 
 
 def _card(ctx, item, twin=None):
@@ -94,8 +105,9 @@ def _card(ctx, item, twin=None):
         return f'<span class="ft__card">{_img(ctx, item, "")}</span>'
     import projects
     srcset = re.search(r'srcset="([^"]*)"', _img(ctx, twin, '')).group(1)   # the same candidates, so the same file
-    img = _img(ctx, item, f'--fp:{projects.focal(*item)};--fp-ph:{projects.focal(*twin)}')
-    return (f'<span class="ft__card"><picture><source media="{TWIN_MEDIA}" srcset="{srcset}" sizes="80px">'
+    tz = projects.zoom(*twin)
+    img = _img(ctx, item, f'--fp:{projects.focal(*item)};--fp-ph:{projects.focal(*twin)}' + _zoom_vars(item) + _zoom_vars(twin, '-ph'))
+    return (f'<span class="ft__card"><picture><source media="{TWIN_MEDIA}" srcset="{srcset}" sizes="{80 * tz[0] if tz else 80:.0f}px">'
             f'{img}</picture></span>')
 
 
@@ -203,6 +215,22 @@ def _service_link(ctx, word):
     return f'<a class="ft-bar__svc" href="{E(ctx.url("what-we-create", slug(name)))}">{E(word)}</a>'
 
 
+# The service words in two groups, the first FOOTER_SPLIT of them and the rest ('Web Design · Development · E-commerce' /
+# 'Interactive · Branding · Product · AI'): one line on wider screens, a line each on phones (12-footer.css), so a
+# wrapped line never ends on a dot (mobile audit PAR2-02).
+FOOTER_SPLIT = 3
+
+
+def _services(ctx):
+    """The footer's service words, each linking to its section on What We Create (owner's SEO request, 18 Oct:
+    descriptive sitewide links, same look - 12-footer.css). The dots between them are aria-hidden (a screen reader reads
+    'Services:' and the links, never 'dot'); a no-break space binds each dot to the word before it."""
+    sep = lambda cls='': f'<span class="ft-bar__sep{cls}" aria-hidden="true">{chr(160)}· </span>'
+    words = [_service_link(ctx, word) for word in FOOTER['services']]
+    groups = [g for g in (words[:FOOTER_SPLIT], words[FOOTER_SPLIT:]) if g]
+    return sep(' ft-bar__sep--join').join(f'<span class="ft-bar__grp">{sep().join(g)}</span>' for g in groups)
+
+
 def _copyright():
     """The copyright line with the full studio name kept on one line (no-break spaces), so a narrow phone (360 px)
     breaks it as '© 2026 TESERACT Creative Studios.' / 'All rights reserved.' (with text-wrap:balance, 12-footer.css)."""
@@ -214,9 +242,7 @@ def _bar(ctx, compact=False):
     current = ctx.route.split('/')[0]
     nav = ''.join(
         f'<li>{_bar_link(ctx.url(route), label, current=(True if route == ctx.route else ("section" if route == "work" and current == "projects" else False)))}</li>' for _key, label, route in NAV)
-    # no-break space before each dot so a wrapped line never starts with a separator; each word links to its service's
-    # section on What We Create (owner's SEO request, 18 Oct: descriptive sitewide links, same look - 12-footer.css)
-    services = ' · '.join(_service_link(ctx, word) for word in FOOTER['services'])
+    services = _services(ctx)
     legal = (f'<li>{_bar_link(ctx.url("privacy"), "Privacy policy", current=current == "privacy")}</li>'
              f'<li>{_bar_link(ctx.url("terms"), "Terms of service", current=current == "terms")}</li>')
     brand = '' if compact else (f'<a class="ft-bar__brand" href="{ctx.url("")}" aria-label="{E(BRAND)} home">'

@@ -11,17 +11,6 @@
         "C:/Users/giris/OneDrive/Desktop/Teseract/teseract-website/dist"
       ],
       "port": 4273
-    },
-    {
-      "name": "tone-demo",
-      "runtimeExecutable": "python",
-      "runtimeArgs": [
-        "-I",
-        "C:/Users/giris/OneDrive/Desktop/Teseract/_tools/serve.py",
-        "4286",
-        "C:/Users/giris/AppData/Local/Temp/claude/C--Users-giris-OneDrive-Desktop-Teseract/c0f11ba3-5bcf-46e2-8807-3c4d5bfdea2c/scratchpad/tone/final"
-      ],
-      "port": 4286
     }
   ]
 }

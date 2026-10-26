@@ -64,7 +64,8 @@ G.TSChatFlow = (C, env) => {
       if (direct) lead.push(P(C.p0[1]), { t: 'list', items: C.factors_web, src: 'chat:factors_web' });
       return next(priceTurn('w', lead).concat(st.bq ? budgetReply() : [], [P(C.w_after)]));
     }
-    if (path === 'E') {   // two turns (24 Oct): what the service includes, then the price and the first question
+    // two turns (24 Oct): what the service includes, then the price and the first question
+    if (path === 'E') {
       const s = kb().services.find(v => v.id === 'e-commerce');
       return [{ b: lead.concat([P(C.e_intro), P(s.body, s.src + '.body'), { t: 'included' }]), c: [] }]
         .concat(next(priceTurn('e', []).concat(st.bq ? budgetReply() : [], [P(C.e_after)])));
@@ -85,7 +86,8 @@ G.TSChatFlow = (C, env) => {
   const GUESS = [['THREE_D', 'Interactive & 3D'], ['AI', 'AI & Automation'], ['SAAS', 'Product & SaaS'], ['BRAND', 'Brand & Digital Identity'], ['STRAT', 'Digital Strategy']];
   const guessService = a => {
     const w = EN.weigh(a.toks || []);
-    a.c.forEach(k => { if (!w[k]) w[k] = .5; });   // (a concept found by phrase: "digital product")
+    // (a concept found by phrase: "digital product")
+    a.c.forEach(k => { if (!w[k]) w[k] = .5; });
     const best = GUESS.reduce((b, g) => ((w[g[0]] || 0) > (w[b[0]] || 0) ? g : b), GUESS[0]);
     return w[best[0]] ? best[1] : null;
   };
@@ -231,7 +233,8 @@ G.TSChatFlow = (C, env) => {
       if (c.unknown) { env.setCur(cur); st.brief.regionDone = 1; }
       if (c.unknown || (cur === c.code && !c.unknown)) return [{ b: [P(fill(C.cur_country, { cur_name: name(cur), country }))], c: [] }].concat(back);
       const t = [{ b: [P(fill(C.cur_offer, { cur_now: name(c.code), cur_name: name(cur) }))], c: [] }].concat(back);
-      t[t.length - 1].c = (t[t.length - 1].c || []).concat(offer(cur));   // (only the last turn keeps its chips)
+      // (only the last turn keeps its chips)
+      t[t.length - 1].c = (t[t.length - 1].c || []).concat(offer(cur));
       return t;
     }
     env.setCur(cur);
@@ -350,21 +353,25 @@ G.TSChatFlow = (C, env) => {
         // or a place named in passing is offered as a chip (the device's region stays, pending the owner: 3h)
         const lead = [], ok = c => c && c !== '?' && c !== 'DOL';
         let offerCur = null;
-        if (m.id !== 'price.currency' && !/^nodata\./.test(m.id)) {   // ("can I pay in euros": not a display request)
+        // ("can I pay in euros": not a display request)
+        if (m.id !== 'price.currency' && !/^nodata\./.test(m.id)) {
           if (ok(e.cur) && e.ask) {
             if (e.cur !== cur.code || cur.unknown) { env.setCur(e.cur); lead.push(P(fill(C.cur_switched, { cur_name: kb().pricing.cur[e.cur].name }))); }
-          } else if (cur.unknown && e.place && ok(e.place[0]) && m.id !== 'faq.1') {   // (not "do you work in the UK")
+          // (not "do you work in the UK")
+          } else if (cur.unknown && e.place && ok(e.place[0]) && m.id !== 'faq.1') {
             env.setCur(e.place[0]); st.brief.regionDone = 1;
             lead.push(P(fill(C.cur_country, { cur_name: kb().pricing.cur[e.place[0]].name, country: e.place[1] })));
           } else {
             const c = ok(e.cur) ? e.cur : e.place && ok(e.place[0]) ? e.place[0] : null;
-            if (c && (c !== cur.code || cur.unknown)) offerCur = c;
+            // (not under "are you based in India")
+            if (c && (c !== cur.code || cur.unknown) && m.id !== 'faq.1') offerCur = c;
           }
         }
         const sl = m.a.sl;
         const said = /^price\.(website|ecommerce|budget)$|^contact\.start$/.test(m.id) && ((sl.pages ? 1 : 0) + (sl.products ? 1 : 0) + (sl.timeline ? 1 : 0) + (sl.budget ? 1 : 0)) >= 1;
         turns = answer(m.id, m.a);
-        const typeWord = said ? { E: 'an online store', W: 'a website', L: 'a landing page' }[st.path] : null;   // (said back: "Got it: ...")
+        // (said back: "Got it: ...")
+        const typeWord = said ? { E: 'an online store', W: 'a website', L: 'a landing page' }[st.path] : null;
         if (typeWord) {
           const parts = [];
           const b = st.brief;

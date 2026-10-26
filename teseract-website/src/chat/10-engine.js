@@ -24,7 +24,8 @@ const norm = s => {
     .replace(/₹|\brs\.?(?=[\s\d])|\binr\b|\brupees?\b|\brupaye\b/g, ' _inr ').replace(/€|\beur\b|\beuros?\b/g, ' _eur ')
     .replace(/£|\bgbp\b|\bpounds?\b|\bquid\b/g, ' _gbp ').replace(/\baed\b|\baed(?=\d)|\bdirhams?\b/g, ' _aed ').replace(/\$|\bdollars?\b|\bbucks\b/g, ' _dol ')
     .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)\s+(?=(?:thousand|lakhs?|lacs?|crores?)\b)/g, (m, w) => NUMW[w] + ' ')
-    .replace(/(\d+(?:\.\d+)?)\s*(k|thousand|lakhs?|lacs?|l|cr|crores?)\b/g, (m, n, u) => ' ' + Math.round(+n * (u[0] === 'k' || u[0] === 't' ? 1e3 : u[0] === 'c' ? 1e7 : 1e5)) + ' _k ')   // (_k: said as money)
+    // (_k: said as money; a lakh or a crore is rupees, 25 Oct)
+    .replace(/(\d+(?:\.\d+)?)\s*(k|thousand|lakhs?|lacs?|l|cr|crores?)\b/g, (m, n, u) => ' ' + Math.round(+n * (u[0] === 'k' || u[0] === 't' ? 1e3 : u[0] === 'c' ? 1e7 : 1e5)) + (/^[kt]/.test(u) ? ' _k ' : ' _k _inr '))
     .replace(/n't\b/g, ' not').replace(/'re\b/g, ' are').replace(/'m\b/g, ' am').replace(/'ve\b/g, ' have').replace(/'ll\b/g, ' will').replace(/'d\b/g, ' would').replace(/'s\b/g, '')
     .replace(/\be[\s-]?commerce\b|\becom\b|\bonline (?:store|shop|business)s?\b|\bweb ?shops?\b|\be-?shops?\b/g, ' ecommerce ')
     .replace(/\bone[\s-]pager\b|\bsingle[\s-]page\b/g, ' one_pager ').replace(/\b3[\s-]?d\b|\bthree[\s-]?d\b/g, ' 3d ')
@@ -113,7 +114,8 @@ const detectCurrency = (tz, langs, kb) => {
     const m = /^[a-z]{2,3}(?:-[A-Za-z]{4})?-([A-Z]{2}|\d{3})\b/i.exec(l);
     if (!m) continue;
     const r = m[1].toUpperCase();
-    if (r === 'US' && l.toLowerCase().startsWith('en')) return { code: 'INR', unknown: true };   // en-US: many devices' default
+    // en-US: many devices' default
+    if (r === 'US' && l.toLowerCase().startsWith('en')) return { code: 'INR', unknown: true };
     if (P.lang[r]) return { code: P.lang[r], near: R.lang_near.split(' ').includes(r) };
     return { code: 'INR', unknown: true };
   }
@@ -132,12 +134,18 @@ const bucket = (n, cuts, labels) => labels[cuts.findIndex(c => n <= c) < 0 ? lab
 const PAGES = ['One page', '2 to 5', '6 to 10', 'More than 10'];
 const PRODUCTS = ['Under 20', '20 to 100', '100 to 500', 'More than 500'];
 const CATS = ['1 to 3', '4 to 10', 'More than 10'];
-const num = w => /^\d+$/.test(w) ? +w : NUM[w];
+// ("fifty" products)
+const num = w => /^\d+$/.test(w) ? +w : NUM[w] || NUMW[w];
 const CU = '_(?:inr|eur|gbp|usd|aed|cad|aud|sgd|dol)', CURW = new RegExp('^' + CU + '$');
 // (25 Oct) "what does 50k get me", "what do I get for 35k": a question about the starting price, never a budget
 const GETQ = new RegExp('\\bwhat (?:do|does|would|will|can|could) (?:(?:i|we|one|it) |(?:' + CU + ' )?\\d+ (?:_k )?(?:' + CU + ' )?)(?:get|include|cover|buy)\\b');
-// a price said back after the amount ("35k is the starting price", "is 35k the price for 10 pages", "is ₹35,000 the minimum")
-const QUOTED = /^(?:(?:is|was|as) )?(?:the|your|ur|a) (?:(?:starting|start|minimum|min|base|lowest|usual|standard) )?(?:price|cost|rate|fee|charge|minimum|starting)\b/;
+// a price said back after the amount ("35k is the starting price", "is 35k the price for 10 pages", "is ₹35,000 the minimum";
+// 26 Oct: "is 50k the lowest for a store", "50k is what an online store starts at")
+const QUOTED = /^(?:(?:is|was|as) )?(?:(?:the|your|ur|a) (?:(?:starting|start|minimum|min|base|lowest|usual|standard) )?(?:price|cost|rate|fee|charge|minimum|starting)|(?:the|your|ur) (?:lowest|least|cheapest|base|minimum|min|entry))\b|^(?:is|was) (?:what|where|how|when)\b.*\b(?:start|starts|starting|begin|begins|minimum|lowest)\b/;
+// (26 Oct) a rate, not a sum: "3 lakh a month in sales", "we make 3 lakh"; and "I can pay 25000" is a budget, "do I pay
+// 35k upfront" a question about paying
+const RATE = /^(?:(?:a|per|every|each|in|of) (?:month|year|day|week|quarter|annum|sales|revenue|turnover|profit|income)|monthly|yearly|annually|annual|daily|weekly)\b/;
+const PAYQ = /^(?:so )?(?:do|does|did|should|shall|must|will|would|is|are|how|what|when|why)\b|\b(?:installments?|instalments?|emi|upfront|advance|deposit|milestones?|parts)\b/;
 // what a number counts when it is not money ("200 employees", "150 stores", "999 rupees each")
 const NOUN = /^(percent|off|each|per|pages?|products?|items?|skus?|categories|category|collections?|weeks?|months?|days?|hours?|years?|yrs?|screens?|employees?|staff|people|persons?|users?|members?|stores?|shops?|outlets?|branches?|locations?|cities|countries|customers?|clients?|followers?|visitors?|orders?|students?|rooms?|beds?|units?|pieces?|times|sq|sqft|km|kg)$/;
 const slots = (raw, s, kb, active, want) => {
@@ -146,7 +154,7 @@ const slots = (raw, s, kb, active, want) => {
   let m = /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty|single)\s*(?:to|or)?\s*(\d+)?\s*(?:pages?|screens?)\b/.exec(s);
   if (m && num(m[1])) { const n = Math.max(num(m[1]), +(m[2] || 0)); o.pages = bucket(n, [1, 5, 10], PAGES); o.pagesN = n; }
   else if (/\blanding\b|\bone_pager\b/.test(s)) { o.pages = 'One page'; o.pagesN = 1; }
-  m = /\b(\d+)\s*(?:_k\s*)?(?:to\s*\d+\s*(?:_k\s*)?)?(?:products?|items?|skus?)\b/.exec(s);
+  m = /\b(\d+)\s*(?:_k\s*(?:_inr\s*)?)?(?:to\s*\d+\s*(?:_k\s*(?:_inr\s*)?)?)?(?:products?|items?|skus?)\b/.exec(s);
   if (m) { o.productsN = +m[1]; o.products = bucket(o.productsN, [19, 100, 500], PRODUCTS); }
   else if (/\b(?:a few|few|some|a handful of) (?:products|items)\b/.test(s)) o.products = PRODUCTS[0];
   else if (/\bhundreds? of (?:products|items)\b/.test(s)) o.products = PRODUCTS[2];
@@ -171,7 +179,7 @@ const slots = (raw, s, kb, active, want) => {
   const ws = s.split(' '), money = /\b(budget|budgets|spend|spending|afford)\b/.test(s);
   let best = null;
   // ("what do I get for 35k", "is 35k fixed": questions about the starting price)
-  if ((GETQ.test(s) || /\b(fixed|final|exact|confirm|correct|true)\b/.test(s)) && !money) return o;
+  if ((GETQ.test(s) || /\b(fixed|final|exact|confirm|correct|true)\b|\b(right|is not it|isnt it)$/.test(s)) && !money) return o;
   for (let i = 0; i < ws.length; i++) {
     if (!/^\d+$/.test(ws[i])) continue;
     const n = +ws[i], k = ws[i + 1] === '_k', j = i + (k ? 2 : 1);
@@ -183,13 +191,17 @@ const slots = (raw, s, kb, active, want) => {
       cur = ws[at + 1]; at += 2;
     }
     const after = ws[at] || '';
-    if (NOUN.test(after) || (QUOTED.test(ws.slice(at, at + 5).join(' ')) && !/\b(budget|spend|afford)\b/.test(before))) continue;
-    if (/\b(sell|sells|selling|sold|priced|mrp|worth|price|prices|cost|costs|charge|charges|quote|quoted|told|said|rate|rates|revenue|turnover|sales|profit|income|salary|valuation|funding|raised|loan)\b/.test(before) && !/\b(budget|spend|afford)\b/.test(before)) continue;
+    if (NOUN.test(after) || (QUOTED.test(ws.slice(at, at + 6).join(' ')) && !/\b(budget|spend|afford)\b/.test(before))) continue;
+    if (/\b(sell|sells|selling|sold|priced|mrp|worth|price|prices|cost|costs|charge|charges|quote|quoted|told|said|says|mentions|mentioned|shows|showed|lists|listed|states|stated|rate|rates|revenue|turnover|sales|profit|income|salary|valuation|funding|raised|loan)\b/.test(before) && !/\b(budget|spend|afford)\b/.test(before)) continue;
+    const pay = /\bpay(ing)?(?: you| u)?$/.test(before);
+    if ((pay && PAYQ.test(s)) || RATE.test(ws.slice(at, at + 2).join(' ')) || /\b(make|makes|made|earn|earns|earned|generate|generates|generated|clock|clocks)(?: (around|about|roughly|over|nearly|almost|approx))?$/.test(before)) continue;
     // (a year: "my 2027 launch"; not at the budget question, where "2000" from a dollar or dirham visitor is the answer)
     if (!cur && !k && n >= 1900 && n <= 2100 && want !== 'budget' && !/\b(budget|spend|afford|upto|up to|max|maximum)\b/.test(before)) continue;
-    const near = /\b(budget|budgets|spend|spending|afford|upto|up to|max|maximum|within|under|below|than)\b/.test(before);
+    const near = /\b(budget|budgets|spend|spending|afford|upto|up to|max|maximum|within|under|below|than)\b/.test(before) || pay;
     const weak = /\b(around|about|approx|approximately|roughly|only|just)\b/.test(before) && n >= 1000;
-    if (n < 50 || !(cur || k || near || weak || money || want === 'budget')) continue;
+    // ("can you do a website for 30000": the sum it is wanted for; not "an app for 100 schools")
+    const fr = ws[i - 1] === 'for' && /\b(do|make|build|design|create|develop|get)\b/.test(ws.slice(Math.max(0, i - 7), i).join(' ')) && /^(|only|please|total|max|maximum|budget|possible|right|ok|okay|or|and|is|can|could|would|will|then|all|flat|inclusive|including|with)$/.test(after);
+    if (n < 50 || !(cur || k || near || weak || money || fr || want === 'budget')) continue;
     let code = cur ? cur.slice(1).toUpperCase() : active;
     if (code === 'DOL') code = ['USD', 'CAD', 'AUD', 'SGD'].includes(active) ? active : 'USD';
     const rate = code === 'INR' ? 1 : kb.pricing.rates[code];
@@ -291,7 +303,8 @@ const score = (kb, a) => {
 
 // ---- gates: questions whose meaning is clear from their parts (prices above all), before any scoring
 const WEB = /\b(website|websites|site|sites|web|webpage|webpages|landing|homepage|one_pager|blog|portfolio)\b/;
-const AMT = new RegExp('\\b\\d+ (?:_k )?' + CU + '|' + CU + ' \\d');   // (an amount with its currency)
+// (an amount with its currency)
+const AMT = new RegExp('\\b\\d+ (?:_k )?' + CU + '|' + CU + ' \\d');
 const gate = (kb, a, prev) => {
   const s = a.s, has = w => a.toks.includes(w), c = a.c, ent = a.ent;
   if (a.sl && a.sl.personal) return 'meta.personal';
@@ -305,7 +318,7 @@ const gate = (kb, a, prev) => {
     && !/\bhow_much\b|\b(price|prices|cost|costs|quote)\b/.test(s) && !(a.sl && a.sl.budget) && !AMT.test(s)) return 'nodata.payment';
   if (has('hosting')) return 'nodata.hosting';
   if (has('domain')) return 'nodata.domain';
-  if (has('installment') || /\bpayment (terms|methods?|options?|plan|schedule)\b|\bhow (do|can|should) i pay\b|\bpay in (parts|instalments|installments)\b|\bmilestones?\b/.test(s)) return 'nodata.payment';
+  if (has('installment') || /\bpayment (terms|methods?|options?|plan|schedule)\b|\bhow (do|can|should) i pay\b|\bpay in (parts|instalments|installments)\b|\bmilestones?\b|\bpay\b.*\bbefore (you|we) (start|begin)\b/.test(s)) return 'nodata.payment';
   if (has('gst')) return 'nodata.gst';
   if (has('refund') || /\bmoney back\b/.test(s)) return 'nodata.refund';
   if (has('stack') || ((/\bshopify\b|\bwoocommerce\b/.test(s)) && !c.has('PRICE'))) return 'nodata.stack';
@@ -315,18 +328,21 @@ const gate = (kb, a, prev) => {
   // where the studio works ("are you based in India", "do you work with clients in the UK"): the FAQ, never a currency
   if (/\b(you|your|teseract|studio|gireesh)\b/.test(s) && !c.has('PRICE') && (/\b(based|located|situated|internationally|international|abroad|overseas|remote|remotely|worldwide|globally)\b/.test(s)
     || ((ent.place || /\boutside\b/.test(s)) && /\b(work|working|clients?|customers?|serve|available|deliver)\b/.test(s))
-    || (ent.place && /\b(are|is) (you|your studio|the studio|teseract|gireesh) (in|from)\b/.test(s)))) return 'faq.1';   // ("are you in the uk")
+    // ("are you in the uk")
+    || (ent.place && /\b(are|is) (you|your studio|the studio|teseract|gireesh) (in|from)\b/.test(s)))) return 'faq.1';
   // not on this website: results, rates of success; marketing and ads, copywriting - unless the message also asks about a
   // website, a store or a price (25 Oct: "landing page for google ads, how much" is a website price; a.also: the rest
   // of it goes to Gireesh with "Ask Gireesh")
-  const mkt = /\b(social media|digital|performance|influencer|email|content) marketing\b(?! (agency|agencies|company|companies|firm|business|website|site))|\b(google|facebook|instagram|meta|paid) ads\b|\bads? campaigns?\b|\badvertising\b|\bppc\b|\bcopywriting\b|\b(write|writing|writes) (the |my |our )?(content|copy|text|blogs?)\b|\bcontent writing\b/.test(s);
+  const mkt = /\b(social media|digital|performance|influencer|email|content|instagram|facebook|linkedin|youtube|whatsapp|online|video) marketing\b(?! (agency|agencies|company|companies|firm|business|website|site))|\b(google|facebook|instagram|meta|paid) ads\b|\b(ads?|marketing) campaigns?\b|\badvertising\b|\bppc\b|\bcopywriting\b|\b(write|writing|writes) (the |my |our )?(content|copy|text|blogs?)\b|\bcontent writing\b|\bmanag\w* (my|our) (instagram|facebook|linkedin|youtube|social media|socials)\b/.test(s);
   if ((/\bguarantee/.test(s) && !c.has('TIME')) || /\b(success|conversion|bounce|interest) rates?\b/.test(s)) return 'nodata.other';
-  if (mkt) { if (!c.has('PRICE') && !((c.has('SITE') || c.has('ECOM') || WEB.test(s)) && /\b(build|builds|design|make|create|develop|need|want|looking)\b/.test(s))) return 'nodata.other'; a.also = 1; }
+  if (mkt) { if (!c.has('PRICE') && !((c.has('SITE') || c.has('ECOM') || WEB.test(s)) && /\b(build|builds|design|make|create|develop|need|want|looking)\b/.test(s))) return 'nodata.other'; a.also = 1; if (!c.has('PRICE') && /\blanding\b/.test(s)) return 'faq.6'; }
   if (/\bfree\b/.test(s) && /\b(consultation|consult|call|meeting|discovery|session|quote|estimate|first call)\b/.test(s)) return 'nodata.consult';
   // a few questions whose words mean something else on their own ("day" is a timeline, "person" is near "personal")
   if (/\blaunch day\b|\bday of (the )?launch\b|\bon launch\b/.test(s)) return 'process.step.8';
   if (/\b(only|one|single) (person|man|guy|designer|developer|member)\b|\bsolo\b|\balone\b|\bby (yourself|himself)\b|\b(just|only) (you|him|gireesh)\b|\bone man\b|\bfreelancers?\b/.test(s)) return 'about.team';
-  if (disc) return 'price.discount';
+  // an amount asked about, not offered ("is ₹35,000 the minimum?", "is 50k the lowest for a store"): the price answer
+  const ask = !(a.sl && a.sl.budget) && (AMT.test(s) || /\b\d+ _k\b|\b(said|says|quoted|mentioned) \d{4,}\b/.test(s)) &&/\b(minimum|starting|start|starts|begin|begins|lowest|least|base|entry|says|said|mentions|mentioned)\b/.test(s);
+  if (disc && !(ask && !/\b(go|less|discount|negotiate|cheaper|reduce|lower|bargain|best)\b/.test(s))) return 'price.discount';
   if (/\bfree\b/.test(s) && !/\bfeel free\b|\bfree time\b|\bfreedom\b/.test(s)) return 'price.free';
   if (ent.conv) return 'price.currency';
   const get = GETQ.test(s);
@@ -334,8 +350,7 @@ const gate = (kb, a, prev) => {
   if (c.has('INCLUDE') && c.has('ECOM')) return 'svc.e-commerce';
   if (c.has('TIME') && !c.has('PRICE') && !ent.project) return 'time.timeline';
   if (ent.project && (c.has('PRICE') || c.has('BUDGET')) && !(a.sl && a.sl.budget)) return 'price.project';
-  // an amount asked about, not offered ("is ₹35,000 the minimum?"): the price answer
-  if (!(a.sl && a.sl.budget) && (AMT.test(s) || /\b\d+ _k\b/.test(s)) && /\b(minimum|starting|start|lowest|least)\b/.test(s)) return c.has('ECOM') ? 'price.ecommerce' : c.has('SITE') ? 'price.website' : 'price.general';
+  if (ask) return c.has('ECOM') ? 'price.ecommerce' : c.has('SITE') ? 'price.website' : 'price.general';
   if (a.sl && a.sl.budget && !c.has('INCLUDE') && !(c.has('PRICE') && (c.has('SITE') || c.has('ECOM')))) return 'price.budget';
   if (c.has('BUDGET') && !c.has('PRICE')) return 'price.discount';
   // a currency or a place with nothing else in the message: the currency (a place is only offered: 40-chat region rule)

@@ -34,9 +34,10 @@ The title is info.txt's name unless portfolio.json "keep_title" is set (the owne
 "Gireesh"; their README / page titles tell them apart).
 Also: ROWS (the Work grid's row rhythm, used by spread() and pages/work.rows), clashes(), concept_intro(items)
 (the one line introducing the concepts group, shared by the Work page and llms.txt), and label_text(p) (the label with
-its secondary line, for alt text, link names and structured data).
+its secondary line, for alt text, link names and structured data); focal(p, still), zoom(p, still) and tile_style(p, still)
+(how a still sits in a cropped tile: portfolio.json "focal" / "zoom"), scale_sizes(sizes, k).
 """
-import json, pathlib
+import json, pathlib, re
 import lib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -148,7 +149,7 @@ def _build(e, mp):
         'spill': e.get('spill') or None,
         # the curated tagline wins: a capture report can pick up a section heading (Hidden Stories)
         'tagline': (e.get('tagline_verbatim') or report.get('tagline_verbatim') or '').strip() or None,
-        'order': e['order'], 'focal': e.get('focal') or {},
+        'order': e['order'], 'focal': e.get('focal') or {}, 'zoom': e.get('zoom') or {},
         'items': items, 'stills': stills, 'images': stills, 'cover': stills[0],
         'scene_still': next((s for s in stills if s['role'] == e.get('scene_still')), None)
                        or next((s for s in stills if s['frame'] == 'desktop'), stills[0]),
@@ -319,3 +320,30 @@ def focal(p, still):
     {"gallery-03": "40% 30%"}), else the top of a phone screen (its header and first screen) or a point a
     little above the middle of a desktop screen (where headlines sit)."""
     return p['focal'].get(still['role']) or ('50% 0%' if still['frame'] == 'phone' else '50% 40%')
+
+
+def zoom(p, still):
+    """(scale, origin) of a still drawn larger in the square crops of the home gallery tile and the footer ring card
+    (portfolio.json "zoom": {"gallery-03": [2.06, "50% 60.8%"]}, about that point of the tile, after its focal point), or
+    None. For a screen whose square crop cuts a giant wordmark into letters or keeps a dark band at its foot (VYRN's
+    'VYRN STUDIO' over the black 'Our approach' section, mobile audit VIS2-02): the tile frames the picture inside it."""
+    z = p.get('zoom', {}).get(still['role'])
+    return (float(z[0]), str(z[1])) if z else None
+
+
+def tile_style(p, still):
+    """The inline style of a still in a home gallery tile or a footer ring card: its focal point, and its zoom (a CSS
+    scale, so the tiles' hover zoom and reveal still apply on top)."""
+    z = zoom(p, still)
+    return f'object-position:{focal(p, still)}' + (f';scale:{z[0]};transform-origin:{z[1]}' if z else '')
+
+
+def scale_sizes(sizes, k):
+    """A sizes attribute whose slot widths (not its media conditions) are k times larger: a zoomed still is drawn k times
+    the tile's width, so the browser picks a file that much wider, as sharp as the other tiles."""
+    out = []
+    for part in sizes.split(','):
+        cond, _, size = part.strip().rpartition(' ')
+        m = re.fullmatch(r'(\d+(?:\.\d+)?)(px|vw)', size)
+        out.append((cond + ' ' if cond else '') + (f'{float(m.group(1)) * k:.0f}{m.group(2)}' if m else size))
+    return ', '.join(out)

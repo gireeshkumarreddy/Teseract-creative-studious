@@ -7,6 +7,8 @@ content.FAQ (APG accordion: h3 > button[aria-expanded][aria-controls] + answer p
 because seven panels can be open at once and would flood the landmark list; height + icon animation
 in 25-faq.js / 25-faq.css).
 """
+import re
+
 import lib
 from lib import E, fmt, CONFIG, ICONS, pill_label
 from content import FAQ, CONTACT
@@ -56,13 +58,21 @@ def _contact_card(ctx):
     </div>'''
 
 
+def _question(q):
+    """The question's text with each hyphenated word kept whole ('e-commerce'): a narrow phone broke 'Do you build e- /
+    commerce websites?' at the hyphen (mobile audit TYPO-R2-01); 25-faq.css .faq-item__nw. The FAQPage JSON-LD keeps
+    the plain text (seo.py). No non-breaking hyphen (U+2011): one typeface for the whole site, and a glyph it lacks
+    would come from a fallback font."""
+    return re.sub(r'[^\s-]+(?:-[^\s-]+)+', lambda m: f'<span class="faq-item__nw">{m.group(0)}</span>', E(fmt(q)))
+
+
 def _item(i, q, a):
     qid, aid = f'faq-q-{i}', f'faq-a-{i}'
     return f'''<div class="faq__cell" data-reveal style="--y:150px">
       <div class="faq-item" data-faq-item>
         <h3 class="faq-item__h">
           <button class="faq-item__btn" type="button" id="{qid}" aria-expanded="false" aria-controls="{aid}">
-            <span class="faq-item__q">{E(fmt(q))}</span>
+            <span class="faq-item__q">{_question(q)}</span>
             <span class="faq-item__icon" aria-hidden="true"><span class="faq-item__plus">{PLUS}</span></span>
           </button>
         </h3>

@@ -15,6 +15,7 @@ Copy comes from content.py / site.config.json only. The pill rotates brand state
 verbatim from the content document (no testimonials, which the document does not supply).
 """
 import math
+import re
 import lib
 from lib import E, fmt, CONFIG, button, roll
 import chrome
@@ -138,9 +139,13 @@ def _marquee(ctx):
 
 def _cap(title, industry):
     """Name caption: rolls in on hover / keyboard focus; on touch screens it is always shown, in a strip under the
-    image (20-hero.css). A ' | ' binds to the word before it, like lib.name_text's separators."""
+    image (20-hero.css) - the name, then the industry (on phones on a line of its own). A ' | ' binds to the word before
+    it, like lib.name_text's separators."""
+    # a hyphenated word of the industry stays whole: the phone strip broke 'Fashion e- / commerce concept' (as the FAQ,
+    # mobile audit TYPO-R2-01; 20-hero.css .hero-tile__nw)
+    keep = lambda m: re.sub(r'[^\s-]+(?:-[^\s-]+)+', lambda w: f'<span class="hero-tile__nw">{w.group(0)}</span>', m.group(0))
     ind = (f'<span class="hero-tile__dot">·</span>'
-           f'<span class="hero-tile__ind">{roll(industry)}</span>') if industry else ''
+           f'<span class="hero-tile__ind">{re.sub(r"(?<=>)[^<]+(?=<)", keep, roll(industry))}</span>') if industry else ''
     return (f'<span class="hero-tile__cap" aria-hidden="true">'
             f'<span class="hero-tile__title">{roll(lib.name_text(title).replace(" | ", chr(160) + "| "))}</span>{ind}</span>')
 
@@ -150,7 +155,8 @@ def _label(p):
     "Personal project" (owner, 14 Oct: visitors see client vs concept at once, before any hover). An Interactive
     Concept's small "Unofficial, ..." line (portfolio.json label_note) shows under its pill too (Client update 8: on
     every card, project page and home tile) - on phones as a full-text strip under the image, so the artwork stays
-    visible; the alt text and the link name carry it as well."""
+    visible; the alt text and the link name carry it as well. On touch screens the pill (and that line) sit in the name
+    strip under the image, after the name, so no pill covers a screen (mobile audit VIS2-01, 20-hero.css)."""
     if not p.get('label'):
         return ''
     tag = (f'<span class="hero-tile__tag hero-tile__tag--{E(p.get("label_kind") or "concept")}" aria-hidden="true">'
@@ -383,15 +389,19 @@ def _media(ctx, t):
                     lib.video(ctx, media, max_width=1280, poster_width=POSTER_W, still=False))
         media = _best_still(p, _ratio(t['ar']), set())[0]
     # The lead tile of columns 1-2 (on screen at every width) is the gallery's first image and the phone's LCP: eager +
-    # fetchpriority=high, painted from the first frame (no script reveal; its entrance is CSS, 20-hero.css).
+    # fetchpriority=high, painted from the first frame (no script reveal; its entrance is CSS, 20-hero.css). A still drawn
+    # larger in its tile (portfolio.json "zoom": VYRN's portrait without its cut wordmark, mobile audit VIS2-02) asks
+    # for a file that much wider.
     eager = t['lead'] and min(SHOWN) in t['shows']
-    return lib.media_img(ctx, media['entry'], alt, sizes=TILE_SIZES, max_width=1280, eager=eager,
-                         attrs=f'style="object-position:{projects.focal(p, media)}"'), ''
+    z = projects.zoom(p, media)
+    return lib.media_img(ctx, media['entry'], alt, sizes=projects.scale_sizes(TILE_SIZES, z[0]) if z else TILE_SIZES,
+                         max_width=1280, eager=eager, attrs=f'style="{projects.tile_style(p, media)}"'), ''
 
 
 def _item(ctx, t):
     p = t['p']
-    name = f"View project: {p['title']} ({projects.label_text(p)})" if p.get('label') else None
+    # the link name carries the industry too (mobile audit PAR2-01: the tile's strip shows it on phones as well)
+    name = f"View project: {p['title']}, {p['industry']}" + (f" ({projects.label_text(p)})" if p.get('label') else '')
     # the slot's aspect (--ar) sits on the tile: its media box takes it, and a loop's foot label is placed by it
     extra = f'style="--ar:{t["ar"]}"' + (' tabindex="-1" aria-hidden="true"' if t['repeat'] else '')
     # A landing page's loop (owner, 17 Oct) opens every frame with its site's nav and headline, which the label pill in

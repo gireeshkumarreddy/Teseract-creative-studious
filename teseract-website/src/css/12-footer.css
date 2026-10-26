@@ -44,10 +44,10 @@
 .ft__card:last-child{transform:rotate(180deg)}
 .ft__card img{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease}
 /* cards 13-24: on upright phones a <source> shows the image of the card opposite (chrome_footer.py TWIN_MEDIA), with
-   that image's focal point */
+   that image's focal point and zoom (portfolio.json "zoom": a still drawn larger in its square card, VYRN's) */
 .ft__card picture{display:contents}
-.ft__card picture img{object-position:var(--fp)}
-@media (max-width:599.98px){.ft__card picture img{object-position:var(--fp-ph)}}
+.ft__card picture img{object-position:var(--fp);scale:var(--fz,none);transform-origin:var(--fo,50% 50%)}
+@media (max-width:599.98px){.ft__card picture img{object-position:var(--fp-ph);scale:var(--fz-ph,none);transform-origin:var(--fo-ph,50% 50%)}}
 /* JS marks the ring (data-fade) and each card once its image has loaded, so a late image fades in
    instead of popping into an empty tile mid-rotation */
 .ft__ring[data-fade] .ft__card:not(.is-loaded) img{opacity:0}
@@ -76,6 +76,7 @@
   font-feature-settings:'tnum';font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
 .ft__time{font:inherit}
 .no-js .ft__clock{visibility:hidden}
+.js .ft__time:not([datetime]){visibility:hidden}   /* its placeholder until 12-footer.js sets the time (the panel's first showing) */
 .ft__title{font-size:40px;font-weight:600;line-height:1.3;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
 .ft__sub{max-width:421px;font-size:18px;line-height:1.5;letter-spacing:-.3px;color:var(--muted-strong);text-wrap:balance}
 .ft__sub-2{color:var(--ink)}
@@ -139,9 +140,19 @@
 .ft-bar__link[aria-disabled=true]:hover{background:rgba(255,255,255,0);color:var(--ink-2)}
 .ft-bar__services{grid-area:services;justify-self:center;font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong);text-align:center}
 /* each service word links to its section on What We Create (owner's SEO request, 18 Oct): same text, colour and no hover
-   change; the focus ring only */
-.ft-bar__svc{color:inherit;text-decoration:none}
+   change; the focus ring only. Hit area (mobile audit PAR2-02): a box round each word that ends halfway into the ~10px
+   gap its dot leaves (no two meet), 24px tall and at least 24px wide ("AI" is 11px: its box runs on to the right, where
+   its line ends); on touch screens the lines are 44px apart and each word's box is as tall as its line (below). The two
+   groups of words (chrome_footer.FOOTER_SPLIT) are a line each on phones. */
+.ft-bar__svc{position:relative;color:inherit;text-decoration:none}
+.ft-bar__svc::before{content:"";position:absolute;top:-4px;bottom:-4px;left:-4.5px;right:-4.5px;min-width:24px}
 .ft-bar__svc:focus-visible{outline-offset:2px;border-radius:4px}
+@media (pointer:coarse){
+  .ft-bar__services{line-height:44px}
+  .ft-bar__svc{display:inline-block}
+  .ft-bar__svc::before{top:0;bottom:0}
+  .ft-bar__svc:active{color:var(--ink)}
+}
 .ft-bar__social{grid-area:social;justify-self:end;align-self:start;justify-content:flex-end}  /* on the first row, level with the links */
 .ft-bar__meta{display:grid;grid-template-columns:auto auto 1fr;align-items:center;column-gap:16px;row-gap:8px;padding-top:16px;border-top:1px solid var(--line-2)}
 .ft-bar__copy{font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong);text-wrap:balance}  /* 360 px: two even lines, no lone 'reserved.' */
@@ -217,6 +228,8 @@
   .ft-bar__link{height:44px;padding:0 12px;border-radius:12px}
   .ft-bar__line,.ft-bar__services,.ft-bar__copy,.ft-bar__legal .ft-bar__link,.ft-bar__motto{font-size:14px}   /* no footer copy under 14px on a phone */
   .ft-bar__services{max-width:340px;margin-top:4px}
+  .ft-bar__grp{display:block}           /* 'Web Design · Development · E-commerce' / 'Interactive · Branding · Product · AI' */
+  .ft-bar__sep--join{display:none}      /* no line ends on a dot */
   .ft-bar__social{justify-self:center;justify-content:center;margin-top:4px}
   .ft-bar__meta{grid-template-columns:1fr;justify-items:center;text-align:center;row-gap:4px;padding-top:16px}
   .ft-bar__legal{justify-content:center}

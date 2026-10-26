@@ -1,5 +1,5 @@
 {
-  "note": "Ask TESERACT matcher corpus (node _tools/chat-test.cjs). intent = the expected answer id; 'any' lists the ids that are all acceptable (adversarial lines may go to the discount, off-topic or no-data answer, never to a price or a name). slots = brief fields the message must fill. 24 Oct: + the review's lines (currency words, business + app/AI/brand, numbers that are not a budget, payment currency, where the studio works). 25 Oct: + the re-verify lines (a price said back after the amount, ads or copy asked with a website or a price, paying an amount, \"are you in X\").",
+  "note": "Ask TESERACT matcher corpus (node _tools/chat-test.cjs). intent = the expected answer id; 'any' lists the ids that are all acceptable (adversarial lines may go to the discount, off-topic or no-data answer, never to a price or a name). slots = brief fields the message must fill. 24 Oct: + the review's lines (currency words, business + app/AI/brand, numbers that are not a budget, payment currency, where the studio works). 25 Oct: + the re-verify lines (a price said back after the amount, ads or copy asked with a website or a price, paying an amount, \"are you in X\"); a lakh or a crore is rupees. 26 Oct: + the second re-verify lines; budget = the amount the message must save as the budget, nobudget = it must save none.",
   "items": [
     {"cat": "pricing", "q": "how much is a website", "intent": "price.website"},
     {"cat": "pricing", "q": "How much does it cost?", "intent": "price.general"},
@@ -226,6 +226,21 @@
     {"cat": "website", "q": "we can only pay ₹30,000 for the website", "intent": "price.website"},
     {"cat": "ecommerce", "q": "I want to pay 40k in rupees for an online store", "intent": "price.ecommerce"},
     {"cat": "about", "q": "are you in the uk", "intent": "faq.1"},
-    {"cat": "currency", "q": "what is 50k in dollars", "intent": "price.currency"}
+    {"cat": "currency", "q": "what is 50k in dollars", "intent": "price.currency"},
+    {"cat": "about", "q": "are you in india", "intent": "faq.1"},
+    {"cat": "budget", "q": "my budget is 2 lakh", "intent": "price.budget"},
+    {"cat": "ecommerce", "q": "we have 1 lakh products, how much for an online store", "intent": "price.ecommerce"},
+    {"cat": "ecommerce", "q": "50k is what an online store starts at?", "intent": "price.ecommerce", "nobudget": true},
+    {"cat": "ecommerce", "q": "the site says 50k for a store, right", "intent": "price.ecommerce", "nobudget": true},
+    {"cat": "ecommerce", "q": "is 50k the lowest for a store", "intent": "price.ecommerce", "nobudget": true},
+    {"cat": "ecommerce", "q": "we make 3 lakh a month in sales, how much for a store", "intent": "price.ecommerce", "nobudget": true},
+    {"cat": "website", "q": "you said 35000, is that for 5 pages", "intent": "price.website", "nobudget": true},
+    {"cat": "adversarial", "q": "is 35k the lowest you can go", "any": ["price.discount"], "nobudget": true},
+    {"cat": "budget", "q": "can you do a website for 30000?", "intent": "price.budget", "budget": 30000},
+    {"cat": "website", "q": "I can pay 25000 for a website", "intent": "price.website", "budget": 25000},
+    {"cat": "nodata", "q": "do we pay 50k before you start", "intent": "nodata.payment", "nobudget": true},
+    {"cat": "nodata", "q": "should I pay 35k in advance", "intent": "nodata.payment", "nobudget": true},
+    {"cat": "nodata", "q": "can you manage my instagram marketing", "intent": "nodata.other"},
+    {"cat": "services", "q": "do you make landing pages for marketing campaigns", "intent": "faq.6"}
   ]
 }

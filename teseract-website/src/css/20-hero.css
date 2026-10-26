@@ -170,8 +170,8 @@
 @keyframes hero-lead-fade{from{opacity:0}}
 /* Name caption. Pointer screens: rolls in at the tile's foot on hover / keyboard focus (lifted by 20-hero.js to stay
    inside the tile's visible part). Touch screens: always shown, static (no roll, no blur) in a strip under the image,
-   so it never covers the artwork - the name, plus the industry where a tile is wide enough (from 600px); an
-   Interactive Concept's note follows it in the same strip. */
+   so it never covers the artwork - the name and the industry (after a dot from 600px, on phones a line of its own,
+   mobile audit PAR2-01), then the tile's label pill and an Interactive Concept's note (below). */
 .hero-tile__cap{position:absolute;z-index:3;right:10px;bottom:calc(10px + var(--cap-lift,0px));display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;column-gap:7px;
   max-width:calc(100% - 20px);padding:7px 10px 8px;background:rgba(8,8,8,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--ink);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 10px 24px -10px rgba(0,0,0,.8);
@@ -180,6 +180,7 @@
 .hero-tile__cap .roll{height:19px;line-height:19px;vertical-align:middle}
 .hero-tile__dot{color:var(--red-dot)}
 .hero-tile__ind{color:rgba(244,244,242,.66)}
+.hero-tile__nw{white-space:nowrap}   /* a hyphenated word of the industry stays whole (home_hero._cap) */
 .hero-tile:hover .hero-tile__cap,.hero-tile:focus-visible .hero-tile__cap{opacity:1;transform:none}
 @media (hover:none){
   .hero-tile__cap{position:static;max-width:none;justify-content:flex-start;padding:8px calc(10px + var(--clear,0px)) 9px 10px;
@@ -189,14 +190,20 @@
   .hero-tile__cap .roll>span,.hero-tile:hover .hero-tile__cap .roll>span{white-space:normal;text-wrap:balance;transform:none}
   .hero-tile__cap .roll>span+span{display:none}
 }
-@media (hover:none) and (max-width:599.98px){.hero-tile__dot,.hero-tile__ind{display:none}}
+/* phones (tiles ~150-200px): no dot, the industry as the strip's second line - 12px, sentence case, two lines at most */
+@media (hover:none) and (max-width:599.98px){
+  .hero-tile__dot{display:none}
+  .hero-tile__cap .hero-tile__ind{flex:0 0 100%;margin-top:3px;font-size:12px;line-height:15px;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+  .hero-tile__cap .hero-tile__ind .roll>span:first-child{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+}
 /* Touch: the pause button (below) docks on the frame's right edge, over the outer 8-12px of the right-hand column's
    tiles - the text there that wraps (name, note) keeps clear of it. */
 @media (hover:none){.hero-col--4 .hero-tile{--clear:8px}}
 @media (hover:none) and (max-width:1439.98px){.hero-col--3 .hero-tile{--clear:8px}}
 @media (hover:none) and (max-width:799.98px){.hero-col--2 .hero-tile{--clear:12px}}
 /* label pill on EVERY tile, always visible: client vs concept at a glance - ink dot = Client Project,
-   red dot = Interactive Concept / Concept Project / Personal project */
+   red dot = Interactive Concept / Concept Project / Personal project. Pointer screens: in the image's top corner (a
+   landing page's loop: its foot); touch screens: in the name strip under the image (below). */
 .hero-tile__tag{position:absolute;z-index:3;left:8px;top:8px;display:inline-flex;align-items:center;gap:6px;max-width:calc(100% - 16px);
   padding:4px 9px 4px 7px;border-radius:999px;background:rgba(8,8,8,.82);color:var(--ink);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-family:var(--mono);font-size:10px;font-weight:500;line-height:14px;
@@ -212,7 +219,8 @@
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-family:var(--mono);font-size:10px;line-height:13px;letter-spacing:.01em}
 /* Phones (tiles ~130-200px wide) and touch screens: the pill at 11.5px on one line; an Interactive Concept's
    "Unofficial, ..." line leaves the image for a full-text strip under it (12px: the artwork stays visible and the
-   owner-required line is never cut), the pill stays on the image. */
+   owner-required line is never cut); the pill stays on the image in a pointer window under 480px and leaves it for the
+   name strip on touch screens (below). */
 @media (max-width:479.98px),(hover:none){
   .hero-tile__tag{gap:5px;padding:3px 7px 3px 6px;font-size:11.5px;line-height:15px;letter-spacing:.01em}
   .hero-tile__labels{position:static;display:block;max-width:none}
@@ -230,8 +238,9 @@
 /* narrow phones (tiles ~130-150px): a long pill wraps to two balanced lines instead of being cut, never smaller */
 @media (max-width:379.98px){
   .hero-tile__tag,.hero-tile__labels .hero-tile__tag{white-space:normal;text-overflow:clip;text-wrap:balance;border-radius:9px}
-  .hero-tile__dot,.hero-tile__ind{display:none}
+  .hero-tile__dot{display:none}
 }
+@media (hover:hover) and (max-width:379.98px){.hero-tile__ind{display:none}}   /* a narrow pointer window's hover caption: the name */
 /* A landing page's loop (.hero-tile--loop, home_hero._item; owner, 17 Oct): every frame of it opens with the site's own
    nav and headline, which the pill in the top corner covered (the first headline line on phones and tablets, and on
    desktop Tidings' note under it), so its labels sit at the foot of the frame, bottom left - over the site's lower half
@@ -256,14 +265,16 @@
 /* Touch screens (18 Oct verifiers): at the frame's foot the pill still hid the lower third of each site's second
    section (Sagewell's steps, Tidings' stats card, Emberpost's inbox, Maren Holt's book row) - on phones (16:9 frames
    ~85-110px tall) and on tablets (834px: 225px tiles, a 126px frame), with no hover to fade it - so a loop's pill leaves
-   the frame for the name strip under it - name, pill (then Tidings' note) - and the whole loop shows. Static from the
-   first paint, like the strip (no layout shift). 8px from the edges (the docked pause button's 12px in column 2), so the
-   pill stays on one line on a 360px phone's 151px tiles. */
+   the frame for the name strip under it - name, pill (then Tidings' note) - and the whole loop shows. The stills' pills
+   do the same (mobile audit VIS2-01: in the top corner they sat on SAN Media's, LiveCV's, VYRN's ... screens): one
+   place for every tile's pill, no pill on a screen. Static from the first paint, like the strip (no layout shift). 8px
+   from the edges (the docked pause button's 12px in column 2), so the pill stays on one line on a 360px phone's 151px
+   tiles. */
 @media (hover:none){
-  .hero-tile--loop .hero-tile__cap{padding-bottom:6px}
-  .hero-tile--loop .hero-tile__tag,.hero-tile--loop .hero-tile__labels .hero-tile__tag{position:static;display:flex;width:fit-content;
+  .hero-tile .hero-tile__cap{padding-bottom:6px}
+  .hero-tile .hero-tile__tag,.hero-tile .hero-tile__labels .hero-tile__tag{position:static;display:flex;width:fit-content;
     max-width:calc(100% - 8px - max(8px, var(--clear,0px)));margin:0 0 9px 8px;translate:none}
-  .hero-tile--loop .hero-tile__labels .hero-tile__tag{margin-bottom:6px}
+  .hero-tile .hero-tile__labels .hero-tile__tag{margin-bottom:6px}
 }
 
 /* Pause control (WCAG 2.2.2; the shared .motion-toggle, 02-components.css, for the hero's [data-motion-scope]):
@@ -333,6 +344,22 @@
 @media (max-width:719.98px){
   .hero__title{font-size:var(--h1-phone);line-height:var(--h1-phone-lh)}   /* ~1.3x the 32px section H2s, as on desktop */
   .hero__kicker{margin-bottom:14px;font-size:12px;letter-spacing:.14em}
+}
+/* Phones held sideways (landscape, at most 520px tall, from 656px wide; mobile audit TYPO-R2-03): the 64px H1 under the
+   64px top padding left the pill and the H1 alone in the first view. At 44px (one line, ~1.3x the 34px section H2s, as
+   on desktop), with the lockup's steps tightened and the two calls to action side by side (as on desktop; a 667px phone
+   stacked them), the pill, H1, lead and both calls to action fit 844 x 390 under the 56px header. */
+@media (orientation:landscape) and (max-height:520px) and (min-width:656px){
+  .hero.section{padding-top:12px}
+  .hero__inner{gap:16px}
+  .hero__lockup{gap:12px;padding:0}
+  .hero__kicker{margin-bottom:10px}
+  .hero__title{font-size:44px;line-height:1}
+  .hero__cta{width:auto}
+  .hero__buttons{grid-template-columns:1fr 1fr;width:auto}
+  .hero__btn:first-child{justify-self:end}
+  .hero__btn:last-child{justify-self:start}
+  .hero__btn,.hero__btn .btn{width:auto}
 }
 /* Without motion (reduced motion, or no JS: the head script sets .motion before the first paint, only where motion is
    allowed) the columns stand still, and the frame's fixed height (1000px; a phone's screen) clipped them: 10 of the 19

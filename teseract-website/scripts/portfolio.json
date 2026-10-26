@@ -519,7 +519,14 @@
       "alt": {
         "gallery-03": "'VYRN STUDIO' in giant letters under the header pill, over 'A SPACE FOR MODERN ESSENTIALS'. Below are the 'Index 1/2' text ('Our collections are studies in form and contrast. Functional design, considered volumes. Designed for real life, shaped by the streets.') with 'Explore collection', an overhead portrait of a model in black outerwear and sunglasses, and 'ABOUT VYRN — A space for discovery, reference and visual direction. Modern essentials, seen through an independent lens.' with 'Meet the studio'. At the bottom the black 'Our approach' section begins.",
         "gallery-08": "Bag drawer after adding one 'Hoodie in the night' (Black / M, €240) on its product page. The drawer reads 'Your bag (1) — Considered pieces. Collected by you.' and shows a quantity stepper, a delete button, subtotal €240, 'Shipping calculated at checkout.', 'CONTINUE TO CHECKOUT' and 'Private collection preview · illustrative prices'. An 'Added to your bag' toast sits over the dimmed product page, where size M is selected."
-      }
+      },
+      "focal": {
+        "gallery-03": "50% 40%"
+      },
+      "zoom": {
+        "gallery-03": [2.06, "50% 60.8%"]
+      },
+      "zoom_note": "Mobile audit VIS2-02 (21 Oct): the square crops of gallery-03 (the home gallery tile, its 1:1 slot, and the footer ring card) cut the giant VYRN STUDIO wordmark to 'RN STUD' and kept the black 'Our approach' band as a dark lower third. Drawn 2.06x about '50% 60.8%' of the square (focal 50%), the crop is the screen's portrait of the model in black outerwear and sunglasses alone: x .257-.743 of the square inside the photo's .246-.754, y .313-.799 inside .305-.811 (the band starts at .811). Square tiles only (projects.zoom); the Work card, the scene screen and the project page show the still whole."
     },
     {
       "order": 28,

@@ -98,9 +98,8 @@
 .cc-chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:22px;background:#1c1c1c;border:1px solid var(--line-3);color:var(--ink);font-size:15px;line-height:1.2;text-align:left;text-decoration:none;
   animation:cc-up4 .18s var(--ease) both;animation-delay:calc(var(--i,0) * 30ms);-webkit-tap-highlight-color:transparent}
 .cc-chip:hover,.cc-chip:active{background:#262626}
-/* "More below" (25 Oct, 30-ui.js bot): over the log's bottom edge while the rest of a long answer waits below */
-.cc-more{position:relative;flex:none;height:0;z-index:2}
-.cc-more .cc-chip{position:absolute;left:50%;bottom:10px;translate:-50% 0;box-shadow:0 8px 24px -6px #000}.cc-more svg{display:block}
+/* "More below" (30-ui.js bot): under the log, never over its links, while the rest of a long answer waits below */
+.cc-more{flex:none;display:flex;justify-content:center;padding:6px 16px;border-top:1px solid var(--line-2)}.cc-more[hidden]{display:none}.cc-more svg{display:block}
 .cc-chip:focus-visible,.cc-row:focus-visible,.cc-cta:focus-visible,.cc-proj:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .cc-chip svg{display:none;width:16px;height:16px;margin-left:-4px}
 .cc-chip[aria-pressed="true"]{background:#2a2a2a;border-color:var(--ink-2)}

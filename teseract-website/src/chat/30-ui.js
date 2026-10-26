@@ -10,7 +10,8 @@ const dock = document.querySelector('[data-cc]');
 if (!dock || !C || window.TSChat) return;
 const TS = window.TS || {}, root = document.documentElement, D = dock.dataset;
 const launch = dock.querySelector('[data-cc-launch]');
-const NS = dock.querySelector('svg').namespaceURI;   // the launcher's own shards are SVG
+// the launcher's own shards are SVG
+const NS = dock.querySelector('svg').namespaceURI;
 const fill = (t, o) => String(t).replace(/\{(\w+)\}/g, (m, k) => (o && o[k] != null ? o[k] : m));
 const S = {
   get: k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
@@ -153,7 +154,8 @@ const build = () => {
   dlg.addEventListener('cancel', e => { e.preventDefault(); const set = log.querySelector('.cc-chips.is-cur'); if (set && set.contains(document.activeElement)) { set.remove(); input.focus(); return; } hide(); });
   dlg.addEventListener('close', () => { if (open) finish(); });
   dlg.addEventListener('click', e => { if (e.target === dlg) hide(); });
-  dlg.addEventListener('click', e => {        // internal links: close at once, then the page transition runs
+  // internal links: close at once, then the page transition runs
+  dlg.addEventListener('click', e => {
     const a = e.target.closest('a[href]');
     if (!a || a.target === '_blank' || /^mailto:/.test(a.getAttribute('href'))) return;
     hide(true);
@@ -352,7 +354,8 @@ const chipsEl = (t) => {
     else {
       b = el('button', 'cc-chip', c.l, { type: 'button' });
       if (a.m) { b.setAttribute('aria-pressed', String(multi.has(a.m))); b.prepend(icon(I.check)); }
-      if (a.cur && 'pressed' in c) b.setAttribute('aria-pressed', String(!!c.pressed));   // (the switcher; not an offer)
+      // (the switcher; not an offer)
+      if (a.cur && 'pressed' in c) b.setAttribute('aria-pressed', String(!!c.pressed));
       b.addEventListener('click', () => {
         if (a.m) {
           const none = /^(None of these|Not sure yet)$/.test(a.m);
@@ -397,12 +400,17 @@ const toEnd = () => { log.scrollTop = log.scrollHeight; };
 const top = li => li.offsetTop - log.offsetTop - 12;
 // the cue: shown while the visitor reads a long answer from its start and more of it waits below; it goes at the bottom
 const showMore = li => { if (!moreTo) moreTo = li; more.hidden = false; };
-const noMore = () => { if (more) more.hidden = true; moreTo = null; };
-const onMore = () => {
-  const li = moreTo, f = more.contains(document.activeElement);
-  if (li && li.isConnected && log.scrollHeight - li.offsetTop + log.offsetTop > log.clientHeight) log.scrollTop = top(li); else toEnd();
-  noMore();
+// (26 Oct) focus on the cue when it goes (a tap, or the log scrolled to its end) moves to the chips in view, else the answer
+const noMore = li => {
+  if (!more) return;
+  const f = more.contains(document.activeElement);
+  more.hidden = true; moreTo = null;
   if (f) { const c = log.querySelector('.cc-turn--chips .cc-chip'), n = li && li.isConnected ? li : [...log.querySelectorAll('.cc-turn--b')].pop(); if (c && c.getBoundingClientRect().bottom <= log.getBoundingClientRect().bottom) c.focus({ preventScroll: true }); else if (n) { n.tabIndex = -1; n.focus({ preventScroll: true }); } }
+};
+const onMore = () => {
+  const li = moreTo;
+  if (li && li.isConnected && log.scrollHeight - li.offsetTop + log.offsetTop > log.clientHeight) log.scrollTop = top(li); else toEnd();
+  noMore(li);
 };
 // a chip's group goes when it is used: focus that was on one of its chips moves to the title first (24 Oct: it fell to
 // the page), and on to the next chips or the answer when it arrives (bot). keep: the reading position stays (bot)
@@ -436,11 +444,13 @@ const SR = {
 };
 const plain = t => t.b.map(b => (SR[b.t] ? SR[b.t](b) : '')).filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 
-// one bot turn after the typing shards: delay = min(900, 360 + 10 x words); reduced motion 120 ms. A turn taller than
-// the log shows from its start; the rest of the batch then lands below without moving it, behind "More below" (25 Oct:
-// the e-commerce answer's first turn was scrolled away unseen). The live region reads the whole batch once, at its end.
+// one bot turn after the typing shards: delay = min(900, 360 + 10 x words); reduced motion 120 ms. An answer taller
+// than the log (one turn, or a batch: the e-commerce answer) shows from its start; the rest then lands below without
+// moving it, behind "More below" (25 Oct: its first turn was scrolled away unseen). The live region reads the whole
+// batch once, at its end.
 const bot = async list => {
-  let hold = false;
+  let hold = false, f0 = null;
+  const over = li => log.scrollHeight - (li.offsetTop - log.offsetTop) > log.clientHeight - 24;
   const said = [];
   for (const t of list) {
     const words = plain(t).split(/\s+/).length;
@@ -449,16 +459,18 @@ const bot = async list => {
     const ty = el('li', 'cc-turn cc-turn--b cc-typing');
     ty.appendChild(mark('cc-tava is-typing'));
     log.appendChild(ty);
-    if (!hold) toEnd();
+    if (!hold && !(f0 && over(f0))) toEnd();
     await new Promise(r => setTimeout(r, reduced() ? 120 : Math.min(900, 360 + 10 * words)));
     ty.remove();
     push({ who: 'b', b: t.b, c: t.c || [], multi: t.multi, g: t.g }, hold);
     const c = t.c && t.c.length ? chipsEl(t) : null;
     if (c) log.appendChild(c);
-    strip();   // (24 Oct) before the scroll: the brief strip appearing makes the log shorter
-    const li = [...log.querySelectorAll('.cc-turn--b')].pop(), h = log.scrollHeight - (li ? li.offsetTop - log.offsetTop : 0);
+    // (24 Oct) before the scroll: the brief strip appearing makes the log shorter
+    strip();
+    const li = [...log.querySelectorAll('.cc-turn--b')].pop();
+    if (!f0) f0 = li;
     if (hold) { if (!atBottom()) showMore(li); }
-    else if (li && h > log.clientHeight - 24) { log.scrollTop = top(li); hold = true; if (!atBottom()) showMore(null); }
+    else if (f0 && over(f0)) { log.scrollTop = top(f0); hold = true; if (!atBottom()) showMore(f0 === li ? null : li); }
     else toEnd();
     if (t.g || t.b.some(b => b.t === 'price')) gesture(t.g || 'nod');
     log.removeAttribute('aria-busy');
@@ -466,9 +478,10 @@ const bot = async list => {
     said.push(plain(t) + (t.c && t.c.length ? ` ${C.options} ${t.c.map(x => x.l).join(', ')}.` : ''));
   }
   if (said.length) live.textContent = said.join(' ');
-  // after a chip: focus goes to the next chips, else the composer (on touch screens the newest answer: no keyboard pops)
+  // after a chip: focus goes to the next chips, else the composer (on touch screens the newest answer: no keyboard pops);
+  // the rest of a long answer waits below "More below", which takes it (26 Oct: on touch too, not chips out of view)
   const first = log.querySelector('.cc-turn--chips .cc-chip'), newest = [...log.querySelectorAll('.cc-turn--b')].pop();
-  if (focusChips && !more.hidden && !coarse()) more.firstChild.focus({ preventScroll: true });   // (the rest waits below)
+  if (focusChips && !more.hidden) more.firstChild.focus({ preventScroll: true });
   else if (focusChips && first) first.focus({ preventScroll: true });
   else if (focusChips && coarse() && newest) { newest.tabIndex = -1; newest.focus({ preventScroll: true }); }
   else if (focusChips) input.focus({ preventScroll: true });
@@ -544,7 +557,8 @@ const show = async (opts = {}) => {
   if (TS.lockScroll) TS.lockScroll(true);
   dlg.classList.remove('is-out', 'is-in', 'is-drag');
   dlg.showModal();
-  launch.setAttribute('aria-expanded', 'true');   // (the launcher carries the state; the dock is a plain div)
+  // (the launcher carries the state; the dock is a plain div)
+  launch.setAttribute('aria-expanded', 'true');
   dock.classList.remove('has-dot');
   vv(true);
   requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));
@@ -581,7 +595,8 @@ const finish = () => {
   if (!open) return;
   open = false;
   vv(false);
-  if (TS.lockScroll) TS.lockScroll(false);       // (the launcher stays shown under the chat: focus can return to it)
+  // (the launcher stays shown under the chat: focus can return to it)
+  if (TS.lockScroll) TS.lockScroll(false);
   if (dlg.open) dlg.close();
   dlg.classList.remove('is-out', 'is-drag');
   panel.style.transform = '';

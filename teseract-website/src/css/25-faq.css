@@ -109,6 +109,7 @@
   .faq-item:has(.faq-item__btn:focus-visible){outline:2px solid var(--red);outline-offset:3px}
 }
 .faq-item__q{flex:1 1 0;min-width:0;font-size:20px;font-weight:600;line-height:1;letter-spacing:-.02em;color:var(--ink);text-wrap:pretty}
+.faq-item__nw{white-space:nowrap}   /* a hyphenated word stays whole: 'e-commerce' never breaks at its hyphen (home_faq._question) */
 .faq-item__icon{display:inline-flex;width:24px;height:24px;flex:none;color:var(--ink);transition:transform var(--spring-d) var(--spring),color .3s var(--ease-io)}
 @media (hover:hover){.faq-item__icon:hover{transform:rotate(10deg)}}
 .faq-item__plus{display:inline-flex;width:100%;height:100%;transition:transform .3s var(--ease-io)}

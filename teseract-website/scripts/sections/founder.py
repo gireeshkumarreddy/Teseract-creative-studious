@@ -106,7 +106,11 @@ def frame(ctx):
     photo = ''
     if FOUNDER_PORTRAIT:
         p = FOUNDER_PORTRAIT
-        photo = lib.img(ctx, p['file'], p['alt'], w=p['w'], h=p['h'], cls='fdr-frame__photo')
+        # eager (PERF2-08): on phones the plate starts in the first screen, so the photo is requested with the first
+        # images, not after layout + the lazy margin; fetchpriority=low keeps it behind the hero monitor (the LCP):
+        # plain eager (Medium priority) measured a slightly later hero LCP on phones, low measures level with lazy
+        photo = lib.img(ctx, p['file'], p['alt'], w=p['w'], h=p['h'], cls='fdr-frame__photo', eager=True,
+                        attrs='fetchpriority="low"')
     cls = f'fdr-frame fdr-frame--{FRAME}' + (' fdr-frame--photo' if FOUNDER_PORTRAIT else '')
     return f'''<div class="{cls}" data-fdr-frame data-fdr-in>
         <div class="fdr-frame__tex" aria-hidden="true">{tex}</div>
@@ -234,10 +238,13 @@ WIN = 'first-place hackathon achievement'
 
 
 def bio():
-    """The three paragraphs; the first-place hackathon phrase stays in its sentence, drawn in an orange frame."""
+    """The three paragraphs; the first-place hackathon phrase stays in its sentence, drawn in an orange frame. Under
+    400px the phrase may wrap (26-founder.css, TYPO-R2-05), only after its first word: "hackathon achievement." stays
+    together, so the paragraph never ends on "achievement." alone."""
     b = F['body']
     assert b[2].count(WIN) == 1
-    p3 = T(b[2]).replace(WIN, f'<strong class="fdr-win">{WIN}</strong>', 1)
+    lead, rest = WIN.split(' ', 1)
+    p3 = T(b[2]).replace(WIN, f'<strong class="fdr-win">{lead} <span class="fdr-nw">{rest}</span></strong>', 1)
     return (f'<div class="fdr-bio"><p class="fdr-bio__p fdr-bio__p--lead" data-reveal>{T(b[0])}</p>'
             f'<p class="fdr-bio__p" data-reveal style="--d:80ms">{T(b[1])}</p>'
             f'<p class="fdr-bio__p" data-reveal style="--d:160ms">{p3}</p></div>')

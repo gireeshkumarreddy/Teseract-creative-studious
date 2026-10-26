@@ -598,3 +598,27 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   has no clear spot, so there it only hops in place; 844 x 390 home glides without lines. Files: src/chat/10-engine.js,
   20-flow.js, 30-ui.js, 40-chat.css, src/js/40-chat.js, src/css/40-chat.css, content.py (CHAT more_below),
   LAUNCH-CHECKLIST 3h (12), _tools/chat-corpus.json (+14 lines, 226).
+- DONE 25 Oct evening (site chatbot, repair round 2): on the phone home's first screen (360 / 390 / 430) the logo now
+  glides onto the hero's moving word band (decorative, under the buttons) and says its line beside it, over the band
+  only (first glide and line about 4 s after it arrives; never over the hero's text, buttons or linked images); it
+  arrives only once its corner is checked (it showed over the Pause control for a moment); a line no longer sits over a
+  small button the hit grid missed (a video's Play on Derlin Haus); its checks run one small task at a time. Chat: a long
+  answer of several turns (the store) shows from its first turn, and "More below" sits under the conversation, never
+  over a link; "1 lakh" / "5 crore" are rupees on any device; "fifty" products is read; "are you based in India"
+  no longer adds a currency chip. Still open: 844 x 390 home glides without a line; a strict 0 long tasks on the phone
+  home at 4x CPU (the launcher's hit tests and lines still cost a few). Files: src/js/40-chat.js, src/chat/10-engine.js,
+  20-flow.js, 30-ui.js, 40-chat.css, LAUNCH-CHECKLIST 3h (10)(12), _tools/chat-live.cjs, chat-corpus.json (229).
+- DONE 26 Oct (site chatbot, repair round 3): a price said back is never a budget, also when the amount comes first
+  ("50k is what an online store starts at?", "the site says 50k for a store, right", "is 50k the lowest for a store":
+  the store's price answer; on a pounds device "50k" was saved as £50,000), nor sales ("we make 3 lakh a month") or a
+  question about paying ("do we pay 50k before you start", "should I pay 35k in advance": payment terms, not covered);
+  an offered sum is ("I can pay 25,000 for a website", "can you do a website for 30,000?"). "Can you manage my
+  Instagram marketing" -> not covered; "landing pages for marketing campaigns" -> the landing-page FAQ. Launcher: a
+  line's bubble also checks the text under it by its boxes (on the 360 home a line from the lifted corner sat over
+  "Build beyond the ordinary", between the hit grid's rows); closing the chat re-tests its corner (it un-tucked over the
+  footer); on phones no landing dip or ring and a smaller line shadow, the pill's blur only where a pill can show
+  (home 390 at 4x CPU: about 1 late long task per run, was 4 with the cues, 0 without the launcher; the rest comes at
+  the glides themselves, not their cues: owner choice in 3h(12)). Chat: "More below" takes the focus on phones too (it went to
+  chips out of view) and hands it on when it goes. Files: src/chat/10-engine.js, 20-flow.js, 30-ui.js (trailing comments
+  moved onto their own lines: the lazy bundle drops them), src/js/40-chat.js, src/css/40-chat.css, LAUNCH-CHECKLIST 3h
+  (12), _tools/chat-corpus.json (241 lines, budget / nobudget checks), chat-test.cjs.

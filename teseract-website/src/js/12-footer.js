@@ -11,19 +11,26 @@
     const panels = [...document.querySelectorAll('[data-ft]')];
     if (!panels.length) return;
 
-    /* ---------- Clock: "10:06:57 PM — your local time" (tabular figures, updates every second) */
+    /* ---------- Clock: "10:06:57 PM — your local time" (tabular figures, updates every second). Its two formatters are
+       made the first time a footer panel is on screen (startClock), not at load: making them took 50-190 ms of app.js's
+       first task on a phone (mobile audit PERF2-07). Until then the time is not drawn (12-footer.css). */
     const clocks = [...document.querySelectorAll('[data-ft-clock]')];
     const tz = (clocks[0] && clocks[0].getAttribute('data-tz')) || undefined;
     const make = (locale, opts) => { try { return new Intl.DateTimeFormat(locale, Object.assign(opts, tz ? { timeZone: tz } : {})); } catch (e) { return null; } };
-    const fmt = make('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-    const iso = make('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
-    if (!fmt || !iso) {
+    let fmt = null, iso = null;
+    const formatters = () => {
+      if (fmt || !clocks.length) return !!fmt;
+      fmt = make('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      iso = make('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+      if (fmt && iso) return true;
       // unknown time zone (or no Intl): hide the line rather than show a wrong time
       clocks.forEach(c => { const line = c.closest('p'); if (line) line.hidden = true; });
       clocks.length = 0;
-    }
+      fmt = iso = null;
+      return false;
+    };
     const tick = () => {
-      if (!clocks.length) return;
+      if (!clocks.length || !fmt) return;
       const now = new Date();
       const text = fmt.format(now).replace(/ /g, ' ');
       const dt = iso.format(now);
@@ -31,14 +38,13 @@
     };
     let timer = 0;
     const startClock = () => {
-      if (timer || !clocks.length) return;
+      if (timer || !formatters()) return;
       tick();
       // align updates to the start of each second
       const loop = () => { tick(); timer = setTimeout(loop, 1000 - (Date.now() % 1000)); };
       timer = setTimeout(loop, 1000 - (Date.now() % 1000));
     };
     const stopClock = () => { clearTimeout(timer); timer = 0; };
-    tick();
 
     /* ---------- Ring images: fade in once loaded; fetch early, but only where the ring is shown */
     const ring = document.querySelector('[data-ft-ring]');

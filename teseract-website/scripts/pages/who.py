@@ -266,10 +266,11 @@ def _founder(ctx):
 def _intro(ctx):
     h = WHO['hero']
     b0, b1, b2 = (T(fmt(t)) for t in h['body'])
-    # the box text's last two words stay together: its column is narrow on 320-360px phones, where text-wrap:pretty
-    # still left "DIFFERENT." alone on the last line (TYPO-R2-05)
-    lead_, _, last_ = b1.rpartition(' ')
-    b1 = f'{lead_}&nbsp;{last_}' if lead_ else b1
+    # the box text's last two words stay together where its column is narrow (30-who.css .who-whobox__nw, < 1200px): on
+    # 320-360px phones text-wrap:pretty still left "DIFFERENT." alone on the last line (TYPO-R2-05); the >= 1200px box is
+    # balanced instead (a join there left "BUILD" alone on the middle line)
+    head_ = b1.rsplit(' ', 2)
+    b1 = f'{head_[0]} <span class="who-whobox__nw">{head_[1]} {head_[2]}</span>' if len(head_) == 3 else b1
     title = T(h['title']).replace(' small', ' <br>small', 1).replace(' with', ' <br>with', 1)
     # ---- bands A + B: H2, the three hero.body annotations, rock, decorative boxes (board 1333 x 824)
     ab_wires = wires(1333, 824, ''.join([

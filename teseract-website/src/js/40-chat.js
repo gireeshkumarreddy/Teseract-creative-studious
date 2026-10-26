@@ -1,7 +1,6 @@
-/* Ask TESERACT launcher (owner 21 Oct; markup chrome.chat_dock, look 40-chat.css). Load: a query + listeners; after
-   paint: button semantics; idle: corner obstacles, greeting, field watch, living. The chat loads on the first hover /
-   focus / touch or with the greeting (else, or in 4 s, it is a link to the contact form). Living (owner 21 Oct 23:20):
-   unscrolled, the mark visits clear edge spots, looks at the page, says a line now and then (CHAT 'say'); home on
+/* Ask TESERACT launcher (markup chrome.chat_dock, look 40-chat.css). Idle: corner obstacles, greeting, living. The
+   chat loads on the first hover / focus / touch or with the greeting (else, or after 4 s: the contact link).
+   Living (owner 21 Oct): unscrolled, the mark visits clear spots and says a line now and then (CHAT 'say'); home on
    scroll, menu, dialog, hidden tab; calm after a minute or once opened. Reduced motion or hushed: still. */
 (() => {
   const dock = document.querySelector('[data-cc]');
@@ -11,7 +10,7 @@
   const ss = (k, v) => { try { return v == null ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch (e) { return null; } };
   const saying = () => hi && !hi.hidden && hi.classList.contains('is-say');
   let p = null, opened = false, tuck = false, away = false, t0 = 0, tIn = 0, turns = 0, ft = 0, ht = 0, sw = 0, x0 = 0, home = () => {};
-  // hushed (WCAG 2.2.2): a bubble dismissed, Esc on the launcher, a Pause motion ('ts:motion'): home, still
+  // hushed (WCAG 2.2.2): a bubble dismissed, Esc, the page's Pause motion
   let hushed = !!ss('ts-cc-still');
   const hush = () => { hushed = true; ss('ts-cc-still', '1'); cl.remove('is-ring', 'is-breath', 'is-shim', 'is-bob'); home(1); }, dismiss = () => { fold(1); hush(); };
   document.addEventListener('ts:motion', e => { if (e.detail && e.detail.still) hush(); }, true);
@@ -30,7 +29,7 @@
       .then(c => c.open({ q, from: btn }), () => location.assign(btn.href))
       .finally(() => cl.remove('is-wait'));
   };
-  // fold the bubble; gone: dismissed or the chat opened (the dot goes, no more lines)
+  // fold the bubble; gone: dismissed or opened (no dot, no more lines)
   const fold = gone => {
     if (gone) { cl.remove('has-dot'); ss('ts-cc-hush', '1'); }
     clearTimeout(ht);
@@ -38,7 +37,7 @@
     hi.classList.add('is-off'); btn.removeAttribute('aria-describedby');
     clearTimeout(ft); ft = setTimeout(() => { hi.hidden = true; }, 200);
   };
-  const pop = (line, say, ms, side) => {   // the greeting or a line; folds itself unless hovered / focused
+  const pop = (line, say, ms, side) => {   // the greeting or a line; folds unless hovered / focused
     hi.querySelector('p').textContent = line; cl.toggle('is-side', !!side);
     hi.classList.toggle('is-say', say); hi.classList.remove('is-off'); hi.classList.add('is-on'); clearTimeout(ft); hi.hidden = false;
     cl.add('has-dot'); btn.setAttribute('aria-describedby', 'cc-hello');
@@ -51,7 +50,7 @@
     if (e.key === ' ') { e.preventDefault(); btn.click(); }
     if (e.key === 'Escape') dismiss();
   });
-  if (hi) {   // a chip asks; X, Esc, a swipe dismiss (focus: to the launcher); else a tap opens the chat
+  if (hi) {   // a chip asks; X, Esc, a swipe dismiss; a tap opens
     const off = () => { const f = hi.contains(document.activeElement); dismiss(); if (f) btn.focus({ preventScroll: true }); };
     hi.addEventListener('pointerdown', e => { x0 = e.clientX; sw = 0; });
     hi.addEventListener('pointerup', e => { if (e.clientX - x0 > 60) { sw = 1; off(); } });
@@ -74,11 +73,13 @@
     btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', resume ? d.ccL2 : d.ccL1);
     if (resume) dock.querySelector('.cc-pill').textContent = d.ccP2;
   });
-  // arrival: in full on a tab's first page, a fade after
+  // arrival: in full on a tab's first page, a fade after; once its corner is checked (25 Oct)
+  let due = '', ck = 0;
+  const appear = () => { if (due && ck) { tIn = now(); cl.add('is-in', due); due = ''; } };
   const arrive = () => {
     const first = !ss('ts-cc-seen');
     ss('ts-cc-seen', '1');
-    setTimeout(() => { tIn = now(); cl.add('is-in', first ? 'is-arrive' : 'is-fade'); }, first ? 600 : 0);
+    setTimeout(() => { due = first ? 'is-arrive' : 'is-fade'; appear(); }, first ? 600 : 0);
   };
   if (TS.afterIntro) TS.afterIntro(() => (root.classList.contains('ts-intro') ? document.addEventListener('ts:intro-end', arrive, { once: true }) : arrive()));
   else arrive();
@@ -88,9 +89,9 @@
     const R = matchMedia('(prefers-reduced-motion: reduce)'), still = () => R.matches || !root.classList.contains('motion') || hushed;
     const shut = () => (tuck && !away) || root.matches('.is-locked,.cc-field,.ts-intro,.cc-open');
     const ok = () => !opened && !shut();
-    const cue = c => { if (!shut() && !still()) cl.add(c); };   // breath, shimmer, ring, landing, hop
-    // corner obstacles (IntersectionObserver): A = the resting box + 12 px, B = 68 px above it and 8 px into it. A pause
-    // control in A lifts it 60 px; anything else in A, or in B while lifted (that control too, 25 Oct), tucks it
+    const cue = c => { if (!shut() && !still()) cl.add(c); };
+    // corner obstacles (IO): A = the resting box + 12 px, B = 68 px above it, 8 px into it. A pause control in A lifts
+    // it 60 px; anything else in A, or in B while lifted, tucks it
     const LIFT = '.motion-toggle:not([hidden])', AVOID = '.btn,.ct-submit,.ct-quick,.ct-input,.ct-chip,.ct-out,.ct-link,.ft-bar a,.ft-bar__motto,.ft__bigmark,'
       + '.pj-visit,.faq-btn,.sto-btn,.sto-rev__btn,.svc-tap,.video-ctl,[data-cc-avoid]';
     const inA = new Set(), inB = new Set(), inC = new Set();   // C: where the greeting would sit
@@ -103,9 +104,8 @@
       if (t) { tuck = true; cl.add('is-tuck'); kk(); }
       else if (tuck) back = setTimeout(untuck, 400);
     };
-    dock.addEventListener('cc:closed', untuck);
-    // tucked, it stays in the Tab order: focused (or tucking, or scrolled, while focused: 25 Oct) it shows in the first
-    // gap up its column clear of controls
+    dock.addEventListener('cc:closed', () => (untuck(), sync()));   // (26 Oct: re-tested)
+    // tucked, it stays in the Tab order: focused, it shows in a clear gap up its column
     const kk = () => {
       if (!tuck || away || document.activeElement !== btn) return;
       const r = btn.getBoundingClientRect(), s = btn.offsetWidth, x = r.left + r.width / 2, y0 = innerHeight - parseFloat(getComputedStyle(dock).bottom);
@@ -131,12 +131,13 @@
         els.forEach(x => o.observe(x));
         return o;
       });
+      requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => { ck = 1; appear(); }, 0)));
     };
     watch();
-    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { G = null; V.clear(); home(1); watch(); }, 150); });
-    // video controls added later join the obstacles
+    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { V.clear(); watch(); geo(); home(1); }, 150); });
+    // (video controls added later)
     if (TS.observeVideos) { const ov = TS.observeVideos; TS.observeVideos = r => { ov(r); clearTimeout(vt); vt = setTimeout(watch, 300); }; }
-    // a text field elsewhere has focus: it steps aside (the keyboard)
+    // a text field elsewhere focused: it steps aside
     const field = x => x && x.matches && x.matches('input,textarea,select,[contenteditable]') && !x.closest('dialog,[data-cc]');
     document.addEventListener('focusin', e => root.classList.toggle('cc-field', field(e.target)));
     document.addEventListener('focusout', () => setTimeout(() => root.classList.toggle('cc-field', field(document.activeElement)), 0));
@@ -146,25 +147,28 @@
     const BAD = 'a[href],button,input,select,textarea,summary,label,iframe,video[controls],[role=button],[role=link],[role=slider],[tabindex]:not([tabindex="-1"]),[contenteditable],header,nav,.ft-bar,[data-cc-avoid]';
     let wx = 0, wy = 0, wt = 0, tk = 0, mt = 0, prev = 0, act = 0, lastS = 0, lastB = 0, gap = 5e3, says = 0, n = 0;
     let hover = false, calm = false, hopped = false, short = !!(ss('ts-cc-calm') || ss('ts-cc'));
-    // reads and hit tests just after a paint, on a clean layout
+    // reads just after a paint
     const clean = f => requestAnimationFrame(() => setTimeout(() => { if (!document.hidden) f(); }, 0));
-    const geo = () => {   // (25 Oct: no layout read; M from watch)
+    const geo = () => {
       const [s, r, b, l, sb] = M, W = innerWidth - sb, H = innerHeight;
       return (G = { s, W, H, l: l || r, hx: W - r - s / 2, hy: H - b - s / 2, ph: W < 800 || matchMedia('(pointer:coarse)').matches });
     };
-    // spots: bottom left, up the right edge (desktop: left too)
+    // spots: a word band first (a ticker without links: decorative, 25 Oct), bottom left, up the right edge (desktop:
+    // left too); never next to its rest
+    const TK = [...document.querySelectorAll('[data-ticker]')].filter(t => !t.querySelector('a[href],button'));
     const spots = g => {
-      const L = g.l + g.s / 2, out = [[L, g.hy]];
+      const L = g.l + g.s / 2, out = [[L, g.hy]], band = [], hy = g.hy - (cl.contains('is-lift') ? 60 : 0), far = y => Math.abs(hy - y) > g.s;
       (g.ph ? [.8, .66, .52, .38] : [.7, .52, .36]).forEach(k => {
         const y = Math.max(120 + g.s / 2, g.H * k);
-        if (g.hy - y > g.s) { out.push([g.hx, y]); if (!g.ph) out.push([L, y]); }
+        if (g.hy - y > g.s && far(y)) { out.push([g.hx, y]); if (!g.ph) out.push([L, y]); }
       });
-      return out;
+      TK.forEach(t => { const r = t.getBoundingClientRect(); if (r.height && r.top > 120 && r.bottom < g.H) [r.top + 4, (r.top + r.bottom) / 2].forEach(y => { band.push([L, y]); if (far(y)) band.push([g.hx, y]); }); });
+      return [band, out];
     };
-    // hit test of kx x ky points, one a task: 2 = a control, a headline, text with a link (or a scroll), 1 = text, 0 =
-    // clear. Verdicts (V) hold at this scroll position: clear 30 s, taken until a scroll (25 Oct: not re-tested a hop)
-    const V = new Map();
-    const probe = (ax, ay, bx, by, kx, ky, cb) => {
+    // kx x ky hit tests, a task each: 2 = a control, headline, link (or a scroll), 1 = text, 0 = clear. Verdicts (V)
+    // hold at this scroll position: clear 30 s, taken until a scroll
+    const V = new Map(), TXT = 'p,li,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dd,dt,td';
+    const probe = (ax, ay, bx, by, kx, ky, cb, T) => {
       let t = 0;
       const P = [], mx = (ax + bx) / 2, my = (ay + by) / 2, s0 = lastS, key = [ax, ay, bx, by, kx].map(Math.round).join(), v = V.get(key);
       const done = r => { if (s0 === lastS) V.set(key, [r, now()]); cb(r); };
@@ -173,14 +177,15 @@
       for (let i = 0; i < kx * ky; i++) P.push([ax + (bx - ax) * (i % kx) / (kx - 1), ay + (by - ay) * Math.floor(i / kx) / (ky - 1)]);
       P.sort((a, b) => Math.hypot(a[0] - mx, a[1] - my) - Math.hypot(b[0] - mx, b[1] - my));
       const next = () => {
-        const [x, y] = P.shift(), st = document.elementsFromPoint(x, y).filter(e => !dock.contains(e)), b = st[0] && st[0].closest('p,li,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dd,dt,td');
-        if (s0 !== lastS || st.some(e => e.matches(BAD)) || (st[0] && parseFloat(getComputedStyle(st[0]).fontSize) >= 28)) return done(2);
+        const [x, y] = P.shift(), st = document.elementsFromPoint(x, y).filter(e => !dock.contains(e)), w = st[0] && !st[0].closest('[data-ticker]'), b = w && st[0].closest(TXT);
+        if (s0 !== lastS || st.some(e => e.matches(BAD)) || (w && parseFloat(getComputedStyle(st[0]).fontSize) >= 28)) return done(2);
         if (b) { if (b.matches('h1,h2') || b.querySelector('a[href],button')) return done(2); t = 1; }
         if (P.length) setTimeout(next, 0); else done(s0 !== lastS ? 2 : t);
       };
-      next();
+      // first, by their boxes, small buttons a grid misses (T, a line: text too, 26 Oct); a task each
+      setTimeout(() => [...document.querySelectorAll('button,[role=button],input,select,textarea' + (T ? ',' + TXT : ''))].some(e => { const r = e.getBoundingClientRect(); return r.width && r.right > ax && r.left < bx && r.bottom > ay && r.top < by && !dock.contains(e) && !(T && e.matches(TXT) && e.closest('[data-ticker],[aria-hidden="true"],.menu,dialog')); }) ? done(2) : setTimeout(next, 0), 0);
     };
-    // glide to a spot (null: home), turning a third, then looking at the page centre
+    // glide to a spot (null: home), turning a third, looking at the page centre
     const go = (c, ms, say) => {
       const g = G || geo(), x = c ? Math.round(c[0] - g.hx) : 0, y = c ? Math.round(c[1] - g.hy) : 0, at = c || [g.hx, g.hy];
       if (x === wx && y === wy) return;
@@ -192,11 +197,11 @@
       clearTimeout(mt); mt = setTimeout(() => { cl.remove('is-move'); if (ms !== 1) cue('is-land'); if (say) clean(speak); }, dur);
     };
     home = fast => { if (away) { if (saying()) fold(); go(null, fast ? 1 : 450); } };
-    // out to a clear spot (2 probed at most), else a hop in place; text is taken
+    // to a clear spot (2 probed at most), else a hop in place
+    const mix = a => { for (let k = a.length; k > 1; k--) { const j = Math.floor(Math.random() * k); [a[k - 1], a[j]] = [a[j], a[k - 1]]; } return a; };
     const hop = done => {
-      const g = G || geo(), all = spots(g);
+      const g = G || geo(), [band, out] = spots(g), all = mix(band).concat(mix(out));
       let i = 0, f = 0;
-      for (let k = all.length; k > 1; k--) { const j = Math.floor(Math.random() * k); [all[k - 1], all[j]] = [all[j], all[k - 1]]; }
       const end = c => { if (c && free()) go(c, 0, 1); else if (!c) cue('is-bob'); done(!!c); };
       const next = () => {
         const c = all[i++];
@@ -209,9 +214,9 @@
       };
       next();
     };
-    const speak = () => {   // until the chat opened or a bubble was dismissed
+    const speak = () => {
       if (!talk || still() || opened || ss('ts-cc') || ss('ts-cc-hush') || says > 3 || !hi.hidden || shut() || hover || now() - lastB < gap) return;
-      // above it, else beside it (towards the page), on a clear area
+      // above it, else beside it, on a clear area
       const g = G || geo(), s = g.s, l = cl.contains('is-l'), cx = g.hx + wx, cy = g.hy + wy - (cl.contains('is-lift') && !away ? 60 : 0);
       const w = Math.min(270, g.W - 32), ax = l ? cx - s / 2 : cx + s / 2 - w, by = cy - s / 2 - 10;
       const ws = Math.min(270, l ? g.W - cx - s / 2 - 26 : cx - s / 2 - 26), sx = l ? cx + s / 2 + 10 : cx - s / 2 - 10 - ws, w0 = wx + ',' + wy;
@@ -222,8 +227,8 @@
         dock.style.setProperty('--bw', (side ? ws : w) + 'px');
         pop(lines[i % lines.length], true, 7e3, side); cue('is-ring');
       };
-      const beside = r => (!r ? say(0) : ws >= 200 && probe(sx, cy - 46, sx + ws, cy + 46, 4, 3, q => !q && say(1)));
-      if (!away && [...inC].some(x => !x.matches(LIFT))) beside(2); else probe(ax, by - 92, ax + w, by, 4, 3, beside);
+      const beside = r => (!r ? say(0) : ws >= 200 && probe(sx, cy - 46, sx + ws, cy + 46, 4, 3, q => !q && say(1), 1));
+      if (!away && [...inC].some(x => !x.matches(LIFT))) beside(2); else probe(ax, by - 92, ax + w, by, 4, 3, beside, 1);
     };
     const later = (f, ms) => { clearTimeout(tk); tk = setTimeout(f, ms); };
     const settle = () => { calm = true; if (hopped) ss('ts-cc-calm', '1'); home(still()); later(rest, 9e3 + Math.random() * 6e3); };
@@ -250,14 +255,14 @@
     };
     // menu, dialog, field: home at once
     new MutationObserver(() => { if (away && root.matches('.is-locked,.cc-open,.cc-field')) home(1); }).observe(root, { attributes: true, attributeFilter: ['class'] });
-    // any bubble folds on scroll (25 Oct: the greeting sat over a link)
+    // any bubble folds on scroll
     let kr = 0;
     addEventListener('scroll', () => { lastS = now(); V.clear(); if (away) home(); else if (hi && !hi.hidden) fold(); if (tuck && !kr) kr = requestAnimationFrame(() => { kr = 0; kk(); }); }, { passive: true });
     ['pointerdown', 'keydown'].forEach(t => addEventListener(t, () => { lastS = now(); }, { passive: true, capture: true }));
     dock.addEventListener('pointerenter', () => { hover = true; });
     dock.addEventListener('pointerleave', () => { hover = false; });
     document.addEventListener('visibilitychange', () => { if (document.hidden) { clearTimeout(tk); prev = 0; home(1); } else later(calm ? rest : step, 1500); });
-    later(step, 1200);
+    geo(); later(step, 1200);
 
     // the greeting: once a tab, after 8 s seen or 40% down the page (never in the first 3 s)
     if (!hi || ss('ts-cc-hello')) return;

@@ -20,7 +20,7 @@ s = s.replace(/(\d),(?=\d)/g, '$1')
 .replace(/₹|\brs\.?(?=[\s\d])|\binr\b|\brupees?\b|\brupaye\b/g, ' _inr ').replace(/€|\beur\b|\beuros?\b/g, ' _eur ')
 .replace(/£|\bgbp\b|\bpounds?\b|\bquid\b/g, ' _gbp ').replace(/\baed\b|\baed(?=\d)|\bdirhams?\b/g, ' _aed ').replace(/\$|\bdollars?\b|\bbucks\b/g, ' _dol ')
 .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)\s+(?=(?:thousand|lakhs?|lacs?|crores?)\b)/g, (m, w) => NUMW[w] + ' ')
-.replace(/(\d+(?:\.\d+)?)\s*(k|thousand|lakhs?|lacs?|l|cr|crores?)\b/g, (m, n, u) => ' ' + Math.round(+n * (u[0] === 'k' || u[0] === 't' ? 1e3 : u[0] === 'c' ? 1e7 : 1e5)) + ' _k ')   // (_k: said as money)
+.replace(/(\d+(?:\.\d+)?)\s*(k|thousand|lakhs?|lacs?|l|cr|crores?)\b/g, (m, n, u) => ' ' + Math.round(+n * (u[0] === 'k' || u[0] === 't' ? 1e3 : u[0] === 'c' ? 1e7 : 1e5)) + (/^[kt]/.test(u) ? ' _k ' : ' _k _inr '))
 .replace(/n't\b/g, ' not').replace(/'re\b/g, ' are').replace(/'m\b/g, ' am').replace(/'ve\b/g, ' have').replace(/'ll\b/g, ' will').replace(/'d\b/g, ' would').replace(/'s\b/g, '')
 .replace(/\be[\s-]?commerce\b|\becom\b|\bonline (?:store|shop|business)s?\b|\bweb ?shops?\b|\be-?shops?\b/g, ' ecommerce ')
 .replace(/\bone[\s-]pager\b|\bsingle[\s-]page\b/g, ' one_pager ').replace(/\b3[\s-]?d\b|\bthree[\s-]?d\b/g, ' 3d ')
@@ -101,7 +101,7 @@ for (const l of langs || []) {
 const m = /^[a-z]{2,3}(?:-[A-Za-z]{4})?-([A-Z]{2}|\d{3})\b/i.exec(l);
 if (!m) continue;
 const r = m[1].toUpperCase();
-if (r === 'US' && l.toLowerCase().startsWith('en')) return { code: 'INR', unknown: true };   // en-US: many devices' default
+if (r === 'US' && l.toLowerCase().startsWith('en')) return { code: 'INR', unknown: true };
 if (P.lang[r]) return { code: P.lang[r], near: R.lang_near.split(' ').includes(r) };
 return { code: 'INR', unknown: true };
 }
@@ -118,10 +118,12 @@ const bucket = (n, cuts, labels) => labels[cuts.findIndex(c => n <= c) < 0 ? lab
 const PAGES = ['One page', '2 to 5', '6 to 10', 'More than 10'];
 const PRODUCTS = ['Under 20', '20 to 100', '100 to 500', 'More than 500'];
 const CATS = ['1 to 3', '4 to 10', 'More than 10'];
-const num = w => /^\d+$/.test(w) ? +w : NUM[w];
+const num = w => /^\d+$/.test(w) ? +w : NUM[w] || NUMW[w];
 const CU = '_(?:inr|eur|gbp|usd|aed|cad|aud|sgd|dol)', CURW = new RegExp('^' + CU + '$');
 const GETQ = new RegExp('\\bwhat (?:do|does|would|will|can|could) (?:(?:i|we|one|it) |(?:' + CU + ' )?\\d+ (?:_k )?(?:' + CU + ' )?)(?:get|include|cover|buy)\\b');
-const QUOTED = /^(?:(?:is|was|as) )?(?:the|your|ur|a) (?:(?:starting|start|minimum|min|base|lowest|usual|standard) )?(?:price|cost|rate|fee|charge|minimum|starting)\b/;
+const QUOTED = /^(?:(?:is|was|as) )?(?:(?:the|your|ur|a) (?:(?:starting|start|minimum|min|base|lowest|usual|standard) )?(?:price|cost|rate|fee|charge|minimum|starting)|(?:the|your|ur) (?:lowest|least|cheapest|base|minimum|min|entry))\b|^(?:is|was) (?:what|where|how|when)\b.*\b(?:start|starts|starting|begin|begins|minimum|lowest)\b/;
+const RATE = /^(?:(?:a|per|every|each|in|of) (?:month|year|day|week|quarter|annum|sales|revenue|turnover|profit|income)|monthly|yearly|annually|annual|daily|weekly)\b/;
+const PAYQ = /^(?:so )?(?:do|does|did|should|shall|must|will|would|is|are|how|what|when|why)\b|\b(?:installments?|instalments?|emi|upfront|advance|deposit|milestones?|parts)\b/;
 const NOUN = /^(percent|off|each|per|pages?|products?|items?|skus?|categories|category|collections?|weeks?|months?|days?|hours?|years?|yrs?|screens?|employees?|staff|people|persons?|users?|members?|stores?|shops?|outlets?|branches?|locations?|cities|countries|customers?|clients?|followers?|visitors?|orders?|students?|rooms?|beds?|units?|pieces?|times|sq|sqft|km|kg)$/;
 const slots = (raw, s, kb, active, want) => {
 const o = {};
@@ -129,7 +131,7 @@ if (/[^\s@]+@[^\s@]+\.[a-z]{2,}/i.test(raw) || (raw.replace(/\D/g, '').length >=
 let m = /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty|single)\s*(?:to|or)?\s*(\d+)?\s*(?:pages?|screens?)\b/.exec(s);
 if (m && num(m[1])) { const n = Math.max(num(m[1]), +(m[2] || 0)); o.pages = bucket(n, [1, 5, 10], PAGES); o.pagesN = n; }
 else if (/\blanding\b|\bone_pager\b/.test(s)) { o.pages = 'One page'; o.pagesN = 1; }
-m = /\b(\d+)\s*(?:_k\s*)?(?:to\s*\d+\s*(?:_k\s*)?)?(?:products?|items?|skus?)\b/.exec(s);
+m = /\b(\d+)\s*(?:_k\s*(?:_inr\s*)?)?(?:to\s*\d+\s*(?:_k\s*(?:_inr\s*)?)?)?(?:products?|items?|skus?)\b/.exec(s);
 if (m) { o.productsN = +m[1]; o.products = bucket(o.productsN, [19, 100, 500], PRODUCTS); }
 else if (/\b(?:a few|few|some|a handful of) (?:products|items)\b/.test(s)) o.products = PRODUCTS[0];
 else if (/\bhundreds? of (?:products|items)\b/.test(s)) o.products = PRODUCTS[2];
@@ -147,7 +149,7 @@ else if (/\bthis year\b/.test(s)) o.timeline = 'This year';
 else if (/\b(flexible|no rush|no hurry|whenever)\b/.test(s)) o.timeline = 'Flexible';
 const ws = s.split(' '), money = /\b(budget|budgets|spend|spending|afford)\b/.test(s);
 let best = null;
-if ((GETQ.test(s) || /\b(fixed|final|exact|confirm|correct|true)\b/.test(s)) && !money) return o;
+if ((GETQ.test(s) || /\b(fixed|final|exact|confirm|correct|true)\b|\b(right|is not it|isnt it)$/.test(s)) && !money) return o;
 for (let i = 0; i < ws.length; i++) {
 if (!/^\d+$/.test(ws[i])) continue;
 const n = +ws[i], k = ws[i + 1] === '_k', j = i + (k ? 2 : 1);
@@ -158,12 +160,15 @@ if (cur || /\b(what|whats|how_much|convert|converted|conversion)\b/.test(before)
 cur = ws[at + 1]; at += 2;
 }
 const after = ws[at] || '';
-if (NOUN.test(after) || (QUOTED.test(ws.slice(at, at + 5).join(' ')) && !/\b(budget|spend|afford)\b/.test(before))) continue;
-if (/\b(sell|sells|selling|sold|priced|mrp|worth|price|prices|cost|costs|charge|charges|quote|quoted|told|said|rate|rates|revenue|turnover|sales|profit|income|salary|valuation|funding|raised|loan)\b/.test(before) && !/\b(budget|spend|afford)\b/.test(before)) continue;
+if (NOUN.test(after) || (QUOTED.test(ws.slice(at, at + 6).join(' ')) && !/\b(budget|spend|afford)\b/.test(before))) continue;
+if (/\b(sell|sells|selling|sold|priced|mrp|worth|price|prices|cost|costs|charge|charges|quote|quoted|told|said|says|mentions|mentioned|shows|showed|lists|listed|states|stated|rate|rates|revenue|turnover|sales|profit|income|salary|valuation|funding|raised|loan)\b/.test(before) && !/\b(budget|spend|afford)\b/.test(before)) continue;
+const pay = /\bpay(ing)?(?: you| u)?$/.test(before);
+if ((pay && PAYQ.test(s)) || RATE.test(ws.slice(at, at + 2).join(' ')) || /\b(make|makes|made|earn|earns|earned|generate|generates|generated|clock|clocks)(?: (around|about|roughly|over|nearly|almost|approx))?$/.test(before)) continue;
 if (!cur && !k && n >= 1900 && n <= 2100 && want !== 'budget' && !/\b(budget|spend|afford|upto|up to|max|maximum)\b/.test(before)) continue;
-const near = /\b(budget|budgets|spend|spending|afford|upto|up to|max|maximum|within|under|below|than)\b/.test(before);
+const near = /\b(budget|budgets|spend|spending|afford|upto|up to|max|maximum|within|under|below|than)\b/.test(before) || pay;
 const weak = /\b(around|about|approx|approximately|roughly|only|just)\b/.test(before) && n >= 1000;
-if (n < 50 || !(cur || k || near || weak || money || want === 'budget')) continue;
+const fr = ws[i - 1] === 'for' && /\b(do|make|build|design|create|develop|get)\b/.test(ws.slice(Math.max(0, i - 7), i).join(' ')) && /^(|only|please|total|max|maximum|budget|possible|right|ok|okay|or|and|is|can|could|would|will|then|all|flat|inclusive|including|with)$/.test(after);
+if (n < 50 || !(cur || k || near || weak || money || fr || want === 'budget')) continue;
 let code = cur ? cur.slice(1).toUpperCase() : active;
 if (code === 'DOL') code = ['USD', 'CAD', 'AUD', 'SGD'].includes(active) ? active : 'USD';
 const rate = code === 'INR' ? 1 : kb.pricing.rates[code];
@@ -249,7 +254,7 @@ return { id: x.id, fam: x.fam, v: Math.max(0, Math.min(1, v)) };
 return out.sort((p, r) => r.v - p.v);
 };
 const WEB = /\b(website|websites|site|sites|web|webpage|webpages|landing|homepage|one_pager|blog|portfolio)\b/;
-const AMT = new RegExp('\\b\\d+ (?:_k )?' + CU + '|' + CU + ' \\d');   // (an amount with its currency)
+const AMT = new RegExp('\\b\\d+ (?:_k )?' + CU + '|' + CU + ' \\d');
 const gate = (kb, a, prev) => {
 const s = a.s, has = w => a.toks.includes(w), c = a.c, ent = a.ent;
 if (a.sl && a.sl.personal) return 'meta.personal';
@@ -261,7 +266,7 @@ if ((ent.cur || /\bcurrenc/.test(s)) && /\b(pay|paid|paying|payment|payments|inv
 && !/\bhow_much\b|\b(price|prices|cost|costs|quote)\b/.test(s) && !(a.sl && a.sl.budget) && !AMT.test(s)) return 'nodata.payment';
 if (has('hosting')) return 'nodata.hosting';
 if (has('domain')) return 'nodata.domain';
-if (has('installment') || /\bpayment (terms|methods?|options?|plan|schedule)\b|\bhow (do|can|should) i pay\b|\bpay in (parts|instalments|installments)\b|\bmilestones?\b/.test(s)) return 'nodata.payment';
+if (has('installment') || /\bpayment (terms|methods?|options?|plan|schedule)\b|\bhow (do|can|should) i pay\b|\bpay in (parts|instalments|installments)\b|\bmilestones?\b|\bpay\b.*\bbefore (you|we) (start|begin)\b/.test(s)) return 'nodata.payment';
 if (has('gst')) return 'nodata.gst';
 if (has('refund') || /\bmoney back\b/.test(s)) return 'nodata.refund';
 if (has('stack') || ((/\bshopify\b|\bwoocommerce\b/.test(s)) && !c.has('PRICE'))) return 'nodata.stack';
@@ -270,14 +275,15 @@ if ((has('jobs') || (has('careers') && !ent.project && !c.has('SITE') && !/\b(bu
 if (has('maintenance')) return c.has('PRICE') || has('maintenance') && /\bcharges?\b|\bplan\b/.test(s) ? 'price.maintenance' : 'faq.9';
 if (/\b(you|your|teseract|studio|gireesh)\b/.test(s) && !c.has('PRICE') && (/\b(based|located|situated|internationally|international|abroad|overseas|remote|remotely|worldwide|globally)\b/.test(s)
 || ((ent.place || /\boutside\b/.test(s)) && /\b(work|working|clients?|customers?|serve|available|deliver)\b/.test(s))
-|| (ent.place && /\b(are|is) (you|your studio|the studio|teseract|gireesh) (in|from)\b/.test(s)))) return 'faq.1';   // ("are you in the uk")
-const mkt = /\b(social media|digital|performance|influencer|email|content) marketing\b(?! (agency|agencies|company|companies|firm|business|website|site))|\b(google|facebook|instagram|meta|paid) ads\b|\bads? campaigns?\b|\badvertising\b|\bppc\b|\bcopywriting\b|\b(write|writing|writes) (the |my |our )?(content|copy|text|blogs?)\b|\bcontent writing\b/.test(s);
+|| (ent.place && /\b(are|is) (you|your studio|the studio|teseract|gireesh) (in|from)\b/.test(s)))) return 'faq.1';
+const mkt = /\b(social media|digital|performance|influencer|email|content|instagram|facebook|linkedin|youtube|whatsapp|online|video) marketing\b(?! (agency|agencies|company|companies|firm|business|website|site))|\b(google|facebook|instagram|meta|paid) ads\b|\b(ads?|marketing) campaigns?\b|\badvertising\b|\bppc\b|\bcopywriting\b|\b(write|writing|writes) (the |my |our )?(content|copy|text|blogs?)\b|\bcontent writing\b|\bmanag\w* (my|our) (instagram|facebook|linkedin|youtube|social media|socials)\b/.test(s);
 if ((/\bguarantee/.test(s) && !c.has('TIME')) || /\b(success|conversion|bounce|interest) rates?\b/.test(s)) return 'nodata.other';
-if (mkt) { if (!c.has('PRICE') && !((c.has('SITE') || c.has('ECOM') || WEB.test(s)) && /\b(build|builds|design|make|create|develop|need|want|looking)\b/.test(s))) return 'nodata.other'; a.also = 1; }
+if (mkt) { if (!c.has('PRICE') && !((c.has('SITE') || c.has('ECOM') || WEB.test(s)) && /\b(build|builds|design|make|create|develop|need|want|looking)\b/.test(s))) return 'nodata.other'; a.also = 1; if (!c.has('PRICE') && /\blanding\b/.test(s)) return 'faq.6'; }
 if (/\bfree\b/.test(s) && /\b(consultation|consult|call|meeting|discovery|session|quote|estimate|first call)\b/.test(s)) return 'nodata.consult';
 if (/\blaunch day\b|\bday of (the )?launch\b|\bon launch\b/.test(s)) return 'process.step.8';
 if (/\b(only|one|single) (person|man|guy|designer|developer|member)\b|\bsolo\b|\balone\b|\bby (yourself|himself)\b|\b(just|only) (you|him|gireesh)\b|\bone man\b|\bfreelancers?\b/.test(s)) return 'about.team';
-if (disc) return 'price.discount';
+const ask = !(a.sl && a.sl.budget) && (AMT.test(s) || /\b\d+ _k\b|\b(said|says|quoted|mentioned) \d{4,}\b/.test(s)) &&/\b(minimum|starting|start|starts|begin|begins|lowest|least|base|entry|says|said|mentions|mentioned)\b/.test(s);
+if (disc && !(ask && !/\b(go|less|discount|negotiate|cheaper|reduce|lower|bargain|best)\b/.test(s))) return 'price.discount';
 if (/\bfree\b/.test(s) && !/\bfeel free\b|\bfree time\b|\bfreedom\b/.test(s)) return 'price.free';
 if (ent.conv) return 'price.currency';
 const get = GETQ.test(s);
@@ -285,7 +291,7 @@ if ((c.has('INCLUDE') || get) && (c.has('PRICE') || /\b\d{4,}\b|\bstart(ing)?\b/
 if (c.has('INCLUDE') && c.has('ECOM')) return 'svc.e-commerce';
 if (c.has('TIME') && !c.has('PRICE') && !ent.project) return 'time.timeline';
 if (ent.project && (c.has('PRICE') || c.has('BUDGET')) && !(a.sl && a.sl.budget)) return 'price.project';
-if (!(a.sl && a.sl.budget) && (AMT.test(s) || /\b\d+ _k\b/.test(s)) && /\b(minimum|starting|start|lowest|least)\b/.test(s)) return c.has('ECOM') ? 'price.ecommerce' : c.has('SITE') ? 'price.website' : 'price.general';
+if (ask) return c.has('ECOM') ? 'price.ecommerce' : c.has('SITE') ? 'price.website' : 'price.general';
 if (a.sl && a.sl.budget && !c.has('INCLUDE') && !(c.has('PRICE') && (c.has('SITE') || c.has('ECOM')))) return 'price.budget';
 if (c.has('BUDGET') && !c.has('PRICE')) return 'price.discount';
 const rest = a.ws.filter(t => !STOP.has(t) && !/^_/.test(t) && !(kb._p.place[t] || kb._p.other.has(t)) && !/^(based|base|live|living|from|located|price|prices|currency|show|change|switch|country|convert|see|display|please|company|business|firm|startup|agency|team|do|us|we)$/.test(t));
@@ -418,7 +424,7 @@ if (path === 'W' || path === 'L') {
 if (direct) lead.push(P(C.p0[1]), { t: 'list', items: C.factors_web, src: 'chat:factors_web' });
 return next(priceTurn('w', lead).concat(st.bq ? budgetReply() : [], [P(C.w_after)]));
 }
-if (path === 'E') {   // two turns (24 Oct): what the service includes, then the price and the first question
+if (path === 'E') {
 const s = kb().services.find(v => v.id === 'e-commerce');
 return [{ b: lead.concat([P(C.e_intro), P(s.body, s.src + '.body'), { t: 'included' }]), c: [] }]
 .concat(next(priceTurn('e', []).concat(st.bq ? budgetReply() : [], [P(C.e_after)])));
@@ -438,7 +444,7 @@ const serviceId = name => SVC[name];
 const GUESS = [['THREE_D', 'Interactive & 3D'], ['AI', 'AI & Automation'], ['SAAS', 'Product & SaaS'], ['BRAND', 'Brand & Digital Identity'], ['STRAT', 'Digital Strategy']];
 const guessService = a => {
 const w = EN.weigh(a.toks || []);
-a.c.forEach(k => { if (!w[k]) w[k] = .5; });   // (a concept found by phrase: "digital product")
+a.c.forEach(k => { if (!w[k]) w[k] = .5; });
 const best = GUESS.reduce((b, g) => ((w[g[0]] || 0) > (w[b[0]] || 0) ? g : b), GUESS[0]);
 return w[best[0]] ? best[1] : null;
 };
@@ -569,7 +575,7 @@ const c = env.cur();
 if (c.unknown) { env.setCur(cur); st.brief.regionDone = 1; }
 if (c.unknown || (cur === c.code && !c.unknown)) return [{ b: [P(fill(C.cur_country, { cur_name: name(cur), country }))], c: [] }].concat(back);
 const t = [{ b: [P(fill(C.cur_offer, { cur_now: name(c.code), cur_name: name(cur) }))], c: [] }].concat(back);
-t[t.length - 1].c = (t[t.length - 1].c || []).concat(offer(cur));   // (only the last turn keeps its chips)
+t[t.length - 1].c = (t[t.length - 1].c || []).concat(offer(cur));
 return t;
 }
 env.setCur(cur);
@@ -671,21 +677,21 @@ if (m.kind === 'answer') {
 st.misses = 0;
 const lead = [], ok = c => c && c !== '?' && c !== 'DOL';
 let offerCur = null;
-if (m.id !== 'price.currency' && !/^nodata\./.test(m.id)) {   // ("can I pay in euros": not a display request)
+if (m.id !== 'price.currency' && !/^nodata\./.test(m.id)) {
 if (ok(e.cur) && e.ask) {
 if (e.cur !== cur.code || cur.unknown) { env.setCur(e.cur); lead.push(P(fill(C.cur_switched, { cur_name: kb().pricing.cur[e.cur].name }))); }
-} else if (cur.unknown && e.place && ok(e.place[0]) && m.id !== 'faq.1') {   // (not "do you work in the UK")
+} else if (cur.unknown && e.place && ok(e.place[0]) && m.id !== 'faq.1') {
 env.setCur(e.place[0]); st.brief.regionDone = 1;
 lead.push(P(fill(C.cur_country, { cur_name: kb().pricing.cur[e.place[0]].name, country: e.place[1] })));
 } else {
 const c = ok(e.cur) ? e.cur : e.place && ok(e.place[0]) ? e.place[0] : null;
-if (c && (c !== cur.code || cur.unknown)) offerCur = c;
+if (c && (c !== cur.code || cur.unknown) && m.id !== 'faq.1') offerCur = c;
 }
 }
 const sl = m.a.sl;
 const said = /^price\.(website|ecommerce|budget)$|^contact\.start$/.test(m.id) && ((sl.pages ? 1 : 0) + (sl.products ? 1 : 0) + (sl.timeline ? 1 : 0) + (sl.budget ? 1 : 0)) >= 1;
 turns = answer(m.id, m.a);
-const typeWord = said ? { E: 'an online store', W: 'a website', L: 'a landing page' }[st.path] : null;   // (said back: "Got it: ...")
+const typeWord = said ? { E: 'an online store', W: 'a website', L: 'a landing page' }[st.path] : null;
 if (typeWord) {
 const parts = [];
 const b = st.brief;
@@ -810,7 +816,7 @@ const dock = document.querySelector('[data-cc]');
 if (!dock || !C || window.TSChat) return;
 const TS = window.TS || {}, root = document.documentElement, D = dock.dataset;
 const launch = dock.querySelector('[data-cc-launch]');
-const NS = dock.querySelector('svg').namespaceURI;   // the launcher's own shards are SVG
+const NS = dock.querySelector('svg').namespaceURI;
 const fill = (t, o) => String(t).replace(/\{(\w+)\}/g, (m, k) => (o && o[k] != null ? o[k] : m));
 const S = {
 get: k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
@@ -940,7 +946,7 @@ document.body.appendChild(dlg);
 dlg.addEventListener('cancel', e => { e.preventDefault(); const set = log.querySelector('.cc-chips.is-cur'); if (set && set.contains(document.activeElement)) { set.remove(); input.focus(); return; } hide(); });
 dlg.addEventListener('close', () => { if (open) finish(); });
 dlg.addEventListener('click', e => { if (e.target === dlg) hide(); });
-dlg.addEventListener('click', e => {        // internal links: close at once, then the page transition runs
+dlg.addEventListener('click', e => {
 const a = e.target.closest('a[href]');
 if (!a || a.target === '_blank' || /^mailto:/.test(a.getAttribute('href'))) return;
 hide(true);
@@ -1136,7 +1142,7 @@ if (a.u || (k && typeof k === 'object')) b = el('a', 'cc-chip', c.l, { href: hre
 else {
 b = el('button', 'cc-chip', c.l, { type: 'button' });
 if (a.m) { b.setAttribute('aria-pressed', String(multi.has(a.m))); b.prepend(icon(I.check)); }
-if (a.cur && 'pressed' in c) b.setAttribute('aria-pressed', String(!!c.pressed));   // (the switcher; not an offer)
+if (a.cur && 'pressed' in c) b.setAttribute('aria-pressed', String(!!c.pressed));
 b.addEventListener('click', () => {
 if (a.m) {
 const none = /^(None of these|Not sure yet)$/.test(a.m);
@@ -1180,12 +1186,16 @@ const atBottom = () => log.scrollHeight - log.scrollTop - log.clientHeight < 40;
 const toEnd = () => { log.scrollTop = log.scrollHeight; };
 const top = li => li.offsetTop - log.offsetTop - 12;
 const showMore = li => { if (!moreTo) moreTo = li; more.hidden = false; };
-const noMore = () => { if (more) more.hidden = true; moreTo = null; };
-const onMore = () => {
-const li = moreTo, f = more.contains(document.activeElement);
-if (li && li.isConnected && log.scrollHeight - li.offsetTop + log.offsetTop > log.clientHeight) log.scrollTop = top(li); else toEnd();
-noMore();
+const noMore = li => {
+if (!more) return;
+const f = more.contains(document.activeElement);
+more.hidden = true; moreTo = null;
 if (f) { const c = log.querySelector('.cc-turn--chips .cc-chip'), n = li && li.isConnected ? li : [...log.querySelectorAll('.cc-turn--b')].pop(); if (c && c.getBoundingClientRect().bottom <= log.getBoundingClientRect().bottom) c.focus({ preventScroll: true }); else if (n) { n.tabIndex = -1; n.focus({ preventScroll: true }); } }
+};
+const onMore = () => {
+const li = moreTo;
+if (li && li.isConnected && log.scrollHeight - li.offsetTop + log.offsetTop > log.clientHeight) log.scrollTop = top(li); else toEnd();
+noMore(li);
 };
 const push = (t, keep) => {
 turns.push(t);
@@ -1216,7 +1226,8 @@ handoff: b => `${b.mode === 'url' ? C.chips.pick_time : b.mode === 'send' ? C.ch
 };
 const plain = t => t.b.map(b => (SR[b.t] ? SR[b.t](b) : '')).filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 const bot = async list => {
-let hold = false;
+let hold = false, f0 = null;
+const over = li => log.scrollHeight - (li.offsetTop - log.offsetTop) > log.clientHeight - 24;
 const said = [];
 for (const t of list) {
 const words = plain(t).split(/\s+/).length;
@@ -1225,16 +1236,17 @@ log.setAttribute('aria-busy', 'true');
 const ty = el('li', 'cc-turn cc-turn--b cc-typing');
 ty.appendChild(mark('cc-tava is-typing'));
 log.appendChild(ty);
-if (!hold) toEnd();
+if (!hold && !(f0 && over(f0))) toEnd();
 await new Promise(r => setTimeout(r, reduced() ? 120 : Math.min(900, 360 + 10 * words)));
 ty.remove();
 push({ who: 'b', b: t.b, c: t.c || [], multi: t.multi, g: t.g }, hold);
 const c = t.c && t.c.length ? chipsEl(t) : null;
 if (c) log.appendChild(c);
-strip();   // (24 Oct) before the scroll: the brief strip appearing makes the log shorter
-const li = [...log.querySelectorAll('.cc-turn--b')].pop(), h = log.scrollHeight - (li ? li.offsetTop - log.offsetTop : 0);
+strip();
+const li = [...log.querySelectorAll('.cc-turn--b')].pop();
+if (!f0) f0 = li;
 if (hold) { if (!atBottom()) showMore(li); }
-else if (li && h > log.clientHeight - 24) { log.scrollTop = top(li); hold = true; if (!atBottom()) showMore(null); }
+else if (f0 && over(f0)) { log.scrollTop = top(f0); hold = true; if (!atBottom()) showMore(f0 === li ? null : li); }
 else toEnd();
 if (t.g || t.b.some(b => b.t === 'price')) gesture(t.g || 'nod');
 log.removeAttribute('aria-busy');
@@ -1243,7 +1255,7 @@ said.push(plain(t) + (t.c && t.c.length ? ` ${C.options} ${t.c.map(x => x.l).joi
 }
 if (said.length) live.textContent = said.join(' ');
 const first = log.querySelector('.cc-turn--chips .cc-chip'), newest = [...log.querySelectorAll('.cc-turn--b')].pop();
-if (focusChips && !more.hidden && !coarse()) more.firstChild.focus({ preventScroll: true });   // (the rest waits below)
+if (focusChips && !more.hidden) more.firstChild.focus({ preventScroll: true });
 else if (focusChips && first) first.focus({ preventScroll: true });
 else if (focusChips && coarse() && newest) { newest.tabIndex = -1; newest.focus({ preventScroll: true }); }
 else if (focusChips) input.focus({ preventScroll: true });
@@ -1312,7 +1324,7 @@ root.classList.add('cc-open');
 if (TS.lockScroll) TS.lockScroll(true);
 dlg.classList.remove('is-out', 'is-in', 'is-drag');
 dlg.showModal();
-launch.setAttribute('aria-expanded', 'true');   // (the launcher carries the state; the dock is a plain div)
+launch.setAttribute('aria-expanded', 'true');
 dock.classList.remove('has-dot');
 vv(true);
 requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));
@@ -1348,7 +1360,7 @@ const finish = () => {
 if (!open) return;
 open = false;
 vv(false);
-if (TS.lockScroll) TS.lockScroll(false);       // (the launcher stays shown under the chat: focus can return to it)
+if (TS.lockScroll) TS.lockScroll(false);
 if (dlg.open) dlg.close();
 dlg.classList.remove('is-out', 'is-drag');
 panel.style.transform = '';

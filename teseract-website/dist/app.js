@@ -1465,19 +1465,26 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const panels = [...document.querySelectorAll('[data-ft]')];
     if (!panels.length) return;
 
-    /* ---------- Clock: "10:06:57 PM — your local time" (tabular figures, updates every second) */
+    /* ---------- Clock: "10:06:57 PM — your local time" (tabular figures, updates every second). Its two formatters are
+       made the first time a footer panel is on screen (startClock), not at load: making them took 50-190 ms of app.js's
+       first task on a phone (mobile audit PERF2-07). Until then the time is not drawn (12-footer.css). */
     const clocks = [...document.querySelectorAll('[data-ft-clock]')];
     const tz = (clocks[0] && clocks[0].getAttribute('data-tz')) || undefined;
     const make = (locale, opts) => { try { return new Intl.DateTimeFormat(locale, Object.assign(opts, tz ? { timeZone: tz } : {})); } catch (e) { return null; } };
-    const fmt = make('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-    const iso = make('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
-    if (!fmt || !iso) {
+    let fmt = null, iso = null;
+    const formatters = () => {
+      if (fmt || !clocks.length) return !!fmt;
+      fmt = make('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      iso = make('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+      if (fmt && iso) return true;
       // unknown time zone (or no Intl): hide the line rather than show a wrong time
       clocks.forEach(c => { const line = c.closest('p'); if (line) line.hidden = true; });
       clocks.length = 0;
-    }
+      fmt = iso = null;
+      return false;
+    };
     const tick = () => {
-      if (!clocks.length) return;
+      if (!clocks.length || !fmt) return;
       const now = new Date();
       const text = fmt.format(now).replace(/ /g, ' ');
       const dt = iso.format(now);
@@ -1485,14 +1492,13 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     };
     let timer = 0;
     const startClock = () => {
-      if (timer || !clocks.length) return;
+      if (timer || !formatters()) return;
       tick();
       // align updates to the start of each second
       const loop = () => { tick(); timer = setTimeout(loop, 1000 - (Date.now() % 1000)); };
       timer = setTimeout(loop, 1000 - (Date.now() % 1000));
     };
     const stopClock = () => { clearTimeout(timer); timer = 0; };
-    tick();
 
     /* ---------- Ring images: fade in once loaded; fetch early, but only where the ring is shown */
     const ring = document.querySelector('[data-ft-ring]');
@@ -3360,6 +3366,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const motion = TS.motion ? TS.motion() : false;
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
     const lerp = (a, b, t) => a + (b - a) * t;
+    // one eased step towards a target; within eps (a fraction of a pixel / degree on screen) it lands on the target, so
+    // the loop stops a few dozen frames sooner than an endless approach would (each frame that moves anything costs a
+    // full re-layerization of this long page, PERF2-03) and the settled value is the target itself
+    const ease = (v, to, t, eps) => { const n = lerp(v, to, t); return Math.abs(n - to) < eps ? to : n; };
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
     const desktop = matchMedia('(min-width: 1024px)');
 
@@ -3504,7 +3514,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     }
 
     /* ---------- hero entrance: without the intro the inline starter after the hero (pages/who.py, .who-hero--cued)
-       normally runs it before app.js; this path is the fallback and the intro session's */
+       normally runs it before app.js; this path is the fallback and the intro session's. Played once: never replayed
+       over a hero the CSS fail-safe has already shown */
     const hero = document.querySelector('[data-who-hero]');
     if (hero) {
       if (!motion) hero.classList.add('is-on');
@@ -3514,11 +3525,21 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         let done = false;
         // the entrance waits for the intro stage to lift (01-intro.js; immediate without an intro)
         const go = () => { if (done) return; done = true; TS.afterIntro(() => requestAnimationFrame(() => requestAnimationFrame(show))); };
-        // late script, no starter: the CSS fail-safe fade (30-who.css, from 1 s) may already show the hero; show it in
-        // the same style change that ends it (html.is-ready, this task), so nothing drops back and replays
-        const now = document.timeline && document.timeline.currentTime;
-        if (now != null && now > 900 && !hero.classList.contains('who-hero--cued') && !TS.intro.held()) { done = true; show(); }
-        else if (im && !im.complete && im.decode) { im.decode().then(go, go); setTimeout(go, 900); } else go();
+        // late script, no starter: the CSS fail-safe (30-who.css; from 1 s, or 5 s in an intro session) may already be
+        // showing the hero. Then it finishes and the hero is kept as shown (.who-hero--shown: no transitions), so nothing
+        // drops back and replays; before it begins, .who-hero--cued ends it and the entrance runs as usual
+        const safe = !hero.classList.contains('who-hero--cued') && im && im.getAnimations
+          ? im.getAnimations().find(a => a.animationName === 'who-failsafe') : null;
+        const timing = safe && safe.effect && safe.effect.getComputedTiming();
+        if (timing && timing.progress > 0) {
+          done = true;
+          const keep = () => { if (!hero.classList.contains('is-on')) hero.classList.add('who-hero--shown', 'is-on'); };
+          safe.finished.then(keep, keep);
+          setTimeout(keep, 700);   // paused (off screen): never left half shown
+        } else {
+          hero.classList.add('who-hero--cued');
+          if (im && !im.complete && im.decode) { im.decode().then(go, go); setTimeout(go, 900); } else go();
+        }
         new IntersectionObserver(([e]) => hero.classList.toggle('is-off', !e.isIntersecting)).observe(hero);
       }
     }
@@ -3565,12 +3586,12 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         // hero - the monitor turns a little and its top leans back as it rises (P-08)
         const useScroll = !finePointer.matches;
         const tx = usePtr ? pointer.x : useScroll ? p * 0.7 : 0, ty = usePtr ? pointer.y : useScroll ? -p : 0;
-        s.px = lerp(s.px || 0, tx, 0.08); s.py = lerp(s.py || 0, ty, 0.08);
+        s.px = ease(s.px || 0, tx, 0.08, 0.02); s.py = ease(s.py || 0, ty, 0.08, 0.02);   // 0.02 = 0.2px of the light, 0.05deg
         mon.style.transform = `translate3d(0,${(-40 * p).toFixed(2)}px,0) scale(${(1 - 0.06 * p).toFixed(4)})`;
         tilt.style.transform = `perspective(1400px) rotateX(${(-s.py * 2.5).toFixed(3)}deg) rotateY(${(s.px * 2.5).toFixed(3)}deg) translate3d(${(s.px * 6).toFixed(2)}px,${(s.py * 6).toFixed(2)}px,0)`;
         light.style.transform = `translate3d(${(-s.px * 10).toFixed(2)}px,${(30 * p - s.py * 10).toFixed(2)}px,0)`;
         disp.style.transform = `translate3d(0,${(-36 * p).toFixed(2)}px,0)`;
-        return Math.abs(s.px - tx) > 0.003 || Math.abs(s.py - ty) > 0.003;   // < 0.03 px / 0.01deg from rest: stop
+        return s.px !== tx || s.py !== ty;
       });
     }
 
@@ -3590,9 +3611,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         // reads as a pane floating in front rather than a grey patch
         const fine = finePointer.matches;
         const tx = fine ? pointer.x * 6 : c * -5, ty = fine ? pointer.y * 6 : c * 9;
-        s.gx = lerp(s.gx || 0, tx, 0.08); s.gy = lerp(s.gy || 0, ty, 0.08);
+        s.gx = ease(s.gx || 0, tx, 0.08, 0.2); s.gy = ease(s.gy || 0, ty, 0.08, 0.2);   // px
         glass.style.transform = `translate3d(${s.gx.toFixed(2)}px,${s.gy.toFixed(2)}px,0)`;
-        return Math.abs(s.gx - tx) > 0.04 || Math.abs(s.gy - ty) > 0.04;
+        return s.gx !== tx || s.gy !== ty;
       });
     });
 
@@ -3608,10 +3629,10 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       }, it => {
         const s = it.s;
         const target = -20 + 40 * s.p;
-        s.a = s.a == null ? target : lerp(s.a, target, 0.1);
+        s.a = s.a == null ? target : ease(s.a, target, 0.1, 0.02);
         svg.style.transform = `rotate(${s.a.toFixed(3)}deg)`;
         if (sphere) sphere.style.transform = `rotate(${(s.a * 9).toFixed(2)}deg)`;
-        return Math.abs(s.a - target) > 0.02;
+        return s.a !== target;
       });
     });
 
@@ -3631,9 +3652,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
           // with the pointer, or with the panel's scroll on touch screens (P-08)
           const fine = finePointer.matches;
           const tx = fine ? pointer.x * 6 : (p - 0.5) * 12, ty = fine ? pointer.y * 6 : (0.5 - p) * 8;
-          s.lx = lerp(s.lx || 0, tx, 0.06); s.ly = lerp(s.ly || 0, ty, 0.06);
+          s.lx = ease(s.lx || 0, tx, 0.06, 0.1); s.ly = ease(s.ly || 0, ty, 0.06, 0.1);   // 0.1 % of the soft light: < 0.7px
           lightEl.style.transform = `translate3d(${s.lx.toFixed(2)}%,${s.ly.toFixed(2)}%,0)`;
-          return Math.abs(s.lx - tx) > 0.05 || Math.abs(s.ly - ty) > 0.05;   // 0.05 % of the light = a fifth of a pixel
+          return s.lx !== tx || s.ly !== ty;
         }
         return false;
       });
@@ -5013,10 +5034,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 })();
 
 /* ---- 40-chat.js ---- */
-/* Ask TESERACT launcher (owner 21 Oct; markup chrome.chat_dock, look 40-chat.css). Load: a query + listeners; after
-   paint: button semantics; idle: corner obstacles, greeting, field watch, living. The chat loads on the first hover /
-   focus / touch or with the greeting (else, or in 4 s, it is a link to the contact form). Living (owner 21 Oct 23:20):
-   unscrolled, the mark visits clear edge spots, looks at the page, says a line now and then (CHAT 'say'); home on
+/* Ask TESERACT launcher (markup chrome.chat_dock, look 40-chat.css). Idle: corner obstacles, greeting, living. The
+   chat loads on the first hover / focus / touch or with the greeting (else, or after 4 s: the contact link).
+   Living (owner 21 Oct): unscrolled, the mark visits clear spots and says a line now and then (CHAT 'say'); home on
    scroll, menu, dialog, hidden tab; calm after a minute or once opened. Reduced motion or hushed: still. */
 (() => {
   const dock = document.querySelector('[data-cc]');
@@ -5026,7 +5046,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
   const ss = (k, v) => { try { return v == null ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch (e) { return null; } };
   const saying = () => hi && !hi.hidden && hi.classList.contains('is-say');
   let p = null, opened = false, tuck = false, away = false, t0 = 0, tIn = 0, turns = 0, ft = 0, ht = 0, sw = 0, x0 = 0, home = () => {};
-  // hushed (WCAG 2.2.2): a bubble dismissed, Esc on the launcher, a Pause motion ('ts:motion'): home, still
+  // hushed (WCAG 2.2.2): a bubble dismissed, Esc, the page's Pause motion
   let hushed = !!ss('ts-cc-still');
   const hush = () => { hushed = true; ss('ts-cc-still', '1'); cl.remove('is-ring', 'is-breath', 'is-shim', 'is-bob'); home(1); }, dismiss = () => { fold(1); hush(); };
   document.addEventListener('ts:motion', e => { if (e.detail && e.detail.still) hush(); }, true);
@@ -5045,7 +5065,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       .then(c => c.open({ q, from: btn }), () => location.assign(btn.href))
       .finally(() => cl.remove('is-wait'));
   };
-  // fold the bubble; gone: dismissed or the chat opened (the dot goes, no more lines)
+  // fold the bubble; gone: dismissed or opened (no dot, no more lines)
   const fold = gone => {
     if (gone) { cl.remove('has-dot'); ss('ts-cc-hush', '1'); }
     clearTimeout(ht);
@@ -5053,7 +5073,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     hi.classList.add('is-off'); btn.removeAttribute('aria-describedby');
     clearTimeout(ft); ft = setTimeout(() => { hi.hidden = true; }, 200);
   };
-  const pop = (line, say, ms, side) => {   // the greeting or a line; folds itself unless hovered / focused
+  const pop = (line, say, ms, side) => {   // the greeting or a line; folds unless hovered / focused
     hi.querySelector('p').textContent = line; cl.toggle('is-side', !!side);
     hi.classList.toggle('is-say', say); hi.classList.remove('is-off'); hi.classList.add('is-on'); clearTimeout(ft); hi.hidden = false;
     cl.add('has-dot'); btn.setAttribute('aria-describedby', 'cc-hello');
@@ -5066,7 +5086,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     if (e.key === ' ') { e.preventDefault(); btn.click(); }
     if (e.key === 'Escape') dismiss();
   });
-  if (hi) {   // a chip asks; X, Esc, a swipe dismiss (focus: to the launcher); else a tap opens the chat
+  if (hi) {   // a chip asks; X, Esc, a swipe dismiss; a tap opens
     const off = () => { const f = hi.contains(document.activeElement); dismiss(); if (f) btn.focus({ preventScroll: true }); };
     hi.addEventListener('pointerdown', e => { x0 = e.clientX; sw = 0; });
     hi.addEventListener('pointerup', e => { if (e.clientX - x0 > 60) { sw = 1; off(); } });
@@ -5089,11 +5109,13 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', resume ? d.ccL2 : d.ccL1);
     if (resume) dock.querySelector('.cc-pill').textContent = d.ccP2;
   });
-  // arrival: in full on a tab's first page, a fade after
+  // arrival: in full on a tab's first page, a fade after; once its corner is checked (25 Oct)
+  let due = '', ck = 0;
+  const appear = () => { if (due && ck) { tIn = now(); cl.add('is-in', due); due = ''; } };
   const arrive = () => {
     const first = !ss('ts-cc-seen');
     ss('ts-cc-seen', '1');
-    setTimeout(() => { tIn = now(); cl.add('is-in', first ? 'is-arrive' : 'is-fade'); }, first ? 600 : 0);
+    setTimeout(() => { due = first ? 'is-arrive' : 'is-fade'; appear(); }, first ? 600 : 0);
   };
   if (TS.afterIntro) TS.afterIntro(() => (root.classList.contains('ts-intro') ? document.addEventListener('ts:intro-end', arrive, { once: true }) : arrive()));
   else arrive();
@@ -5103,9 +5125,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const R = matchMedia('(prefers-reduced-motion: reduce)'), still = () => R.matches || !root.classList.contains('motion') || hushed;
     const shut = () => (tuck && !away) || root.matches('.is-locked,.cc-field,.ts-intro,.cc-open');
     const ok = () => !opened && !shut();
-    const cue = c => { if (!shut() && !still()) cl.add(c); };   // breath, shimmer, ring, landing, hop
-    // corner obstacles (IntersectionObserver): A = the resting box + 12 px, B = 68 px above it and 8 px into it. A pause
-    // control in A lifts it 60 px; anything else in A, or in B while lifted (that control too, 25 Oct), tucks it
+    const cue = c => { if (!shut() && !still()) cl.add(c); };
+    // corner obstacles (IO): A = the resting box + 12 px, B = 68 px above it, 8 px into it. A pause control in A lifts
+    // it 60 px; anything else in A, or in B while lifted, tucks it
     const LIFT = '.motion-toggle:not([hidden])', AVOID = '.btn,.ct-submit,.ct-quick,.ct-input,.ct-chip,.ct-out,.ct-link,.ft-bar a,.ft-bar__motto,.ft__bigmark,'
       + '.pj-visit,.faq-btn,.sto-btn,.sto-rev__btn,.svc-tap,.video-ctl,[data-cc-avoid]';
     const inA = new Set(), inB = new Set(), inC = new Set();   // C: where the greeting would sit
@@ -5118,9 +5140,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       if (t) { tuck = true; cl.add('is-tuck'); kk(); }
       else if (tuck) back = setTimeout(untuck, 400);
     };
-    dock.addEventListener('cc:closed', untuck);
-    // tucked, it stays in the Tab order: focused (or tucking, or scrolled, while focused: 25 Oct) it shows in the first
-    // gap up its column clear of controls
+    dock.addEventListener('cc:closed', () => (untuck(), sync()));   // (26 Oct: re-tested)
+    // tucked, it stays in the Tab order: focused, it shows in a clear gap up its column
     const kk = () => {
       if (!tuck || away || document.activeElement !== btn) return;
       const r = btn.getBoundingClientRect(), s = btn.offsetWidth, x = r.left + r.width / 2, y0 = innerHeight - parseFloat(getComputedStyle(dock).bottom);
@@ -5146,12 +5167,13 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         els.forEach(x => o.observe(x));
         return o;
       });
+      requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => { ck = 1; appear(); }, 0)));
     };
     watch();
-    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { G = null; V.clear(); home(1); watch(); }, 150); });
-    // video controls added later join the obstacles
+    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { V.clear(); watch(); geo(); home(1); }, 150); });
+    // (video controls added later)
     if (TS.observeVideos) { const ov = TS.observeVideos; TS.observeVideos = r => { ov(r); clearTimeout(vt); vt = setTimeout(watch, 300); }; }
-    // a text field elsewhere has focus: it steps aside (the keyboard)
+    // a text field elsewhere focused: it steps aside
     const field = x => x && x.matches && x.matches('input,textarea,select,[contenteditable]') && !x.closest('dialog,[data-cc]');
     document.addEventListener('focusin', e => root.classList.toggle('cc-field', field(e.target)));
     document.addEventListener('focusout', () => setTimeout(() => root.classList.toggle('cc-field', field(document.activeElement)), 0));
@@ -5161,25 +5183,28 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     const BAD = 'a[href],button,input,select,textarea,summary,label,iframe,video[controls],[role=button],[role=link],[role=slider],[tabindex]:not([tabindex="-1"]),[contenteditable],header,nav,.ft-bar,[data-cc-avoid]';
     let wx = 0, wy = 0, wt = 0, tk = 0, mt = 0, prev = 0, act = 0, lastS = 0, lastB = 0, gap = 5e3, says = 0, n = 0;
     let hover = false, calm = false, hopped = false, short = !!(ss('ts-cc-calm') || ss('ts-cc'));
-    // reads and hit tests just after a paint, on a clean layout
+    // reads just after a paint
     const clean = f => requestAnimationFrame(() => setTimeout(() => { if (!document.hidden) f(); }, 0));
-    const geo = () => {   // (25 Oct: no layout read; M from watch)
+    const geo = () => {
       const [s, r, b, l, sb] = M, W = innerWidth - sb, H = innerHeight;
       return (G = { s, W, H, l: l || r, hx: W - r - s / 2, hy: H - b - s / 2, ph: W < 800 || matchMedia('(pointer:coarse)').matches });
     };
-    // spots: bottom left, up the right edge (desktop: left too)
+    // spots: a word band first (a ticker without links: decorative, 25 Oct), bottom left, up the right edge (desktop:
+    // left too); never next to its rest
+    const TK = [...document.querySelectorAll('[data-ticker]')].filter(t => !t.querySelector('a[href],button'));
     const spots = g => {
-      const L = g.l + g.s / 2, out = [[L, g.hy]];
+      const L = g.l + g.s / 2, out = [[L, g.hy]], band = [], hy = g.hy - (cl.contains('is-lift') ? 60 : 0), far = y => Math.abs(hy - y) > g.s;
       (g.ph ? [.8, .66, .52, .38] : [.7, .52, .36]).forEach(k => {
         const y = Math.max(120 + g.s / 2, g.H * k);
-        if (g.hy - y > g.s) { out.push([g.hx, y]); if (!g.ph) out.push([L, y]); }
+        if (g.hy - y > g.s && far(y)) { out.push([g.hx, y]); if (!g.ph) out.push([L, y]); }
       });
-      return out;
+      TK.forEach(t => { const r = t.getBoundingClientRect(); if (r.height && r.top > 120 && r.bottom < g.H) [r.top + 4, (r.top + r.bottom) / 2].forEach(y => { band.push([L, y]); if (far(y)) band.push([g.hx, y]); }); });
+      return [band, out];
     };
-    // hit test of kx x ky points, one a task: 2 = a control, a headline, text with a link (or a scroll), 1 = text, 0 =
-    // clear. Verdicts (V) hold at this scroll position: clear 30 s, taken until a scroll (25 Oct: not re-tested a hop)
-    const V = new Map();
-    const probe = (ax, ay, bx, by, kx, ky, cb) => {
+    // kx x ky hit tests, a task each: 2 = a control, headline, link (or a scroll), 1 = text, 0 = clear. Verdicts (V)
+    // hold at this scroll position: clear 30 s, taken until a scroll
+    const V = new Map(), TXT = 'p,li,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dd,dt,td';
+    const probe = (ax, ay, bx, by, kx, ky, cb, T) => {
       let t = 0;
       const P = [], mx = (ax + bx) / 2, my = (ay + by) / 2, s0 = lastS, key = [ax, ay, bx, by, kx].map(Math.round).join(), v = V.get(key);
       const done = r => { if (s0 === lastS) V.set(key, [r, now()]); cb(r); };
@@ -5188,14 +5213,15 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       for (let i = 0; i < kx * ky; i++) P.push([ax + (bx - ax) * (i % kx) / (kx - 1), ay + (by - ay) * Math.floor(i / kx) / (ky - 1)]);
       P.sort((a, b) => Math.hypot(a[0] - mx, a[1] - my) - Math.hypot(b[0] - mx, b[1] - my));
       const next = () => {
-        const [x, y] = P.shift(), st = document.elementsFromPoint(x, y).filter(e => !dock.contains(e)), b = st[0] && st[0].closest('p,li,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dd,dt,td');
-        if (s0 !== lastS || st.some(e => e.matches(BAD)) || (st[0] && parseFloat(getComputedStyle(st[0]).fontSize) >= 28)) return done(2);
+        const [x, y] = P.shift(), st = document.elementsFromPoint(x, y).filter(e => !dock.contains(e)), w = st[0] && !st[0].closest('[data-ticker]'), b = w && st[0].closest(TXT);
+        if (s0 !== lastS || st.some(e => e.matches(BAD)) || (w && parseFloat(getComputedStyle(st[0]).fontSize) >= 28)) return done(2);
         if (b) { if (b.matches('h1,h2') || b.querySelector('a[href],button')) return done(2); t = 1; }
         if (P.length) setTimeout(next, 0); else done(s0 !== lastS ? 2 : t);
       };
-      next();
+      // first, by their boxes, small buttons a grid misses (T, a line: text too, 26 Oct); a task each
+      setTimeout(() => [...document.querySelectorAll('button,[role=button],input,select,textarea' + (T ? ',' + TXT : ''))].some(e => { const r = e.getBoundingClientRect(); return r.width && r.right > ax && r.left < bx && r.bottom > ay && r.top < by && !dock.contains(e) && !(T && e.matches(TXT) && e.closest('[data-ticker],[aria-hidden="true"],.menu,dialog')); }) ? done(2) : setTimeout(next, 0), 0);
     };
-    // glide to a spot (null: home), turning a third, then looking at the page centre
+    // glide to a spot (null: home), turning a third, looking at the page centre
     const go = (c, ms, say) => {
       const g = G || geo(), x = c ? Math.round(c[0] - g.hx) : 0, y = c ? Math.round(c[1] - g.hy) : 0, at = c || [g.hx, g.hy];
       if (x === wx && y === wy) return;
@@ -5207,11 +5233,11 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       clearTimeout(mt); mt = setTimeout(() => { cl.remove('is-move'); if (ms !== 1) cue('is-land'); if (say) clean(speak); }, dur);
     };
     home = fast => { if (away) { if (saying()) fold(); go(null, fast ? 1 : 450); } };
-    // out to a clear spot (2 probed at most), else a hop in place; text is taken
+    // to a clear spot (2 probed at most), else a hop in place
+    const mix = a => { for (let k = a.length; k > 1; k--) { const j = Math.floor(Math.random() * k); [a[k - 1], a[j]] = [a[j], a[k - 1]]; } return a; };
     const hop = done => {
-      const g = G || geo(), all = spots(g);
+      const g = G || geo(), [band, out] = spots(g), all = mix(band).concat(mix(out));
       let i = 0, f = 0;
-      for (let k = all.length; k > 1; k--) { const j = Math.floor(Math.random() * k); [all[k - 1], all[j]] = [all[j], all[k - 1]]; }
       const end = c => { if (c && free()) go(c, 0, 1); else if (!c) cue('is-bob'); done(!!c); };
       const next = () => {
         const c = all[i++];
@@ -5224,9 +5250,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
       };
       next();
     };
-    const speak = () => {   // until the chat opened or a bubble was dismissed
+    const speak = () => {
       if (!talk || still() || opened || ss('ts-cc') || ss('ts-cc-hush') || says > 3 || !hi.hidden || shut() || hover || now() - lastB < gap) return;
-      // above it, else beside it (towards the page), on a clear area
+      // above it, else beside it, on a clear area
       const g = G || geo(), s = g.s, l = cl.contains('is-l'), cx = g.hx + wx, cy = g.hy + wy - (cl.contains('is-lift') && !away ? 60 : 0);
       const w = Math.min(270, g.W - 32), ax = l ? cx - s / 2 : cx + s / 2 - w, by = cy - s / 2 - 10;
       const ws = Math.min(270, l ? g.W - cx - s / 2 - 26 : cx - s / 2 - 26), sx = l ? cx + s / 2 + 10 : cx - s / 2 - 10 - ws, w0 = wx + ',' + wy;
@@ -5237,8 +5263,8 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
         dock.style.setProperty('--bw', (side ? ws : w) + 'px');
         pop(lines[i % lines.length], true, 7e3, side); cue('is-ring');
       };
-      const beside = r => (!r ? say(0) : ws >= 200 && probe(sx, cy - 46, sx + ws, cy + 46, 4, 3, q => !q && say(1)));
-      if (!away && [...inC].some(x => !x.matches(LIFT))) beside(2); else probe(ax, by - 92, ax + w, by, 4, 3, beside);
+      const beside = r => (!r ? say(0) : ws >= 200 && probe(sx, cy - 46, sx + ws, cy + 46, 4, 3, q => !q && say(1), 1));
+      if (!away && [...inC].some(x => !x.matches(LIFT))) beside(2); else probe(ax, by - 92, ax + w, by, 4, 3, beside, 1);
     };
     const later = (f, ms) => { clearTimeout(tk); tk = setTimeout(f, ms); };
     const settle = () => { calm = true; if (hopped) ss('ts-cc-calm', '1'); home(still()); later(rest, 9e3 + Math.random() * 6e3); };
@@ -5265,14 +5291,14 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     };
     // menu, dialog, field: home at once
     new MutationObserver(() => { if (away && root.matches('.is-locked,.cc-open,.cc-field')) home(1); }).observe(root, { attributes: true, attributeFilter: ['class'] });
-    // any bubble folds on scroll (25 Oct: the greeting sat over a link)
+    // any bubble folds on scroll
     let kr = 0;
     addEventListener('scroll', () => { lastS = now(); V.clear(); if (away) home(); else if (hi && !hi.hidden) fold(); if (tuck && !kr) kr = requestAnimationFrame(() => { kr = 0; kk(); }); }, { passive: true });
     ['pointerdown', 'keydown'].forEach(t => addEventListener(t, () => { lastS = now(); }, { passive: true, capture: true }));
     dock.addEventListener('pointerenter', () => { hover = true; });
     dock.addEventListener('pointerleave', () => { hover = false; });
     document.addEventListener('visibilitychange', () => { if (document.hidden) { clearTimeout(tk); prev = 0; home(1); } else later(calm ? rest : step, 1500); });
-    later(step, 1200);
+    geo(); later(step, 1200);
 
     // the greeting: once a tab, after 8 s seen or 40% down the page (never in the first 3 s)
     if (!hi || ss('ts-cc-hello')) return;

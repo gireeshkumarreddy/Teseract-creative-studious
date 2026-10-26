@@ -149,16 +149,17 @@
 .motion .who-hero:not(.is-on) .who-display__dot::before{transform:scale(0)}
 .motion .who-display__dot::before{transition:transform .6s var(--spring) 1.02s;transform-origin:50% 50%}
 /* Fail-safe (as 20-hero.css hero-failsafe): .is-on normally comes from the inline starter after the hero (pages/who.py,
-   .who-hero--cued) or from 30-who.js. Without either - the starter did not run and app.js has not marked the page
-   ready - the hero shows by ~1.5 s; in an intro session only once the stage's own fail-safe (04-intro.css, 4.4-4.9 s)
-   has cleared it. Keyed to html.is-ready, never to .is-on: Chrome starts no transition in the style change that also
-   drops an animation, so it must be gone frames before .is-on lands (30-who.js shows the hero at once instead when the
-   fade has already begun, so it is never replayed). */
-.motion:not(.is-ready) .who-hero:not(.who-hero--cued) :is(.who-hero__lightin,.who-hero__img,.who-display__l),
-.motion:not(.is-ready) .who-hero:not(.who-hero--cued) .who-display__dot::before{animation:who-failsafe .5s ease 1s both}
-.motion:not(.is-ready) .who-hero:not(.who-hero--cued) .who-hero__curtain{animation:who-failsafe-out .5s ease 1s both}
-.motion.ts-intro:not(.is-ready) .who-hero :is(.who-hero__lightin,.who-hero__img,.who-display__l,.who-hero__curtain),
-.motion.ts-intro:not(.is-ready) .who-hero .who-display__dot::before{animation-delay:5s}
+   .who-hero--cued) or from 30-who.js. Without either - the starter did not run and app.js has not arrived - the hero
+   shows by ~1.5 s; in an intro session only once the stage's own fail-safe (04-intro.css, 4.4-4.9 s) has cleared it.
+   Keyed to the hero's own classes, never to html.is-ready: app.js arriving after the fade must not take it back. 30-who.js
+   ends it before it begins (.who-hero--cued: the script owns the entrance), or once it has begun lets it finish and keeps
+   the hero as shown (.who-hero--shown below): an animation dropped in the style change that adds .is-on lets the
+   transitions start from the resting values, which replayed the whole entrance on slow connections. */
+.motion .who-hero:not(.who-hero--cued):not(.is-on) :is(.who-hero__lightin,.who-hero__img,.who-display__l),
+.motion .who-hero:not(.who-hero--cued):not(.is-on) .who-display__dot::before{animation:who-failsafe .5s ease 1s both}
+.motion .who-hero:not(.who-hero--cued):not(.is-on) .who-hero__curtain{animation:who-failsafe-out .5s ease 1s both}
+.motion.ts-intro .who-hero:not(.who-hero--cued):not(.is-on) :is(.who-hero__lightin,.who-hero__img,.who-display__l,.who-hero__curtain),
+.motion.ts-intro .who-hero:not(.who-hero--cued):not(.is-on) .who-display__dot::before{animation-delay:5s}
 @keyframes who-failsafe{to{opacity:1;transform:none}}
 @keyframes who-failsafe-out{to{opacity:0;transform:translateX(85%) skewX(-13.5deg)}}
 /* settle: as the light arrives it breathes up once, the amber core flickers once and one sheen travels the streak, then
@@ -167,6 +168,11 @@
 .motion .who-hero.is-on .who-hero__light{animation:who-breathe 4.6s ease-in-out .5s 1 backwards}
 .motion .who-hero.is-on .who-hero__amber{animation:who-flicker 4.4s ease-in-out .8s 1 backwards}
 .motion .who-hero.is-on .who-hero__sheen{animation:who-sheen 3.4s cubic-bezier(.45,0,.25,1) 2.2s 1}
+/* shown by the fail-safe before app.js came (30-who.js): it stays exactly as shown - no entrance transitions, and no
+   settle dip of the lit monitor (the breathe and flicker start below full light) */
+.motion .who-hero--shown :is(.who-hero__lightin,.who-hero__img,.who-hero__curtain,.who-display__l),
+.motion .who-hero--shown .who-display__dot::before{transition:none}
+.motion .who-hero--shown.is-on :is(.who-hero__light,.who-hero__amber){animation:none}
 .who-hero.is-off *{animation-play-state:paused!important}
 @keyframes who-breathe{0%{opacity:.86}45%{opacity:1}70%{opacity:.93}100%{opacity:1}}
 @keyframes who-flicker{0%{opacity:.9}40%{opacity:1}55%{opacity:.93}100%{opacity:1}}
@@ -201,6 +207,7 @@
 .who-whobox__thumb{flex:none;width:94px;height:94px;overflow:hidden}
 .who-whobox__thumb img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05)}
 .who-whobox__text{font-size:13px;line-height:1.33;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);padding-top:4px;text-wrap:pretty}
+@media (max-width:1199.98px){.who-whobox__nw{white-space:nowrap}}   /* "something different." stays together (pages/who.py); >= 1200 balances */
 .who-tag__box{display:inline-block;white-space:nowrap;padding:5px 10px;border:1px solid var(--who-line);font-size:12px;line-height:1.3;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
 .who-tag__box span{color:var(--muted-strong);padding:0 .25em}
 .who-time__in{display:flex;flex-direction:column;align-items:flex-end;font-size:12px;line-height:1.3;letter-spacing:.06em;text-transform:uppercase;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -417,7 +424,7 @@
   .who-whobox__label{font-size:calc(25 * var(--u));margin-bottom:calc(14 * var(--u))}
   .who-whobox__box{gap:calc(14 * var(--u));padding:calc(8 * var(--u)) calc(10 * var(--u)) calc(8 * var(--u)) calc(10 * var(--u));min-height:calc(113 * var(--u))}
   .who-whobox__thumb{width:calc(94 * var(--u));height:calc(94 * var(--u))}
-  .who-whobox__text{font-size:calc(14 * var(--u));padding-top:calc(4 * var(--u))}
+  .who-whobox__text{font-size:calc(14 * var(--u));padding-top:calc(4 * var(--u));text-wrap:balance}   /* 5 even lines, none alone */
   .who-note--work,.who-note--tagline{font-size:calc(14 * var(--u))}
   .who-note--tagline{font-size:calc(15 * var(--u));line-height:1.33}
   .who-tag,.who-time{width:0;display:flex;justify-content:center}

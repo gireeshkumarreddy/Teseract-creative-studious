@@ -224,6 +224,19 @@
 .motion.is-ready .fdr-bio__p:not(.is-in) .fdr-win::after{transform:scaleY(0)}
 .motion .fdr-win::before{transition:transform .55s var(--ease) .7s}
 .motion .fdr-win::after{transition:transform .45s var(--ease) 1s}
+/* under 400px (TYPO-R2-05): kept whole, the phrase left "hackathons, including a" alone on a short line at 390. It
+   may wrap here, after "first-place" only (founder.py keeps "hackathon achievement" together in a .fdr-nw span):
+   the frame is four 1px background lines repeated on each line part (box-decoration-break: clone)
+   instead of the two pseudo frames, with the same draw-in (top + bottom from the left, then the sides from the top) */
+@media (max-width:399.98px){
+  .fdr-win{--fdr-w:linear-gradient(var(--fdr-accent),var(--fdr-accent));display:inline;padding:.05em .08em;white-space:normal;line-height:inherit;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone;
+    background-image:var(--fdr-w),var(--fdr-w),var(--fdr-w),var(--fdr-w);background-repeat:no-repeat;
+    background-size:100% 1px,100% 1px,1px 100%,1px 100%;background-position:0 0,0 100%,0 0,100% 0}
+  .fdr-win::before,.fdr-win::after{content:none}
+  .motion.is-ready .fdr-bio__p:not(.is-in) .fdr-win{background-size:0 1px,0 1px,1px 100%,1px 100%;background-position:0 0,0 100%,0 -2em,100% -2em}
+  .motion .fdr-win{transition:background-size .55s var(--ease) .7s,background-position .45s var(--ease) 1s}
+}
 
 /* ---------- restore (Why TESERACT exists): red strikes the visitor removes; once restored the line reads exactly as
    he wrote it (the culprit word only dims, it is never struck). Without JS: plain lines. Under html.js the head row
@@ -259,6 +272,18 @@
 .fdr-rs__line.is-restored .fdr-rs__a{color:rgba(244,244,242,.62)}
 .is-struck .fdr-rs__line.is-touched:not(.is-restored) .fdr-rs__v::after{transition-duration:.3s;transition-delay:0ms}
 .fdr-rs__v.is-breathe{animation:fdr-breathe 1.2s ease-in-out 1}
+/* phones and short landscape (FDR-02): the head row (hint, 0/3 -> 3/3 count, seal) sits at the box's FOOT, so when
+   the paragraph under the box fires the auto-restore the count is on screen, not under the header (the box's top has
+   scrolled past it by then). Visual order only: the row stays first in the DOM and is aria-hidden. Short landscape
+   (e.g. 844 x 390) also compacts the rows so the whole box (317px there, was 383) fits the 334px under the nav. */
+@media (max-width:799.98px),(orientation:landscape) and (max-height:540px) and (max-width:1199.98px){
+  .fdr-rs{display:flex;flex-direction:column}
+  .fdr-rs__head{order:2;border-bottom:0;border-top:1px solid var(--fdr-line)}
+}
+@media (orientation:landscape) and (max-height:540px) and (max-width:1199.98px){
+  .fdr-rs__line{min-height:0;padding:10px 14px}
+  .fdr-rs__v{font-size:44px}
+}
 @keyframes fdr-warm{0%{text-shadow:0 0 0 rgba(var(--fdr-glow),0)}35%{text-shadow:0 0 .35em rgba(var(--fdr-glow),.55)}100%{text-shadow:0 0 0 rgba(var(--fdr-glow),0)}}
 @keyframes fdr-breathe{0%,100%{color:rgba(244,244,242,.5)}50%{color:rgba(244,244,242,.72)}}
 @media (hover:hover) and (pointer:fine){
@@ -274,6 +299,15 @@
 .fdr-name--plate .fdr-name__l1{font-size:30cqi}
 .fdr-name--plate .fdr-name__l2{font-size:12.6cqi}
 .fdt__id .fdr-roles{margin-top:16px}
+/* phones (VIS2-05): the teaser's roles stack like #founder's on the same phone (a node per role, the dots kept for
+   screen readers only); run inline they wrapped after a "·" at 360 / 390 / 430. From 800px they stay on one line. */
+@media (max-width:799.98px){
+  .fdt__id .fdr-roles--inline{display:grid;gap:6px;justify-items:start}
+  .fdt__id .fdr-roles--inline .fdr-role{display:inline-flex;align-items:center;gap:10px}
+  .fdt__id .fdr-roles--inline .fdr-role::before{content:"";flex:none;width:11px;height:11px;border:1px solid var(--fdr-lead);
+    background:linear-gradient(var(--ink),var(--ink)) 50% 50%/5px 5px no-repeat}
+  .fdt__id .fdr-roles--inline .fdr-roles__sep{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+}
 .fdt__id .fdr-strip{margin-top:24px;max-width:420px}
 .fdt__say{margin-top:32px}
 .fdt .fdr-q__t{font-size:min(8cqw,34px)}
@@ -330,3 +364,5 @@
   .fdr-q__m{fill:CanvasText}
   .fdr-win::before,.fdr-win::after{border-color:CanvasText}
 }
+/* the per-part frame under 400px is drawn with gradients, which forced colours remove: a plain border per part */
+@media (forced-colors:active) and (max-width:399.98px){.fdr-win{border:1px solid CanvasText}}

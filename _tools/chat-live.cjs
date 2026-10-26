@@ -105,9 +105,10 @@ const SAMPLE = () => {
     const c = await mk(phone(390, 844, 'Asia/Kolkata', 'en-IN')), p = c.p;
     await p.goto(BASE + 'index.html', { waitUntil: 'load' });
     const S = await record(p, 'p390-home', 34000);
-    // (24 Oct, review PUX-3: never over text. The 390 home first screen has no clear edge spot, so it hops in place there;
-    // record() above fails any rest or line over a control, and the text checks are in the review's vx wander run)
-    want(S.some(s => s.away || /is-bob/.test(s.cls)), 'no sign of life (a move or a hop) in 34 s on the home first screen');
+    // (24 Oct, review PUX-3: never over text; 25 Oct: the hero's word band is its clear spot on the first screen, where it
+    // glides and says a line beside it; record() above fails any rest or line over a control)
+    want(S.some(s => s.away), 'never glided in 34 s on the home first screen');
+    want(S.some(s => s.say), 'no line in 34 s on the home first screen');
     // scrolling sends it home
     let s = await st(p);
     for (let i = 0; i < 20 && !s.away; i++) { await sleep(500); s = await st(p); }
