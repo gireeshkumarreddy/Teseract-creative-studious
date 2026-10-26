@@ -53,7 +53,8 @@
    every alias is re-declared here and colour is re-resolved below. */
 :root,[data-tone=dark],
 .menu,.cc,.cc-dlg,.site-footer,.scn,.idea.section,.home-faq,.who-hero,.fdr-frame,.fdr-flap,.fdr-rs,
-.motion-toggle,.video-ctl,.idea__toggle,.pj-zoom__badge,.pj-viewer,.hero-tile__tag,.svc-cap,.wk-cap,.cursor-pill{
+.motion-toggle,.video-ctl,.idea__toggle,.pj-zoom__badge,.pj-viewer,.hero-tile__tag,.svc-cap,.wk-cap,.cursor-pill,
+.who-pnl__cap,.who-pnl__credit{
   color-scheme:dark;
   --bg:#000;--bg-1:#060606;--surface-1:#0d0d0d;--surface-2:#141414;--surface-3:#1c1c1c;
   --paper:var(--surface-1);--bg-soft:var(--surface-2);

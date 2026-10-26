@@ -486,6 +486,8 @@ Image 7 shows two small columns. The document gives two lines per item, and the 
 
 ### 6.4 Replacement for the portrait (non-person visual, 0.727 aspect)
 
+> **Owner decision, 26 Oct 2026:** each spread now shows an **inspiration photo**: a free 4K Unsplash photo, credited, with an "Inspiration 0X" tag and a strip of four swatches of its main colours. The small abstracts (`who-abstract-01/02/03`) were also replaced by inspiration photos. See `scripts/inspiration.json` and `teseract-website/docs/IMAGE-CREDITS.md`. The brand-light panel below is now only the fallback.
+
 Recommended: **one brand-light panel per spread**, built in CSS (resolution-independent, no stock people). A `#0b0b0b` panel with 1 px `--who-line` and a soft light field:
 
 | Spread | Light field |

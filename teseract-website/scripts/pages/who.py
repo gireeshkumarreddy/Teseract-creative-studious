@@ -12,9 +12,12 @@
   4 Why TESERACT exists   WHO.why (#why, the owner's founder content): /02 bar, the statement with the red box on
                           "exactly the same.", the three struck lines the visitor restores, Gireesh's answer,
                           quote 2 (orange final dot), the closing box with its three goals.
-  5 Our philosophy        WHO.philosophy: the /03 box (abstract image + text panel) and the 01-04 steps.
-  6 How we think (img 7)  WHO.think as three editorial spreads; non-person brand-light panels replace the
-                          reference's people photo.
+  5 Our philosophy        WHO.philosophy: the /03 box (inspiration photo + text panel) and the 01-04 steps.
+  6 How we think (img 7)  WHO.think as three editorial spreads; an inspiration photo panel per spread (owner, 26 Oct:
+                          free 4K Unsplash photos, credited, with a swatch strip of each photo's colours; the CSS
+                          brand-light panel until a photo is prepared) replaces the reference's people photo.
+The small abstracts (the who box thumb, the /03 box, the (people) tile) are inspiration photos too
+(scripts/inspiration.json, docs/IMAGE-CREDITS.md).
   7 Our promise           WHO.promise as the closing statement.
 Desktop (>= 1200px) places the image-6 and image-7 elements on their measured design grids (--x/--y in
 design px, see 30-who.css; the founder and why boards use a 4-column grid snapped to the image-6 hairlines);
@@ -36,7 +39,7 @@ Also hosts the small inner-page building blocks reused by pages/contact.py, page
 pages/stories.py (page hero, section head with an id, corner dots, reference checklist seal, marks).
 """
 import re
-from lib import E, fmt, img, svg_inline, pill_label, longpath, PUBLIC, BRAND
+from lib import E, fmt, img, media_img, inspiration, svg_inline, pill_label, longpath, PUBLIC, BRAND
 from content import WHO, HOME, BRAND as BRAND_COPY
 from sections import founder as FD
 from tone import chapter, DARK, LIGHT
@@ -311,7 +314,7 @@ def _intro(ctx):
     <div class="who-whobox at" style="{at(35, 571, 325, '--d:200ms')}" data-reveal data-who-pin="h">
       <p class="who-whobox__label"><span>Who we are</span></p>
       <div class="who-whobox__box">
-        <span class="who-whobox__thumb">{img(ctx, A + 'who-abstract-01.webp', '', w=94, h=94)}</span>
+        <span class="who-whobox__thumb">{photo(ctx, 'who-fibre-optics', '(min-width:1200px) 104px, 94px') or img(ctx, A + 'who-abstract-01.webp', '', w=94, h=94)}</span>
         <p class="who-whobox__text">{b1}</p>
       </div>
     </div>
@@ -437,7 +440,7 @@ def _philosophy(ctx):
     {rail()}
     <div class="who-b03 at" style="{at(40, 42, 318, 293)}" data-reveal="fade" data-who-pin="h">
       <p class="who-b03__head"><span>{T(p['label'])}</span><span class="who-b03__n" aria-hidden="true">/03</span></p>
-      <div class="who-b03__img reveal-image">{img(ctx, A + 'who-abstract-02.webp', '', w=197, h=235)}</div>
+      <div class="who-b03__img reveal-image">{photo(ctx, 'phil-prism-spectrum', '(min-width:1200px) 216px, 197px') or img(ctx, A + 'who-abstract-02.webp', '', w=197, h=235)}</div>
     </div>
     <div class="who-panel6 at" style="{at(251, 82, 303, '--d:200ms')}" data-reveal data-who-pin="h!">
       <h2 class="who-panel6__title" id="philosophy-title">{' '.join(f'<span class="who-panel6__ln">{T(x)}</span>' for x in _sentences(p['title']))}</h2>
@@ -452,11 +455,12 @@ def _philosophy(ctx):
 
 # ================================================================== 6. how we think (image 7)
 THINK = [
-    # tags (rail, main), lead line breaks, side visual, link
-    {'tags': ('people', 'experience'), 'panel': 'mark', 'link': ('what-we-create', 'See what we create')},
-    {'tags': ('details', 'feel'), 'panel': 'detail', 'link': ('work', 'Explore our work')},
-    {'tags': ('ideas', 'clarity'), 'panel': 'flat', 'link': ('contact', 'Start a project')},
+    # tags (rail, main), side visual: an inspiration photo (the brand-light panel until it is prepared), link
+    {'tags': ('people', 'experience'), 'photo': 'think-01-red-paper', 'panel': 'mark', 'link': ('what-we-create', 'See what we create')},
+    {'tags': ('details', 'feel'), 'photo': 'think-02-colour-paper', 'panel': 'detail', 'link': ('work', 'Explore our work')},
+    {'tags': ('ideas', 'clarity'), 'photo': 'think-03-glass-prism', 'panel': 'flat', 'link': ('contact', 'Start a project')},
 ]
+PNL_SIZES = '(min-width:1200px) 560px, (min-width:800px) 38vw, 92vw'   # measured 545-552 / 301 (834) / 353 (390)
 
 
 def _sentences(text):
@@ -474,7 +478,43 @@ def _think_title(title, n):
     return ' '.join(f'<span class="who-sp__ln">{T(l)}</span>' for l in lines)
 
 
-def _panel(ctx, kind, i):
+def _lum(hexc):
+    """WCAG relative luminance of '#rrggbb'."""
+    c = [int(hexc[k:k + 2], 16) / 255 for k in (1, 3, 5)]
+    r, g, b = [v / 12.92 if v <= .03928 else ((v + .055) / 1.055) ** 2.4 for v in c]
+    return .2126 * r + .7152 * g + .0722 * b
+
+
+def _on(hexc):
+    """Ink for a label on a swatch: near-black or near-white, whichever has the higher contrast."""
+    l = _lum(hexc)
+    return '#0b0b0b' if (l + .05) / (_lum('#0b0b0b') + .05) >= (_lum('#f4f4f2') + .05) / (l + .05) else '#f4f4f2'
+
+
+def _photo_panel(ctx, p, i):
+    """An inspiration photo (owner, 26 Oct) as the spread's panel: full bleed, its 'Inspiration' tag, the
+    photographer's credit, and a paint-chip strip of its main colours (light to dark, hex labels)."""
+    chips = ''.join(f'<span class="who-pnl__sw" style="--c:{c};--t:{_on(c)};--i:{k}"><span>{c[1:].upper()}</span></span>'
+                    for k, c in enumerate(sorted(p['palette'], key=_lum, reverse=True)))
+    pos = f'style="object-position:{p.get("focal") or "50% 50%"}"'
+    return (f'<div class="who-pnl who-pnl--{i + 1} who-pnl--photo" aria-hidden="true" data-who-pnl>'
+            f'{media_img(ctx, p, "", sizes=PNL_SIZES, cls="who-pnl__photo", attrs=pos)}'
+            f'<p class="who-pnl__cap"><span>Inspiration {i + 1:02d}</span><span>{E(p["word"])}</span></p>'
+            f'<p class="who-pnl__credit">Photo {E(p["credit"]["by"])} / Unsplash</p>'
+            f'<span class="who-pnl__pal">{chips}</span></div>')
+
+
+def photo(ctx, name, sizes):
+    """A small inspiration photo tile (decorative, alt=""), or '' until it is prepared."""
+    p = inspiration(name)
+    return media_img(ctx, p, '', sizes=sizes, attrs=f'style="object-position:{p.get("focal") or "50% 50%"}"') if p else ''
+
+
+def _panel(ctx, cfg, i):
+    p = inspiration(cfg['photo'])
+    if p:
+        return _photo_panel(ctx, p, i)
+    kind = cfg['panel']
     if kind == 'flat':
         visual = f'<span class="who-pnl__flat">{svg_inline("assets/brand/logo-mark.svg")}</span>'
     else:
@@ -491,7 +531,7 @@ def _think(ctx):
     for i, ((title, lead, body), cfg) in enumerate(zip(t['items'], THINK)):
         lead_html = ' '.join(f'<span class="who-sp__s">{T(s)}</span>' for s in _sentences(lead))
         rail_tag, main_tag = cfg['tags']
-        abstract = (f'<span class="who-sp__abs">{img(ctx, A + "who-abstract-03.webp", "", w=149, h=153)}</span>'
+        abstract = (f'<span class="who-sp__abs">{photo(ctx, "people-light-streaks", "(min-width:1200px) 186px, 72px") or img(ctx, A + "who-abstract-03.webp", "", w=149, h=153)}</span>'
                     if i == 0 else '')
         rail_link = (f'<a class="who-sp__raillink" href="{ctx.url("our-approach")}">Our <br>approach</a>' if i == 0 else '')
         route, label = cfg['link']
@@ -515,7 +555,7 @@ def _think(ctx):
             <p class="who-sp__more"><a class="who-link" href="{ctx.url(route)}">{link_text(label)}</a></p>
           </div>
         </div>
-        {_panel(ctx, cfg['panel'], i)}
+        {_panel(ctx, cfg, i)}
       </div>
     </article>''')
     return f'''<section class="who-think" id="how-we-think" aria-labelledby="think-title">

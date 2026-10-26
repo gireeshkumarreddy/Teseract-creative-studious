@@ -373,6 +373,25 @@ def media_img(ctx, entry, alt, *, sizes='100vw', eager=False, cls='', attrs='', 
 SUPPLIED_TABLE = ROOT / 'scripts/supplied.json'
 SUPPLIED_MANIFEST = ROOT / 'scripts/supplied-manifest.json'
 _SUPPLIED = None
+# the Who We Are inspiration photos (free Unsplash photos, credited; same script with --table, same manifest shape)
+INSPIRATION_TABLE = ROOT / 'scripts/inspiration.json'
+INSPIRATION_MANIFEST = ROOT / 'scripts/inspiration-manifest.json'
+_INSPIRATION = None
+
+
+def _prepared(table_path, manifest_path):
+    """{name: table entry + 'variants', 'palette' and the prepared size 'w' x 'h'} for the prepared entries."""
+    table = json.loads(longpath(table_path).read_text(encoding='utf-8')) if longpath(table_path).exists() else {}
+    done = (json.loads(longpath(manifest_path).read_text(encoding='utf-8')).get('images') or {}
+            if longpath(manifest_path).exists() else {})
+    out = {}
+    for e in table.get('images') or []:
+        m = done.get(e['name']) or {}
+        if m.get('variants'):
+            top = max(m['variants'], key=lambda v: v['width'])
+            out[e['name']] = {**e, 'variants': m['variants'], 'palette': m.get('palette') or [],
+                              'w': top['width'], 'h': top['height']}
+    return out
 
 
 def supplied(name):
@@ -380,16 +399,17 @@ def supplied(name):
     and the prepared size 'w' x 'h' - or None when it is not in the table or has not been prepared yet."""
     global _SUPPLIED
     if _SUPPLIED is None:
-        table = json.loads(longpath(SUPPLIED_TABLE).read_text(encoding='utf-8')) if longpath(SUPPLIED_TABLE).exists() else {}
-        done = (json.loads(longpath(SUPPLIED_MANIFEST).read_text(encoding='utf-8')).get('images') or {}
-                if longpath(SUPPLIED_MANIFEST).exists() else {})
-        _SUPPLIED = {}
-        for e in table.get('images') or []:
-            m = done.get(e['name']) or {}
-            if m.get('variants'):
-                top = max(m['variants'], key=lambda v: v['width'])
-                _SUPPLIED[e['name']] = {**e, 'variants': m['variants'], 'w': top['width'], 'h': top['height']}
+        _SUPPLIED = _prepared(SUPPLIED_TABLE, SUPPLIED_MANIFEST)
     return _SUPPLIED.get(name)
+
+
+def inspiration(name):
+    """The inspiration photo `name` (scripts/inspiration.json: slot, word, focal, credit) plus 'variants', its
+    'palette' (main colours, hex) and size - or None when it is not in the table or has not been prepared yet."""
+    global _INSPIRATION
+    if _INSPIRATION is None:
+        _INSPIRATION = _prepared(INSPIRATION_TABLE, INSPIRATION_MANIFEST)
+    return _INSPIRATION.get(name)
 
 
 # ---------------------------------------------------------------- device scenes (src/css/38-scene.css)

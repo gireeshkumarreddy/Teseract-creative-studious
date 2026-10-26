@@ -5,7 +5,8 @@ target and #fragment exists, image alt text and responsive attributes, safe exte
 CSS url() assets, reduced-motion support, no leftover build errors / stubs / third-party identity; project labels
 (owner, 14 Oct: "Client Project" on every client card / page head / home tile / service-card caption, the concept
 labels on the concepts, no "concept" wording on a client project's page or card), the owner-supplied service-card
-images (scripts/supplied.json: prepared, valid WebP files of the recorded size and crop, shown where mapped) and the
+images (scripts/supplied.json: prepared, valid WebP files of the recorded size and crop, shown where mapped), the
+Who We Are inspiration photos (scripts/inspiration.json: prepared, shown, credited, swatch strips recorded) and the
 Client Stories reviews (one per client project, rendered with rating and link, never as structured data or in the GEO
 files; LAUNCH GUARD: an error while a SAMPLE review remains and site.config.json is indexable or has a site_url); the
 owner's 14-15 Oct decisions: Kingfisher gone, VYRN without its A-COLD-WALL / Nike / sneaker screens and the cinematic
@@ -1022,6 +1023,39 @@ for name in sorted(mapped | set(supplied_rows)):
         warnings.append(f'supplied image "{name}": source {source} not found on this machine (prepared copy used)')
     if name in mapped and not row.get('alt'):
         errors.append(f'supplied image "{name}" has no alt text in supplied.json')
+
+# Who We Are inspiration photos (owner, 26 Oct; scripts/inspiration.json, free Unsplash photos): each one prepared (valid
+# WebP variants, never upscaled, the table's crop), shown on /who-we-are/ (and in dist), credited in the table with an
+# Unsplash photo link + the licence, and every panel photo credited visibly with its swatch strip (palette recorded).
+insp_table = json.loads(lib.longpath(lib.INSPIRATION_TABLE).read_text(encoding='utf-8')) if lib.longpath(lib.INSPIRATION_TABLE).exists() else {}
+insp_done = (json.loads(lib.longpath(lib.INSPIRATION_MANIFEST).read_text(encoding='utf-8')).get('images') or {}
+             if lib.longpath(lib.INSPIRATION_MANIFEST).exists() else {})
+who_html = (DIST / 'who-we-are/index.html').read_text(encoding='utf-8') if (DIST / 'who-we-are/index.html').exists() else ''
+for row in insp_table.get('images') or []:
+    name, done = row['name'], insp_done.get(row['name'])
+    cr = row.get('credit') or {}
+    if not (cr.get('by') and str(cr.get('url', '')).startswith('https://unsplash.com/photos/') and cr.get('licence') == 'Unsplash License'):
+        errors.append(f'inspiration photo "{name}": scripts/inspiration.json needs its credit (by, the unsplash.com/photos/ url, licence "Unsplash License")')
+    if not done or not done.get('variants'):
+        errors.append(f'inspiration photo "{name}" is not prepared (run python scripts/prepare_supplied.py --table scripts/inspiration.json)')
+        continue
+    src = done.get('source') or {}
+    if src.get('crop') != (list(row['crop']) if row.get('crop') else None):
+        errors.append(f'inspiration photo "{name}": prepared crop {src.get("crop")} differs from inspiration.json {row.get("crop")}')
+    for v in done['variants']:
+        if v['width'] > (row['crop'][2] - row['crop'][0] if row.get('crop') else src.get('width', 0)):
+            errors.append(f'inspiration photo "{name}": {v["file"]} is upscaled')
+        if webp_size(lib.PUBLIC / v['file']) != (v['width'], v['height']):
+            errors.append(f'inspiration photo "{name}": public/{v["file"]} is missing or broken')
+        if v['file'] in who_html and webp_size(DIST / v['file']) != (v['width'], v['height']):
+            errors.append(f'inspiration photo "{name}": dist/{v["file"]} is missing or broken')
+    if not any(v['file'] in who_html for v in done['variants']):
+        errors.append(f'who-we-are/index.html does not show the inspiration photo "{name}"')
+    if row.get('word'):                                   # a panel photo: its visible credit and its swatch strip
+        if f'Photo {lib.E(cr.get("by", ""))} / Unsplash' not in who_html:
+            errors.append(f'who-we-are/index.html: the panel photo "{name}" has no visible credit')
+        if len(done.get('palette') or []) != insp_table.get('palette', 0):
+            errors.append(f'inspiration photo "{name}": its palette is not recorded (re-run prepare_supplied.py --table)')
 
 # ---------------------------------------------------------------- SEO / GEO (owner's SEO request, 18 Oct; docs/SEO.md)
 # Launch = set site_url + indexable. Until then: noindex,nofollow on every page, robots.txt 'Disallow: /' without a

@@ -1,0 +1,73 @@
+{
+  "_note": [
+    "Inspiration photos for the Who We Are page (owner, 26 Oct: replace the placeholder abstracts with 'cool aesthetic images about technology ... a unique design approach ... colour ... inspiration, not exactly the designs', from a free source, 4K). Free stock photos, NOT the studio's work: the panels say 'Inspiration' and credit the photographer, and none is ever captioned or linked as a project.",
+    "Source: Unsplash, free photos only (the Unsplash License: free for commercial use, no attribution required; never an Unsplash+ photo). Every original is 4K or larger (long side >= 4611 px) and is kept, untouched, in 'src'. No people, no brand marks.",
+    "scripts/prepare_supplied.py --table scripts/inspiration.json crops each original ('crop' = [left, top, right, bottom] source pixels; the panels to their tallest shape, 0.727), writes public/assets/inspiration/<name>-<w>.webp at the table's widths (an entry's own 'widths' wins) and records each image's 4 main colours ('palette'), which the panels show as a swatch strip. check.py: every entry prepared, shown on /who-we-are/ and credited.",
+    "slot: where who.py shows it. word: the panel's tag. focal: object-position of the cover crop."
+  ],
+  "src": "C:/Teseract-media/_inspiration",
+  "out": "assets/inspiration",
+  "manifest": "scripts/inspiration-manifest.json",
+  "quality": 82,
+  "widths": [640, 1280, 1920],
+  "palette": 4,
+  "images": [
+    {
+      "name": "think-01-red-paper",
+      "file": "think-01-red-paper.jpg",
+      "crop": [0, 252, 4054, 5828],
+      "slot": "how we think, panel 01 (people / experience)",
+      "word": "form",
+      "focal": "50% 50%",
+      "what": "Curved layers of red paper, lit from the side",
+      "credit": {"by": "Forest S", "profile": "https://unsplash.com/@forest_ms", "url": "https://unsplash.com/photos/curved-red-paper-layers-1Q6gfwHc5GI", "licence": "Unsplash License"}
+    },
+    {
+      "name": "think-02-colour-paper",
+      "file": "think-02-colour-paper.jpg",
+      "crop": [0, 0, 4000, 5502],
+      "slot": "how we think, panel 02 (details / feel)",
+      "word": "colour",
+      "focal": "50% 40%",
+      "what": "A colour-blocked composition of turquoise, sand, green and red paper planes",
+      "credit": {"by": "Max van den Oetelaar", "profile": "https://unsplash.com/@maxvdo", "url": "https://unsplash.com/photos/green-white-and-blue-abstract-painting-0p6jFznXPsg", "licence": "Unsplash License"}
+    },
+    {
+      "name": "think-03-glass-prism",
+      "file": "think-03-glass-prism.jpg",
+      "crop": [0, 789, 2851, 4711],
+      "slot": "how we think, panel 03 (ideas / clarity)",
+      "word": "clarity",
+      "focal": "50% 45%",
+      "what": "A clear glass prism on pastel colour blocks",
+      "credit": {"by": "Maxim Berg", "profile": "https://unsplash.com/@maxberg", "url": "https://unsplash.com/photos/colorful-geometric-shapes-and-a-glass-prism-B9uu2KWsPv8", "licence": "Unsplash License"}
+    },
+    {
+      "name": "who-fibre-optics",
+      "file": "who-fibre-optics.jpg",
+      "crop": [0, 1900, 4160, 6060],
+      "widths": [320, 640],
+      "slot": "[ who we are ] box thumbnail",
+      "what": "Blue glowing fibre-optic strands",
+      "credit": {"by": "Kashish Lamba", "profile": "https://unsplash.com/@drunkenchimp", "url": "https://unsplash.com/photos/abstract-blue-glowing-fiber-optics-with-bokeh-effect-DGwunSOMMbk", "licence": "Unsplash License"}
+    },
+    {
+      "name": "phil-prism-spectrum",
+      "file": "phil-prism-spectrum.jpg",
+      "crop": [0, 400, 3337, 4381],
+      "widths": [320, 640],
+      "slot": "our philosophy, /03 box image (197 x 235)",
+      "what": "A prism's light spectrum on a dark wall",
+      "credit": {"by": "Evie S.", "profile": "https://unsplash.com/@evieshaffer", "url": "https://unsplash.com/photos/rainbow-prism-light-spectrum-on-dark-surface-kBzQNk9AgOg", "licence": "Unsplash License"}
+    },
+    {
+      "name": "people-light-streaks",
+      "file": "people-light-streaks.jpg",
+      "crop": [0, 800, 3375, 4266],
+      "widths": [320, 640],
+      "slot": "how we think, the (people) tile (149 x 153)",
+      "what": "Orange light streaks fanning out on black",
+      "credit": {"by": "Susan Wilkinson", "profile": "https://unsplash.com/@susan_wilkinson", "url": "https://unsplash.com/photos/orange-red-and-purple-fluid-streaks-on-black-background-5jJ8p_S1t7M", "licence": "Unsplash License"}
+    }
+  ]
+}

@@ -739,6 +739,35 @@
 .who-pnl__flat svg{width:100%;height:auto}
 .motion .who-pnl{transition:opacity 1s ease,transform 1.3s var(--ease)}
 .motion .who-sp:not(.is-in) .who-pnl{opacity:0;transform:scale(1.04)}
+/* inspiration photo panel (owner, 26 Oct; scripts/inspiration.json): a free 4K photo, full bleed, with its tag and the
+   photographer's credit (always-dark islands in 96-tone.css: they sit on the photo) and a paint-chip strip of its main
+   colours (--c / --t inline from the build), which rises in after the panel when the spread comes in */
+.who-pnl--photo{--sw-h:64px;background:#0d0d0d}
+.who-pnl__photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.who-pnl__cap,.who-pnl__credit{position:absolute;z-index:1;margin:0;font-size:12px;line-height:1;color:#f4f4f2;
+  background:rgba(0,0,0,.55);padding:7px 9px}
+.who-pnl__cap{left:14px;top:14px;display:flex;gap:10px;letter-spacing:.06em;text-transform:uppercase}
+.who-pnl__cap span+span{color:rgba(244,244,242,.66)}
+.who-pnl__cap span+span::before{content:"(";}
+.who-pnl__cap span+span::after{content:")"}
+.who-pnl__credit{right:14px;bottom:calc(var(--sw-h) + 12px);color:rgba(244,244,242,.8)}
+.who-pnl__pal{position:absolute;left:0;right:0;bottom:0;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);
+  height:var(--sw-h);overflow:hidden}
+.who-pnl__sw{position:relative;background:var(--c);color:var(--t)}
+.who-pnl__sw span{position:absolute;left:10px;bottom:9px;font-size:12px;line-height:1;letter-spacing:.04em;
+  font-variant-numeric:tabular-nums}
+.motion .who-pnl__sw{transition:transform .9s var(--ease) calc(500ms + var(--i) * 80ms)}
+.motion .who-sp:not(.is-in) .who-pnl__sw{transform:translateY(101%)}
+@media (hover:hover) and (pointer:fine){
+  .who-pnl__photo{transition:transform 1.6s var(--ease)}
+  .who-pnl--photo:hover .who-pnl__photo{transform:scale(1.035)}
+}
+@media (max-width:799.98px){
+  .who-pnl--photo{--sw-h:48px}
+  .who-pnl__cap{left:10px;top:10px}
+  .who-pnl__credit{right:10px;bottom:calc(var(--sw-h) + 10px)}
+  .who-pnl__sw span{left:8px;bottom:8px}
+}
 
 /* promise */
 .who-ed--promise{padding-bottom:120px}

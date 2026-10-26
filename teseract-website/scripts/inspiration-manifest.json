@@ -1,0 +1,238 @@
+{
+ "images": {
+  "think-01-red-paper": {
+   "variants": [
+    {
+     "file": "assets/inspiration/think-01-red-paper-640.webp",
+     "width": 640,
+     "height": 880,
+     "bytes": 14478
+    },
+    {
+     "file": "assets/inspiration/think-01-red-paper-1280.webp",
+     "width": 1280,
+     "height": 1761,
+     "bytes": 35052
+    },
+    {
+     "file": "assets/inspiration/think-01-red-paper-1920.webp",
+     "width": 1920,
+     "height": 2641,
+     "bytes": 61258
+    }
+   ],
+   "source": {
+    "file": "think-01-red-paper.jpg",
+    "width": 4054,
+    "height": 6081,
+    "crop": [
+     0,
+     252,
+     4054,
+     5828
+    ],
+    "sha256": "94d9899cbb4a34c06d4c94809a9b5d2e0f7bc6c9d2d3933d32d421599f1700df"
+   },
+   "palette": [
+    "#150101",
+    "#580100",
+    "#d60111",
+    "#8c0102"
+   ]
+  },
+  "think-02-colour-paper": {
+   "variants": [
+    {
+     "file": "assets/inspiration/think-02-colour-paper-640.webp",
+     "width": 640,
+     "height": 880,
+     "bytes": 12978
+    },
+    {
+     "file": "assets/inspiration/think-02-colour-paper-1280.webp",
+     "width": 1280,
+     "height": 1761,
+     "bytes": 44256
+    },
+    {
+     "file": "assets/inspiration/think-02-colour-paper-1920.webp",
+     "width": 1920,
+     "height": 2641,
+     "bytes": 170818
+    }
+   ],
+   "source": {
+    "file": "think-02-colour-paper.jpg",
+    "width": 4000,
+    "height": 6000,
+    "crop": [
+     0,
+     0,
+     4000,
+     5502
+    ],
+    "sha256": "0ebbb4717026a07c0f9cc24d80abd147d15cced40d8a8a5778c4445f8cdb961b"
+   },
+   "palette": [
+    "#4ec1d0",
+    "#982d31",
+    "#027451",
+    "#f9d491"
+   ]
+  },
+  "think-03-glass-prism": {
+   "variants": [
+    {
+     "file": "assets/inspiration/think-03-glass-prism-640.webp",
+     "width": 640,
+     "height": 880,
+     "bytes": 11986
+    },
+    {
+     "file": "assets/inspiration/think-03-glass-prism-1280.webp",
+     "width": 1280,
+     "height": 1761,
+     "bytes": 29262
+    },
+    {
+     "file": "assets/inspiration/think-03-glass-prism-1920.webp",
+     "width": 1920,
+     "height": 2641,
+     "bytes": 51552
+    }
+   ],
+   "source": {
+    "file": "think-03-glass-prism.jpg",
+    "width": 2851,
+    "height": 5000,
+    "crop": [
+     0,
+     789,
+     2851,
+     4711
+    ],
+    "sha256": "fc6c86401a9ff1ca3d744119335ea0f148febf7d356a879b1bb6e37b0f2c194f"
+   },
+   "palette": [
+    "#f7cd55",
+    "#95c5e7",
+    "#b196d4",
+    "#df6bc5"
+   ]
+  },
+  "who-fibre-optics": {
+   "variants": [
+    {
+     "file": "assets/inspiration/who-fibre-optics-320.webp",
+     "width": 320,
+     "height": 320,
+     "bytes": 20954
+    },
+    {
+     "file": "assets/inspiration/who-fibre-optics-640.webp",
+     "width": 640,
+     "height": 640,
+     "bytes": 55714
+    }
+   ],
+   "source": {
+    "file": "who-fibre-optics.jpg",
+    "width": 4160,
+    "height": 6240,
+    "crop": [
+     0,
+     1900,
+     4160,
+     6060
+    ],
+    "sha256": "30589ac7df9b67c4134287b09a539b2aff53cf773953a735a30616a0e4761f66"
+   },
+   "widths": [
+    320,
+    640
+   ],
+   "palette": [
+    "#000d61",
+    "#0b5ffb",
+    "#000407",
+    "#13befd"
+   ]
+  },
+  "phil-prism-spectrum": {
+   "variants": [
+    {
+     "file": "assets/inspiration/phil-prism-spectrum-320.webp",
+     "width": 320,
+     "height": 382,
+     "bytes": 3790
+    },
+    {
+     "file": "assets/inspiration/phil-prism-spectrum-640.webp",
+     "width": 640,
+     "height": 764,
+     "bytes": 14098
+    }
+   ],
+   "source": {
+    "file": "phil-prism-spectrum.jpg",
+    "width": 3337,
+    "height": 4611,
+    "crop": [
+     0,
+     400,
+     3337,
+     4381
+    ],
+    "sha256": "afec06bf9aa08b1388356c3b324a68b28ceb3e068d896914c290b6b1aa6d4bc6"
+   },
+   "widths": [
+    320,
+    640
+   ],
+   "palette": [
+    "#19191d",
+    "#c09b1b",
+    "#7da482",
+    "#01618d"
+   ]
+  },
+  "people-light-streaks": {
+   "variants": [
+    {
+     "file": "assets/inspiration/people-light-streaks-320.webp",
+     "width": 320,
+     "height": 329,
+     "bytes": 32782
+    },
+    {
+     "file": "assets/inspiration/people-light-streaks-640.webp",
+     "width": 640,
+     "height": 657,
+     "bytes": 102374
+    }
+   ],
+   "source": {
+    "file": "people-light-streaks.jpg",
+    "width": 3375,
+    "height": 6000,
+    "crop": [
+     0,
+     800,
+     3375,
+     4266
+    ],
+    "sha256": "2db2b2492c85e59be2a95b52ed2ba9de584c21ea075890130b7519ed0e8cd53a"
+   },
+   "widths": [
+    320,
+    640
+   ],
+   "palette": [
+    "#3c4169",
+    "#010100",
+    "#fdc986",
+    "#f28472"
+   ]
+  }
+ }
+}
