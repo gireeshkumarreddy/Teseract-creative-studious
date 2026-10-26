@@ -187,7 +187,9 @@
     background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     font-size:12px;line-height:15px;opacity:1;transform:none;transition:none}
   .hero-tile__cap .roll{height:auto;line-height:inherit;vertical-align:top}
-  .hero-tile__cap .roll>span,.hero-tile:hover .hero-tile__cap .roll>span{white-space:normal;text-wrap:balance;transform:none}
+  /* static on hover and on keyboard focus too: 02-components.css rolls a focused link's line up and out, which left a
+     touch screen's Tab-focused tile (iPad keyboard, switch access) with an empty strip (repair of mobile audit PAR2-01) */
+  .hero-tile__cap .roll>span,.hero-tile:is(:hover,:focus-visible) .hero-tile__cap .roll>span{white-space:normal;text-wrap:balance;transform:none}
   .hero-tile__cap .roll>span+span{display:none}
 }
 /* phones (tiles ~150-200px): no dot, the industry as the strip's second line - 12px, sentence case, two lines at most */
@@ -360,6 +362,20 @@
   .hero__btn:first-child{justify-self:end}
   .hero__btn:last-child{justify-self:start}
   .hero__btn,.hero__btn .btn{width:auto}
+  /* the statement pill rolls inside its 32px slot: with the steps this tight, a statement rolling out (up 56px) or in
+     (from 40px below) crossed the header and the kicker (26 Oct verifier); on hover the slot opens upwards for the
+     tooltip above it */
+  .hero-pill{clip-path:inset(0 -100vw)}
+  .hero-pill:hover{clip-path:inset(-40px -100vw 0)}
+}
+/* 360-380px tall (740 / 800 x 360 phones; 667 x 375): the calls to action still ended 5-15px under the first view, so
+   the steps tighten once more */
+@media (orientation:landscape) and (max-height:380px) and (min-width:656px){
+  .hero.section{padding-top:8px}
+  .hero__inner{gap:12px}
+  .hero__lockup{gap:8px}
+  .hero__kicker{margin-bottom:6px}
+  .hero__copy{gap:8px}
 }
 /* Without motion (reduced motion, or no JS: the head script sets .motion before the first paint, only where motion is
    allowed) the columns stand still, and the frame's fixed height (1000px; a phone's screen) clipped them: 10 of the 19

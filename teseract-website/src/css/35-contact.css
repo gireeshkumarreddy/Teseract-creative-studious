@@ -198,6 +198,14 @@
     white-space:normal;text-align:center;text-wrap:balance}
   .ct-chip__tick{flex:none}
 }
+/* 320-class phones: 6 px sides and a 4 px tick gap keep a ticked two-line label two lines (Brand & / Digital Identity
+   needs ~84 px; 116 px cells leave 78 with the 360 spacing, so it took a third line and grew its row to 62 px) */
+@media (max-width:339.98px){
+  .ct-chip>span{padding-inline:6px}
+  .ct-chip input:checked+span .ct-chip__tick{margin-right:4px}
+}
+/* under 320 (folded covers): one chip per row - a ticked "Development" no longer fits a half-width cell */
+@media (max-width:319.98px){.ct-chips{grid-template-columns:minmax(0,1fr)}}
 /* the site chat's hand-off (35-contact.js): "Filled in from your chat ..." above the form, with Clear */
 .ct-prefill{display:flex;align-items:center;gap:12px;margin:0 0 20px;padding:8px 8px 8px 14px;border-radius:14px;border:1px solid var(--line-3);
   background:rgba(255,255,255,.03);font-size:14px;line-height:1.4;color:var(--ink-2)}

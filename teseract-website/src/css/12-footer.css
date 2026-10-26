@@ -153,6 +153,9 @@
   .ft-bar__svc::before{top:0;bottom:0}
   .ft-bar__svc:active{color:var(--ink)}
 }
+/* a mouse window under 800px (two lines): 28px apart, so each word's ~26px box stays on its own line (at 20px the second
+   line's boxes covered the first line's lower edge: a 20px hit height; 26 Oct verifier) */
+@media (max-width:799.98px) and (pointer:fine){.ft-bar__services{line-height:28px}}
 .ft-bar__social{grid-area:social;justify-self:end;align-self:start;justify-content:flex-end}  /* on the first row, level with the links */
 .ft-bar__meta{display:grid;grid-template-columns:auto auto 1fr;align-items:center;column-gap:16px;row-gap:8px;padding-top:16px;border-top:1px solid var(--line-2)}
 .ft-bar__copy{font-size:13px;font-weight:500;line-height:20px;letter-spacing:-.01em;color:var(--muted-strong);text-wrap:balance}  /* 360 px: two even lines, no lone 'reserved.' */
