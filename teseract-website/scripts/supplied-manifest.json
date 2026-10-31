@@ -171,6 +171,382 @@
     "crop": null,
     "sha256": "1d44fb7a3fc76103e6304377a896802e8d0ee7bc20bea08324eaccea2f7b041a"
    }
+  },
+  "bk-ikc-hero": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-hero-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 9596
+    },
+    {
+     "file": "assets/supplied/bk-ikc-hero-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 21354
+    },
+    {
+     "file": "assets/supplied/bk-ikc-hero-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 35796
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-hero.jpg",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "da1e2ea70ff21e160cb5ca85e8d0a37f65383bd3d41dcf9dcd0870d0538dbd62"
+   }
+  },
+  "bk-ikc-reach": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-reach-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 18314
+    },
+    {
+     "file": "assets/supplied/bk-ikc-reach-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 49376
+    },
+    {
+     "file": "assets/supplied/bk-ikc-reach-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 86222
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-reach.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "d647318838c49b7b5f6ab4fee217dc5cd88fa26ab2fbf04c89b03a61fc8214c4"
+   }
+  },
+  "bk-ikc-versions": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-versions-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 18920
+    },
+    {
+     "file": "assets/supplied/bk-ikc-versions-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 51818
+    },
+    {
+     "file": "assets/supplied/bk-ikc-versions-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 87462
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-versions.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "c54507cbee7fdb4f6a5bffbb22e8b89000ed895cca91e8c0037177f17bb92638"
+   }
+  },
+  "bk-ikc-colour": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-colour-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 14682
+    },
+    {
+     "file": "assets/supplied/bk-ikc-colour-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 42922
+    },
+    {
+     "file": "assets/supplied/bk-ikc-colour-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 76446
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-colour.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "cdcb524745badc6e37625c48498ea7aea5dc84b39ad13dc46bc410223969feb3"
+   }
+  },
+  "bk-ikc-tee": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-tee-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 14848
+    },
+    {
+     "file": "assets/supplied/bk-ikc-tee-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 48544
+    },
+    {
+     "file": "assets/supplied/bk-ikc-tee-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 143110
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-tee.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "69b96a23781a6d33637bffc381f422ad1fa3e58fc63569afce062f1baa000e10"
+   }
+  },
+  "bk-ikc-stationery": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-stationery-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 15676
+    },
+    {
+     "file": "assets/supplied/bk-ikc-stationery-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 38470
+    },
+    {
+     "file": "assets/supplied/bk-ikc-stationery-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 62030
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-stationery.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "07c2e48fe12944ae03e4bf81b98f4b50a6f3ef4fa0076daf3a6c085d9ae3ab7f"
+   }
+  },
+  "bk-ikc-audition": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-audition-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 23698
+    },
+    {
+     "file": "assets/supplied/bk-ikc-audition-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 56294
+    },
+    {
+     "file": "assets/supplied/bk-ikc-audition-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 89922
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-audition.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "803037dece136c1342a15d02be6e546ea21aad94bb37d9c82a70730ccd91101b"
+   }
+  },
+  "bk-ikc-screens": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-screens-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 20694
+    },
+    {
+     "file": "assets/supplied/bk-ikc-screens-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 55682
+    },
+    {
+     "file": "assets/supplied/bk-ikc-screens-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 96712
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-screens.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "642fb73fced13704311ad1666aee897c3551c450075c1642532063ec9fa65fa0"
+   }
+  },
+  "bk-ikc-mediawall": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-ikc-mediawall-640.webp",
+     "width": 640,
+     "height": 360,
+     "bytes": 20842
+    },
+    {
+     "file": "assets/supplied/bk-ikc-mediawall-1280.webp",
+     "width": 1280,
+     "height": 720,
+     "bytes": 53018
+    },
+    {
+     "file": "assets/supplied/bk-ikc-mediawall-1920.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 89374
+    }
+   ],
+   "source": {
+    "file": "brandkits/ikc-mediawall.png",
+    "width": 1920,
+    "height": 1080,
+    "crop": null,
+    "sha256": "a121c7d78fe5911d0f189db498a2024a11996ef0f99d0e0bd257cd5c30a9ea46"
+   }
+  },
+  "bk-hs-after": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-hs-after-640.webp",
+     "width": 640,
+     "height": 1138,
+     "bytes": 62972
+    },
+    {
+     "file": "assets/supplied/bk-hs-after-1080.webp",
+     "width": 1080,
+     "height": 1920,
+     "bytes": 155042
+    }
+   ],
+   "source": {
+    "file": "brandkits/hs-after.png",
+    "width": 1080,
+    "height": 1920,
+    "crop": null,
+    "sha256": "ea63418205c5330d64709ba999811648c4dec654bedb6f6cbdf5a03a70333897"
+   }
+  },
+  "bk-hs-before-after": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-hs-before-after-640.webp",
+     "width": 640,
+     "height": 1138,
+     "bytes": 44098
+    },
+    {
+     "file": "assets/supplied/bk-hs-before-after-1080.webp",
+     "width": 1080,
+     "height": 1920,
+     "bytes": 114260
+    }
+   ],
+   "source": {
+    "file": "brandkits/hs-before-after.png",
+    "width": 1080,
+    "height": 1920,
+    "crop": null,
+    "sha256": "a6addad4b2ecde30c689db828728925c7400cd3065cfeab9094d2a2c61749930"
+   }
+  },
+  "bk-hs-guest": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-hs-guest-640.webp",
+     "width": 640,
+     "height": 1138,
+     "bytes": 56662
+    },
+    {
+     "file": "assets/supplied/bk-hs-guest-1080.webp",
+     "width": 1080,
+     "height": 1920,
+     "bytes": 134694
+    }
+   ],
+   "source": {
+    "file": "brandkits/hs-guest.png",
+    "width": 1080,
+    "height": 1920,
+    "crop": null,
+    "sha256": "ff560e95389fe7543e90c368a38f6be2de8e7ae518dab9d987b3de2f75e71b65"
+   }
+  },
+  "bk-hs-blindfold": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-hs-blindfold-640.webp",
+     "width": 640,
+     "height": 1138,
+     "bytes": 72948
+    },
+    {
+     "file": "assets/supplied/bk-hs-blindfold-1080.webp",
+     "width": 1080,
+     "height": 1920,
+     "bytes": 176608
+    }
+   ],
+   "source": {
+    "file": "brandkits/hs-blindfold.png",
+    "width": 1080,
+    "height": 1920,
+    "crop": null,
+    "sha256": "c4af6d88f530daf6b19ea74c8cf77a5391cfba34e50495d00aca5fa03dff6219"
+   }
+  },
+  "bk-hs-name": {
+   "variants": [
+    {
+     "file": "assets/supplied/bk-hs-name-640.webp",
+     "width": 640,
+     "height": 1138,
+     "bytes": 78056
+    },
+    {
+     "file": "assets/supplied/bk-hs-name-1080.webp",
+     "width": 1080,
+     "height": 1920,
+     "bytes": 209472
+    }
+   ],
+   "source": {
+    "file": "brandkits/hs-name.png",
+    "width": 1080,
+    "height": 1920,
+    "crop": null,
+    "sha256": "a0bc276e369ba21ea0b924e02590e6db4d6f011ff6f298c8f5011914b2f4c265"
+   }
   }
  }
 }

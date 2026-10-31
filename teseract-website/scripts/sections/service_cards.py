@@ -67,13 +67,16 @@ MEDIA = {
                       {'slug': 'mahira-select', 'role': 'gallery-01', 'focal': '18% 50%'}]},
     # OBSCURA (front, whole design on its black page) and FaiPy (back, logo row cropped out): the owner's own designs
     '04': {'images': [{'supplied': 'interactive-3d-1-obscura'}, {'supplied': 'interactive-3d-2-faipy'}]},
-    # Brand & Digital Identity = the owner's two brand concepts, each site's main hero screen (owner, 14 Oct): SAANJH
-    # (Kesar Cloud bottle over 'SAVOUR') in front, VELORA ('The essence of subtle romance') behind it
-    # Both are 16:9 heroes on ~4:3 cards: cropped from the left edge ('0% 50%'), so each hero headline stays whole
-    # ('Good things. Slowly savoured.' / 'The essence of subtle romance') beside its bottle
-    '05': {'images': [{'slug': 'saanjh', 'role': 'gallery-01', 'focal': '0% 50%'},
-                      {'slug': 'velora', 'role': 'gallery-01', 'focal': '0% 50%'}]},
-    # Product & SaaS = two of the owner's SaaS landing-page concepts (owner, 17 Oct: instead of LiveCV, which stays a
+    # Brand Kits & Identity (owner, 31 Oct: "we build the brand kit ... add those projects"; until then SAANJH and VELORA's
+    # hero screens): the brand kits the studio made (scripts/supplied.json bk-*), each linking to the page's "What is a
+    # brand kit?" section ('href') under its own caption ('cap'). India Kids Casting's logo on its black stage (the logo
+    # intro's last frame; a brand-book page showed its text column at the card's edge) in front, the Hidden Stories
+    # 'After' card behind it (a 9:16 frame: '50% 42%' centres the badge).
+    '05': {'images': [{'supplied': 'bk-ikc-hero', 'href': '#brand-kits', 'cap': 'India Kids Casting · Brand Kit',
+                       'focal': '50% 50%'},
+                      {'supplied': 'bk-hs-after', 'href': '#brand-kits', 'cap': 'Hidden Stories · Logo Redesign',
+                       'focal': '50% 42%'}]},
+    # Apps & SaaS (named Product & SaaS until 31 Oct) = two of the owner's SaaS landing-page concepts (owner, 17 Oct: instead of LiveCV, which stays a
     # client project everywhere else), the two whose capture reports call them SaaS product landing pages: SAGEWELL (AI
     # reasoning model) in front, VANTLINE (decision-intelligence copilot) behind it, each site's hero. Both headlines are
     # centred on the 16:10 screen, so the cover crop of the ~4:3 cards keeps them whole ('The model that thinks before it
@@ -163,6 +166,8 @@ _I = {
     'scale': '<path d="M10 3v14M6.5 17h7M4 6.25h12"/><path d="M4 6.25 1.75 11a2.25 2.25 0 0 0 4.5 0zM16 6.25 13.75 11a2.25 2.25 0 0 0 4.5 0z"/>',
     'structure': '<rect x="7.5" y="2.5" width="5" height="4" rx="1.2"/><rect x="2.5" y="13.5" width="5" height="4" rx="1.2"/><rect x="12.5" y="13.5" width="5" height="4" rx="1.2"/><path d="M10 6.5V10.5M5 13.5V12c0-.83.67-1.5 1.5-1.5h7c.83 0 1.5.67 1.5 1.5v1.5"/>',
     'trend': '<path d="m2.5 14.5 5-5 3.5 3.5 6.5-6.5M12.5 6.5h5v5"/>',
+    'pen': '<path d="M10 2.5 15.25 8.5 10 17.5 4.75 8.5z"/><circle cx="10" cy="10" r="1.5"/><path d="M10 2.5v6"/>',
+    'kit': '<rect x="2.5" y="6" width="15" height="11" rx="2.5"/><path d="M7.25 6V4.5c0-.83.67-1.5 1.5-1.5h2.5c.83 0 1.5.67 1.5 1.5V6M2.5 10.5h15M8.5 10.5v1.75h3V10.5"/>',
     'dot': '<circle cx="10" cy="10" r="3"/>',
 }
 
@@ -176,7 +181,9 @@ TAG_ICON = {
     'Scroll animations': 'scroll', 'Interactive storytelling': 'story', 'Product interactions': 'cube',
     'Micro-interactions': 'toggle', 'Cinematic experiences': 'film', '3D environments': 'cube',
     'Typography': 'type', 'Colour Systems': 'drop', 'Visual Direction': 'eye', 'Digital Identity': 'id', 'Brand Guidelines': 'book',
+    'Logo Design': 'pen', 'Brand Kits': 'kit', 'Logo Animation': 'film',
     'Dashboards': 'gauge', 'SaaS Platforms': 'cloud', 'Mobile Interfaces': 'phone', 'User Flows': 'flow', 'Prototypes': 'cursor',
+    'Mobile Apps': 'phone', 'Web Apps': 'browser',
     'AI Experiences': 'spark', 'Workflow Automation': 'loop', 'AI Interfaces': 'chat', 'Internal Tools': 'wrench',
     'Intelligent Dashboards': 'bars', 'API Integrations': 'code',
     'Digital Positioning': 'target', 'Website Strategy': 'map', 'User Research': 'search', 'Competitor Analysis': 'scale',
@@ -184,6 +191,11 @@ TAG_ICON = {
 }
 # 'Product interactions' reads better as a pointer than a second cube.
 TAG_ICON['Product interactions'] = 'tap'
+
+
+def icon_svg(name):
+    """One of the chip icons by its own name (_I), e.g. for a list that is not a service's tags."""
+    return f'<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">{_I[name]}</svg>'
 
 
 def chip_icon(tag):
@@ -320,7 +332,8 @@ def slides(n):
             p = projects.by_slug(it['slug']) if it.get('slug') else None
             out.append({'p': p, 'entry': img, 'alt': img['alt'], 'pos': it.get('focal') or img.get('focal') or '50% 50%',
                         'fit': img.get('fit') or 'cover', 'ground': img.get('ground'), 'fade': img.get('fade'),
-                        'ar': img['w'] / img['h'], 'work': not p, 'cap': _cap_text(p['title'], p) if p else None,
+                        'ar': img['w'] / img['h'], 'work': not p and not it.get('href'), 'href': it.get('href'),
+                        'cap': _cap_text(p['title'], p) if p else (it['cap'], None) if it.get('cap') else None,
                         'zoom': it.get('zoom'), 'small': it.get('small')})
             continue
         p = projects.by_slug(it['slug'])
@@ -341,6 +354,10 @@ def stackable(n):
 def _tag(ctx, sl, cls, extra=''):
     """(open, close) for an image card: a link to the slide's project page, or to The Work page for an owner-supplied
     image and for a card under the portfolio label."""
+    if sl.get('href'):                                        # MEDIA 'href': a section of What We Create
+        x = f' {extra}' if extra else ''
+        return (f'<a class="{cls}" href="{E(ctx.url("what-we-create") + sl["href"])}" aria-label="{E(sl["cap"][0])}"'
+                f' data-cursor="View"{x}>', '</a>')
     if sl['work']:
         name = f'{WORK_LABEL}: {HOME["hero"]["ctas"][1]}'          # "The Work: Explore Our Work"
         x = f' {extra}' if extra else ''
@@ -491,9 +508,11 @@ def contact_href(ctx, s):
 
 def _cta(ctx, s):
     arrow = lib.ICONS['arrow-r']
+    more = (f'<a class="svc-more" href="{E(ctx.url("what-we-create") + s["more"][1])}">{E(s["more"][0])}'
+            f'<span class="svc-more__icon" aria-hidden="true">{arrow}</span></a>' if s.get('more') else '')
     return (f'<div class="svc-info__foot"><a class="svc-cta" data-letter-roll href="{E(contact_href(ctx, s))}" '
             f'aria-label="{E(PRIMARY_CTA)}: {E(s["name"])}"><span class="svc-cta__label">{roll(PRIMARY_CTA)}</span>'
-            f'<span class="svc-cta__icon" aria-hidden="true">{arrow}</span></a></div>')
+            f'<span class="svc-cta__icon" aria-hidden="true">{arrow}</span></a>{more}</div>')
 
 
 def info(ctx, s, *, hid, tag='h3', number=False, total=8, note=False, cta=False):

@@ -203,7 +203,7 @@ def _socials():
 
 # The footer's short service words -> the What We Create service each one names (its section id: service_cards.slug).
 FOOTER_SERVICE = {'Web Design': 'Website Design', 'Development': 'Website Development', 'E-commerce': 'E-commerce',
-                  'Interactive': 'Interactive & 3D', 'Branding': 'Brand & Digital Identity', 'Product': 'Product & SaaS',
+                  'Interactive': 'Interactive & 3D', 'Branding': 'Brand Kits & Identity', 'Apps': 'Apps & SaaS',
                   'AI': 'AI & Automation'}
 
 

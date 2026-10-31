@@ -143,12 +143,16 @@ CREATE = {
          'body': 'We create digital experiences using motion, interaction and 3D.',
          'tags': ['Scroll animations', 'Interactive storytelling', 'Product interactions', 'Micro-interactions', 'Cinematic experiences', '3D environments'],
          'note': 'Every interaction has a purpose.'},
-        {'n': '05', 'name': 'Brand & Digital Identity', 'title': 'Your brand should feel consistent everywhere.',
-         'body': '',
-         'tags': ['Typography', 'Colour Systems', 'Visual Direction', 'Digital Identity', 'Design Systems', 'Brand Guidelines']},
-        {'n': '06', 'name': 'Product & SaaS', 'title': 'Digital products people actually want to use.',
-         'body': '',
-         'tags': ['Dashboards', 'SaaS Platforms', 'Web Applications', 'Mobile Interfaces', 'User Flows', 'Prototypes', 'Design Systems']},
+        {'n': '05', 'name': 'Brand Kits & Identity', 'title': 'Your brand should feel consistent everywhere.',
+         'body': ('We design your logo and build the brand kit around it: every logo file, your colours, your typefaces '
+                  'and the guidelines that keep them consistent.'),
+         'tags': ['Logo Design', 'Brand Kits', 'Brand Guidelines', 'Colour Systems', 'Typography', 'Logo Animation',
+                  'Digital Identity'],
+         'more': ('What is a brand kit?', '#brand-kits')},
+        {'n': '06', 'name': 'Apps & SaaS', 'title': 'Apps people actually want to use.',
+         'body': ('We design and build web and mobile apps, from the first user flow to the working product: SaaS '
+                  'platforms, dashboards and the tools behind them.'),
+         'tags': ['Mobile Apps', 'Web Apps', 'SaaS Platforms', 'Dashboards', 'User Flows', 'Prototypes', 'Design Systems']},
         {'n': '07', 'name': 'AI & Automation', 'title': 'Make your business work smarter.',
          'body': '',
          'tags': ['AI Experiences', 'Workflow Automation', 'AI Interfaces', 'Internal Tools', 'Intelligent Dashboards', 'API Integrations']},
@@ -156,6 +160,54 @@ CREATE = {
          'body': '',
          'tags': ['Digital Positioning', 'Website Strategy', 'User Research', 'Competitor Analysis', 'Content Structure', 'Conversion Strategy']},
     ],
+    # "What is a brand kit?" (owner, 31 Oct: explain it on this page, no separate page; show the brand kits we made).
+    # Every kit fact is from the kit itself: India Kids Casting's Read-Me, brand book and files; Hidden Stories' redesign
+    # film and its portfolio entry. images / hero = scripts/supplied.json names; the IKC book's cover ('Confidential')
+    # is left out. palette = (name, hex) as the kits name them.
+    'brand_kits': {
+        'label': 'Brand Kits',
+        'title': 'What is a brand kit?',
+        'lead': 'Everything your brand needs to look like itself, everywhere.',
+        'body': ['A brand kit holds your logo in every format and colour, your colours with their exact codes, your '
+                 'typefaces, and a guide that shows how to use them.',
+                 'Your website, social posts, signs, print and merchandise all draw from the same kit. So your brand looks '
+                 'the same wherever people meet it, and anyone who works on it gets it right the first time.'],
+        'inside_label': "What's inside",
+        'inside': [
+            ('Logo suite', 'Every version of your logo, in colour, black and white, as SVG, PDF and PNG files.', 'id'),
+            ('Colour palette', 'Your colours with exact HEX, RGB, CMYK and Pantone values, for screen and print.', 'drop'),
+            ('Typography', 'The typefaces that sound like your brand, and how to size them.', 'type'),
+            ('Brand guidelines', 'A brand book that shows how to use it all, and what to avoid.', 'book'),
+            ('Applications', 'Your brand on social posts, stationery, signs and merchandise.', 'layers'),
+            ('Motion', 'A logo animation for videos, reels and your website.', 'film'),
+        ],
+        'kits_label': "Brand kits we've made",
+        'kits': [
+            {'key': 'ikc', 'name': 'India Kids Casting', 'kind': 'Logo, brand kit and logo animation',
+             'label': 'Client Project',
+             'about': 'A child casting and audition agency that connects young talent with work on screen and in print.',
+             'idea': ('The logo, The Reach, is a child on tiptoe reaching for a star. The child reaches up through the '
+                      'name itself, joining INDIA and KIDS into one story.'),
+             'facts': ['Five logo lockups, each in six versions', 'SVG, PDF and 3000 px PNG files',
+                       'A 26-page brand book', 'Colours as CSS and JSON', 'A 15-second logo intro with sound'],
+             'palette': [('Midnight Navy', '#022861'), ('Star Gold', '#D4A762'), ('Stage Black', '#0B0B0C'),
+                         ('Spotlight White', '#FFFFFF'), ('Saffron', '#FB821C'), ('India Green', '#0E994B')],
+             'hero': 'bk-ikc-hero', 'video': 'assets/brandkits/ikc-logo-intro-720.mp4',
+             'video_label': 'Play the India Kids Casting logo intro, The Reach (15 seconds, with sound)',
+             'images': ['bk-ikc-reach', 'bk-ikc-versions', 'bk-ikc-colour', 'bk-ikc-tee', 'bk-ikc-stationery',
+                        'bk-ikc-audition', 'bk-ikc-screens', 'bk-ikc-mediawall']},
+            {'key': 'hs', 'name': 'Hidden Stories', 'kind': 'Logo redesign and brand identity', 'label': 'Client Project',
+             'project': 'hidden-stories',
+             'about': 'Eight short-stay homes in Hyderabad.',
+             'idea': ('We redesigned the logo as an engraved storybook plate: a guest blindfolded by the name, a garden of '
+                      'stories growing above him, and the name arched like a doorway.'),
+             'facts': ['A new logo and badge', 'A five-colour palette', 'Logo files for light and dark grounds'],
+             'palette': [('Hidden Wine', '#4B050F'), ('Blindfold Red', '#7E3340'), ('Champagne Gold', '#E8C2A1'),
+                         ('Paper Cream', '#F9F5F0'), ('Engraving Black', '#170E0B')],
+             'hero': 'bk-hs-after',
+             'images': ['bk-hs-before-after', 'bk-hs-guest', 'bk-hs-blindfold', 'bk-hs-name']},
+        ],
+    },
     'cta': {
         'label': 'Service CTA',
         'title': 'Not sure what you need?',
@@ -313,7 +365,7 @@ CONTACT = {
 # ---------------------------------------------------------------- FOOTER
 FOOTER = {
     'line': 'Digital experiences, built around you.',
-    'services': ['Web Design', 'Development', 'E-commerce', 'Interactive', 'Branding', 'Product', 'AI'],
+    'services': ['Web Design', 'Development', 'E-commerce', 'Interactive', 'Branding', 'Apps', 'AI'],
     'socials': ['Instagram', 'LinkedIn', 'GitHub', 'Email'],
     # owner's SEO request (18 Oct; for the owner's review): the full name, as in the logo's own lockup, so every page
     # names 'TESERACT Creative Studios' once (the content document reads '© [YEAR] TESSERACT.')
@@ -458,7 +510,7 @@ CHAT = {
         'categories': ['1 to 3', '4 to 10', 'More than 10', 'Not sure'],
         'store': ['Online payments', 'Shipping and delivery', 'Coupons and offers', 'Sizes or variants', 'Order management',
                   'Editing products yourself', 'Not sure yet'],
-        'service': ['Product & SaaS', 'AI & Automation', 'Interactive & 3D', 'Brand & Digital Identity', 'Digital Strategy'],
+        'service': ['Apps & SaaS', 'AI & Automation', 'Interactive & 3D', 'Brand Kits & Identity', 'Digital Strategy'],
         'filters': ['Client work', 'Online stores', 'SaaS concepts', 'Concepts', 'Everything'],
         'restart': ['Start over', 'Keep chatting'],
         'dollars': ['US$', 'CA$', 'A$', 'S$'],
@@ -521,7 +573,7 @@ CHAT = {
     'pp_concept_e': "{project} is one of our concept projects, so there's no client price behind it. A store like it would start from {E}.",
     'pp_personal': "{project} is one of Gireesh's personal projects, so there's no client price behind it. A site like it would start from {W}.",
     'pp_personal_self': "{project} is one of his personal projects, so there's no client price behind it. A site like it would start from {W}.",
-    'pp_saas': ("{project} is a concept project. Product & SaaS work is priced on scope, so there's no starting price I can "
+    'pp_saas': ("{project} is a concept project. Apps & SaaS work is priced on scope, so there's no starting price I can "
                 "give you for the product. A marketing website like it starts from {W}."),
     # other price-adjacent replies
     'included_in_start': "The starting price isn't a fixed package. What's included is shaped around your project, and your quote will set out what it covers.",
@@ -546,8 +598,8 @@ CHAT = {
     'phone': "There's no phone number on this website. The quickest way to reach Gireesh is the contact form or email.",
     'seo': ("SEO isn't listed as a separate service on this website. Digital Strategy covers Website Strategy, Content "
             "Structure and Conversion Strategy. For SEO itself, Gireesh can tell you more."),
-    'logo': ("Logo design isn't listed on its own. Brand & Digital Identity covers Typography, Colour Systems, Visual "
-             "Direction, Digital Identity, Design Systems and Brand Guidelines."),
+    'logo': ("Yes. Logo design is part of Brand Kits & Identity: Gireesh designs the logo and builds the brand kit "
+             "around it, with every logo file, your colours, your typefaces and the guidelines."),
     'bot': "I'm an automated assistant that answers from this website. I'm not Gireesh, but anything I can't answer can go to him.",
     'chat_privacy': 'Nothing you type here leaves this browser tab unless you send the contact form.',
     'personal': "No need to share contact details here. You'll add them on the contact form when you're ready.",

@@ -15,7 +15,7 @@ E-commerce on exactly the owner's shops, a supplied frame of a project linked to
 its tiger poster, Sedile prepared and listed everywhere as a Concept Project (OWNER_ADDED), the Work page's count; the
 owner's 17 Oct decision: the six landing-page concepts (LANDING_SIX) as Concept Projects leading the home gallery, every
 tile of a prepared one playing its clip (phones too), Aivinci's tile its tiger, 7 gallery clips at most, two of them on
-the Product & SaaS card instead of LiveCV (one without prepared media yet: a warning); headings
+the Apps & SaaS (until 31 Oct: Product & SaaS) card instead of LiveCV (one without prepared media yet: a warning); headings
 read letter by letter (A11Y-04: an error, SPELLED_NAMES_ERROR); the founder (owner, 15 Oct): every line of
 _ref/specs/founder-content.md verbatim on Who We Are, the founder section directly after the hero, no image of
 him while none is supplied, the old 'Why we started' copy gone, the Person JSON-LD, the home teaser + its link, his
@@ -100,7 +100,7 @@ NOT_ON_CARDS = {'tavra': {'gallery-05'}}
 # the home gallery (portfolio.json home_gallery, in this order), every one of their tiles playing its own clip, plus
 # Aivinci's tiger (TIGER): 7 clips (home_hero.MAX_VIDEO_TILES). They are captured and re-captured one after another, so
 # one without prepared media yet is a warning (not shown); with it, an error when it is not listed and shown like
-# OWNER_ADDED, does not lead the gallery or has a tile that does not play its clip. The Product & SaaS card (service 06)
+# OWNER_ADDED, does not lead the gallery or has a tile that does not play its clip. The Apps & SaaS card (service 06)
 # shows two of them (their SaaS heroes) instead of LiveCV, which stays a client project everywhere else.
 LANDING_SIX = ('sagewell', 'vantline', 'tidings', 'emberpost', 'ines-morrow', 'maren-holt')
 # Owner, 17-18 Oct: taken out of the home gallery ONLY - each keeps its Work card and page: AARADHYA, ONE PIECE, TAVRA,
@@ -494,6 +494,12 @@ for p in pages:
         if img.get('srcset') and not all(img.get(k) for k in ['width', 'height', 'sizes']):
             errors.append(f'{rel}: incomplete responsive image {img.get("src")}')
     for v in page.videos:
+        if 'controls' in v:      # a player the visitor starts (with sound: the brand-kit logo intro), never a background loop
+            missing = [k for k in ('playsinline', 'poster', 'width', 'height', 'aria-label') if k not in v]
+            if missing or 'autoplay' in v or v.get('preload') != 'none':
+                errors.append(f'{rel}: a video with controls plays only on request: preload="none", no autoplay, and '
+                              f'{", ".join(missing) or "its attributes"} ({v.get("poster")})')
+            continue
         missing = [k for k in ('muted', 'playsinline', 'loop', 'poster', 'width', 'height', 'data-srcs') if k not in v]
         if missing:
             errors.append(f'{rel}: video without {", ".join(missing)} ({v.get("poster")})')
@@ -813,17 +819,17 @@ if _own_clips > GALLERY_CLIPS:
                   'pages + the tiger, owner 17 Oct)')
 _saas = [it for it in service_cards.MEDIA[SAAS_CARD].get('images') or ()]
 if not _saas or any(it.get('slug') not in LANDING_SIX or it.get('supplied') for it in _saas):
-    errors.append(f'service_cards.MEDIA["{SAAS_CARD}"] (Product & SaaS): two captured stills of the SaaS landing pages, '
+    errors.append(f'service_cards.MEDIA["{SAAS_CARD}"] (Apps & SaaS): two captured stills of the SaaS landing pages, '
                   'nothing else (owner, 17 Oct: instead of LiveCV)')
 for it in _saas:
     x = projects.by_slug(it.get('slug') or '')
     if not x:
-        warnings.append(f'Product & SaaS card: {it.get("slug")} is not shown yet, so the card shows fewer landing pages')
+        warnings.append(f'Apps & SaaS card: {it.get("slug")} is not shown yet, so the card shows fewer landing pages')
         continue
     for rel in ('index.html', 'what-we-create/index.html'):
         if not re.search(r'<a class="svc-[^"]*" href="[^"]*' + re.escape(x['route']) + r'/(?:index\.html)?"[^>]*>(?:(?!</a>).)*assets/media/'
                          + re.escape(f"{x['slug']}/{it['role']}-"), page_html.get(rel, ''), re.S):
-            errors.append(f'{rel}: the Product & SaaS card does not show {x["slug"]} {it["role"]} linked to its page')
+            errors.append(f'{rel}: the Apps & SaaS card does not show {x["slug"]} {it["role"]} linked to its page')
 
 # Client Stories reviews (content.STORIES['testimonials'], owner 14 Oct): one per shown CLIENT project (never a concept;
 # company, industry, label, still and link come from it), rating 1.0-5.0 with one decimal, a quote (warning above 320
@@ -1026,6 +1032,42 @@ for name in sorted(mapped | set(supplied_rows)):
         warnings.append(f'supplied image "{name}": source {source} not found on this machine (prepared copy used)')
     if name in mapped and not row.get('alt'):
         errors.append(f'supplied image "{name}" has no alt text in supplied.json')
+
+# What We Create "What is a brand kit?" (owner, 31 Oct): the section (#brand-kits, its own chapter mark), every brand
+# kit's prepared images shown as links into the still viewer (one gallery per kit), the India Kids Casting logo intro
+# shipped and playable, each kit's palette (hex) written out, and the Brand Kits & Identity row linking down to it.
+_wwc = (DIST / 'what-we-create/index.html').read_text(encoding='utf-8') if (DIST / 'what-we-create/index.html').exists() else ''
+import content as _bk_content  # noqa: E402
+_bk = _bk_content.CREATE.get('brand_kits') or {}
+if _bk:
+    _sec = re.search(r'<section class="create-bk" id="brand-kits"[^>]*>(.*?)</section>', _wwc, re.S)
+    if not _sec:
+        errors.append('what-we-create/index.html: no "What is a brand kit?" section (#brand-kits)')
+    else:
+        if 'data-chapter' not in _wwc[_sec.start():_sec.start() + 300]:
+            errors.append('what-we-create/index.html #brand-kits: no chapter mark (the white/black scroll)')
+        _body = _sec.group(1)
+        if _body.count('data-zoom-group') != len(_bk.get('kits', [])):
+            errors.append('what-we-create/index.html #brand-kits: each brand kit must be its own viewer gallery (data-zoom-group)')
+        for _k in _bk.get('kits', []):
+            for _n in [_k['hero']] + _k['images']:
+                _im = lib.supplied(_n)
+                if not _im:
+                    errors.append(f'brand kit {_k["name"]}: image "{_n}" is not prepared (scripts/supplied.json, prepare_supplied.py)')
+                elif not any(v['file'] in _body for v in _im['variants']):
+                    errors.append(f'what-we-create/index.html #brand-kits: {_k["name"]} does not show "{_n}"')
+            for _name, _hex in _k['palette']:
+                if _hex.upper() not in _body:
+                    errors.append(f'what-we-create/index.html #brand-kits: {_k["name"]} palette lacks {_name} {_hex}')
+            if _k.get('video'):
+                if _k['video'] not in _body or not (DIST / _k['video']).is_file():
+                    errors.append(f'what-we-create/index.html #brand-kits: {_k["name"]} logo intro {_k["video"]} is not shipped')
+                elif not re.search(r'<video class="bk-kit__video" controls preload="none"[^>]*aria-label="[^"]+"', _body):
+                    errors.append(f'what-we-create/index.html #brand-kits: the {_k["name"]} video must be a named player that plays on request')
+        if 'id="pj-viewer-tpl"' not in _wwc:
+            errors.append('what-we-create/index.html: the brand-kit images need the still viewer template (pj-viewer-tpl)')
+    if not re.search(r'class="svc-more" href="[^"]*#brand-kits"', _wwc):
+        errors.append('what-we-create/index.html: the Brand Kits & Identity row must link to #brand-kits')
 
 # Who We Are inspiration photos (owner, 26 Oct; scripts/inspiration.json, free Unsplash photos): each one prepared (valid
 # WebP variants, never upscaled, the table's crop), shown on /who-we-are/ (and in dist), credited in the table with an

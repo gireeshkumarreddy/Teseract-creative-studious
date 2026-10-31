@@ -3,7 +3,8 @@
     "Owner-supplied images (DARK-THEME.md 'Client update 8': the studio owner's OWN designs and sites, supplied 14 Oct) for the What We Create service cards. They are not portfolio projects: no project caption; their cards link to The Work page.",
     "scripts/prepare_supplied.py converts each 'file' from 'src' into public/assets/supplied/<name>-<width>.webp (640/1280/1920, never upscaled; 'crop' = [left, top, right, bottom] in source pixels, applied first) and writes scripts/supplied-manifest.json. The build references them through lib.supplied(), so only images a page uses reach dist/.",
     "fit: 'cover' (default) or 'contain' (the whole design, centred on its own 'ground' colour - for a design whose headline any 4:3 crop would cut; 'fade': 'bottom' dissolves its bottom edge into the ground, e.g. OBSCURA's model). focal: object-position of a 'cover' image in the service cards (keep the device / the website's headline in view). alt: what the image shows (shared by every card that shows it).",
-    "check.py fails when an image mapped in sections/service_cards.MEDIA is missing from the manifest, a variant file is missing or not a valid WebP of the recorded size, or a recorded crop differs from this table."
+    "check.py fails when an image mapped in sections/service_cards.MEDIA is missing from the manifest, a variant file is missing or not a valid WebP of the recorded size, or a recorded crop differs from this table.",
+    "Brand-kit work (owner, 31 Oct: 'add those projects'), files in <src>/brandkits: the India Kids Casting brand kit (the brand book's pages, from its 05_Pages, and the logo intro's end frame; the book's cover, marked 'Confidential', is left out) and the Hidden Stories logo redesign (frames of the studio's before/after film). Shown in What We Create's 'What is a brand kit?' section (content.CREATE['brand_kits']) and on the Brand Kits & Identity card."
   ],
   "src": "C:/Teseract-media/_supplied",
   "images": [
@@ -65,6 +66,104 @@
       "title": "Gireesh",
       "source_note": "The founder's photo, supplied by the owner on 15 Oct 2026 as his 'Founders Series' poster (founder-gireesh-poster.webp, 1122x1402, kept beside it). founder-gireesh.png is the 4:5 portrait cut from it with none of the poster's text, zoomed out at the owner's request ('it's zoomed, I wanted to minimize it'): source pixels [472, 95, 1122, 907] (the widest 4:5 cut clear of the BUILT ON / DESIGNED TO headline), the poster's grid hairlines (x 560 / 897 / 1060, y 212 / 457 / 588 / 750) blended out from their neighbouring pixels and the IDEAS / BRANDS / WEBSITES / EXPERIENCES words on the right inpainted (OpenCV Telea). Shown by sections/founder.py FOUNDER_PORTRAIT in the Who We Are founder plate. A larger original photo would make it sharper on phones.",
       "alt": "Gireesh, the founder, in a dark jacket and an open white shirt, resting his chin on his hand."
+    },
+    {
+      "name": "bk-ikc-hero",
+      "file": "brandkits/ikc-hero.jpg",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "The India Kids Casting logo on a black stage under a spotlight: a child on tiptoe reaching for a gold star between the words INDIA and KIDS, CASTING below and the line ‘Little Stars. Big Dreams.’ between saffron and green rules. The last frame of the logo intro TESERACT animated for the brand."
+    },
+    {
+      "name": "bk-ikc-reach",
+      "file": "brandkits/ikc-reach.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘The Reach’, explaining the India Kids Casting logo (the star, the child, the name, the word Casting and the saffron and green rules) beside the full-colour logo."
+    },
+    {
+      "name": "bk-ikc-versions",
+      "file": "brandkits/ikc-versions.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘Eight approved versions’: the India Kids Casting logo in full colour, reverse, navy, black, white and gold foil on light, dark, navy and gold grounds."
+    },
+    {
+      "name": "bk-ikc-colour",
+      "file": "brandkits/ikc-colour.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘Navy, gold, black and white’: the India Kids Casting palette (Midnight Navy, Star Gold, Stage Black, Spotlight White, Saffron and India Green) with each colour’s values."
+    },
+    {
+      "name": "bk-ikc-tee",
+      "file": "brandkits/ikc-tee.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘The crew tee, in black’: black T-shirts with the India Kids Casting logo on the front and the reaching child on the back."
+    },
+    {
+      "name": "bk-ikc-stationery",
+      "file": "brandkits/ikc-stationery.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘Paper that feels premium in the hand’: India Kids Casting letterhead, business cards and a compliments slip in navy and white."
+    },
+    {
+      "name": "bk-ikc-audition",
+      "file": "brandkits/ikc-audition.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘Audition day, on brand’: an India Kids Casting clapperboard, a numbered audition badge and crew and guardian lanyard passes."
+    },
+    {
+      "name": "bk-ikc-screens",
+      "file": "brandkits/ikc-screens.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘Showtime on every screen’: India Kids Casting social posts, a phone screen and a web banner."
+    },
+    {
+      "name": "bk-ikc-mediawall",
+      "file": "brandkits/ikc-mediawall.png",
+      "title": "India Kids Casting",
+      "focal": "50% 50%",
+      "alt": "Brand book page ‘A red carpet for little stars’: a navy media wall repeating the India Kids Casting logo and a standing banner for an audition day."
+    },
+    {
+      "name": "bk-hs-after",
+      "file": "brandkits/hs-after.png",
+      "title": "Hidden Stories",
+      "focal": "50% 50%",
+      "alt": "The redesigned Hidden Stories logo on a cream card marked ‘After’: an engraved man in a bow tie, blindfolded by a wine-red ribbon that carries the name, a garden growing above him, HIDDEN STORIES arched over the top and ‘Your stay, your story’ on a wine-red horseshoe badge."
+    },
+    {
+      "name": "bk-hs-before-after",
+      "file": "brandkits/hs-before-after.png",
+      "title": "Hidden Stories",
+      "focal": "50% 50%",
+      "alt": "The Hidden Stories logo, before and after: the earlier logo with an arched window and script lettering above the new engraved, blindfolded portrait badge."
+    },
+    {
+      "name": "bk-hs-guest",
+      "file": "brandkits/hs-guest.png",
+      "title": "Hidden Stories",
+      "focal": "50% 50%",
+      "alt": "Hidden Stories logo, step 01, ‘The guest’: an engraved storybook portrait of a man in a bow tie."
+    },
+    {
+      "name": "bk-hs-blindfold",
+      "file": "brandkits/hs-blindfold.png",
+      "title": "Hidden Stories",
+      "focal": "50% 50%",
+      "alt": "Hidden Stories logo, step 02, ‘The blindfold’: a wine-red ribbon over the guest’s eyes carries the name, hidden in plain sight."
+    },
+    {
+      "name": "bk-hs-name",
+      "file": "brandkits/hs-name.png",
+      "title": "Hidden Stories",
+      "focal": "50% 50%",
+      "alt": "Hidden Stories logo, step 05, ‘The name’: custom lettering arched like a doorway over the finished badge."
     }
   ]
 }

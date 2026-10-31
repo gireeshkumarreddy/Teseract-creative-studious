@@ -212,7 +212,7 @@ def intents():
         I('svc.seo', 'Do you do SEO?', ['seo', 'search engine optimisation', 'google ranking', 'do you do seo'], ['seo'],
           blocks=[C('seo'), FROM('what-we-create', 'digital-strategy')], chips=['ask_gireesh', 'create']),
         I('svc.logo', 'Do you design logos?', ['logo design', 'can you make a logo', 'do you design logos'], ['logo'],
-          blocks=[C('logo'), FROM('what-we-create', 'brand-digital-identity')], chips=['cost_site', 'ask_gireesh']),
+          blocks=[C('logo'), FROM('what-we-create', 'brand-kits-identity')], chips=['cost_site', 'ask_gireesh']),
         # ---- process
         I('process.overview', 'How does a project work?',
           ['how does a project work', 'what is your process', 'process', 'how do you work', 'project steps',
@@ -345,8 +345,9 @@ def intents():
                                        'develop a website'],
                'e-commerce': ['ecommerce', 'online store', 'what is included in ecommerce', 'ecommerce services'],
                'interactive-3d': ['3d', 'animation', 'motion design', 'interactive website', 'scroll animations', '3d website'],
-               'brand-digital-identity': ['branding', 'branding services', 'brand identity', 'brand guidelines', 'visual identity'],
-               'product-saas': ['saas', 'dashboard', 'app design', 'product design', 'web app', 'do you make apps',
+               'brand-kits-identity': ['branding', 'branding services', 'brand identity', 'brand guidelines', 'visual identity',
+                                       'brand kit', 'what is a brand kit', 'logo files'],
+               'apps-saas': ['saas', 'apps', 'app development', 'dashboard', 'app design', 'product design', 'web app', 'do you make apps',
                                 'do you build apps', 'mobile app'],
                'ai-automation': ['ai', 'automation', 'ai tools', 'workflow automation', 'internal tools'],
                'digital-strategy': ['strategy', 'digital strategy', 'competitor analysis', 'user research']}

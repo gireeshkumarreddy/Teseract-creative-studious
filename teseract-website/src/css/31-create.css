@@ -108,3 +108,89 @@
 @media (pointer:coarse){
   .create-index__link{height:44px;border-radius:14px}
 }
+
+/* ---------- What is a brand kit? (owner, 31 Oct; pages/create.py _brand_kits): a black chapter between the last white
+   rows and the CTA. What a kit is, what's inside (six cards), then the brand kits the studio made: a lead visual (the
+   India Kids Casting logo intro plays on request, with sound), the story, the facts, the palette (name + hex) and the
+   kit's pages as a scroll strip; every page opens in the still viewer (36-project.js, one gallery per kit). */
+.create-bk{padding:40px 120px 160px;scroll-margin-top:var(--nav-h,72px)}
+.create-bk__inner{width:100%;max-width:1200px;margin-inline:auto}
+.create-bk__head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:end;padding-bottom:56px;border-bottom:1px solid var(--line)}
+.create-bk__head-l{display:flex;flex-direction:column;align-items:flex-start;gap:24px}
+.create-bk__title{font-size:72px;font-weight:600;line-height:.95;letter-spacing:-.05em;color:var(--ink);text-wrap:balance}
+.create-bk__lead{margin-bottom:16px;font-size:24px;line-height:1.25;letter-spacing:-.6px;color:var(--ink);text-wrap:balance}
+.create-bk__text{font-size:17px;line-height:1.55;letter-spacing:-.2px;color:var(--ink-2);text-wrap:pretty}
+.create-bk__text+.create-bk__text{margin-top:12px}
+.create-bk__label{margin:72px 0 24px;font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-strong)}
+.create-bk__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.create-bk__item{padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--surface-1)}
+.create-bk__icon{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--surface-2);color:var(--ink)}
+.create-bk__icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.create-bk__item-title{margin:20px 0 8px;font-size:20px;font-weight:600;letter-spacing:-.4px;color:var(--ink)}
+.create-bk__item-text{font-size:15px;line-height:1.5;color:var(--ink-2)}
+.create-bk__kits{display:flex;flex-direction:column;gap:96px}
+
+.bk-kit__top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:56px;align-items:start}
+.bk-kit--tall .bk-kit__top{grid-template-columns:minmax(0,380px) minmax(0,1fr)}
+.bk-kit__video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:20px;background:#000;border:1px solid var(--line)}
+.bk-kit__hero{border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.bk-kit__hero img{display:block;width:100%;height:auto}
+.bk-kit__n{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-strong)}
+.bk-kit__label{padding:5px 10px;border:1px solid var(--line-3);border-radius:999px;font-size:12px;letter-spacing:.02em;text-transform:none;color:var(--ink-2)}
+.bk-kit__name{margin-top:20px;font-size:48px;font-weight:600;line-height:1;letter-spacing:-.04em;color:var(--ink);text-wrap:balance}
+.bk-kit__kind{margin-top:10px;font-size:16px;color:var(--ink-2)}
+.bk-kit__about{margin-top:24px;font-size:17px;line-height:1.5;color:var(--ink);text-wrap:pretty}
+.bk-kit__idea{margin-top:10px;font-size:17px;line-height:1.5;color:var(--ink-2);text-wrap:pretty}
+.bk-kit__facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.bk-kit__facts li{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface-1);font-size:14px;line-height:1.2;color:var(--ink)}
+.bk-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px 8px;margin-top:28px}
+.bk-pal__c{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bk-pal__sw{display:block;height:56px;margin-bottom:6px;border-radius:12px;background:var(--c);box-shadow:inset 0 0 0 1px rgba(255,255,255,.24)}
+.bk-pal__name{font-size:13px;font-weight:500;line-height:1.2;color:var(--ink)}
+.bk-pal__hex{font-family:var(--mono);font-size:12px;letter-spacing:.03em;font-variant-numeric:tabular-nums;color:var(--muted-strong)}
+.bk-kit__more{margin-top:24px}
+.bk-kit__link{display:inline-flex;align-items:center;gap:8px;padding:10px 0;font-size:16px;font-weight:500;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-3);text-underline-offset:5px}
+.bk-kit__link svg{width:14px;height:14px}
+.bk-kit__strip{display:flex;gap:12px;margin-top:40px;padding-bottom:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--line-3) transparent}
+.bk-kit__item{flex:none;scroll-snap-align:start}
+.bk-kit__page{width:420px;height:auto;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.bk-kit__page--tall{width:220px}
+.bk-kit__page img{display:block;width:100%;height:auto;transition:transform .8s var(--ease)}
+@media (hover:hover) and (pointer:fine){
+  .bk-kit__page:hover img,.bk-kit__hero:hover img{transform:scale(1.03)}
+  .bk-kit__hero img{transition:transform .8s var(--ease)}
+  .bk-kit__link:hover{text-decoration-color:currentColor}
+}
+@media (max-width:1439.98px){
+  .create-bk{padding-inline:clamp(48px,8.33vw,120px)}
+}
+@media (max-width:1199.98px){
+  .create-bk{padding-inline:48px}
+  .create-bk__head{grid-template-columns:minmax(0,1fr);gap:28px;align-items:start}
+  .bk-kit__top,.bk-kit--tall .bk-kit__top{grid-template-columns:minmax(0,1fr);gap:32px}
+  .bk-kit--tall .bk-kit__lead{max-width:380px}
+}
+@media (max-width:1023.98px){
+  .create-bk__title{font-size:56px}
+  .create-bk__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bk-kit__name{font-size:40px}
+}
+@media (max-width:799.98px){
+  .create-bk{padding:16px 16px 80px}
+  .create-bk__head{padding-bottom:40px}
+  .create-bk__title{font-size:44px}
+  .create-bk__lead{font-size:20px}
+  .create-bk__text,.bk-kit__about,.bk-kit__idea{font-size:16px}
+  .create-bk__label{margin:48px 0 16px}
+  .create-bk__grid{grid-template-columns:minmax(0,1fr);gap:8px}
+  .create-bk__item{padding:20px}
+  .create-bk__item-title{margin-top:16px;font-size:18px}
+  .create-bk__kits{gap:64px}
+  .bk-kit__name{font-size:34px}
+  .bk-kit--tall .bk-kit__lead{max-width:min(320px,80vw)}
+  .bk-kit__strip{margin-top:28px;margin-inline:-16px;padding-inline:16px;scroll-padding-inline:16px}
+  .bk-kit__page{width:78vw}
+  .bk-kit__page--tall{width:46vw}
+  .bk-pal{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bk-pal__sw{height:44px}
+}

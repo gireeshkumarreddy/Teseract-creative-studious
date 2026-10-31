@@ -79,11 +79,11 @@ G.TSChatFlow = (C, env) => {
     }
     return next(kb().create.cta.map(t => P(t, 'CREATE.cta.lines')).concat([P(C.n_scale)]));
   };
-  const SVC = { 'Product & SaaS': 'product-saas', 'AI & Automation': 'ai-automation', 'Interactive & 3D': 'interactive-3d',
-    'Brand & Digital Identity': 'brand-digital-identity', 'Digital Strategy': 'digital-strategy' };
+  const SVC = { 'Apps & SaaS': 'apps-saas', 'AI & Automation': 'ai-automation', 'Interactive & 3D': 'interactive-3d',
+    'Brand Kits & Identity': 'brand-kits-identity', 'Digital Strategy': 'digital-strategy' };
   const serviceId = name => SVC[name];
   // the service the question weighs most ("an interactive 3D experience for my brand" is 3D); ties in this order
-  const GUESS = [['THREE_D', 'Interactive & 3D'], ['AI', 'AI & Automation'], ['SAAS', 'Product & SaaS'], ['BRAND', 'Brand & Digital Identity'], ['STRAT', 'Digital Strategy']];
+  const GUESS = [['THREE_D', 'Interactive & 3D'], ['AI', 'AI & Automation'], ['SAAS', 'Apps & SaaS'], ['BRAND', 'Brand Kits & Identity'], ['STRAT', 'Digital Strategy']];
   const guessService = a => {
     const w = EN.weigh(a.toks || []);
     // (a concept found by phrase: "digital product")

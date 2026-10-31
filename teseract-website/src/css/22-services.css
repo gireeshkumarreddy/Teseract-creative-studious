@@ -76,6 +76,11 @@
 /* Footer deep link (What We Create page): "Start a Project" → contact with the service pre-selected.
    Rests as dark glass with a hairline; hover/focus brighten to the white high-emphasis fill. */
 .svc-info__foot{display:flex;margin-top:auto}
+/* a row's second link (content: 'more', e.g. Brand Kits & Identity -> "What is a brand kit?" further down the page) */
+.svc-info__foot{flex-wrap:wrap;align-items:center;gap:8px 20px}
+.svc-more{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:15px;font-weight:500;color:var(--ink-2);text-decoration:underline;text-decoration-color:var(--line-3);text-underline-offset:5px;transition:color .3s var(--ease)}
+.svc-more:hover{color:var(--ink)}
+.svc-more__icon svg{display:block;width:14px;height:14px;transform:rotate(90deg)}
 .svc-cta{position:relative;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 18px;border-radius:14px;background:rgba(255,255,255,.07);color:var(--ink);
   font-size:15px;font-weight:500;line-height:20px;letter-spacing:-.3px;white-space:nowrap;
   box-shadow:inset 0 0 0 1px var(--line-3),inset 0 1px 0 rgba(255,255,255,.06),0 8px 18px -10px rgba(0,0,0,.9);

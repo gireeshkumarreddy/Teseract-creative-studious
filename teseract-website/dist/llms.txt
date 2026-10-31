@@ -19,8 +19,8 @@ From the first idea to the final interaction, we design and build your digital p
 - Website Development: From design to reality. We turn the design into a real, responsive and functional website. (Business Websites, Corporate Websites, Landing Pages, CMS Websites, Interactive Websites, Web Applications)
 - E-commerce: Make buying feel simple. From discovering a product to completing a purchase, we design every step of the experience. (Product Pages, Shopping Experiences, Cart & Checkout, Payment Integration, Order Management, CMS, Mobile Experiences)
 - Interactive & 3D: Don't just show people. Let them experience it. We create digital experiences using motion, interaction and 3D. (Scroll animations, Interactive storytelling, Product interactions, Micro-interactions, Cinematic experiences, 3D environments)
-- Brand & Digital Identity: Your brand should feel consistent everywhere. (Typography, Colour Systems, Visual Direction, Digital Identity, Design Systems, Brand Guidelines)
-- Product & SaaS: Digital products people actually want to use. (Dashboards, SaaS Platforms, Web Applications, Mobile Interfaces, User Flows, Prototypes, Design Systems)
+- Brand Kits & Identity: Your brand should feel consistent everywhere. We design your logo and build the brand kit around it: every logo file, your colours, your typefaces and the guidelines that keep them consistent. (Logo Design, Brand Kits, Brand Guidelines, Colour Systems, Typography, Logo Animation, Digital Identity)
+- Apps & SaaS: Apps people actually want to use. We design and build web and mobile apps, from the first user flow to the working product: SaaS platforms, dashboards and the tools behind them. (Mobile Apps, Web Apps, SaaS Platforms, Dashboards, User Flows, Prototypes, Design Systems)
 - AI & Automation: Make your business work smarter. (AI Experiences, Workflow Automation, AI Interfaces, Internal Tools, Intelligent Dashboards, API Integrations)
 - Digital Strategy: Before we build, we think. (Digital Positioning, Website Strategy, User Research, Competitor Analysis, Content Structure, Conversion Strategy)
 

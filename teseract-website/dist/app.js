@@ -4794,7 +4794,9 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     function show(link) {
       if (closing) { reopen = link; return; }   // a tap while the last still flies home: open once it has landed
       if (open) return;
-      const links = [...document.querySelectorAll('a[data-zoom]')].filter(a => shown(a) && pageImg(a));
+      // one gallery per [data-zoom-group] (What We Create: each brand kit), else the whole page (project pages)
+      const group = link.closest('[data-zoom-group]');
+      const links = [...(group || document).querySelectorAll('a[data-zoom]')].filter(a => shown(a) && pageImg(a));
       if (!links.includes(link)) links.push(link);
       items = links.map(a => {
         const p = pageImg(a);
