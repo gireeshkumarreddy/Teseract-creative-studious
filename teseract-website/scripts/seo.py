@@ -95,7 +95,6 @@ def _first_fit(options, limit):
 # summary + label forms in project_meta.
 PROJECT_DESC = {
     'aivinci': 'A single-page website by TESERACT for Aivinci Creative Studio, an AI creative and technology studio: AI films, creative technology and digital products.',
-    'geetha-jewellers': 'A one-page website by TESERACT for Geetha Jewellers, a gold and diamond jewellery shop: collections, a store-visit section and gold savings schemes.',
     'aeroskys': 'A travel booking website by TESERACT for AeroSkys: flights, hotels, holiday packages and buses; a working prototype in which bookings are simulated.',
     'derlin-haus': 'An online menswear shop by TESERACT for Derlin Haus: shirts, T-shirts and trousers, with search and filters, size selection and a bag with coupons.',
     'mahira-select': "An online store by TESERACT for Mahira Select's Indian ethnic womenswear, from sarees and kurta sets to lehengas, with a cart and checkout.",

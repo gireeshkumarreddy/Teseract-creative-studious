@@ -154,7 +154,6 @@ Each primary phrase points to its own service section on the page.
 
 **Client projects**
 - **Aivinci Creative Studio:** AI creative studio website · creative technology studio website design
-- **Geetha Jewellers:** jewellery website design · gold and diamond jewellery shop website
 - **AeroSkys:** travel booking website design · flight and hotel booking website
 - **Derlin Haus:** menswear e-commerce website · online menswear store design
 - **Mahira Select:** Indian ethnic womenswear online store · ethnic wear e-commerce website
@@ -234,7 +233,6 @@ Your content document has "© [YEAR] TESSERACT." The full name matches the logo 
 
 **Client projects**
 - **Aivinci Creative Studio:** A single-page website for Aivinci Creative Studio, an AI creative and technology studio, showing its AI films, creative technology and digital products.
-- **Geetha Jewellers:** A one-page website for Geetha Jewellers, a gold and diamond jewellery shop: scroll-animated collections, a store-visit section and gold savings schemes.
 - **AeroSkys:** A travel booking website for AeroSkys to search and book flights, hotels, holiday packages and buses; a working prototype in which bookings are simulated.
 - **Derlin Haus:** An online menswear shop for Derlin Haus: shirts, T-shirts and trousers, with category pages, search and filters, size selection and a bag with coupons.
 - **Mahira Select:** An online store for Mahira Select's Indian ethnic womenswear, from sarees and kurta sets to lehengas, with a cinematic home page, a cart and checkout.

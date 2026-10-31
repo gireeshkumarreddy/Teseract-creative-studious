@@ -47,7 +47,8 @@ GROUPS = DATA['groups']                                   # {'client': 'Client W
 CATALOGUE = sorted(DATA['projects'], key=lambda e: e['order'])   # every curated project, shown or not
 # Owner: never on the site (_ref/specs/DARK-THEME.md; Kingfisher removed 14 Oct, 23:20). check.py FORBIDDEN lists their
 # names for the dist scan.
-EXCLUDED = {'heeding', 'stepai', 'tgts', 'ghost-rider', 'got', 'avengers', 'the-paradise', 'kingfisher'}
+EXCLUDED = {'heeding', 'stepai', 'tgts', 'ghost-rider', 'got', 'avengers', 'the-paradise', 'kingfisher',
+            'geetha-jewellers'}   # Geetha Jewellers: removed by the owner, 31 Oct
 _FALLBACK_INDUSTRY = {'client': 'Website', 'concept': 'Website concept'}
 # Visible project labels (owner, 14 Oct - DARK-THEME.md 'Client update 8'): every client project is labelled
 # CLIENT_LABEL, every concept one of CONCEPT_LABELS, so visitors see client vs concept at once (check.py enforces it).

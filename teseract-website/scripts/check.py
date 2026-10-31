@@ -74,6 +74,9 @@ FORBIDDEN += ['TGTS', 'tgts', 'Telangana Technology', 'Ghost Rider', 'GHOST RIDE
 # Removed by the owner on 14 Oct, 23:20 (DARK-THEME.md): Kingfisher, the unofficial beer brand concept - its name, tagline,
 # route and media in any case (projects.EXCLUDED keeps the slug out of the data).
 FORBIDDEN += ['Kingfisher', 'kingfisher', 'KINGFISHER', 'KING OF GOOD TIMES', 'King of Good Times']
+# Removed by the owner on 31 Oct ("remove the geetha project"): Geetha Jewellers - its name, route, media, site URL
+# and tagline (projects.EXCLUDED keeps the slug out of the data; its media folder is in C:/Teseract-media/_removed/).
+FORBIDDEN += ['Geetha', 'geetha', 'GEETHA', 'geetha-seven', 'More than Jewellery']
 # Owner, 15 Oct: roles a project must always skip (portfolio.json "skip"): VYRN's A-COLD-WALL hero (a real label's name and
 # layout: gallery-01, gallery-09, the phone scroll 'hero' and the laptop film, which opens on it) and its Nike-swoosh still
 # (gallery-02); the cinematic portfolio's floating third-party tool logos (gallery-03 and the laptop recording). Owner
@@ -101,10 +104,10 @@ NOT_ON_CARDS = {'tavra': {'gallery-05'}}
 # shows two of them (their SaaS heroes) instead of LiveCV, which stays a client project everywhere else.
 LANDING_SIX = ('sagewell', 'vantline', 'tidings', 'emberpost', 'ines-morrow', 'maren-holt')
 # Owner, 17-18 Oct: taken out of the home gallery ONLY - each keeps its Work card and page: AARADHYA, ONE PIECE, TAVRA,
-# THENGA, SAANJH and the cinematic portfolio (17 Oct), Geetha Jewellers (18 Oct ~19:05), the designer's desk portfolio
+# THENGA, SAANJH and the cinematic portfolio (17 Oct), Geetha Jewellers (18 Oct ~19:05; removed from the site 31 Oct), the designer's desk portfolio
 # (18 Oct ~22:05). portfolio.json home_gallery listing one, or a hero tile in the built page showing any project the
 # list does not name (a stale dist after a home_gallery change), is an error - the auto-sync never publishes it.
-GALLERY_HIDDEN = ('aaradhya', 'one-piece', 'tavra', 'thenga', 'saanjh', 'gireesh-cinematic', 'geetha-jewellers', 'gireesh-desk')
+GALLERY_HIDDEN = ('aaradhya', 'one-piece', 'tavra', 'thenga', 'saanjh', 'gireesh-cinematic', 'gireesh-desk')
 TIGER = ('aivinci', 'tiger')
 GALLERY_CLIPS = 7
 SAAS_CARD = '06'

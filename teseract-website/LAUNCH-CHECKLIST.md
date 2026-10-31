@@ -111,7 +111,7 @@ means setting two values, `site_url` and `indexable`, together. `build.py` refus
 - Portfolio = your own websites: Client Work (11) + Concepts & Interactive (12: ONE PIECE as an unofficial fan
   project; AARADHYA, TĀVRA, VELORA, SAANJH, Vesper, VYRN, THENGA and Sedile as Concept Projects; your three personal sites)
   + your six landing-page concepts as Concept Projects (17 Oct; first in the concepts group, each shown once captured);
-  Heeding, StepAI and Kingfisher are not shown; Geetha Jewellers is shown as normal images (no device scene).
+  Heeding, StepAI, Kingfisher and Geetha Jewellers (removed 31 Oct) are not shown.
 - E-commerce card: SIAARA in front, your VYRN categories frame behind it (captioned "VYRN · Concept Project", opens the
   VYRN page), Mahira Select in the What We Create stack. Aivinci's review card shows the tiger, like its Work card.
 - Device scenes are original (drawn in code), colour-matched, a different project in each.
@@ -121,8 +121,8 @@ means setting two values, `site_url` and `indexable`, together. `build.py` refus
   with no pause control: your decision of 18 Oct). The intro's shard echo stays off on phones. Final check of 26 Oct
   (after the second mobile round, with the chat repairs and the black / white scroll): every page and project page
   passes the browser QA at 1440 / 834 / 390, with and without reduced motion.
-- Client Stories: an interactive client-reviews section with six client profiles (Aivinci, Geetha Jewellers, Derlin Haus,
-  AeroSkys, SIAARA, Hidden Stories) and SAMPLE reviews until the real ones arrive (item 3c); never shown as
+- Client Stories: an interactive client-reviews section with five client profiles (Aivinci, Derlin Haus, AeroSkys,
+  SIAARA, Hidden Stories; Geetha Jewellers removed 31 Oct) and SAMPLE reviews until the real ones arrive (item 3c); never shown as
   search-engine review stars (no review structured data).
 - Intro logo animation: plays once per browser-tab session on the first page opened. Open the site in a new tab, or add
   `?intro=1` to any page address, to see it again; `?intro=0` skips it (screenshots, audits).

@@ -8,7 +8,7 @@
   hero     the project's device scene (lib.scene: backdrop + drawn monitor/laptop, portfolio.json "scene" /
            "device") playing its laptop recording through lib.video (lazy, poster first, poster only under
            reduced motion), or showing its Work still (a still on the screen opens in the viewer below); a project
-           without a scene style (owner: Geetha Jewellers, whose gold palette suits no backdrop) shows the plain frame
+           without a scene style (none since Geetha Jewellers was removed, 31 Oct) shows the plain frame
            of its Work card: its first still on the 16:10 stage, its first phone screen on the 4:5 stage of a phone
            (there it opens in the viewer)
   gallery  the captured stills (scripts/media-manifest.json): desktop screens in the ZIP full/half rhythm,

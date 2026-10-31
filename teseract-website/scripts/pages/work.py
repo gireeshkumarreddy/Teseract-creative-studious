@@ -10,7 +10,7 @@ Each card shows the project in its DEVICE SCENE (lib.scene: backdrop + drawn mon
 "scene"/"device") with a gallery still on the screen - stills on this page, for speed, except a project's
 portfolio.json "card_clip" (owner, 14 Oct: Aivinci's tiger, the one card that autoplays: muted, looped, inline, lazy,
 playing only in view, its poster under reduced motion / Save-Data - lib.video + 06-video.js); the project pages play
-the recordings. A project without a scene (owner: Geetha Jewellers) shows its still in the same frame.
+the recordings. A project without a scene (none at present) shows its still in the same frame.
 Card text: title, the project's label ("Client Project", "Interactive Concept" + its "Unofficial, ..." line, "Concept
 Project", "Personal project" - owner, 14 Oct; also the scene's caption pill), industry, year and services; the scene and
 the text link both lead to the project page ("View Project" cursor through lib.project_tag). The tile helper is reused

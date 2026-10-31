@@ -721,3 +721,5 @@ SunnaKids, "Web Design") are to be REPLACED by the owner's own websites. Capture
   desktop windows getting the compact heroes, What We Create's 4 + 4 index in landscape, contact's first field below the
   first view at 844 x 390, the scroll smoothness targets on a slow phone (PERF2-03 / PERF2-04: page-wide style and layer
   cost), defaults 2-11, a real iPhone and mid Android pass.
+
+- OWNER (31 Oct): "remove the geetha project". Geetha Jewellers is OFF THE SITE: its Work card, project page, Client Stories sample review (five profiles now), chat aliases and SEO lines are gone. Done the Kingfisher way: portfolio.json entry removed, slug in projects.EXCLUDED, its name / route / site URL / tagline in check.py FORBIDDEN, media folder moved to C:/Teseract-media/_removed/geetha-jewellers, out of order.txt. Its prepared files stay in public/assets/media/geetha-jewellers (never copied to dist). To bring it back, reverse all of these.

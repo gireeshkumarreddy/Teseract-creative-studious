@@ -613,7 +613,7 @@ def scene(ctx, project, media_html, *, device=None, style=None, caption=True, no
     video(..., cls='scn-media')). style / device default to the project's portfolio.json "scene" / "device".
     aspect = the media's width / height: 16:10 media (sites captured at 1440x900) get a 16:10 screen
     (scn--tall), so nothing of the capture is cropped; 16:9 media keep the 16:9 screen.
-    A project without a scene style (owner: Geetha Jewellers) gets plain_frame(): no device, no backdrop.
+    A project without a scene style (none since Geetha Jewellers was removed, 31 Oct) gets plain_frame(): no device, no backdrop.
     Fixed-aspect stage (16:10; 4:5 when the scene is narrower than 640px) = no layout shift while media loads."""
     style = style or project.get('scene')
     if style not in SCENE_STYLES:
@@ -632,7 +632,7 @@ def scene(ctx, project, media_html, *, device=None, style=None, caption=True, no
 def plain_frame(project, media_html, *, caption=False, note=False, cls='', attrs=''):
     """A scene's frame without device or backdrop (same stage, corners and aspect, so plain and device cards line
     up in a row): the still fills it, cropped at its focal point on a narrow (4:5) stage. caption=True adds the label
-    pill only (the project's name would sit on the website itself, e.g. Geetha Jewellers' light gold page)."""
+    pill only (the project's name would sit on the website itself, e.g. a light page)."""
     return (f'<figure class="scn scn--plain{(" " + cls) if cls else ""}"{(" " + attrs) if attrs else ""}>'
             f'<div class="scn-stage">{media_html}</div>{scene_caption(project, name=False, note=note) if caption else ""}</figure>')
 

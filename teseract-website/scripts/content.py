@@ -241,7 +241,8 @@ STORIES = {
     #            check.py warns above 320 characters (the longest quote sets the deck's height)
     #   sample   True = a SAMPLE review written by the studio, not real client feedback
     #   name / role  optional: only with that person's written consent (attribution is company + industry otherwise)
-    # !! SAMPLE TESTIMONIALS (owner request, 14 Oct): the six entries below are placeholders written by the studio
+    # !! SAMPLE TESTIMONIALS (owner request, 14 Oct): the five entries below (six until Geetha Jewellers was removed,
+    # !! 31 Oct) are placeholders written by the studio
     # !! to preview the section (ratings mixed 4.7 / 4.8 / 4.9 / 5.0 as the owner asked). Replace each quote and
     # !! rating with the client's real feedback, with their written consent, and drop 'sample' before launch:
     # !! scripts/check.py fails while a sample remains and site.config.json is indexable or has a site_url.
@@ -250,10 +251,6 @@ STORIES = {
          'quote': "We make films, so we're fussy about pace and atmosphere. Gireesh understood that straight away and "
                   "gave us a site that feels cinematic, from the dark services intro to the AI video showcase. He took "
                   "every round of feedback seriously."},
-        {'project': 'geetha-jewellers', 'rating': 4.9, 'sample': True,
-         'quote': "A jewellery shop is built on trust and warmth, and our website feels the same. The glass domes and "
-                  "that marble-and-gold showroom look stunning, even on a phone. Gireesh explained every step "
-                  "patiently and kept our store details and savings schemes easy to find."},
         {'project': 'derlin-haus', 'rating': 4.8, 'sample': True,
          'quote': "Menswear online can look very samey, so we asked Gireesh for a shop with an editorial feel. The "
                   "zipper hero, the shirt carousel and the calm product pages carry that mood, and the bag, sizes and "
@@ -607,7 +604,6 @@ CHAT = {
         'darlin house': 'derlin-haus', 'derlin': 'derlin-haus', 'derlin house': 'derlin-haus', 'darlin': 'derlin-haus',
         'siara': 'siaara', 'siaara': 'siaara', 'siyara': 'siaara',
         'aerosky': 'aeroskys', 'aero skys': 'aeroskys', 'aero sky': 'aeroskys', 'aeroskies': 'aeroskys',
-        'geeta': 'geetha-jewellers', 'geetha': 'geetha-jewellers',
         'one piece': 'one-piece', 'luffy': 'one-piece',
         'careers aeroskys': 'aeroskys-careers', 'aeroskys careers': 'aeroskys-careers', 'careers portal': 'aeroskys-careers',
         'gireesh portfolio': 'gireesh-portfolio', 'designer portfolio': 'gireesh-portfolio',
