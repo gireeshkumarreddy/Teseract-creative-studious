@@ -100,7 +100,7 @@ ECOMMERCE = {'derlin-haus', 'mahira-select', 'siaara', 'vyrn'}
 NOT_ON_CARDS = {'tavra': {'gallery-05'}}
 # Owner, 17 Oct (DARK-THEME.md): the six landing-page concepts of his repo landing-concepts - Concept Projects that LEAD
 # the home gallery (portfolio.json home_gallery, in this order), every one of their tiles playing its own clip, plus
-# Aivinci's tiger (TIGER): 7 clips (home_hero.MAX_VIDEO_TILES). They are captured and re-captured one after another, so
+# Aivinci's tiger (TIGER), then Finsmith and VÉLUNE (LIVE_TILES): 9 clips (home_hero.MAX_VIDEO_TILES). They are captured and re-captured one after another, so
 # one without prepared media yet is a warning (not shown); with it, an error when it is not listed and shown like
 # OWNER_ADDED, does not lead the gallery or has a tile that does not play its clip. The Apps & SaaS card (service 06)
 # shows two of them (their SaaS heroes) instead of LiveCV, which stays a client project everywhere else.
@@ -111,7 +111,10 @@ LANDING_SIX = ('sagewell', 'vantline', 'tidings', 'emberpost', 'ines-morrow', 'm
 # list does not name (a stale dist after a home_gallery change), is an error - the auto-sync never publishes it.
 GALLERY_HIDDEN = ('aaradhya', 'one-piece', 'tavra', 'thenga', 'saanjh', 'gireesh-cinematic', 'gireesh-desk')
 TIGER = ('aivinci', 'tiger')
-GALLERY_CLIPS = 7
+# Owner, 5 Nov: the two projects he added from his repos move in the gallery too ("the fish have to move ... the clothes
+# have to come ... not like image"): every tile of them plays its tile clip, and their Work cards play it.
+LIVE_TILES = ('finsmith', 'velune')
+GALLERY_CLIPS = 9
 SAAS_CARD = '06'
 ALT_MAX = 400                  # a landing page's still / recording alt text, at most (18 Oct: one or two sentences)
 
@@ -354,7 +357,8 @@ for p in pages:
         if n_cards != len(projects.CASES):
             errors.append(f'{rel}: {n_cards} cards for {len(projects.CASES)} shown projects')
         # stills only (the project pages play the recordings), except a project's portfolio.json "card_clip" (owner,
-        # 14 Oct: Aivinci's tiger - the one card that autoplays; lazy, muted, looped, inline, poster: the video checks below)
+        # 14 Oct: Aivinci's tiger; 5 Nov: Finsmith's koi and VÉLUNE's clothes; lazy, muted, looped, inline, poster: the video
+        # checks below)
         clips = [x for x in projects.CASES if x.get('card_clip')]
         if html.count('<video') != len(clips):
             errors.append(f'{rel}: {html.count("<video")} video(s) for {len(clips)} card clip(s) - the Work page shows stills otherwise')
@@ -775,6 +779,16 @@ for s in LANDING_SIX:
            for acls, href, inner in _tile_cls):
         errors.append(f'index.html: a hero tile of {s} plays its loop without the hero-tile--loop class (owner, 17 Oct: '
                       "the loop shows the site's hero - its labels sit at the frame's foot, clear of the nav and headline)")
+for s in LIVE_TILES:
+    x = projects.by_slug(s)
+    if not x or s not in _gal:
+        errors.append(f'portfolio.json home_gallery: {s} must be in the gallery (owner, 5 Nov)')
+        continue
+    mine = [(cls, inner) for cls, href, inner in _items if links_to(href, x['route'])]
+    if not x['tile_clips'] or not mine or not all(_plays(inner, x['tile_clips']) for cls, inner in mine):
+        errors.append(f'index.html: every home hero tile of {s} must play its clip (owner, 5 Nov: "not like image")')
+    if not x.get('card_clip'):
+        errors.append(f'portfolio.json {s}: its Work card plays its clip ("card_clip", owner 5 Nov)')
 _tiger = projects.by_slug(TIGER[0])
 if _tiger and TIGER[0] in _gal:
     tiger = [c for c in _tiger.get('tile_clips') or () if c['variants'][0]['file'].rsplit('/', 1)[-1].startswith(TIGER[1] + '-')]
@@ -809,7 +823,9 @@ for n in (4, 3, 2):
                for cls, href, inner in re.findall(r'<li class="hero-col__item([^"]*)"><a class="hero-tile[^"]*" href="([^"]+)"[^>]*>(.*?)</a></li>', body, re.S)
                if '--lt' not in cls or ('--lt1440' in cls and n < 4) or ('--lt800' in cls and n == 2)]
         for a, b in zip(seq, seq[1:] + seq[:1]):
-            if a[1] and b[1] and a is not b:
+            # owner, 5 Nov: nine clips; four columns of five seat eight apart, so the last column's loop may join two, at the
+            # widths that show it only (home_hero._video_slots)
+            if a[1] and b[1] and a is not b and not (b is seq[0] and n == 4 and c == '4'):
                 errors.append(f'index.html: with {n} gallery columns, column {c} stacks two clips ({a[2]} and {b[2]}) - '
                               'never two clips stacked in a column (owner, 17 Oct; home_hero._columns)')
         if n == 3 and len(seq) > 1 and '--lt' in seq[1][0]:
@@ -818,7 +834,7 @@ for n in (4, 3, 2):
 _own_clips = sum(1 for cls, href, inner in _items if '--lt' not in cls and '<template' not in inner and '<video' in inner)
 if _own_clips > GALLERY_CLIPS:
     errors.append(f'index.html: the home hero gallery plays {_own_clips} clips (at most {GALLERY_CLIPS}: the six landing '
-                  'pages + the tiger, owner 17 Oct)')
+                  'pages, the tiger, the koi and the clothes, owner 17 Oct and 5 Nov)')
 _saas = [it for it in service_cards.MEDIA[SAAS_CARD].get('images') or ()]
 if not _saas or any(it.get('slug') not in LANDING_SIX or it.get('supplied') for it in _saas):
     errors.append(f'service_cards.MEDIA["{SAAS_CARD}"] (Apps & SaaS): two captured stills of the SaaS landing pages, '

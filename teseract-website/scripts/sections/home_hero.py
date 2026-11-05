@@ -6,7 +6,7 @@ Structure (reference geometry at 1440):
   badge    red pulsing dot + mono tagline
   media    services marquee (48px, horizontal ticker) + 1000px framed 4/3/2-column vertical tickers
            of the studio's own websites (portfolio.json "home_gallery": stills cropped to each slot by
-           focal point, up to 7 clips - a project's portfolio.json "tile_clip" such as the six landing pages'
+           focal point, up to 9 clips - a project's portfolio.json "tile_clip" such as the six landing pages'
            16:9 loops and Aivinci's tiger, or a phone scroll); every tile links to its project page, and every
            project of the gallery is on screen at every width (stand-ins for the hidden columns, _columns(); a
            clip's stand-in plays the clip).
@@ -52,15 +52,16 @@ TILE_SIZES = '(min-width:1440px) 316px, (min-width:800px) 30vw, 46vw'
 # Clips replace up to MAX_VIDEO_TILES tiles: the first projects of the gallery that have one (portfolio.json "tile_clip",
 # else the hero.mp4 phone scroll). Owner, 17 Oct (DARK-THEME.md): the six landing-page concepts lead the gallery and
 # every one of their tiles plays its own clip (hero first, then the second section), and Aivinci's tiger keeps moving -
-# 7 clips. They are placed together (_video_slots): spread over the columns as evenly as they go (two at most in a
-# column, never two stacked, never the lead tile), each in a slot that suits its shape - the slot keeps its aspect ratio
+# 7 clips; owner, 5 Nov: Finsmith's koi and VÉLUNE's clothes move too ("not like image"): 9 clips. They are placed
+# together (_video_slots): spread over the columns as evenly as they go (two in a column, three in the last one, whose
+# top tile is the only top tile that takes a clip; never two stacked, never the lead tile), each in a slot that suits its shape - the slot keeps its aspect ratio
 # and the clip covers it, so a clip only takes a slot within MAX_CLIP_CROP of its own frame (log ratio 0.5 = 1.65x: a
 # 16:9 desktop loop never goes into a square tile, a 4:5 phone scroll never into a landscape one) - with the least crop
 # in all. A project with several clips (the landing pages: the 16:9 tile.mp4, then the phone hero.mp4, whose 4:5 tile
 # crop cuts the site's header and headline) plays the first unless a later one crops CLIP_PREFERENCE less. Ties go to
 # the earlier projects in the higher, more left slot (columns 1-2 are what a phone shows from the first paint).
-VIDEO_SLOTS = (1, 2, 3, 4)
-MAX_VIDEO_TILES = 7
+VIDEO_SLOTS = (0, 1, 2, 3, 4)
+MAX_VIDEO_TILES = 9
 MAX_CLIP_CROP = 0.5
 CLIP_PREFERENCE = 0.3
 POSTER_W = 640             # a clip tile's poster: the 480 / 640 frames (cropped to the tile shape) cover 316px at 2x
@@ -190,7 +191,12 @@ def _video_slots(pool):
     A search over the ways to seat them all (as many clips in a column as an even spread allows, never in neighbouring
     tiles of a column, never the lead tile): the least crop in all; of equal ones, project by project in the curated
     order, the higher and then the more left slot (the search visits them in that order and keeps the first)."""
-    slots = sorted(((c, t) for c, col in enumerate(COLUMNS) for t in VIDEO_SLOTS if t < len(col[3])), key=lambda ct: (ct[1], ct[0]))
+    # A column is a loop (its last tile runs on into its first), so five tiles hold two clips apart at most and four
+    # columns seat eight; the ninth takes the top of the last column, which only shows from 1440px (check.py allows that
+    # one pair): tablets and phones never see two clips stacked.
+    last = len(COLUMNS) - 1
+    slots = sorted(((c, t) for c, col in enumerate(COLUMNS) for t in VIDEO_SLOTS if t < len(col[3]) and (t or c == last)),
+                   key=lambda ct: (ct[1], ct[0]))
     clips = []
     for p in pool:
         fits = {s: f for s in slots for f in [_clip_fit(p, _ratio(COLUMNS[s[0]][3][s[1]]))] if f}

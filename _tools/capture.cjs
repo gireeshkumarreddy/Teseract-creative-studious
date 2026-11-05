@@ -107,6 +107,8 @@
      --timeout <s>              hard limit for the whole run (default 900; record
                                 default 2400)
      --preload-speed <px/s>     speed of the pre-load scroll pass (default 2500)
+     --at-start <js>            record only: JS run once the virtual clock is on, just before the first
+                                frame (e.g. re-enter a route so its entrance animation is recorded)
      --supersample              record only: render at 2x (desktop) / 3x (phone) and
                                 downscale with lanczos (sharper, ~2.3x slower)
      --format png|jpeg          record only: frame transport (png = lossless,
@@ -949,13 +951,17 @@ async function cmdRecord(url, opts) {
     log(`plan: ${plan.n} frames, y ${Math.round(y0)} -> ${Math.round(y1)}, peak ${Math.round(plan.peakSpeed)} px/s (${(plan.peakSpeed / fps).toFixed(1)} px/frame)`);
 
     // 2) ffmpeg
-    const [ow, oh] = preset.out;
+    // a --viewport keeps its own captured size (rescaling to the preset's 1920 x 1200 stretched a 16:9 window)
+    const [ow, oh] = opts.viewport
+      ? await page.evaluate(() => [innerWidth, innerHeight].map(v => Math.round(v * devicePixelRatio / 2) * 2))
+      : preset.out;
     const sampleDir = opts.samples ? path.resolve(opts.samples) : null;
     if (sampleDir) fs.mkdirSync(sampleDir, { recursive: true });
     const sampleEvery = +(opts['sample-every'] || 30);
 
     // 3) virtual time on
     await page.evaluate(() => window.__tsrCap.virtualize());
+    if (opts['at-start']) await page.evaluate(opts['at-start']);   // on the virtual clock: an entrance plays on camera
     const trace = [];
     const tRec = Date.now();
     let firstSize = null;

@@ -13086,7 +13086,8 @@
    "info": {
     "name": "Finsmith",
     "permission": "yes",
-    "laptop_poster": "1.0"
+    "laptop_poster": "1.0",
+    "tile_poster": "0.0"
    },
    "media": {
     "laptop": {
@@ -13142,6 +13143,73 @@
       "duration": 18.0
      },
      "alt": "The Finsmith showcase film: the 3D koi swims over the headline 'Craft', follows the cursor and comes to each click, and the menu opens.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 707865
+      },
+      {
+       "file": "assets/media/finsmith/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 1086156
+      },
+      {
+       "file": "assets/media/finsmith/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 3016128
+      },
+      {
+       "file": "assets/media/finsmith/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 5984895
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/finsmith/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/finsmith/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/finsmith/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/finsmith/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 14.7,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "finsmith/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "finsmith/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 14.7
+     },
+     "alt": "The Finsmith koi swimming freely over the giant cream headline Craft on the lacquer-red page, as a seamless loop.",
      "frame": "video"
     },
     "gallery-01": {
@@ -16554,7 +16622,8 @@
     "name": "VÉLUNE",
     "permission": "yes",
     "laptop_poster": "1.0",
-    "hero_poster": "1.0"
+    "hero_poster": "1.0",
+    "tile_poster": "2.0"
    },
    "media": {
     "laptop": {
@@ -16654,6 +16723,73 @@
       "duration": 10.0
      },
      "alt": "Phone scroll through the VÉLUNE rail: the garments pass one after another under the orange band.",
+     "frame": "video"
+    },
+    "tile": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/velune/tile-480.mp4",
+       "width": 480,
+       "height": 270,
+       "bytes": 245022
+      },
+      {
+       "file": "assets/media/velune/tile-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 368626
+      },
+      {
+       "file": "assets/media/velune/tile-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 933922
+      },
+      {
+       "file": "assets/media/velune/tile-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 1708132
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/velune/tile-480.webp",
+       "width": 480,
+       "height": 270
+      },
+      {
+       "file": "assets/media/velune/tile-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/velune/tile-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/velune/tile-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 9.5,
+     "fps": 30.0,
+     "crf": 23,
+     "poster_source": "velune/tile.png",
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "velune/tile.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 9.5
+     },
+     "alt": "The VÉLUNE rail in motion: the garments slide in from the right along the empty rail, then each of the ten pieces steps forward in turn.",
      "frame": "video"
     },
     "gallery-01": {

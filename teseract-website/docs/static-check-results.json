@@ -3,6 +3,7 @@
   "html_files": 41,
   "errors": [],
   "warnings": [
+    "index.html: with 3 gallery columns, column 1 has a stand-in (./projects/velune/index.html) right under its lead tile - on a tablet it comes in only once that place has left the screen",
     "5 SAMPLE testimonial(s) on Client Stories: preview only, replace before launch (LAUNCH-CHECKLIST.md 3c; check.py fails once indexable / site_url is set)",
     "chat.pricing.rates_confirmed is false: the owner has not confirmed the exchange rates (LAUNCH-CHECKLIST \"Chat\")",
     "content.CHAT owner_review is True: the chat copy waits for the owner's approval (LAUNCH-CHECKLIST \"Chat\")"
