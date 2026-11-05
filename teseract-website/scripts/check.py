@@ -88,7 +88,9 @@ OWNER_SKIPS = {'vyrn': {'gallery-01', 'gallery-02', 'gallery-05', 'gallery-06', 
 # 'projects'; prepare_media.py --skip lists a folder in 'order' only) and shown wherever the portfolio is listed (Work
 # page, project page, JSON-LD, llms.txt, sitemap), with real alt text on every still. Owner defaults until he answers:
 # Sedile is not E-commerce (ECOMMERCE, below) and has no home hero tile unless portfolio.json home_gallery lists it.
-OWNER_ADDED = {'sedile': ('concept', 'Concept Project')}
+OWNER_ADDED = {'sedile': ('concept', 'Concept Project'),
+               # owner, 5 Nov: from his repos velune and finsmith-koi-hero, in the home gallery too
+               'velune': ('concept', 'Concept Project'), 'finsmith': ('concept', 'Concept Project')}
 # Owner, 14 Oct: the home laptop ("The Idea") plays the VYRN film only - vyrn/laptop.mp4, although VYRN's own page skips it.
 HOME_FILM = 'vyrn'
 # Owner, 14-15 Oct: "E-commerce" is a service of exactly these projects (and they are the E-commerce card's shops); not

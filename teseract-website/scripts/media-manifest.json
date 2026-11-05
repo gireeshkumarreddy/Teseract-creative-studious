@@ -701,638 +701,6 @@
    }
   },
   {
-   "slug": "geetha-jewellers",
-   "info": {
-    "name": "Geetha Jewellers",
-    "url": "https://geetha-seven.vercel.app/",
-    "permission": "yes",
-    "laptop_poster": "1.0",
-    "hero_poster": "0.8"
-   },
-   "media": {
-    "laptop": {
-     "type": "video",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/laptop-640.mp4",
-       "width": 640,
-       "height": 400,
-       "bytes": 1194098
-      },
-      {
-       "file": "assets/media/geetha-jewellers/laptop-1280.mp4",
-       "width": 1280,
-       "height": 800,
-       "bytes": 3835100
-      },
-      {
-       "file": "assets/media/geetha-jewellers/laptop-1920.mp4",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 9002313
-      }
-     ],
-     "poster": [
-      {
-       "file": "assets/media/geetha-jewellers/laptop-640.webp",
-       "width": 640,
-       "height": 400
-      },
-      {
-       "file": "assets/media/geetha-jewellers/laptop-1280.webp",
-       "width": 1280,
-       "height": 800
-      },
-      {
-       "file": "assets/media/geetha-jewellers/laptop-1920.webp",
-       "width": 1920,
-       "height": 1200
-      }
-     ],
-     "duration": 15.0,
-     "fps": 30.0,
-     "crf": 23,
-     "source": {
-      "width": 1920,
-      "height": 1200,
-      "codec": "h264",
-      "file": "geetha-jewellers/laptop.mp4",
-      "fps": 30.0,
-      "rotation": 0,
-      "has_audio": false,
-      "duration": 15.0
-     },
-     "alt": "Desktop scroll through the home page: the showroom carousel turns through Necklaces, Rings, Earrings, Bangles and Diamond Pendant Sets, then the 'Crafted for Generations' story section passes and the Signature Collection necklace grows into view with its specifications.",
-     "frame": "video"
-    },
-    "hero": {
-     "type": "video",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/hero-480.mp4",
-       "width": 480,
-       "height": 600,
-       "bytes": 392483
-      },
-      {
-       "file": "assets/media/geetha-jewellers/hero-640.mp4",
-       "width": 640,
-       "height": 800,
-       "bytes": 600407
-      }
-     ],
-     "poster": [
-      {
-       "file": "assets/media/geetha-jewellers/hero-480.webp",
-       "width": 480,
-       "height": 600
-      },
-      {
-       "file": "assets/media/geetha-jewellers/hero-640.webp",
-       "width": 640,
-       "height": 800
-      }
-     ],
-     "duration": 9.0,
-     "fps": 30.0,
-     "crf": 28,
-     "source": {
-      "width": 780,
-      "height": 1688,
-      "codec": "h264",
-      "file": "geetha-jewellers/hero.mp4",
-      "fps": 30.0,
-      "rotation": 0,
-      "has_audio": false,
-      "duration": 9.0
-     },
-     "alt": "Phone scroll through the home page hero: the glass-dome carousel moves from Necklaces through Rings, Earrings and Bangles to Diamond Pendant Sets.",
-     "frame": "video"
-    },
-    "gallery-01": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-01-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 28108,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-01-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 43916
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-01-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 125162
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-01-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 149758
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-01-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 224748
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-01-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 324948
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-01.png"
-     },
-     "alt": "Home page first screen: Geetha Jewellers logo header and navigation above a marble-and-gold showroom with a glass dome holding a diamond and emerald necklace (Necklaces), with the Rings and Earrings domes to the right.",
-     "frame": "desktop"
-    },
-    "gallery-02": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-02-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 35010,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-02-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 55414
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-02-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 155230
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-02-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 183700
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-02-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 265762
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-02-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 390674
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-02.png"
-     },
-     "alt": "Signature Collection section 'A Masterpiece in Gold': a gold temple necklace floating above a marble pedestal, with description, Enquire Now button and a specifications list (gross weight, purity, gemstones, craftsmanship, occasion).",
-     "frame": "desktop"
-    },
-    "gallery-03": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-03-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 33232,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-03-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 50990
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-03-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 143290
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-03-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 168318
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-03-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 243906
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-03-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 354662
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-03.png"
-     },
-     "alt": "Rings Collection 'Love in Every Detail': two gold rings shown as exploded views with labelled parts, a features list and a row of five ring cards (Diamond Blossom, Twin Hearts, Emerald Vintage, Classic Solitaire, Signature Solitaire).",
-     "frame": "desktop"
-    },
-    "gallery-04": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-04-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 29380,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-04-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 45162
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-04-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 117314
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-04-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 134126
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-04-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 187432
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-04-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 263768
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-04.png"
-     },
-     "alt": "Earrings Collection 'Elegance That Speaks Volumes': five pairs of earrings in hanging glass arches with Traditional Jhumkas in the centre, a featured-piece specifications panel and a 360-degree control.",
-     "frame": "desktop"
-    },
-    "gallery-05": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-05-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 29992,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-05-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 45848
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-05-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 127976
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-05-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 149012
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-05-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 206098
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-05-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 288794
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-05.png"
-     },
-     "alt": "Bangles Collection 'Premium Bangles': five gold bangles fanned out on a marble lotus pedestal with name labels, a features list and a row of five bangle cards.",
-     "frame": "desktop"
-    },
-    "gallery-06": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-06-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 23944,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-06-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 38124
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-06-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 101382
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-06-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 115684
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-06-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 167964
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-06-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 244126
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-06.png"
-     },
-     "alt": "Men's Chains section: three gold chains on black busts in lit glass display cases on a marble platform, with the 'Men's Chains' title and an Enquire Now button.",
-     "frame": "desktop"
-    },
-    "gallery-07": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-07-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 28774,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-07-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 44758
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-07-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 115718
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-07-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 134038
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-07-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 188908
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-07-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 261396
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-07.png"
-     },
-     "alt": "Men's Bracelets Collection 'Strength In Every Detail': two gold men's bracelets floating between rocks against a sunset sky, with an Enquire Now button.",
-     "frame": "desktop"
-    },
-    "gallery-08": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-08-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 21092,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-08-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 34132
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-08-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 93032
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-08-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 109792
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-08-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 152442
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-08-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 207746
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-08.png"
-     },
-     "alt": "Visit Our Store section 'We'd Love to See You': embedded Google map, photo of the shop front and a store details card with address, phone, WhatsApp number and business hours.",
-     "frame": "desktop"
-    },
-    "gallery-09": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-09-480.webp",
-       "width": 480,
-       "height": 300,
-       "bytes": 8334,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-09-640.webp",
-       "width": 640,
-       "height": 400,
-       "bytes": 13198
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-09-1280.webp",
-       "width": 1280,
-       "height": 800,
-       "bytes": 35724
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-09-1440.webp",
-       "width": 1440,
-       "height": 900,
-       "bytes": 40526
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-09-1920.webp",
-       "width": 1920,
-       "height": 1200,
-       "bytes": 59004
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-09-2560.webp",
-       "width": 2560,
-       "height": 1600,
-       "bytes": 83146
-      }
-     ],
-     "source": {
-      "width": 2880,
-      "height": 1800,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-09.png"
-     },
-     "alt": "Rate Scheme section 'Save Little, Shine Big': four monthly gold savings plan cards from Rs 1,000 to Rs 10,000 per month, each marked '+1 month free', with an Enquire Now button.",
-     "frame": "desktop"
-    },
-    "gallery-10": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-10-480.webp",
-       "width": 480,
-       "height": 1039,
-       "bytes": 68006,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-10-640.webp",
-       "width": 640,
-       "height": 1385,
-       "bytes": 108278
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-10-1170.webp",
-       "width": 1170,
-       "height": 2532,
-       "bytes": 251028
-      }
-     ],
-     "source": {
-      "width": 1170,
-      "height": 2532,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-10.png"
-     },
-     "alt": "Home page first screen on a phone: logo header and menu button above a glass dome with the diamond and emerald necklace (Necklaces).",
-     "frame": "phone"
-    },
-    "gallery-11": {
-     "type": "image",
-     "variants": [
-      {
-       "file": "assets/media/geetha-jewellers/gallery-11-480.webp",
-       "width": 480,
-       "height": 1039,
-       "bytes": 64992,
-       "thumb": true
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-11-640.webp",
-       "width": 640,
-       "height": 1385,
-       "bytes": 95388
-      },
-      {
-       "file": "assets/media/geetha-jewellers/gallery-11-1170.webp",
-       "width": 1170,
-       "height": 2532,
-       "bytes": 207614
-      }
-     ],
-     "source": {
-      "width": 1170,
-      "height": 2532,
-      "codec": "png",
-      "file": "geetha-jewellers/gallery-11.png"
-     },
-     "alt": "Rings Collection 'Love in Every Detail' on a phone: two rings in exploded view on a pedestal above a row of ring cards.",
-     "frame": "phone"
-    }
-   },
-   "report": {
-    "name": "Geetha Jewellers",
-    "url": "https://geetha-seven.vercel.app/",
-    "group": "client",
-    "site_is": "One-page website of Geetha Jewellers, a gold and diamond jewellery shop at No 20, Bazar Street, Pungavadi Puthur, Attur, Tamil Nadu (the logo says 'Since 1998'). It presents its collections (necklaces, rings, earrings, bangles, diamond pendant sets, men's chains, bracelets and rings) as scroll-animated showcases with enquiry links to WhatsApp and phone, a store-visit section with map, address and opening hours, a special-offer banner, customer testimonials and monthly gold savings schemes. There is no online shop, cart or checkout.",
-    "tagline_verbatim": "More than Jewellery, It’s a part of your story"
-   }
-  },
-  {
    "slug": "derlin-haus",
    "info": {
     "name": "Derlin Haus",
@@ -13714,6 +13082,423 @@
    }
   },
   {
+   "slug": "finsmith",
+   "info": {
+    "name": "Finsmith",
+    "permission": "yes",
+    "laptop_poster": "1.0"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/laptop-640.mp4",
+       "width": 640,
+       "height": 360,
+       "bytes": 1673210
+      },
+      {
+       "file": "assets/media/finsmith/laptop-1280.mp4",
+       "width": 1280,
+       "height": 720,
+       "bytes": 4738628
+      },
+      {
+       "file": "assets/media/finsmith/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1080,
+       "bytes": 9351671
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/finsmith/laptop-640.webp",
+       "width": 640,
+       "height": 360
+      },
+      {
+       "file": "assets/media/finsmith/laptop-1280.webp",
+       "width": 1280,
+       "height": 720
+      },
+      {
+       "file": "assets/media/finsmith/laptop-1920.webp",
+       "width": 1920,
+       "height": 1080
+      }
+     ],
+     "duration": 18.0,
+     "fps": 30,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "file": "finsmith/laptop.mp4",
+      "fps": 60.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 18.0
+     },
+     "alt": "The Finsmith showcase film: the 3D koi swims over the headline 'Craft', follows the cursor and comes to each click, and the menu opens.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 15822,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 24130
+      },
+      {
+       "file": "assets/media/finsmith/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 67726
+      },
+      {
+       "file": "assets/media/finsmith/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 78168
+      },
+      {
+       "file": "assets/media/finsmith/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 114534
+      },
+      {
+       "file": "assets/media/finsmith/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 167546
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "finsmith/gallery-01.png"
+     },
+     "alt": "Finsmith hero: a large orange, red and cream 3D koi swimming across the giant cream headline 'Craft' on a lacquer-red page, with sparkles, a white Services pill at the top right and the FINSMITH wordmark at the bottom left.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 16140,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 24876
+      },
+      {
+       "file": "assets/media/finsmith/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 70808
+      },
+      {
+       "file": "assets/media/finsmith/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 82456
+      },
+      {
+       "file": "assets/media/finsmith/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 121928
+      },
+      {
+       "file": "assets/media/finsmith/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 177972
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "finsmith/gallery-02.png"
+     },
+     "alt": "The Finsmith koi stretched across the headline 'Craft', its long pale tail curving off the right edge of the red page.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 15140,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 23206
+      },
+      {
+       "file": "assets/media/finsmith/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 65508
+      },
+      {
+       "file": "assets/media/finsmith/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 75694
+      },
+      {
+       "file": "assets/media/finsmith/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 110454
+      },
+      {
+       "file": "assets/media/finsmith/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 163116
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "finsmith/gallery-03.png"
+     },
+     "alt": "The Finsmith koi turning upward through the headline 'Craft', its head near the top of the red page and its tail fanned out below the letters.",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 14496,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 21846
+      },
+      {
+       "file": "assets/media/finsmith/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 60066
+      },
+      {
+       "file": "assets/media/finsmith/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 68756
+      },
+      {
+       "file": "assets/media/finsmith/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 101036
+      },
+      {
+       "file": "assets/media/finsmith/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 150180
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "finsmith/gallery-04.png"
+     },
+     "alt": "The Finsmith page with the whole headline 'Craft' clear and the koi swimming beneath it, above the line 'Branding shaped to endure and evolve with your ambition'.",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 18826,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 28506
+      },
+      {
+       "file": "assets/media/finsmith/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 76598
+      },
+      {
+       "file": "assets/media/finsmith/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 89686
+      },
+      {
+       "file": "assets/media/finsmith/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 132372
+      },
+      {
+       "file": "assets/media/finsmith/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 191864
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "finsmith/gallery-05.png"
+     },
+     "alt": "Finsmith with its menu open: a cream card listing Work, Studio, Approach, Journal and Contact at the top right, while the koi swims over the headline 'Craft'.",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-06-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 39050,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-06-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 54686
+      },
+      {
+       "file": "assets/media/finsmith/gallery-06-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 111176
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "finsmith/gallery-06.png"
+     },
+     "alt": "Finsmith on a phone: the koi curving above the headline 'Craft' on the red page, with the white menu pill at the top and the FINSMITH wordmark at the foot.",
+     "frame": "phone"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-07-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 38834,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-07-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 54570
+      },
+      {
+       "file": "assets/media/finsmith/gallery-07-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 110848
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "finsmith/gallery-07.png"
+     },
+     "alt": "Finsmith on a phone: the whole headline 'Craft' clear and the koi swimming in the lower half of the red page.",
+     "frame": "phone"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/finsmith/gallery-08-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 38862,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/finsmith/gallery-08-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 55428
+      },
+      {
+       "file": "assets/media/finsmith/gallery-08-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 112280
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "finsmith/gallery-08.png"
+     },
+     "alt": "Finsmith on a phone: the koi swimming over the headline, with the hint 'Tap to feed the koi' at the bottom right.",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "Finsmith",
+    "group": "concept",
+    "site_is": "Finsmith — Craft: a single-screen landing-page hero for Finsmith, a branding studio (repo: 'Finsmith landing page hero with a real 3D koi that swims over the headline'). A lacquer-red page with a giant cream headline and a real 3D koi that swims freely over it, casts a soft shadow, follows the cursor or finger and comes wherever you click or tap. Built as one index.html with three.js. Only the hero exists: the menu links lead nowhere yet.",
+    "tagline_verbatim": "Branding shaped to endure and evolve with your ambition"
+   }
+  },
+  {
    "slug": "ines-morrow",
    "info": {
     "name": "Ines Morrow",
@@ -16762,11 +16547,622 @@
     "site_is": "A concept landing page for Vantline, an invented decision-intelligence copilot for teams. README: 'Vantline — decision-intelligence copilot', with the signature interaction 'Fanned insight deck, live chart controls, plans toggle, scroll colour transition' and the signature animation 'Scroll-fanned deck: cards fan out from a stack as the section scrolls through'. The page description says: 'Vantline is a decision-intelligence copilot that explains what changed in your numbers and what to do next. A design concept.' The footer line is 'A copilot that explains what changed in your numbers, and what to do next.' It is one of six pages in the public repo gireeshkumarreddy/landing-concepts (GitHub description: 'Six interactive landing page concepts — React, GSAP, Motion'), built with React, GSAP ScrollTrigger, Motion and Lenis smooth scrolling. The site states its demo nature in its own words. The footer says 'Vantline is a concept product for a design portfolio. Chart values are sample data.', and the chart carries a 'Sample data' tag.",
     "tagline_verbatim": "Know what changed and what to do about it."
    }
+  },
+  {
+   "slug": "velune",
+   "info": {
+    "name": "VÉLUNE",
+    "permission": "yes",
+    "laptop_poster": "1.0",
+    "hero_poster": "1.0"
+   },
+   "media": {
+    "laptop": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/velune/laptop-640.mp4",
+       "width": 640,
+       "height": 400,
+       "bytes": 502838
+      },
+      {
+       "file": "assets/media/velune/laptop-1280.mp4",
+       "width": 1280,
+       "height": 800,
+       "bytes": 1673246
+      },
+      {
+       "file": "assets/media/velune/laptop-1920.mp4",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 2933404
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/velune/laptop-640.webp",
+       "width": 640,
+       "height": 400
+      },
+      {
+       "file": "assets/media/velune/laptop-1280.webp",
+       "width": 1280,
+       "height": 800
+      },
+      {
+       "file": "assets/media/velune/laptop-1920.webp",
+       "width": 1920,
+       "height": 1200
+      }
+     ],
+     "duration": 17.0,
+     "fps": 30.0,
+     "crf": 23,
+     "source": {
+      "width": 1920,
+      "height": 1200,
+      "codec": "h264",
+      "file": "velune/laptop.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 17.0
+     },
+     "alt": "Desktop scroll through the VÉLUNE home page: the ten garments slide along the rail one after another as the page scrolls, then the editorial study arrives.",
+     "frame": "video"
+    },
+    "hero": {
+     "type": "video",
+     "variants": [
+      {
+       "file": "assets/media/velune/hero-480.mp4",
+       "width": 480,
+       "height": 600,
+       "bytes": 393214
+      },
+      {
+       "file": "assets/media/velune/hero-640.mp4",
+       "width": 640,
+       "height": 800,
+       "bytes": 580485
+      }
+     ],
+     "poster": [
+      {
+       "file": "assets/media/velune/hero-480.webp",
+       "width": 480,
+       "height": 600
+      },
+      {
+       "file": "assets/media/velune/hero-640.webp",
+       "width": 640,
+       "height": 800
+      }
+     ],
+     "duration": 10.0,
+     "fps": 30.0,
+     "crf": 28,
+     "source": {
+      "width": 780,
+      "height": 1688,
+      "codec": "h264",
+      "file": "velune/hero.mp4",
+      "fps": 30.0,
+      "rotation": 0,
+      "has_audio": false,
+      "duration": 10.0
+     },
+     "alt": "Phone scroll through the VÉLUNE rail: the garments pass one after another under the orange band.",
+     "frame": "video"
+    },
+    "gallery-01": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-01-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 16292,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-01-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 24894
+      },
+      {
+       "file": "assets/media/velune/gallery-01-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 64474
+      },
+      {
+       "file": "assets/media/velune/gallery-01-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 74932
+      },
+      {
+       "file": "assets/media/velune/gallery-01-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 106700
+      },
+      {
+       "file": "assets/media/velune/gallery-01-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 155622
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-01.png"
+     },
+     "alt": "VÉLUNE home page: ten garments on wooden hangers along a silver rail on off-white, the porcelain tee Interval 01 pulled forward, its name and pill buttons below and an orange marquee band across the foot of the screen.",
+     "frame": "desktop"
+    },
+    "gallery-02": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-02-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 16660,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-02-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 25368
+      },
+      {
+       "file": "assets/media/velune/gallery-02-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 67600
+      },
+      {
+       "file": "assets/media/velune/gallery-02-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 75634
+      },
+      {
+       "file": "assets/media/velune/gallery-02-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 109038
+      },
+      {
+       "file": "assets/media/velune/gallery-02-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 156640
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-02.png"
+     },
+     "alt": "The VÉLUNE rail further along its scroll: the espresso hoodie Afterlight has come forward between the other garments, with its name under the rail above the orange band.",
+     "frame": "desktop"
+    },
+    "gallery-03": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-03-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 16744,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-03-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 25570
+      },
+      {
+       "file": "assets/media/velune/gallery-03-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 69712
+      },
+      {
+       "file": "assets/media/velune/gallery-03-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 81846
+      },
+      {
+       "file": "assets/media/velune/gallery-03-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 117952
+      },
+      {
+       "file": "assets/media/velune/gallery-03-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 169000
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-03.png"
+     },
+     "alt": "The VÉLUNE rail with the sage knit Slow Hours pulled forward among the other garments, its name under the rail and the orange band below.",
+     "frame": "desktop"
+    },
+    "gallery-04": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-04-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 17506,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-04-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 27846
+      },
+      {
+       "file": "assets/media/velune/gallery-04-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 83328
+      },
+      {
+       "file": "assets/media/velune/gallery-04-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 100786
+      },
+      {
+       "file": "assets/media/velune/gallery-04-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 150396
+      },
+      {
+       "file": "assets/media/velune/gallery-04-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 224146
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-04.png"
+     },
+     "alt": "VÉLUNE editorial study: a man in an oat cable-knit polo and chocolate trousers in a sunlit stone interior beside a black panel with the headline 'Made for the spaces between.', the last word in orange.",
+     "frame": "desktop"
+    },
+    "gallery-05": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-05-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 10336,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-05-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 15874
+      },
+      {
+       "file": "assets/media/velune/gallery-05-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 42010
+      },
+      {
+       "file": "assets/media/velune/gallery-05-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 50032
+      },
+      {
+       "file": "assets/media/velune/gallery-05-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 73680
+      },
+      {
+       "file": "assets/media/velune/gallery-05-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 108520
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-05.png"
+     },
+     "alt": "VÉLUNE footer: the line 'A little room to be yourself.', its links and the wordmark VÉLUNE set very large in black across the page.",
+     "frame": "desktop"
+    },
+    "gallery-06": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-06-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 12588,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-06-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 18788
+      },
+      {
+       "file": "assets/media/velune/gallery-06-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 45386
+      },
+      {
+       "file": "assets/media/velune/gallery-06-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 52516
+      },
+      {
+       "file": "assets/media/velune/gallery-06-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 77774
+      },
+      {
+       "file": "assets/media/velune/gallery-06-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 109158
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-06.png"
+     },
+     "alt": "VÉLUNE collection page: the title 'The Off Hours.', category filter pills and the first row of product cards, a porcelain tee, an oxblood jersey and an oat polo on hangers.",
+     "frame": "desktop"
+    },
+    "gallery-07": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-07-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11792,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-07-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 17390
+      },
+      {
+       "file": "assets/media/velune/gallery-07-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 45048
+      },
+      {
+       "file": "assets/media/velune/gallery-07-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 52296
+      },
+      {
+       "file": "assets/media/velune/gallery-07-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 77710
+      },
+      {
+       "file": "assets/media/velune/gallery-07-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 114014
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-07.png"
+     },
+     "alt": "VÉLUNE product page for Night Practice: the oxblood striped jersey on its hanger on the left, and its name, price, colour, size buttons and quantity on the right.",
+     "frame": "desktop"
+    },
+    "gallery-08": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-08-480.webp",
+       "width": 480,
+       "height": 300,
+       "bytes": 11414,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-08-640.webp",
+       "width": 640,
+       "height": 400,
+       "bytes": 16268
+      },
+      {
+       "file": "assets/media/velune/gallery-08-1280.webp",
+       "width": 1280,
+       "height": 800,
+       "bytes": 44434
+      },
+      {
+       "file": "assets/media/velune/gallery-08-1440.webp",
+       "width": 1440,
+       "height": 900,
+       "bytes": 49346
+      },
+      {
+       "file": "assets/media/velune/gallery-08-1920.webp",
+       "width": 1920,
+       "height": 1200,
+       "bytes": 72398
+      },
+      {
+       "file": "assets/media/velune/gallery-08-2560.webp",
+       "width": 2560,
+       "height": 1600,
+       "bytes": 102932
+      }
+     ],
+     "source": {
+      "width": 2880,
+      "height": 1800,
+      "codec": "png",
+      "file": "velune/gallery-08.png"
+     },
+     "alt": "VÉLUNE studio page: the large headline 'Less noise. More feeling.' above an editorial portrait of a man in an oat knit polo against a stone wall.",
+     "frame": "desktop"
+    },
+    "gallery-09": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-09-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 24364,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-09-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 34746
+      },
+      {
+       "file": "assets/media/velune/gallery-09-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 69114
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "velune/gallery-09.png"
+     },
+     "alt": "VÉLUNE on a phone: the rail with the porcelain tee Interval 01 in front, its name, the arrows and pill buttons, and the orange band at the foot.",
+     "frame": "phone"
+    },
+    "gallery-10": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-10-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 29158,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-10-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 41600
+      },
+      {
+       "file": "assets/media/velune/gallery-10-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 83850
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "velune/gallery-10.png"
+     },
+     "alt": "VÉLUNE on a phone, further along the rail: the indigo tee Blue Note in front, between the charcoal and wine tees.",
+     "frame": "phone"
+    },
+    "gallery-11": {
+     "type": "image",
+     "variants": [
+      {
+       "file": "assets/media/velune/gallery-11-480.webp",
+       "width": 480,
+       "height": 1039,
+       "bytes": 35710,
+       "thumb": true
+      },
+      {
+       "file": "assets/media/velune/gallery-11-640.webp",
+       "width": 640,
+       "height": 1385,
+       "bytes": 50942
+      },
+      {
+       "file": "assets/media/velune/gallery-11-1170.webp",
+       "width": 1170,
+       "height": 2532,
+       "bytes": 100526
+      }
+     ],
+     "source": {
+      "width": 1170,
+      "height": 2532,
+      "codec": "png",
+      "file": "velune/gallery-11.png"
+     },
+     "alt": "VÉLUNE on a phone: the black panel 'Made for the spaces between.' with its text and link, and the top of the footer, 'A little room to be yourself.'",
+     "frame": "phone"
+    }
+   },
+   "report": {
+    "name": "VÉLUNE",
+    "group": "concept",
+    "site_is": "VÉLUNE — The Off Hours: an original, fictional wardrobe concept (README: 'VÉLUNE is a fictional digital wardrobe concept ... It is not a transactional shop'). A scroll-driven clothing rail of ten pieces, a collection, product pages, a studio page and a locally saved edit. Prices are illustrative and orders are not open; imagery was generated for the concept (docs/assets.md).",
+    "tagline_verbatim": "Wear your own rhythm."
+   }
   }
  ],
  "order": [
   "aivinci",
-  "geetha-jewellers",
   "derlin-haus",
   "aeroskys",
   "mahira-select",
@@ -16789,10 +17185,12 @@
   "gireesh-cinematic",
   "vyrn",
   "emberpost",
+  "finsmith",
   "ines-morrow",
   "maren-holt",
   "sagewell",
   "tidings",
-  "vantline"
+  "vantline",
+  "velune"
  ]
 }

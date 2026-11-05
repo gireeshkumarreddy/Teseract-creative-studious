@@ -171,6 +171,8 @@ Each primary phrase points to its own service section on the page.
 - **Emberpost:** email app landing page concept · email product landing page
 - **Ines Morrow:** film editor portfolio website concept · video editor portfolio website
 - **Maren Holt:** book editor newsletter website concept · editor newsletter landing page
+- **VÉLUNE:** wardrobe website concept · interactive clothing rail · fashion website design
+- **Finsmith:** 3D landing page concept · three.js koi hero · branding studio website design
 - **ONE PIECE | Luffy:** cinematic fan tribute website (unofficial) · never targets the One Piece trademark
 - **TĀVRA:** sportswear e-commerce concept · Indian textile craft sportswear website
 - **VELORA:** fragrance website design concept · perfume brand website concept
@@ -250,6 +252,8 @@ Your content document has "© [YEAR] TESSERACT." The full name matches the logo 
 - **Emberpost:** A concept landing page for Emberpost, an invented people-first email app that files every email under its sender, with a clickable sample inbox.
 - **Ines Morrow:** A portfolio concept for Ines Morrow, a fictional film and commercial editor, with a scrubbable reel timeline and a before-and-after colour-grade slider.
 - **Maren Holt:** A concept landing page for Maren Holt, a fictional developmental editor with a weekly newsletter: a keycap headline, sample essays, a reader and search.
+- **VÉLUNE:** A wardrobe concept by TESERACT for VÉLUNE, a fictional label: a scroll-driven clothing rail of ten pieces; prices are illustrative and orders are not open.
+- **Finsmith:** A landing-page hero concept by TESERACT for Finsmith, a branding studio: a real 3D koi swims over the headline, follows the cursor and comes when fed.
 - **ONE PIECE | Luffy:** An unofficial fan tribute to Monkey D. Luffy, told in cinematic, scroll-driven chapters: a fan experiment made for fun and never sold.
 - **TĀVRA:** A concept store for TĀVRA, a women's sportswear concept built on Indian textile crafts such as bandhani, ikat and ajrakh; checkout and payment are off.
 - **VELORA:** A concept website for VELORA, a fragrance-house concept built around its signature eau de parfum, with an interactive bottle and notes; ordering is not open.

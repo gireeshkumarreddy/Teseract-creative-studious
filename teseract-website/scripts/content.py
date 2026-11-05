@@ -657,6 +657,8 @@ CHAT = {
         'siara': 'siaara', 'siaara': 'siaara', 'siyara': 'siaara',
         'aerosky': 'aeroskys', 'aero skys': 'aeroskys', 'aero sky': 'aeroskys', 'aeroskies': 'aeroskys',
         'one piece': 'one-piece', 'luffy': 'one-piece',
+        'velune': 'velune', 'wardrobe': 'velune', 'clothing rail': 'velune',
+        'finsmith': 'finsmith', 'koi': 'finsmith', 'koi fish': 'finsmith',
         'careers aeroskys': 'aeroskys-careers', 'aeroskys careers': 'aeroskys-careers', 'careers portal': 'aeroskys-careers',
         'gireesh portfolio': 'gireesh-portfolio', 'designer portfolio': 'gireesh-portfolio',
         'desk': 'gireesh-desk', 'working desk': 'gireesh-desk', 'green portfolio': 'gireesh-desk',

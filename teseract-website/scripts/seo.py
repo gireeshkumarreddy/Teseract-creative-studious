@@ -109,6 +109,8 @@ PROJECT_DESC = {
     'tidings': 'A concept landing page by TESERACT for Tidings, an invented chat-commerce platform for small shops; not affiliated with WhatsApp or Meta.',
     'emberpost': 'A concept landing page by TESERACT for Emberpost, an invented people-first email app that files every email under its sender, with a sample inbox.',
     'ines-morrow': 'A portfolio concept by TESERACT for Ines Morrow, a fictional film and commercial editor, with a scrubbable reel timeline and a colour-grade slider.',
+    'velune': 'A wardrobe concept by TESERACT for VÉLUNE, a fictional label: a scroll-driven clothing rail of ten pieces; prices are illustrative and orders are not open.',
+    'finsmith': 'A landing-page hero concept by TESERACT for Finsmith, a branding studio: a real 3D koi swims over the headline, follows the cursor and comes when fed.',
     'maren-holt': 'A concept landing page by TESERACT for Maren Holt, a fictional developmental editor with a weekly newsletter: sample essays, a reader and search.',
     'one-piece': 'A fan tribute to Monkey D. Luffy by TESERACT in cinematic, scroll-driven chapters, never sold; unofficial, not affiliated with the rights holders.',
     'tavra': "A concept store by TESERACT for TĀVRA, a women's sportswear concept built on Indian textile crafts; checkout and payment are not connected.",

@@ -14,7 +14,7 @@
     "alt: per-still alt text overrides ({\"gallery-04\": \"...\"}) for capture-report 'shows' lines that carry capture notes or private names (the capture reports themselves are read-only).",
     "Every project the owner removed (DARK-THEME.md) is listed in projects.EXCLUDED and check.py FORBIDDEN: never add one back here, in home_gallery / home_laptop or in C:/Teseract-media/order.txt.",
     "card_clip / tile_clip: a named loop clip of the project's media folder (prepare_media.py: <name>.mp4 + its <name>.png poster) played muted, looped and inline, only while in view (poster under reduced motion / Save-Data): card_clip = on the Work card's screen (the one card that autoplays), tile_clip = its home hero tile (instead of the hero.mp4 phone scroll). Owner, 14 Oct: Aivinci's profile = the tiger from aivinci.ai's 'AI Video Story' section (aivinci/tiger.mp4 + tiger.png); its project page keeps the laptop scene video. Owner, 14 Oct (later): the tiger must read as the website, not a zoomed video - tiger.mp4 is a 16:9 desktop view of the whole section (header, heading, panel with the tiger at its size in the page, intro line), never a crop of the video alone. The card_clip's poster (<name>.png) is the project's profile image wherever a still stands for it (owner, 15 Oct: Aivinci's Client Stories card shows the tiger poster, the same still as its Work card; alt text: alt '<name>-poster'). tile_clip may list several clips, preferred first: the home gallery plays the one that suits the shape of the slot its tile gets (owner, 17 Oct: the six landing pages' ['tile', 'hero'] - tile.mp4, the 16:9 desktop loop hero -> second section, in a landscape slot; hero.mp4, the same on a phone, only where a portrait slot is left).",
-    "home_gallery: the projects of the home hero gallery's 20 tiles (sections/home_hero.COLUMNS: 4 columns x 5 slots, up to 7 clips), one tile each. Owner, 17 Oct (DARK-THEME.md): the six landing-page concepts FIRST (each tile plays its own clip, Aivinci's tiger keeps moving: 7 clips), then the client tiles and vyrn, velora, vesper, gireesh-desk; AARADHYA, ONE PIECE, TĀVRA, THENGA, SAANJH and the cinematic portfolio left the gallery only (they keep their Work cards and pages), as did Careers at Aeroskys, the earlier Gireesh portfolio and Sedile (15 Oct). A listed project without prepared media yet is simply not shown (check.py warns); swap names here to change the selection."
+    "home_gallery: the projects of the home hero gallery's 20 tiles (sections/home_hero.COLUMNS: 4 columns x 5 slots, up to 7 clips), one tile each. Owner, 17 Oct (DARK-THEME.md): the six landing-page concepts FIRST (each tile plays its own clip, Aivinci's tiger keeps moving: 7 clips), then the client tiles and vyrn, velora, vesper, gireesh-desk; AARADHYA, ONE PIECE, TĀVRA, THENGA, SAANJH and the cinematic portfolio left the gallery only (they keep their Work cards and pages), as did Careers at Aeroskys, the earlier Gireesh portfolio and Sedile (15 Oct). Owner, 5 Nov: Finsmith and VÉLUNE join right after Aivinci, still-image tiles (the 7 clips stay the six landing pages and the tiger), which makes 20 projects for the 20 tiles, so none repeats. A listed project without prepared media yet is simply not shown (check.py warns); swap names here to change the selection."
   ],
   "year": "2026",
   "default_services": [
@@ -319,6 +319,52 @@
       "scene_still": "gallery-01",
       "scene_confirmed": true,
       "tagline_verbatim": "Go further. Grow further."
+    },
+    {
+      "order": 19,
+      "slug": "velune",
+      "title": "VÉLUNE",
+      "group": "concept",
+      "industry": "Wardrobe concept",
+      "summary": "An interactive wardrobe concept for VÉLUNE, a fictional label: a scroll-driven clothing rail of ten pieces; prices are illustrative and orders are not open.",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "",
+      "label": "Concept Project",
+      "scene": "white-glass",
+      "device": "monitor",
+      "scene_still": "gallery-01",
+      "spill": "rgba(255,84,24,.08)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "Wear your own rhythm.",
+      "note": "Owner, 5 Nov: add to the gallery. Public repo gireeshkumarreddy/velune (dist/ served locally for the capture; no live site yet, so no url and no Visit site button). README: 'VÉLUNE is a fictional digital wardrobe concept ... not a transactional shop', so no E-commerce. Imagery generated for the concept (docs/assets.md). Off-white with one orange accent: white-glass + monitor proposed (scene_confirmed false until the owner has seen it)."
+    },
+    {
+      "order": 20,
+      "slug": "finsmith",
+      "title": "Finsmith",
+      "group": "concept",
+      "industry": "Branding studio hero concept",
+      "summary": "A landing-page hero concept for Finsmith, a branding studio: a real 3D koi swims over the headline, follows the cursor and comes when you feed it.",
+      "year": "2026",
+      "verified": true,
+      "services": [
+        "Website Design",
+        "Website Development"
+      ],
+      "url": "",
+      "label": "Concept Project",
+      "scene": "red-horizon",
+      "device": "laptop",
+      "scene_still": "gallery-01",
+      "spill": "rgba(176,6,14,.14)",
+      "scene_confirmed": false,
+      "tagline_verbatim": "Branding shaped to endure and evolve with your ambition",
+      "note": "Owner, 5 Nov: add to the gallery. Public repo gireeshkumarreddy/finsmith-koi-hero (index.html served locally for the capture; no live site yet, so no url and no Visit site button). One-screen hero: the menu links lead nowhere yet, so it is shown as a concept until the owner says otherwise. laptop.mp4 is the repo's own showcase film. Lacquer red: red-horizon + laptop proposed (scene_confirmed false until the owner has seen it)."
     },
     {
       "order": 21,
@@ -879,6 +925,8 @@
     "ines-morrow",
     "maren-holt",
     "aivinci",
+    "finsmith",
+    "velune",
     "derlin-haus",
     "aeroskys",
     "mahira-select",
