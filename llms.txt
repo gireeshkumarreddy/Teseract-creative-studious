@@ -64,7 +64,9 @@ With nearly five years of professional experience across aviation, business, tec
 - **How involved will we be?** We communicate, share progress, ask questions, listen to feedback and build together — because the best results happen when the client isn't just watching the process. They're part of it.
 - **What does the name TESERACT mean?** Tesseract is a geometric concept associated with a fourth dimension. For the agency, the name represents thinking beyond the obvious, exploring new dimensions of digital experiences, and building work that goes beyond ordinary websites.
 
-## Client Work
+## The work
+
+Fan pieces are unofficial and not affiliated with the rights holders.
 
 - [Aivinci Creative Studio](https://teseract.pro/projects/aivinci/): AI creative & technology studio; 2026. A single-page website for Aivinci Creative Studio, an AI creative and technology studio, showing its AI films, creative technology and digital products. Tagline: “WE CREATE WHAT’S NEXT.” Live site: https://aivinci.ai/
 - [AeroSkys](https://teseract.pro/projects/aeroskys/): Travel booking; 2026. A travel booking website for AeroSkys to search and book flights, hotels, holiday packages and buses; a working prototype in which bookings are simulated. Tagline: “Book your trip in a few clicks.” Live site: https://aeroskys.vercel.app/
@@ -76,11 +78,6 @@ With nearly five years of professional experience across aviation, business, tec
 - [LiveCV](https://teseract.pro/projects/livecv/): Resume & career platform; 2026. A resume-builder website for LiveCV that turns a resume into one permanent live link, shown with example profiles the site labels illustrative. Tagline: “Your career is bigger than a resume.” Live site: https://gireeshkumarreddy.github.io/Livecv/
 - [Hidden Stories](https://teseract.pro/projects/hidden-stories/): Short-stay homes, Hyderabad; 2026. A website for Hidden Stories, eight short-stay homes in Hyderabad: a scroll-driven story around a home-tour film, then search and booking in demo mode. Tagline: “Your stay. Your story.” Live site: https://gireeshkumarreddy.github.io/hidden/
 - [Careers at Aeroskys](https://teseract.pro/projects/aeroskys-careers/): Careers portal; 2026. A careers site for Aeroskys, a travel booking company: open roles in three groups, each with its own page, career ladder, hiring process and application. Tagline: “Go further. Grow further.” Live site: https://aeroskys-careers.vercel.app/
-
-## Concepts & Interactive
-
-Self-initiated concepts and fan projects, not client commissions. Fan pieces are unofficial and not affiliated with the rights holders.
-
 - [Sagewell](https://teseract.pro/projects/sagewell/): AI reasoning SaaS concept; 2026. A concept landing page for Sagewell, an invented AI reasoning model for developers and teams, with a prompt composer and a reasoning-trace demo. Tagline: “The model that thinks before it speaks.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/sagewell/
 - [Vantline](https://teseract.pro/projects/vantline/): Decision-intelligence SaaS concept; 2026. A concept landing page for Vantline, an invented decision-intelligence copilot that explains what changed in your numbers, shown with sample data. Tagline: “Know what changed and what to do about it.” Live site: https://gireeshkumarreddy.github.io/landing-concepts/vantline/
 - [Tidings](https://teseract.pro/projects/tidings/): Chat-commerce SaaS concept; 2026; not affiliated with WhatsApp or Meta. A concept landing page for Tidings, an invented chat-commerce platform for small shops and restaurants, with clickable phone chats and a campaign builder. Tagline: “WhatsApp campaigns customers actually want to open”. Live site: https://gireeshkumarreddy.github.io/landing-concepts/tidings/
