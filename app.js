@@ -5854,3 +5854,23 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true }); else init();
 })();
+
+/* ---- 97-desktop-nav.js ---- */
+/* Desktop header links (desktop_header.py): a soft pill slides to the link under the pointer. The first link
+   entered gets it in place (no slide in from the left edge); leaving the pill fades it out. */
+(() => {
+  'use strict';
+  const list = document.querySelector('.hx__list');
+  if (!list || !list.querySelector('.hx__hl')) return;
+  let fresh = true;
+  list.addEventListener('pointerleave', () => { fresh = true; });
+  list.addEventListener('pointerover', e => {
+    const a = e.target.closest('.hx__link');
+    if (!a) return;
+    const li = a.parentElement;
+    if (fresh) list.classList.add('hx--snap');
+    list.style.setProperty('--hl-x', li.offsetLeft + 'px');
+    list.style.setProperty('--hl-w', li.offsetWidth + 'px');
+    if (fresh) { fresh = false; requestAnimationFrame(() => requestAnimationFrame(() => list.classList.remove('hx--snap'))); }
+  });
+})();
