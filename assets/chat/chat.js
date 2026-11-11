@@ -950,7 +950,7 @@ const size = () => { input.style.height = 'auto'; if (input.value) input.style.h
 const fromLink = (page, u) => { const p = el('p', 'cc-from'); p.appendChild(el('a', null, fill(C.from, { page }), { href: href(u) })); return p; };
 const bubble = (text, cls) => el('p', 'cc-bub' + (cls ? ' ' + cls : ''), text);
 const micro = t => el('p', 'cc-micro', t);
-const pill = p => { const s = el('span', 'cc-lab cc-lab--' + p.k); s.append(el('i', null, null, { 'aria-hidden': 'true' }), kb.labels[p.k]); return s; };
+const pill = () => document.createDocumentFragment();
 const projCard = (p, full) => {
 const a = el('a', 'cc-proj' + (full ? ' cc-proj--full' : ''), null, { href: href({ r: 'projects/' + p.s }) });
 a.appendChild(el('img', null, null, { src: D.ccBase + kb.media + p.th, alt: '', loading: 'lazy', decoding: 'async', width: '480', height: '300' }));
@@ -1210,7 +1210,7 @@ service: b => { const s = kb.services.find(v => v.id === b.id); return `${s.n} $
 step: b => { const s = kb.process.steps[b.i]; return `${s.n} ${s.name}. ${s.sub} ${[s.body, s.list_intro, (s.list || []).join(', '), (s.ask || []).join(' '), s.end].filter(Boolean).join(' ')}`; },
 stepper: () => kb.process.steps.map(s => `${s.n} ${s.name}: ${s.sub}`).join(' '),
 founder: () => { const f = kb.founder; return `${f.label}. ${f.name}, ${f.roles.join(', ')}. ${f.body[0]}`; },
-project: b => { const p = kb.projects.find(x => x.s === b.s); return `${p.t}, ${p.i}, ${kb.labels[p.k]}. ${p.sum || ''}`; },
+project: b => { const p = kb.projects.find(x => x.s === b.s); return `${p.t}, ${p.i}. ${p.sum || ''}`; },
 projects: b => projList(b).map(p => `${p.t}, ${p.i}`).join('. ') + '.',
 email: () => kb.contact.email,
 socials: () => kb.contact.socials.map(s => s.label).join(', ') + '.',
