@@ -1118,7 +1118,7 @@ const li = el('li', 'cc-turn cc-turn--' + t.who);
 if (t.who === 'u') { li.append(bubble(t.text, 'cc-bub--u'), el('span', 'cc-you', C.you, { 'aria-hidden': 'true' })); return li; }
 const body = el('div', 'cc-turn__b');
 t.b.forEach((b, j) => {
-let n = R[b.t] ? R[b.t](b) : null;
+let n = null; try { n = R[b.t] ? R[b.t](b) : null; } catch (e) { n = null; }
 if (!n) return;
 (Array.isArray(n) ? n : [n]).forEach(x => { x.style.setProperty('--i', j); body.appendChild(x); });
 });
@@ -1322,6 +1322,7 @@ dock.classList.remove('has-dot');
 vv(true);
 requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));
 if (coarse()) { try { history.pushState({ tsCc: 1 }, ''); pushed = true; addEventListener('popstate', onPop); } catch (e) { pushed = false; } }
+if (turns.length && !kb) { try { await ready(); } catch (e) { /* draw what needs no knowledge */ } }
 render(); toEnd();
 if (opts.focus === 'composer' || (!coarse() && !opts.q)) input.focus({ preventScroll: true }); else title.focus({ preventScroll: true });
 loadKb().catch(() => {});
