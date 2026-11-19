@@ -4557,7 +4557,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
     };
     const mailLink = (text) => {
       const a = document.createElement('a');
-      a.href = `mailto:${studioEmail}`; a.textContent = text || studioEmail;
+      a.href = `mailto:${studioEmail}`; a.textContent = text || studioEmail.split(',').join(' or ');
       return a;
     };
     const busy = on => {

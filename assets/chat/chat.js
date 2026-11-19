@@ -504,7 +504,7 @@ c: kb().services.map(s => ({ l: s.name, a: { i: 'svc.' + s.id } })) }],
 const cl = kb().projects.filter(p => p.k === 'client');
 return [{ b: [P(fill(C.clients_count, { n_client: cl.length, first: low(cl[0].i), another: low(cl[cl.length - 1].i) })), from('work', 'projects')], c: chips(['work']) }];
 },
-'contact.how': () => [{ b: [P(fill(C.contact, { email: kb().contact.email })), { t: 'email' }, { t: 'socials' }], c: chips(['book']) }],
+'contact.how': () => [{ b: [P(fill(C.contact, { email: kb().contact.email.split(',').join(' or ') })), { t: 'email' }, { t: 'socials' }], c: chips(['book']) }],
 'contact.phone': () => [{ b: [P(C.phone), { t: 'email' }], c: chips(['book']) }],
 'contact.socials': () => [{ b: [{ t: 'socials' }], c: chips(['book', 'show_email']) }],
 'contact.email': () => [{ b: [{ t: 'email' }], c: chips(['book']) }],
@@ -876,7 +876,7 @@ if (j && j.v === 1) { turns = j.turns || []; Object.assign(flow.st, j.st || {});
 restore();
 const prices = () => {
 const bu = flow.st.brief.budget;
-return { W: '', E: '', W_inr: '', E_inr: '', B: bu && bu.amount ? flow.budgetText(bu) : '', email: kb.contact.email, rates_month: '' };
+return { W: '', E: '', W_inr: '', E_inr: '', B: bu && bu.amount ? flow.budgetText(bu) : '', email: kb.contact.email.split(',').join(' or '), rates_month: '' };
 };
 const T = t => kb ? fill(t, prices()) : t;
 let dlg, panel, log, live, input, sendBtn, title, ava, stripBtn, briefBox, more, moreTo = null, opener = null, pushed = false, open = false, busy = false;
@@ -1089,8 +1089,8 @@ const mailLink = (t, brief) => el('a', 'cc-chip', t, { href: `mailto:${kb.contac
 const emailBlock = (or) => {
 const w = el('div', 'cc-mail'), e = kb.contact.email, p = el('p', or ? 'cc-sub' : 'cc-mail__addr');
 if (or) p.append(fill(C.or_write, { email: '' }));
-p.appendChild(el('a', null, e, { href: 'mailto:' + e }));
-w.append(p, actBtn(C.copy, () => copy(e)));
+e.split(',').forEach((x, i) => { if (i) p.append(' or '); p.appendChild(el('a', null, x, { href: 'mailto:' + x })); });
+w.append(p, actBtn(C.copy, () => copy(e.split(',').join(', '))));
 return w;
 };
 const briefRows = () => {
@@ -1276,7 +1276,7 @@ await bot(flow.input({ chip: { l: label, a } }).turns);
 save();
 });
 };
-const fail = () => { busy = false; log.removeAttribute('aria-busy'); push({ who: 'b', b: [{ t: 'p', text: fill(C.kb_fail, { email: D.ccEmail || '' }) }], c: [] }); };
+const fail = () => { busy = false; log.removeAttribute('aria-busy'); push({ who: 'b', b: [{ t: 'p', text: fill(C.kb_fail, { email: (D.ccEmail || '').split(',').join(' or ') }) }], c: [] }); };
 const copy = t => {
 const done = () => { live.textContent = C.copied; };
 if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => {});
